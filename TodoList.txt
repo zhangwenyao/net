@@ -1,0 +1,2 @@
+有向网络利用lkk计算pearson、spearman系数
+lkk生成p2p

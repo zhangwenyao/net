@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="extremum" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/extremum" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/extremum" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="src/ActFitnessComplexity.cpp" />
+		<Unit filename="src/ActFitnessComplexity.h" />
+		<Unit filename="src/ActRecommend.cpp" />
+		<Unit filename="src/ActRecommend.h" />
+		<Unit filename="src/NetBA.cpp" />
+		<Unit filename="src/NetBA.h" />
+		<Unit filename="src/NetDegree.cpp" />
+		<Unit filename="src/NetDegree.h" />
+		<Unit filename="src/NetExtremum.cpp" />
+		<Unit filename="src/NetExtremum.h" />
+		<Unit filename="src/NetGrid.cpp" />
+		<Unit filename="src/NetGrid.h" />
+		<Unit filename="src/NetRandom.cpp" />
+		<Unit filename="src/NetRandom.h" />
+		<Unit filename="src/StatBetweenness.cpp" />
+		<Unit filename="src/StatBetweenness.h" />
+		<Unit filename="src/StatCluster.cpp" />
+		<Unit filename="src/StatCluster.h" />
+		<Unit filename="src/StatKendallTau.cpp" />
+		<Unit filename="src/StatKendallTau.h" />
+		<Unit filename="src/StatModularity.cpp" />
+		<Unit filename="src/StatModularity.h" />
+		<Unit filename="src/StatPearson.cpp" />
+		<Unit filename="src/StatPearson.h" />
+		<Unit filename="src/StatSpearman.cpp" />
+		<Unit filename="src/StatSpearman.h" />
+		<Unit filename="src/common.cpp" />
+		<Unit filename="src/common.h" />
+		<Unit filename="src/commonRandom.cpp" />
+		<Unit filename="src/commonRandom.h" />
+		<Unit filename="src/commonRandomTemplate.h" />
+		<Unit filename="src/commonTemplate.h" />
+		<Unit filename="src/example.bak/Actor.cpp" />
+		<Unit filename="src/example.bak/Actor.h" />
+		<Unit filename="src/example.bak/Actor_main.cpp" />
+		<Unit filename="src/example.bak/BA_main.cpp" />
+		<Unit filename="src/example.bak/Extremum_main.cpp" />
+		<Unit filename="src/example.bak/Random_main.cpp" />
+		<Unit filename="src/example.bak/cluster.cpp" />
+		<Unit filename="src/example.bak/cluster_main.cpp" />
+		<Unit filename="src/example.bak/foodWeb.h" />
+		<Unit filename="src/example.bak/foodWeb_main.cpp" />
+		<Unit filename="src/example.bak/netA.cpp" />
+		<Unit filename="src/example.bak/netA.h" />
+		<Unit filename="src/example.bak/netStatSpeard.cpp" />
+		<Unit filename="src/example.bak/netStatSpeard.h" />
+		<Unit filename="src/example.bak/netStatTree.cpp" />
+		<Unit filename="src/example.bak/netStatTree.h" />
+		<Unit filename="src/example.bak/networkA.cpp" />
+		<Unit filename="src/example.bak/networkA.h" />
+		<Unit filename="src/example.bak/networkStatSpeard.cpp" />
+		<Unit filename="src/example.bak/networkStatSpeard.h" />
+		<Unit filename="src/example.bak/networkStatTree.cpp" />
+		<Unit filename="src/example.bak/networkStatTree.h" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/net.cpp" />
+		<Unit filename="src/net.h" />
+		<Unit filename="src/network.cpp" />
+		<Unit filename="src/network.h" />
+		<Unit filename="src/networkActRecommend.cpp" />
+		<Unit filename="src/networkActRecommend.h" />
+		<Unit filename="src/networkBA.cpp" />
+		<Unit filename="src/networkBA.h" />
+		<Unit filename="src/networkDegree.cpp" />
+		<Unit filename="src/networkDegree.h" />
+		<Unit filename="src/networkExtremum.cpp" />
+		<Unit filename="src/networkExtremum.h" />
+		<Unit filename="src/networkFitnessComplexity.cpp" />
+		<Unit filename="src/networkFitnessComplexity.h" />
+		<Unit filename="src/networkGrid.cpp" />
+		<Unit filename="src/networkGrid.h" />
+		<Unit filename="src/networkRandom.cpp" />
+		<Unit filename="src/networkRandom.h" />
+		<Unit filename="src/networkStatBetweenness.cpp" />
+		<Unit filename="src/networkStatBetweenness.h" />
+		<Unit filename="src/networkStatCluster.cpp" />
+		<Unit filename="src/networkStatCluster.h" />
+		<Unit filename="src/networkStatKendallTau.cpp" />
+		<Unit filename="src/networkStatKendallTau.h" />
+		<Unit filename="src/networkStatModularity.cpp" />
+		<Unit filename="src/networkStatModularity.h" />
+		<Unit filename="src/networkStatPearson.cpp" />
+		<Unit filename="src/networkStatPearson.h" />
+		<Unit filename="src/networkStatSpearman.cpp" />
+		<Unit filename="src/networkStatSpearman.h" />
+		<Unit filename="src/networks.cpp" />
+		<Unit filename="src/networks.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

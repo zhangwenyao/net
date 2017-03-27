@@ -49,6 +49,11 @@
 #include "networkStatModularity.h"
 #endif
 
+#ifdef STAT_SIMILARITY
+#include "StatSimilarity.h"
+#include "networkStatSimilarity.h"
+#endif
+
 #ifdef STAT_CLUSTER
 #include "StatCluster.h"
 #include "networkStatCluster.h"

@@ -21,20 +21,14 @@ int main(int argc, char **argv)
             ERROR();
             break;
         }
-        if(0 != net_betweenness(net) || 0 != net_modularity(net)){
-            ERROR();
-            break;
-        }
         if(0 != net_save(net)){
             ERROR();
             break;
         }
-        double qMax = 0;
-        if(0 != net_newman_modularity(qMax, net)){
+        if(0 != net_similarity(net)){
             ERROR();
             break;
         }
-        cout << qMax << endl;
     }while(0);
 
     SHOW_TIME(cout);    // 显示系统时间

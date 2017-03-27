@@ -189,6 +189,10 @@ class Network
         VVLinkType  moduLKK;    // 不同组之间连边数目
 #endif
 
+#ifdef STAT_SIMILARITY
+        VDouble     simiNodeCoef;   // 网络节点相似系数
+#endif
+
 #ifdef STAT_CLUSTER
         double      cluster_c;
         VDouble     cluster;    // clustering coefficient

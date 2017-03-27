@@ -172,11 +172,11 @@ class Network
 #endif  // STAT_KENDALLTAU
 
 #ifdef STAT_BETWEENNESS
-        double      bt, btEdge;
-        VDouble     betw;
-        VVDouble    betwEdge;
-        VVDistType  minDistMatr;
-        VDistType   minDistMean;
+        double      btNode, btEdge;   // 平均介数
+        VDouble     betwNode;         // 各点介数
+        VVDouble    betwEdge;     // 各边介数
+        VVDistType  minDistMatr;  // 最短距离
+        VDouble     minDistMean;  // 平均最短距离
 #endif
 
 #ifdef STAT_MODULARITY

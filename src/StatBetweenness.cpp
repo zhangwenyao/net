@@ -5,7 +5,7 @@
 using namespace std;
 
 //**//****************************************************//*
-int cal_betweenness0(VDouble &betw, VVDouble &betwEdge, double &bt, double& btEdge, VVDistType& minDistMatr, VDistType& minDistMean, const VVNodeType& p2p, const VVNodeType& p2pIn)
+int cal_betweenness0(VDouble &betwNode, VVDouble &betwEdge, double &btNode, double& btEdge, VVDistType& minDistMatr, VDouble& minDistMean, const VVNodeType& p2p, const VVNodeType& p2pIn)
 {
     if(p2p.size() <= 0 || p2pIn.size() <= 0){
         ERROR();
@@ -13,11 +13,11 @@ int cal_betweenness0(VDouble &betw, VVDouble &betwEdge, double &bt, double& btEd
     }
 
     const NodeType nodeSize = p2p.size() >= p2pIn.size() ? p2p.size() : p2pIn.size();
-    bt = 0;
-    btEdge = 0;
-    betw.assign(nodeSize, 0);
+    betwNode.assign(nodeSize, 0);
+    btNode = 0;
     betwEdge.assign(nodeSize, VDouble(nodeSize, 0));
-    minDistMatr.resize(nodeSize);
+    btEdge = 0;
+    minDistMatr.resize(nodeSize, VDistType(nodeSize, 0));
     minDistMean.assign(nodeSize, 0);
     if(nodeSize < 2) return 0;
 
@@ -33,39 +33,39 @@ int cal_betweenness0(VDouble &betw, VVDouble &betwEdge, double &bt, double& btEd
             continue;
         }
         d.assign(nodeSize, DistMax);   // 最短距离
-        wayNum.assign(nodeSize, 0);
         d[i] = 0;
+        wayNum.assign(nodeSize, 0);
         wayNum[i] = 1;
         nodeStk[0] = i;
         stk_head = 0;
         stk_end = 1;
         while(stk_head != stk_end){
             NodeType iTmp = nodeStk[stk_head];
-            for(VNodeTypeCItr itr = p2p[iTmp].begin(); itr != p2p[iTmp].end(); itr++){
+            for(VNodeTypeCItr itr = p2p[iTmp].begin(); itr != p2p[iTmp].end(); ++itr){
                 NodeType j = *itr;
-                if(d[j] > d[iTmp]){
-                    wayNum[j] += wayNum[iTmp];
-                    if(d[j] == nodeSize){
-                        d[j] = d[iTmp] + 1;
-                        nodeStk[stk_end++] = j;
-                    }
+                if(d[j] == DistMax){
+                  d[j] = d[iTmp] + 1;
+                  wayNum[j] = wayNum[iTmp];
+                  nodeStk[stk_end++] = j;
+                }else if(d[j] > d[iTmp]){
+                  wayNum[j] += wayNum[iTmp];
                 }
             }
             stk_head++;
         }
         minDistMatr[i] = d;
         for(VDistTypeItr t = minDistMatr[i].begin(); t != minDistMatr[i].end(); t++) if(*t == DistMax) *t = 0;
-        for(NodeType t = 1; t < stk_end; t++) minDistMean[i] += d[ nodeStk[t] ];
-        if(stk_end > 1) minDistMean[i] /= stk_end;
+        if(stk_end > 1){
+            for(NodeType t = 1; t < stk_end; t++) minDistMean[i] += d[ nodeStk[t] ];
+            minDistMean[i] /= (stk_end - 1);
+        }
 
         // 计算i节点出发的介数
         b.assign(nodeSize, 0);  // 介数
-        stk_head = 0;
-        stk_end--;
-        while(stk_end > stk_head){
-            NodeType jTmp = nodeStk[stk_end--];
+        while(stk_end-- > 0){
+            NodeType jTmp = nodeStk[stk_end];
             DistType dTmp = d[jTmp];
-            betw[jTmp] += b[jTmp];  // 累计介数
+            if(jTmp != i) betwNode[jTmp] += b[jTmp];  // 累计介数
             b[jTmp] += 1;
             double t = b[jTmp] / wayNum[jTmp];
             for(VNodeTypeCItr itr = p2pIn[jTmp].begin(); itr != p2pIn[jTmp].end(); itr++){
@@ -79,15 +79,18 @@ int cal_betweenness0(VDouble &betw, VVDouble &betwEdge, double &bt, double& btEd
     }
 
     // 归一化、统计介数
-    double t = 1. / nodeSize / (nodeSize - 1);
-    for(NodeType i = 0; i < nodeSize; i++)
-        for(NodeType j = 0; j < nodeSize; j++)
-            if(j != i) btEdge += betwEdge[i][j] *= t;
-    btEdge /= (double)nodeSize * (nodeSize - 1);
+    if(nodeSize > 1){
+        double t = 1. / nodeSize / (nodeSize - 1);
+        for(NodeType i = 0; i < nodeSize; i++){
+            for(NodeType j = 0; j < nodeSize; j++)
+                if(j != i) btEdge += betwEdge[i][j] *= t;
+            btEdge /= (nodeSize - 1.) * nodeSize;
+        }
+    }
     if(nodeSize > 2){
-        t = 1. / ((nodeSize - 1.) * (nodeSize - 2));
-        for(NodeType i = 0; i < nodeSize; i++) bt += betw[i] *= t;
-        bt /= nodeSize;
+        double t = 1. / (nodeSize - 1) / (nodeSize - 2);
+        for(NodeType i = 0; i < nodeSize; i++) btNode += betwNode[i] *= t;
+        btNode /= nodeSize;
     }
 
     return 0;
@@ -95,7 +98,7 @@ int cal_betweenness0(VDouble &betw, VVDouble &betwEdge, double &bt, double& btEd
 
 
 //**//****************************************************//*
-int cal_betweenness(VDouble  &betw, VVDouble &betwEdge, double &bt, double& btEdge, VVDistType& minDistMatr, VDistType& minDistMean, const VVNodeType& p2p, const VVNodeType& p2pIn, const VVDistType& linkMatr)
+int cal_betweenness(VDouble  &betwNode, VVDouble &betwEdge, double &btNode, double& btEdge, VVDistType& minDistMatr, VDouble& minDistMean, const VVNodeType& p2p, const VVNodeType& p2pIn, const VVDistType& linkMatr)
 {
     if(p2p.size() <= 0 || p2pIn.size() <= 0 || linkMatr.size() <= 0 || linkMatr.size() != p2p.size()){
         ERROR();
@@ -103,12 +106,11 @@ int cal_betweenness(VDouble  &betw, VVDouble &betwEdge, double &bt, double& btEd
     }
 
     const NodeType nodeSize = linkMatr.size();
-    bt = 0;
-    btEdge = 0;
-    betw.assign(nodeSize, 0);
-    betwEdge.clear();
+    betwNode.assign(nodeSize, 0);
+    btNode = 0;
     betwEdge.assign(nodeSize, VDouble(nodeSize, 0));
-    minDistMatr.resize(nodeSize);
+    btEdge = 0;
+    minDistMatr.resize(nodeSize, VDistType(nodeSize, 0));
     minDistMean.assign(nodeSize, 0);
     if(nodeSize < 2) return 0;
 
@@ -116,7 +118,6 @@ int cal_betweenness(VDouble  &betw, VVDouble &betwEdge, double &bt, double& btEd
     VDistType   d(nodeSize); // d:i-j最短距离
     VLinkType   wayNum(nodeSize); // i到j最短路径的数目
     VDouble     b(nodeSize);    // i节点出发的介数
-    NodeType    stk_end, stk_head;
     for(NodeType i = 0; i < nodeSize; i++){ // 计算从i节点出发的最短路径、介数
         if(p2p[i].size() <= 0){
             minDistMatr[i].assign(nodeSize, 0);
@@ -131,51 +132,63 @@ int cal_betweenness(VDouble  &betw, VVDouble &betwEdge, double &bt, double& btEd
         for(NodeType j = 1; j < nodeSize; j++)  nodeStk[j] = j;
         nodeStk[0] = i;
         nodeStk[i] = 0;
-        common_sort_p_val(&nodeStk[1], &nodeStk[nodeSize - 1], &linkMatr[i][0]);
+        //common_sort_p_val(&nodeStk[1], &nodeStk[nodeSize - 1], &linkMatr[i][0]);
         for(NodeType j = 0; j < nodeSize; j++)  stkNum[nodeStk[j]] = j;
 
-        // 广度搜索算法，计算最短距离、最短路径路径数目
-        stk_head = 0;
-        stk_end = 1;
-        while(stk_head != stk_end && stk_head < nodeSize){
+        // 广度搜索算法，计算最短距离、最短路径的路径数目
+        DistType dii = 0;
+        NodeType stk_end = 1;
+        for(NodeType stk_head = 0; stk_head != stk_end; ++stk_head){
             NodeType ii = nodeStk[stk_head];
-            DistType dii = d[ii];
+            if(dii < d[ii]){
+              dii = d[ii];
+            }
             for(VNodeTypeCItr itr = p2p[ii].begin(); itr != p2p[ii].end(); itr++){
-                NodeType j = *itr;
-                if(d[j] > dii + linkMatr[ii][j]){
-                    if(d[j] == DistMax) stk_end++;
+                NodeType j = *itr, jNum = stkNum[j];
+                if(jNum <= stk_head)  continue;
+                if(jNum >= stk_end || d[j] > dii + linkMatr[ii][j]){
+                    // d[j]变小，同步更新nodeStk、stkNum
                     d[j] = dii + linkMatr[ii][j];
                     wayNum[j] = wayNum[ii];
-                    // d[j]变小，同步更新nodeStk、stkNum
-                    NodeType stk_jj = stkNum[j];
-                    while(stk_jj > 0 && d[j] < d[nodeStk[stk_jj - 1]]){
-                        nodeStk[stk_jj] = nodeStk[stk_jj - 1];
-                        stkNum[nodeStk[stk_jj]] = stk_jj;
-                        stk_jj--;
+                    if(jNum >= stk_end){
+                      if(jNum > stk_end){
+                        nodeStk[jNum] = nodeStk[stk_end];
+                        stkNum[nodeStk[stk_end]] = jNum;
+                        nodeStk[stk_end] = j;
+                        stkNum[j] = stk_end;
+                      }
+                      stk_end++;
                     }
-                    if(stkNum[j] != stk_jj){
-                        nodeStk[stk_jj] = j;
-                        stkNum[j] = stk_jj;
+                    for(NodeType t = stk_end - 2, jj; t > stk_head; --t){
+                      jj = nodeStk[t];
+                      if(d[jj] <= d[j]){
+                        if(jNum != t){
+                          nodeStk[t] = j;
+                          stkNum[j] = t;
+                        }
+                        break;
+                      }
+                      nodeStk[t+1] = jj;
+                      ++stkNum[jj];
                     }
                 }else if(d[j] == dii + linkMatr[ii][j]){
                     wayNum[j] += wayNum[ii];
                 }
             }
-            stk_head++;
         }
         minDistMatr[i] = d;
         for(VDistTypeItr t = minDistMatr[i].begin(); t != minDistMatr[i].end(); t++) if(*t == DistMax) *t = 0;
-        for(NodeType t = 1; t < stk_end; t++) minDistMean[i] += d[ nodeStk[t] ];
-        if(stk_end > 1) minDistMean[i] /= stk_end;
+        if(stk_end > 1){
+            for(NodeType t = 1; t < stk_end; ++t) minDistMean[i] += d[ nodeStk[t] ];
+            minDistMean[i] /= (stk_end - 1);
+        }
 
         // 计算i节点出发的介数
         b.assign(nodeSize, 0);  // 介数
-        stk_head = 0;
-        stk_end--;
-        while(stk_end > stk_head){
-            NodeType jTmp = nodeStk[stk_end--];
+        while(stk_end-- > 0){
+            NodeType jTmp = nodeStk[stk_end];
             DistType dTmp = d[jTmp];
-            betw[jTmp] += b[jTmp];  // 累计介数
+            if(jTmp != i) betwNode[jTmp] += b[jTmp];  // 累计介数
             b[jTmp] += 1;
             double t = b[jTmp] / wayNum[jTmp];
             for(VNodeTypeCItr itr = p2pIn[jTmp].begin(); itr != p2pIn[jTmp].end(); itr++){
@@ -189,15 +202,17 @@ int cal_betweenness(VDouble  &betw, VVDouble &betwEdge, double &bt, double& btEd
     }
 
     // 归一化、统计介数
-    double t = 1. / nodeSize / (nodeSize - 1);
-    for(NodeType i = 0; i < nodeSize; i++)
-        for(NodeType j = 0; j < nodeSize; j++)
-            if(j != i) btEdge += betwEdge[i][j] *= t;
-    btEdge /= (double)nodeSize * (nodeSize - 1);
+    if(nodeSize > 1){
+        double t = 1. / nodeSize / (nodeSize - 1);
+        for(NodeType i = 0; i < nodeSize; i++)
+            for(NodeType j = 0; j < nodeSize; j++)
+                if(j != i) btEdge += betwEdge[i][j] *= t;
+        btEdge /= (nodeSize -1.) * nodeSize;
+    }
     if(nodeSize > 2){
-        double t = 1. / ((nodeSize - 1.) * (nodeSize - 2));
-        for(NodeType i = 0; i < nodeSize; i++) bt += betw[i] *= t;
-        bt /= nodeSize;
+        double t = 1. / (nodeSize - 1) / (nodeSize - 2);
+        for(NodeType i = 0; i < nodeSize; i++) btNode += betwNode[i] *= t;
+        btNode /= nodeSize;
     }
 
     return 0;

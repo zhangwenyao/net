@@ -96,7 +96,7 @@ Network::Network() :
 #endif  // STAT_SPEARMAN
 
 #ifdef STAT_BETWEENNESS
-    bt(0), btEdge(0),
+    btNode(0), btEdge(0),
 #endif
 
 #ifdef STAT_KENDALLTAU

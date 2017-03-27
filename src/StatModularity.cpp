@@ -5,31 +5,31 @@
 using namespace std;
 
 //**//****************************************************//*
-int save_moduStk(ostream& os, const VNodeType& moduStk, const VRNodeType& moduRange)
+int save_moduStk(ostream& os, const VNodeType& moduStk, const VRNodeType& moduRange, const char c)
 {
     if(!os) return -1;
-    const NodeType size = moduRange.size() - 1;
-    for(NodeType i = 1; i <= size; i++){
-        common_save(os, &moduStk[moduRange[i].start], moduRange[i].end - moduRange[i].start);
-        if(i < size) os << '\n';
+    const NodeType size = moduRange.size();
+    for(NodeType i = 0; i < size;){
+        common_save(os, &moduStk[moduRange[i].start], moduRange[i].end - moduRange[i].start, c);
+        if(++i < size) os << '\n';
     }
     return 0;
 }
 
-int save_moduStk(const VNodeType& moduStk, const VRNodeType& moduRange, const char *name)
+int save_moduStk(const VNodeType& moduStk, const VRNodeType& moduRange, const char *name, const char c)
 {
     if(name == NULL || name[0] == '\0') return -1;
     ofstream os(name);
     if(!os) return -1;
-    save_moduStk(os, moduStk, moduRange);
+    save_moduStk(os, moduStk, moduRange, c);
     os.close();
     return 0;
 }
 
 //**//****************************************************//*
-int modularity_move(const NodeType a, const NodeType b, VNodeType& moduVal, VNodeType& moduStk, VNodeType& moduNum, VRNodeType& moduRange)  // b组移到a组后面
+int modularity_move(const NodeType a, const NodeType b, VNodeType& moduStk, VNodeType& moduNum, VRNodeType& moduRange)  // b组移到a组后面
 {
-    if(a == b || moduRange[a].end != moduRange[b].start)    return 0;
+    if(a == b || moduRange[a].end == moduRange[b].start)    return 0;
     RNodeType ra = moduRange[a], rb = moduRange[b], r1, r2;
     NodeType a1, a2;
     if(a < b)   a1 = a, a2 = b, r1 = ra, r2 = rb;
@@ -58,7 +58,7 @@ int modularity_move(const NodeType a, const NodeType b, VNodeType& moduVal, VNod
 int modularity_merge(const NodeType a, const NodeType b, VNodeType& moduVal, VNodeType& moduStk, VNodeType& moduNum, VRNodeType& moduRange) // b组移到a组后面、合并
 {
     if(a == b)  return 0;
-    modularity_move(a, b, moduVal, moduStk, moduNum, moduRange);  // 移动
+    modularity_move(a, b, moduStk, moduNum, moduRange);  // 移动
     //合并
     RNodeType ra = moduRange[a], rb = moduRange[b], r1, r2;
     NodeType a1, a2;
@@ -68,7 +68,7 @@ int modularity_merge(const NodeType a, const NodeType b, VNodeType& moduVal, VNo
     moduRange.erase(moduRange.begin() + a2);
     // 更新的组号
     for(NodeType i = r2.start; i < r2.end; i++) moduVal[moduStk[i]] = a1;
-    for(NodeType num = a2; num <= moduRange.size() - 1; num++){
+    for(NodeType num = a2; num < moduRange.size(); num++){
         for(NodeType i = moduRange[num].start; i < moduRange[num].end; i++){
             moduVal[moduStk[i]] = num;
         }
@@ -79,7 +79,7 @@ int modularity_merge(const NodeType a, const NodeType b, VNodeType& moduVal, VNo
 int moduStk_sort(VNodeType& moduStk, VRNodeType& moduRange, VNodeType& moduNum)
 {
     const NodeType moduSize = moduRange.size();
-    for(NodeType i = 1; i < moduSize; i++) sort(moduStk.begin() + moduRange[i].start, moduStk.begin() + moduRange[i].end);
+    for(NodeType i = 0; i < moduSize; i++) sort(moduStk.begin() + moduRange[i].start, moduStk.begin() + moduRange[i].end);
     for(NodeType i = 0; i < moduStk.size(); i++) moduNum[moduStk[i]] = i;
     return 0;
 }
@@ -88,8 +88,8 @@ int moduStk_sort(VNodeType& moduStk, VRNodeType& moduRange, VNodeType& moduNum)
 int cal_modularity(VNodeType& moduVal, VNodeType& moduStk, VNodeType& moduNum, VRNodeType& moduRange, const VVNodeType &p2p, const VVNodeType& p2pIn, const int dirFlag)
 {
     const NodeType nodeSize = p2p.size();
-    NodeType moduSize = 0;
-    moduVal.assign(nodeSize, 0);
+    NodeType moduSize = nodeSize;
+    moduVal.assign(nodeSize, nodeSize);
     moduRange.clear();
     moduStk.resize(nodeSize);
     moduNum.resize(nodeSize);
@@ -102,15 +102,22 @@ int cal_modularity(VNodeType& moduVal, VNodeType& moduStk, VNodeType& moduNum, V
     moduRange.push_back(RNodeType(0, nodeSize));
     for(NodeType pos = 0, mEnd = 1; mEnd < nodeSize; pos++){
         NodeType i = moduStk[pos];
-        if(moduVal[i] == 0){
-            moduRange.rbegin()->end = pos;
-            moduRange.push_back(RNodeType(pos, nodeSize));
-            moduVal[i] = ++moduSize;
+        if(moduVal[i] == nodeSize){
+            // 新分组
+            if(moduRange.rbegin()->start != pos){
+              moduRange.rbegin()->end = pos;
+              moduRange.push_back(RNodeType(pos, nodeSize));
+            }else{
+              moduRange.rbegin()->end = nodeSize;
+            }
+            if(moduSize == nodeSize) moduSize = 0;
+            else ++moduSize;
+            moduVal[i] = moduSize;
             mEnd = pos + 1;
         }
         for(VNodeTypeCItr itr = p2p[i].begin(); itr != p2p[i].end(); itr++){
             const NodeType j = *itr;
-            if(moduVal[j] == 0){
+            if(moduVal[j] == nodeSize){
                 moduVal[j] = moduSize;
                 if(moduNum[j] != mEnd){
                     NodeType jPos = moduNum[j], k = moduStk[mEnd];  // j和moduStk[mEnd]调换位置
@@ -125,7 +132,7 @@ int cal_modularity(VNodeType& moduVal, VNodeType& moduStk, VNodeType& moduNum, V
         if(dirFlag){
             for(VNodeTypeCItr itr = p2pIn[i].begin(); itr != p2pIn[i].end(); itr++){
                 const NodeType j = *itr;
-                if(moduVal[j] == 0){
+                if(moduVal[j] == nodeSize){
                     moduVal[j] = moduSize;
                     if(moduNum[j] != mEnd){
                         NodeType jPos = moduNum[j], k = moduStk[mEnd];  // j和moduStk[mEnd]调换位置
@@ -205,41 +212,58 @@ int update_modularity_iNode(const NodeType i, VNodeType& moduVal, VNodeType& mod
 }
 
 //**//****************************************************//*
-int cal_moduLKK(VVLinkType& moduLKK, const NodeType moduSize, const VNodeType& moduVal, const VVNodeType& p2p)
+int cal_moduLKK(VVLinkType& moduLKK, const NodeType moduSize, const VNodeType& moduVal, const VVNodeType& p2p, const int dirFlag)
 {
     moduLKK.resize(moduSize);
     moduLKK[0].assign(moduSize, 0);
-    for(NodeType i = 0; i < moduSize; i++) moduLKK[i] = moduLKK[0];
+    for(NodeType i = 1; i < moduSize; i++) moduLKK[i] = moduLKK[0];
     for(NodeType i = 0; i < p2p.size(); i++){
-        for(NodeType n = 0, iVal = moduVal[i] - 1; n < p2p[i].size(); n++){
-            NodeType jVal = moduVal[p2p[i][n]] - 1;
-            moduLKK[iVal][jVal]++;
+        for(NodeType n = 0; n < p2p[i].size(); n++){
+            NodeType j = p2p[i][n];
+            if(dirFlag || i > j){
+              moduLKK[moduVal[i]][moduVal[j]]++;
+            }
         }
     }
     return 0;
 }
 
-int cal_moduCoef(double& moduCoef, const VVLinkType& moduLKK, const LinkType& linkSize)
+int cal_moduCoef(double& moduCoef, const VVLinkType& moduLKK, const int dirFlag)
 {
     const NodeType moduSize = moduLKK.size();
     if(moduSize <= 1){
-        moduCoef = 1.;
+        moduCoef = 0;
         return 0;
     }
-    double eii = 0, ab = 0;
-    for(NodeType i = 0; i < moduSize; i++){
-        eii += (double)moduLKK[i][i] * moduLKK[i][i];
-        double ai = 0, bi = 0;
-        for(NodeType j = 0; j < moduSize; j++){
-            ai += moduLKK[i][j];
-            bi += moduLKK[j][i];
+    if(!dirFlag){
+        double eii = 0, aii = 0;
+        LinkType linkSize2 = 0;
+        for(NodeType i = 0; i < moduSize; i++){
+            eii += (double)moduLKK[i][i];   // I
+            LinkType ai = moduLKK[i][i] * 2;    // 2I + O
+            for(NodeType j = 0; j < i; j++)
+                ai += moduLKK[i][j];
+            aii += ai * ai;
+            linkSize2 += ai;
         }
-        ab += ai * bi;
+        if(linkSize2 <= 0) moduCoef = 0;
+        else moduCoef = 2. * eii / linkSize2 - aii / linkSize2 / linkSize2;
+    }else{
+        double eii = 0, aij = 0;
+        LinkType linkSize = 0;
+        for(NodeType i = 0; i < moduSize; i++){
+            eii += (double)moduLKK[i][i];   // I
+            LinkType ai = 0, aj = 0;    // I + O
+            for(NodeType j = 0; j < moduSize; j++){
+                ai += moduLKK[i][j];
+                aj += moduLKK[j][i];
+            }
+            aij += ai * aj;
+            linkSize += ai;
+        }
+        if(linkSize <= 0) moduCoef = 0;
+        else moduCoef = eii / linkSize - aij / linkSize / linkSize;
     }
-    moduCoef = eii - ab;
-    ab = (double)linkSize * linkSize - ab;
-    if(ab <= 0) moduCoef = 0;
-    else moduCoef /= ab;
     return 0;
 }
 

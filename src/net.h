@@ -11,24 +11,24 @@
 
 const std::string NET_VERSION = "net2.0: " __DATE__ ", " __TIME__;
 //**//*****************************************************//*
-#define NET_DEGREE  // 节点度分布
+//#define NET_DEGREE  // 节点度分布
 //#define DEG_POISSON // 泊松分布
-#define DEG_POWER  // 幂律分布
+//#define DEG_POWER  // 幂律分布
 
-#define NET_EXTREMUM    // 特例网络
+//#define NET_EXTREMUM    // 特例网络
 //#define NET_RANDOM      // 随机网络
 //#define NET_BA          // BA网络
 //#define NET_GRID        // 网格网络
 
-const bool STAT_TYPE_DIRAA = 0;  // 0:OutIn, 1: OutIn OutOut InOut InIn
-#define STAT_PEARSON
-#define STAT_SPEARMAN
+//const bool STAT_TYPE_DIRAA = 0;  // 0:OutIn, 1: OutIn OutOut InOut InIn
+//#define STAT_PEARSON
+//#define STAT_SPEARMAN
 //#define MODEL_GAUSS
 //#define MODEL_EXP
 
 //#define STAT_KENDALLTAU
-//#define STAT_BETWEENNESS
-//#define STAT_MODULARITY
+#define STAT_BETWEENNESS
+#define STAT_MODULARITY
 //#define STAT_CLUSTER
 
 //#define ACT_RECOMMEND
@@ -221,6 +221,7 @@ int lkk_2_lkkSum(VVLinkType& lkkSum, const VVLinkType& lkk, const int dir);
 int link_2_nodeSize(NodeType& nodeSize, const VNodeType& link);
 int link_2_p2p(VVNodeType& p2p, const VNodeType& link, VVNodeType& p2pIn, NodeType& nodeSize, const int dirFlag);
 int link_2_p2p_out(VVNodeType& p2p, const VNodeType& link, NodeType& nodeSize, const int dirFlag);
+int link_2_p2p_out_linkSize(VVNodeType& p2p, const VNodeType& link, NodeType& nodeSize, LinkType linkSize, const int dirFlag);
 int link_2_p2p_in(VVNodeType& p2pIn, const VNodeType& link, NodeType& nodeSize, const int dirFlag);
 int p2p_2_link(VNodeType& link, const VVNodeType& p2p, const int dirFlag);
 int vvweight_2_vvweightIn(VVWeightType& vvweightIn, const VVWeightType& vvweight, const VVNodeType& p2p);
@@ -242,7 +243,7 @@ int qsort_p2p(VVNodeType& p2p, const VVDistType& linkMatr);
 int del_pij(const NodeType i, const NodeType j, VVNodeType& p2p, VVNodeType& p2pIn, const int dirFlag);
 int add_pij(const NodeType i, const NodeType j, VVNodeType& p2p, VVNodeType& p2pIn, const int dirFlag);
 
-int sort_link_betwEdge(VNodeType& link, VVDouble& betwEdge);
+int sort_link_betwEdge(VNodeType& link, VVDouble& betwEdge, LinkType linkSize = 0);
 
 //**//*****************************************************//*
 int addLink_linkMatrC_ranNode(VVChar& linkMatrC, LinkType& linkRemain);	// 每次直接随机抽取两个点连边

@@ -811,7 +811,7 @@ struct Common_RangeP
     template <typename Tp, typename T2>
 void common_sort_p_val(Tp p, Tp p2, const T2 *const val)
 {
-    if(p + 2 > p2) return;
+    if(p + 1 > p2) return;
     std::stack<Common_RangeP<Tp> > st;
     st.push(Common_RangeP<Tp>(p, p2 - 1));
     while(!st.empty()){

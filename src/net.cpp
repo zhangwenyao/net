@@ -504,11 +504,17 @@ int link_2_p2p(VVNodeType& p2p, const VNodeType& link, VVNodeType& p2pIn, NodeTy
 
 int link_2_p2p_out(VVNodeType& p2p, const VNodeType& link, NodeType& nodeSize, const int dirFlag)
 {
+  return link_2_p2p_out_linkSize(p2p, link, nodeSize, link.size()/2, dirFlag);
+}
+
+int link_2_p2p_out_linkSize(VVNodeType& p2p, const VNodeType& link, NodeType& nodeSize, LinkType linkSize, const int dirFlag)
+{
     p2p.clear();
     link_2_nodeSize(nodeSize, link);
     p2p.resize(nodeSize);
-    for(LinkType n = 0; n < link.size(); n += 2){
-        NodeType i = link[n], j = link[n + 1];
+    if(linkSize > link.size()) linkSize = link.size();
+    for(LinkType n = 0; n < linkSize; ++n){
+        NodeType i = link[n*2], j = link[n*2 + 1];
         p2p[i].push_back(j);
         if(!dirFlag) p2p[j].push_back(i);
     }
@@ -765,13 +771,13 @@ int add_pij(const NodeType i, const NodeType j, VVNodeType& p2p, VVNodeType& p2p
     return 0;
 }
 
-int sort_link_betwEdge(VNodeType& link, VVDouble& betwEdge)
+int sort_link_betwEdge(VNodeType& link, VVDouble& betwEdge, LinkType linkSize)
 {
-    const LinkType linkSize2 = link.size();
-    if(linkSize2 < 4) return 0;
+    if(linkSize == 1 || link.size() < 4) return 0;
+    if(linkSize < 1) linkSize = link.size() / 2;
 
     stack<Common_RangeP<PNodeType> > st;
-    st.push(Common_RangeP<PNodeType>(&link.front(), &link.back()-1));
+    st.push(Common_RangeP<PNodeType>(&link.front(), &link.front() + (linkSize - 1) * 2));
     while(!st.empty()){
         Common_RangeP<PNodeType> range = st.top();
         st.pop();

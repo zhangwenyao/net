@@ -5,25 +5,34 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    SHOW_TIME(cout);    // ÏÔÊ¾ÏµÍ³Ê±¼ä
+    SHOW_TIME(cout);    // æ˜¾ç¤ºç³»ç»Ÿæ—¶é—´
 
     //**//****************************************************//*
     do{
         Network net;
-        net.saveName = net.readName = "data/Max_power2.5";
-        net.nodeSize = 1024;    // ½ÚµãÊı
-        net.Pow_gamma = 2.5;    // ¶È·Ö²¼ÃİÂÉ·Ö²¼µÄÃİÖ¸Êı
-        net.kMin = 4;   // ×îĞ¡¶È
-        net.kMax = net.kMin + sqrt(net.nodeSize) - 1;   // ×î´ó¶È
-        //while(0 == (net.seed = RAND2_INIT(net.seed)));    // ³õÊ¼»¯Ëæ»úÊıÖÖ×Ó
-        net.seed = RAND2_INIT(1);    // ³õÊ¼»¯Ëæ»úÊıÖÖ×Ó
-        if(0 != net_run(net, "cal_deg power cal_p2p Max stat save")){
+        net.saveName = net.readName = "data/link-matrix2";
+        //net.nodeSize = 1024;    // èŠ‚ç‚¹æ•°
+        //net.Pow_gamma = 2.5;    // åº¦åˆ†å¸ƒå¹‚å¾‹åˆ†å¸ƒçš„å¹‚æŒ‡æ•°
+        //net.kMin = 4;   // æœ€å°åº¦
+        //net.kMax = net.kMin + sqrt(net.nodeSize) - 1;   // æœ€å¤§åº¦
+        //while(0 == (net.seed = RAND2_INIT(net.seed)));    // åˆå§‹åŒ–éšæœºæ•°ç§å­
+        //net.seed = RAND2_INIT(1);    // åˆå§‹åŒ–éšæœºæ•°ç§å­
+        if(0 != net_read_linkMatr_0(net, "data/link-matrix2.txt") || 0 != linkMatr_2_p2p(net.p2p, net.linkMatr) || 0 != net_p2p_2_degArr(net)){
+            ERROR();
+            break;
+        }
+        if(0 != net_betweenness(net) || 0 != net_newman_modularity(net)){
+        //if(0 != net_newman_modularity(net)){
+            ERROR();
+            break;
+        }
+        if(0 != net_save(net)){
             ERROR();
             break;
         }
     }while(0);
 
-    SHOW_TIME(cout);    // ÏÔÊ¾ÏµÍ³Ê±¼ä
+    SHOW_TIME(cout);    // æ˜¾ç¤ºç³»ç»Ÿæ—¶é—´
     return 0;
 }
 

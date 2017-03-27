@@ -34,11 +34,13 @@ int net_save_modularity(const Network& net, const char *name)
     if(!net.moduVal.empty()) f |= common_save1((fn + "_moduVal.txt").c_str(), net.moduVal, net.priChar);
     if(!net.moduLKK.empty()) f |= common_save2((fn + "_moduLKK.txt").c_str(), net.moduLKK, net.priChar2);
     if(!net.moduStk.empty()) f |= net_save_moduStk(net, (fn + "_moduStk.txt").c_str(), net.priChar2);
+    if(!net.moduNodeCoef.empty()) f |= common_save1((fn + "_moduNodeCoef.txt").c_str(), net.moduNodeCoef, net.priChar);
     return f;
 }
 //**//****************************************************//*
 int net_clear_modularity(Network& net)
 {
+    net.moduNodeCoef.clear();
     net.moduVal.clear();
     net.moduStk.clear();
     net.moduNum.clear();
@@ -67,6 +69,7 @@ int net_modularity(Network &net)
     f |= moduStk_sort(net.moduStk, net.moduRange, net.moduNum);
     f |= cal_moduLKK(net.moduLKK, net.moduRange.size() , net.moduVal, net.p2p, net.dirFlag);
     f |= cal_moduCoef(net.moduCoef, net.moduLKK, net.dirFlag);
+    f |= cal_moduNodeCoef(net.moduNodeCoef, net.moduRange.size(), net.moduVal, net.p2p);
     return f;
 }
 
@@ -79,10 +82,10 @@ int net_cal_modularity(Network &net)
 #ifdef STAT_BETWEENNESS
 #include "StatBetweenness.h"
 #include "networkStatBetweenness.h"
-int net_newman_modularity(Network& net, NodeType mSize)
+int net_newman_modularity(double &qMax, Network& net, NodeType mSize)
 {
     if(mSize <= 0) mSize = net.nodeSize;
-    double qMax = 0;
+    qMax = 0;
     if(mSize <= 1){
         qMax = 1;
         ERROR();
@@ -102,7 +105,6 @@ int net_newman_modularity(Network& net, NodeType mSize)
         cal_moduCoef(net.moduCoef, net.moduLKK, net.dirFlag);  // 新分组系数
         if(net.moduCoef > qMax) qMax = net.moduCoef;
     }
-    cout << qMax << endl;
     return 0;
 }
 #endif

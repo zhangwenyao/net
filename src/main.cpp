@@ -10,19 +10,18 @@ int main(int argc, char **argv)
     //**//****************************************************//*
     do{
         Network net;
-        net.saveName = net.readName = "data/link-matrix2";
+        net.saveName = net.readName = "data/link-matrix";
         //net.nodeSize = 1024;    // 节点数
         //net.Pow_gamma = 2.5;    // 度分布幂律分布的幂指数
         //net.kMin = 4;   // 最小度
         //net.kMax = net.kMin + sqrt(net.nodeSize) - 1;   // 最大度
         //while(0 == (net.seed = RAND2_INIT(net.seed)));    // 初始化随机数种子
         //net.seed = RAND2_INIT(1);    // 初始化随机数种子
-        if(0 != net_read_linkMatr_0(net, "data/link-matrix2.txt") || 0 != linkMatr_2_p2p(net.p2p, net.linkMatr) || 0 != net_p2p_2_degArr(net)){
+        if(0 != net_read_linkMatr_0(net, "data/link-matrix.txt") || 0 != linkMatr_2_p2p(net.p2p, net.linkMatr) || 0 != net_p2p_2_degArr(net)){
             ERROR();
             break;
         }
-        if(0 != net_betweenness(net) || 0 != net_newman_modularity(net)){
-        //if(0 != net_newman_modularity(net)){
+        if(0 != net_betweenness(net) || 0 != net_modularity(net)){
             ERROR();
             break;
         }
@@ -30,6 +29,12 @@ int main(int argc, char **argv)
             ERROR();
             break;
         }
+        double qMax = 0;
+        if(0 != net_newman_modularity(qMax, net)){
+            ERROR();
+            break;
+        }
+        cout << qMax << endl;
     }while(0);
 
     SHOW_TIME(cout);    // 显示系统时间

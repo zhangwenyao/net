@@ -267,5 +267,29 @@ int cal_moduCoef(double& moduCoef, const VVLinkType& moduLKK, const int dirFlag)
     return 0;
 }
 
+int cal_moduNodeCoef(VDouble& moduNodeCoef, const NodeType moduSize, const VNodeType& moduVal, const VVNodeType& p2p)
+{
+    const NodeType nodeSize = p2p.size();
+    VNodeType s;
+    moduNodeCoef.clear();
+    if(nodeSize < 1){
+        return 0;
+    }
+    moduNodeCoef.assign(nodeSize, 0);
+    for(NodeType i = 0, si; i < nodeSize; ++i){
+        si = p2p[i].size();
+        if(si <= 0)
+            continue;
+        s.assign(moduSize, 0);
+        for(VNodeTypeCItr itr = p2p[i].begin(); itr != p2p[i].end(); ++itr)
+            ++s[moduVal[*itr]];
+        double t = 0;
+        for(NodeType n = 0; n < moduSize; ++n)
+            t += (double) s[n] * s[n];
+        moduNodeCoef[i] = 1 - t / si / si;
+    }
+    return 0;
+}
+
 //**//****************************************************//*
 #endif  // STAT_MODULARITY

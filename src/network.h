@@ -180,7 +180,8 @@ class Network
 #endif
 
 #ifdef STAT_MODULARITY
-        double      moduCoef;   // 分组系数
+        double      moduCoef;   // 网络分组系数Q
+        VDouble     moduNodeCoef;   // 节点分组系数P
         VNodeType   moduVal;    // 各节点分组的序号
         VNodeType   moduStk;    // 按分组序号排列的节点编号
         VNodeType   moduNum;    // 节点在moduStk中的位置

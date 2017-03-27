@@ -19,7 +19,7 @@ int net_modularity(Network &net);
 int net_cal_modularity(Network &net);
 
 #ifdef STAT_BETWEENNESS
-int net_newman_modularity(Network& net, NodeType mSize = 0);
+int net_newman_modularity(double &qMax, Network& net, NodeType mSize = 0);
 #endif
 //**//****************************************************//*
 #endif  // STAT_MODULARITY

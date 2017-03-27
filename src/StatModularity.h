@@ -17,7 +17,8 @@ int cal_modularity(VNodeType& moduVal, VNodeType& moduStk, VNodeType& moduNum, V
 int update_modularity_iNode(const NodeType i, VNodeType& moduVal, VNodeType& moduStk, VNodeType& moduNum, VRNodeType& moduRange, const VVNodeType &p2p, const VVNodeType& p2pIn, const int dirFlag = 0);    // 更新节点i所在分组
 
 int cal_moduLKK(VVLinkType& moduLKK, const NodeType moduSize, const VNodeType& moduVal, const VVNodeType& p2p, const int dirFlag = 0); // 统计不同组之间连边数
-int cal_moduCoef(double& moduCoef, const VVLinkType& moduLKK, const int dirFlag);  // 计算分组系数
+int cal_moduCoef(double& moduCoef, const VVLinkType& moduLKK, const int dirFlag);  // 计算分组系数Q
+int cal_moduNodeCoef(VDouble& moduNodeCoef, const NodeType moduSize, const VNodeType& moduVal, const VVNodeType& p2p); // 计算节点分组系数P
 
 //**//****************************************************//*
 #endif  // STAT_MODULARITY

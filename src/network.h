@@ -190,7 +190,8 @@ class Network
 #endif
 
 #ifdef STAT_SIMILARITY
-        VDouble     simiNodeCoef;   // 网络节点相似系数
+        VVDouble     simiNodeCoef;   // 网络节点相似系数
+        VVDouble     simiEdgeCoef;   // 网络连边相似系数
 #endif
 
 #ifdef STAT_CLUSTER

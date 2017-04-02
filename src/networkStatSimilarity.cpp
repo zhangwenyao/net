@@ -34,6 +34,7 @@ int net_save_similarity(const Network& net, const char *name)
 int net_clear_modularity(Network& net)
 {
     net.simiNodeCoef.clear();
+    net.simiEdgeCoef.clear();
     return 0;
 }
 

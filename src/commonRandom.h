@@ -27,7 +27,7 @@ const int RAND2_MAX = RAND16807_MAX - 1;
 const int  RAND2_MAX = RAND_MAX;
 #else   //RAND_MAX <= 32767
 #if RAND_MAX == 32767
-#define RAND2() ((rand() << 15 + rand()) //rand()*32768+rand()
+#define RAND2() ((rand() << 15) + rand()) //rand()*32768+rand()
 const int RAND2_MAX = 1073741823;	//((RAND_MAX << 15) + RAND_MAX)
 #else   //RAND_MAX < 32767
 #define RAND2() (rand() * (RAND_MAX + 1) + rand())

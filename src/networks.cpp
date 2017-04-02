@@ -832,6 +832,8 @@ int net_cal_p2p(Network& net, const string& s)
             }
 #endif
 
+    // TODO: lkk_2_p2p // lkk生成p2p
+
 #ifdef NET_RANDOM
             if(s == "ER"){
                 net.status = net_ER(net);

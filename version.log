@@ -4,4 +4,5 @@
 2015.12.01	lkk交叉换边求最大同配、异配网络；无向网络利用lkk统计pearson、spearman系数
 2015.12.10	MinLkk,MinLkkFix, MinLkkP2p,MinlkkP2pFix
 2016.03.14	economic complexity
-
+2017.03.27	modularity
+2017.04.02	similarity

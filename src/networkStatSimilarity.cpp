@@ -27,7 +27,8 @@ int net_save_similarity(const Network& net, const char *name)
         fn = net.saveName + '_' + ss.str();
     }
     int f = 0;
-    if(!net.simiNodeCoef.empty()) f |= common_save1((fn + "_simiNodeCoef.txt").c_str(), net.simiNodeCoef, net.priChar);
+    if(!net.simiNodeCoef.empty()) f |= common_save2((fn + "_simiNodeCoef.txt").c_str(), net.simiNodeCoef, net.priChar2);
+    if(!net.simiEdgeCoef.empty()) f |= common_save2((fn + "_simiEdgeCoef.txt").c_str(), net.simiEdgeCoef, net.priChar2);
     return f;
 }
 //**//****************************************************//*
@@ -39,11 +40,19 @@ int net_clear_modularity(Network& net)
 }
 
 //**//****************************************************//*
-int net_similarity(Network &net)
+#include "net.h"
+int net_similarity(Network &net, Network &net2)
 {
+    if(net.dirFlag != net2.dirFlag){
+        ERROR();
+        return -1;
+    }
+    if(net.link.empty()) p2p_2_link(net.link, net.p2p, net.dirFlag);
+    if(net2.link.empty()) p2p_2_link(net2.link, net2.p2p, net2.dirFlag);
     int f = 0;
-    f = cal_similarity();
-    cout << "TODO: similarity" << endl;
+    net.simiNodeCoef.resize(net.nodeSize);
+    net.simiNodeCoef[0].resize(net2.nodeSize);
+    f = cal_similarity(net.simiNodeCoef, net.simiEdgeCoef, net.link, net2.link, net.dirFlag);
     return f;
 }
 

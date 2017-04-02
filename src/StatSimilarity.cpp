@@ -5,69 +5,83 @@
 using namespace std;
 
 //**//****************************************************//*
-int cal_similarity(VVDouble &simiNodeCoef, VVDouble &simiEdgeCoef, const VVNodeType& p2p1, const VVNodeType& p2pIn1, const VNodeType& link1, const VVLinkType& p2p1_linkPos, const VVLinkType& p2pIn1_linkPos, const VVNodeType& p2p2, const VVNodeType& p2pIn2, const VNodeType& link2, const VVLinkType& p2p2_linkPos, const VVLinkType& p2pIn2_linkPos, const int dirFlag)
+int cal_similarity(VVDouble &simiNodeCoef, VVDouble &simiEdgeCoef, const VNodeType& link1, const VNodeType& link2, const int dirFlag)
 {
-    VVDouble x, y;
-    double xSum0 = 1, xSum = 0, ySum0 = 1, ySum = 0;
+    double x2Sum0 = 0.5, x2Sum = 1, y2Sum0 = 0.5, y2Sum = 1, delta = 1.0e-14;
     const NodeType n1 = simiNodeCoef.size(), n2 = simiNodeCoef[0].size();
-    x.resize(n1, VDouble(n2, 1));
-    const LinkType l1 = simiEdgeCoef.size(), l2 = simiEdgeCoef[0].size();
-    y.assign(l1, VDouble(l2, 1));
-    while(!(0.999 * xSum0 < xSum && xSum < 1.001 * xSum0) || !(0.999 * ySum0 < ySum && ySum < 1.001 * ySum0)){
-        xSum0 = xSum;
-        ySum0 = ySum;
-        cal_similarity_update(simiNodeCoef, simiEdgeCoef, p2p1, p2pIn1, link1, p2p1_linkPos, p2pIn1_linkPos, p2p2, p2pIn2, link2, p2p2_linkPos, p2pIn2_linkPos, x, xSum, y, ySum, dirFlag);
+    const LinkType l1 = link1.size() / 2, l2 = link2.size() / 2;
+    VVDouble x, y;
+    x.resize(n1);
+    for(NodeType i = 0; i < n1; ++i) x[i].assign(n2, 1);
+    simiNodeCoef = x;
+    y.resize(l1);
+    for(NodeType i = 0; i < l1; ++i) y[i].assign(l2, 1);
+    simiEdgeCoef = y;
+    for(const double d1 = 1 - delta, d2 = 1 + delta; x2Sum0 > 0 && y2Sum0 > 0 && (d1 * x2Sum0 > x2Sum || x2Sum > d2 * x2Sum0 || d1 * y2Sum0 > y2Sum || y2Sum > d2 * y2Sum0);){
+        x2Sum0 = x2Sum;
+        y2Sum0 = y2Sum;
+        cal_similarity_update(simiNodeCoef, simiEdgeCoef, link1, link2, x, x2Sum, y, y2Sum, dirFlag);
     }
     return 0;
 }
 
-int cal_similarity_update(VVDouble &simiNodeCoef, VVDouble &simiEdgeCoef, const VVNodeType& p2p1, const VVNodeType& p2pIn1, const VNodeType& link1, const VVLinkType& p2p1_linkPos, const VVLinkType& p2pIn1_linkPos, const VVNodeType& p2p2, const VVNodeType& p2pIn2, const VNodeType& link2, const VVLinkType& p2p2_linkPos, const VVLinkType& p2pIn2_linkPos, VVDouble &x, double &xSum, VVDouble &y, double &ySum, const int dirFlag)
+int cal_similarity_update(VVDouble &simiNodeCoef, VVDouble &simiEdgeCoef, const VNodeType& link1, const VNodeType& link2, VVDouble &x, double &x2Sum, VVDouble &y, double &y2Sum, const int dirFlag)
 {
-    const LinkType l1 = simiEdgeCoef.size(), l2 = simiEdgeCoef[0].size();
-    for(NodeType p = 0; p < l1; ++p)
-        for(NodeType q = 0; q < l2; ++q){
-            y[p][q] = simiNodeCoef[link1[p*2]][link2[q*2]] + simiNodeCoef[link1[p*2 + 1]][link2[q*2 + 1]];
-        }
-
     const NodeType n1 = simiNodeCoef.size(), n2 = simiNodeCoef[0].size();
+    const LinkType l1 = link1.size() / 2, l2 = link2.size() / 2;
+    //double xSum = 0, ySum = 0;
+    x2Sum = y2Sum = 0;
     for(NodeType i = 0; i < n1; ++i)
-        for(NodeType j = 0; j < n2; ++j){
+        for(NodeType j = 0; j < n2; ++j)
             x[i][j] = 0;
-            for(NodeType k = 0; k < p2p1[i].size(); ++k)
-                for(NodeType l = 0; l < p2p2[j].size(); ++l){
-                    x[i][j] += simiEdgeCoef[p2p1_linkPos[i][k]][p2p2_linkPos[j][l]];
-                }
-        }
     if(dirFlag){
-        for(NodeType i = 0; i < n1; ++i)
-            for(NodeType j = 0; j < n2; ++j){
-                for(NodeType k = 0; k < p2pIn1[i].size(); ++k)
-                    for(NodeType l = 0; l < p2pIn2[j].size(); ++l){
-                        x[i][j] += simiEdgeCoef[p2pIn1_linkPos[i][k]][p2pIn2_linkPos[j][l]];
-                    }
+        for(NodeType p = 0; p < l1; ++p){
+            const NodeType ps = link1[p * 2], pt = link1[p * 2 + 1];
+            for(NodeType q = 0; q < l2; ++q){
+                const NodeType qs = link2[q * 2], qt = link2[q * 2 + 1];
+                x[ps][qs] += simiEdgeCoef[p][q];
+                x[pt][qt] += simiEdgeCoef[p][q];
+                y[p][q] = simiNodeCoef[ps][qs] + simiNodeCoef[pt][qt];
+                // ySum += y[p][q];
+                y2Sum += y[p][q] * y[p][q];
             }
+        }
+    }else{
+        for(NodeType p = 0; p < l1; ++p){
+            const NodeType ps = link1[p * 2], pt = link1[p * 2 + 1];
+            for(NodeType q = 0; q < l2; ++q){
+                const NodeType qs = link2[q * 2], qt = link2[q * 2 + 1];
+                const double x0 = simiEdgeCoef[p][q];
+                x[ps][qs] += x0;
+                x[ps][qt] += x0;
+                x[pt][qs] += x0;
+                x[pt][qt] += x0;
+                y[p][q] = simiNodeCoef[ps][qs] + simiNodeCoef[pt][qt] + simiNodeCoef[ps][qt] + simiNodeCoef[pt][qs];
+                // ySum += y[p][q];
+                y2Sum += y[p][q] * y[p][q];
+            }
+        }
     }
 
-    ySum = 0;
-    for(NodeType p = 0; p < l1; ++p)
-        for(NodeType q = 0; q < l2; ++q)
-            ySum += y[p][q];
-    if(ySum > 0){
+    if(y2Sum > 0){
+        const double t = sqrt(1. / y2Sum);
         for(NodeType p = 0; p < l1; ++p)
             for(NodeType q = 0; q < l2; ++q)
-                simiEdgeCoef[p][q] = y[p][q] / ySum;
+                simiEdgeCoef[p][q] = y[p][q] > 0 ? y[p][q] * t : 0;
     }else{
         simiEdgeCoef = y;
     }
 
-    xSum = 0;
     for(NodeType i = 0; i < n1; ++i)
-        for(NodeType j = 0; j < n2; ++j)
-            xSum += x[i][j];
-    if(xSum > 0){
+        for(NodeType j = 0; j < n2; ++j){
+            //xSum += x[i][j];
+            x2Sum += x[i][j] * x[i][j];
+        }
+    if(x2Sum > 0){
+        const double t = sqrt(1. / x2Sum);
         for(NodeType i = 0; i < n1; ++i)
             for(NodeType j = 0; j < n2; ++j)
-                simiNodeCoef[i][j] = x[i][j] / xSum;
+                simiNodeCoef[i][j] = x[i][j] > 0 ? x[i][j] * t : 0;
     }else{
         simiNodeCoef = x;
     }

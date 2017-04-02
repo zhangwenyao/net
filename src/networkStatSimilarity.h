@@ -12,7 +12,7 @@ int net_save_similarity(const Network& net, const char* name = NULL);
 
 int net_clear_similarity(Network& net);
 
-int net_similarity(Network &net);
+int net_similarity(Network &net, Network &net2);
 int net_cal_similarity(Network &net);
 
 //**//****************************************************//*

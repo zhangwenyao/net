@@ -373,8 +373,8 @@ int net_save(const Network& net, const char *name)
 
     int f = 0;
     f |= net_save_params(net, (fn + "_params.txt").c_str());
-    f |= net_save_deg(net, fn.c_str());
-    f |= net_save_p2p(net, fn.c_str());
+    //f |= net_save_deg(net, fn.c_str());
+    //f |= net_save_p2p(net, fn.c_str());
 
 #ifdef STAT_BETWEENNESS
     f |= net_save_betweenness(net, fn.c_str());
@@ -382,6 +382,10 @@ int net_save(const Network& net, const char *name)
 
 #ifdef STAT_MODULARITY
     f |= net_save_modularity(net, fn.c_str());
+#endif
+
+#ifdef STAT_SIMILARITY
+    f |= net_save_similarity(net, fn.c_str());
 #endif
 
 #ifdef STAT_PEARSON

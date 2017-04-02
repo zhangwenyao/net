@@ -398,19 +398,19 @@ int net_save_p2p(const Network& net, const char *name)
         ss << net.seed;
         fn = net.saveName + '_' + ss.str();
     }
-    //if(!net.p2p.empty() && 0 != common_save2((fn + "_p2p.txt").c_str(), net.p2p, net.priChar2)) ERROR();
+    if(!net.p2p.empty() && 0 != common_save2((fn + "_p2p.txt").c_str(), net.p2p, net.priChar2)) ERROR();
 
     // link
-    //if(!net.link.empty() && 0 != common_save2((fn + "_link.txt").c_str(), &net.link[0], net.linkSize, 2, net.priChar2)) ERROR();
+    if(!net.link.empty() && 0 != common_save2((fn + "_link.txt").c_str(), &net.link[0], net.linkSize, 2, net.priChar2)) ERROR();
 
-    //if(net.linkMatr.size() > 0){
-    //if(0 != common_save2((fn + "_linkMatr.txt").c_str(), net.linkMatr, net.priChar2)) ERROR();
-    //}
-    //if(net.status == -2 && 0 !=common_save1((fn + "_p2pSize.txt").c_str(), net.p2pSize)) ERROR();
+    if(net.linkMatr.size() > 0){
+        if(0 != common_save2((fn + "_linkMatr.txt").c_str(), net.linkMatr, net.priChar2)) ERROR();
+    }
+    if(net.status == -2 && 0 !=common_save1((fn + "_p2pSize.txt").c_str(), net.p2pSize)) ERROR();
 
     if(!net.lkk.empty() && 0 != common_save2((fn + "_lkk.txt").c_str(), net.lkk, net.priChar2)) ERROR();
 
-    //if(net.weightFlag && !net.vvweight.empty() && 0 != common_save2((fn + "_vvweight.txt").c_str(), net.vvweight, net.priChar2)) ERROR();
+    if(net.weightFlag && !net.vvweight.empty() && 0 != common_save2((fn + "_vvweight.txt").c_str(), net.vvweight, net.priChar2)) ERROR();
 
     return 0;
 }

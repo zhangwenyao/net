@@ -73,6 +73,11 @@
 #include "ActFitnessComplexity.h"
 #endif
 
+#ifdef ACT_SIS
+#include "ActSIS.h"
+#include "networkActSIS.h"
+#endif
+
 //**//************************************************************//*
 std::ostream& operator<<(std::ostream& os, const Network& net);
 int net_save_params(std::ostream& os, const Network& net);

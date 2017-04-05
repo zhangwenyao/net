@@ -17,7 +17,7 @@ const std::string NET_VERSION = "net2.0: " __DATE__ ", " __TIME__;
 
 //#define NET_EXTREMUM    // 特例网络
 //#define NET_RANDOM      // 随机网络
-//#define NET_BA          // BA网络
+#define NET_BA          // BA网络
 //#define NET_GRID        // 网格网络
 
 //const bool STAT_TYPE_DIRAA = 0;  // 0:OutIn, 1: OutIn OutOut InOut InIn
@@ -30,10 +30,11 @@ const std::string NET_VERSION = "net2.0: " __DATE__ ", " __TIME__;
 //#define STAT_BETWEENNESS
 //#define STAT_MODULARITY
 //#define STAT_CLUSTER
-#define STAT_SIMILARITY
+//#define STAT_SIMILARITY
 
 //#define ACT_RECOMMEND
 //#define ACT_FITNESS_COMPLEXITY
+#define ACT_SIS
 
 //**//*****************************************************//*
 typedef unsigned    NodeType;   // 节点编号类型

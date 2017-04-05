@@ -34,6 +34,11 @@ int net_recommend_mass(VDouble& o, VDouble& u2, VDouble& o2, VVNodeType& pu, VVN
     return 0;
 }
 
+int net_recommend(Network &net)
+{
+    // TODO
+    return 0;
+}
 //**//****************************************************//*
 #endif  // ACT_RECOMMEND
 

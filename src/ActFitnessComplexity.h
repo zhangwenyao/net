@@ -8,6 +8,6 @@
 int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp);
 
 //**//*****************************************************//*
-#endif  // ACT
-#endif  // H
+#endif  // ACT_FITNESS_COMPLEXITY
+#endif  // ACT_FITNESS_COMPLEXITY_H
 

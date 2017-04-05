@@ -9,9 +9,8 @@
 // 参数：   mass
 //          heat
 int net_recommend(Network &net);
+int net_recommend_mass(VDouble& o, VDouble& u2, VDouble& o2, VVNodeType& pu, VVNodeType& po);
 
-int net_read_params_recommend(std::istream& is, Network& net);
-int net_save_params_recommend(std::ostream& os, const Network& net);
 //**//****************************************************//*
 #endif  // ACT_RECOMMEND
 

@@ -31,8 +31,9 @@ int net_save_similarity(const Network& net, const char *name)
     if(!net.simiEdgeCoef.empty()) f |= common_save2((fn + "_simiEdgeCoef.txt").c_str(), net.simiEdgeCoef, net.priChar2);
     return f;
 }
+
 //**//****************************************************//*
-int net_clear_modularity(Network& net)
+int net_clear_similarity(Network& net)
 {
     net.simiNodeCoef.clear();
     net.simiEdgeCoef.clear();

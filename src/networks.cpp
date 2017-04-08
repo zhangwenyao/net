@@ -113,6 +113,7 @@ Network::Network() :
 #endif
 
     net2(NULL),
+    params(NULL),
     runStatus(0)
 {}
 
@@ -176,6 +177,10 @@ ostream& operator<<(ostream& os, const Network& net)
 
 #ifdef STAT_KENDALLTAU
     if(0 != net_save_params_kendallTau(os, net)) ERROR();
+#endif
+
+#ifdef ACT_SIS
+    if(0 != net_save_params_act_SIS(os, net)) ERROR();
 #endif
 
     return os;

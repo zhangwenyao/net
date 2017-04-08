@@ -203,6 +203,7 @@ class Network
 
         Network     *net2;
 
+        void    *params;
         int     runStatus;
         Network();
         ~Network();

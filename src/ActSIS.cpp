@@ -126,6 +126,19 @@ int act_SIS(VVNodeType &statusSN, VVNodeType &SN, VNodeType &N_i, VLinkType &NDe
     }
     return 0;
 }
+
+int act_SIS_cal_params(double &ksi, double &lambda_c, const VVNodeType& p2p, const NodeType& nSum, const LinkType& n2Sum, const NodeType& nNum)
+{
+    ksi = ((double)n2Sum - ((double)nSum * nSum) / nNum) / nSum;
+    LinkType kSum = 0, k2Sum = 0;
+    for(NodeType i = 0; i < p2p.size(); ++i){
+        NodeType k = p2p[i].size();
+        kSum += k;
+        k2Sum += k * k;
+    }
+    lambda_c = (double)kSum / k2Sum;
+    return 0;
+}
 //**//*****************************************************//*
 #endif // ACT_SIS
 

@@ -10,21 +10,28 @@ int main(int argc, char **argv)
     //**//****************************************************//*
     do{
         Network net, net2;
-        net.saveName = net.readName = "data/BA";
+        net.saveName = net.readName = "data/random-power2.5";
         net.dirFlag = 0;
-        net.nodeSize = 100;
-        net.BA_M = 4;
-        net.BA_M0 = 5;
+        net.nodeSize = 1000;
+        net.Pow_gamma = 2.5;
+        net.kMin = 2;
+        net.kMax = sqrt(net.nodeSize);
+
         ParamsSIS params;
         params.M = 70;
         params.p0 = 0.1;
         params.p = 0.01;
         params.lambda = 0.1;
-        params.t_r = 80000;
-        params.t_av = 100000;
+        params.t_r = 800;
+        params.t_av = 1000;
+
         //while(0 == (net.seed = RAND2_INIT(net.seed)));    // 初始化随机数种子
         net.seed = RAND2_INIT(1);    // 初始化随机数种子
-        if(0 != net_BA(net) || 0 != net_p2p_2_degArr(net)){
+        if(0 != net_run(net, "cal_deg power cal_p2p random") || 0 != net_p2p_2_degArr(net)){
+            ERROR();
+            break;
+        }
+        if(0 != net_save(net)){
             ERROR();
             break;
         }
@@ -33,10 +40,6 @@ int main(int argc, char **argv)
             break;
         }
         cout << params.ksi << "\t" << params.nNum << "\t" << params.nSum << "\t" << params.n2Sum << endl;
-        //if(0 != net_save(net)){
-            //ERROR();
-            //break;
-        //}
     }while(0);
 
     SHOW_TIME(cout);    // 显示系统时间

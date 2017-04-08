@@ -11,13 +11,13 @@
 
 const std::string NET_VERSION = "net2.0: " __DATE__ ", " __TIME__;
 //**//*****************************************************//*
-//#define NET_DEGREE  // 节点度分布
+#define NET_DEGREE  // 节点度分布
 //#define DEG_POISSON // 泊松分布
-//#define DEG_POWER  // 幂律分布
+#define DEG_POWER  // 幂律分布
 
 //#define NET_EXTREMUM    // 特例网络
-//#define NET_RANDOM      // 随机网络
-#define NET_BA          // BA网络
+#define NET_RANDOM      // 随机网络
+//#define NET_BA          // BA网络
 //#define NET_GRID        // 网格网络
 
 //const bool STAT_TYPE_DIRAA = 0;  // 0:OutIn, 1: OutIn OutOut InOut InIn

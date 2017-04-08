@@ -40,23 +40,11 @@
     统计        stat
     推荐        recommend   mass            扩散
                             heat            热传导
+    传播        SIS
     保存        save
     清理        clear
     结束        exit
-
-    ranLink_ranNode     // 直接随机选点连边；用到linkMatr,p2p
-    ranLink_proNode     // 所有点按概率连边；用到linkMatr,p2p
-    ranLink_remDeg      // 随机选取剩余度连边；用到p2p,link
-    ranLink_remDegGauss // 随机选剩余度按点的度之差的相应高斯概率连边、重连时所有边中随机选；用到p2p,remNodeNum,link
-    ranLink_remDegExp   // 随机选剩余度按点的度之差的相应指数概率连边、重连时所有边中随机选；用到p2p,remNodeNum,link
-    ranLink_remDegExp0  // 随机选剩余度按点的度之差的相应指数概率连边、重连时所有边中随机选；用到p2p,remNodeNum,link
-    ranNode_link        // 随机选点连边、重连时所有边中随机选；用到p2p,remNodeNum,link
-    ranNode_deg         // 随机按度选点连边、重连时所有边中随机选；用到p2p,remNodeNum,link
-    ranNode_node        // 随机选点连边、重连时随机选点；用到p2p,remNodeNum
-    ranNode_nodeM       // 随机选点连边、重连时随机选点；用到linkMatr,p2p,remNodeNum
-    ranNode_Gauss       // 随机选点按点的度之差的相应高斯概率连边、重连时所有边中随机选；用到p2p,remNodeNum,link
-    ranNode_node        // 随机选点连边、重连时随机选点再选边；用到p2p,remNodeNum
-*//**/
+ *//**/
 
 //**//*****************************************************************//*
 class Network

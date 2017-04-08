@@ -6,7 +6,19 @@
 
 #ifdef ACT_SIS
 //**//****************************************************//*
-int net_sis(Network &net);
+struct ParamsSIS{
+    unsigned    M;
+    double      p0, p, lambda;
+    double      t_r, t_av, ksi;
+    LinkType    nSum, n2Sum;
+    NodeType    nNum;
+    VVNodeType  statusSN, SN;
+    VNodeType   N_i;
+    VLinkType   NDeg_i;
+    VDouble     t;
+};
+
+int net_act_SIS(Network &net, ParamsSIS& params);
 
 //**//****************************************************//*
 #endif  // ACT_SIS

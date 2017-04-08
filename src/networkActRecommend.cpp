@@ -5,13 +5,13 @@
 #include "common.h"
 using namespace std;
 //**//****************************************************//*
-int net_recommend_save_i(VDouble& o, char *name)
+int net_act_recommend_save_i(VDouble& o, char *name)
 {
     common_save1(name, o);
     return 0;
 }
 
-int net_recommend_mass(VDouble& o, VDouble& u2, VDouble& o2, VVNodeType& pu, VVNodeType& po)
+int net_act_recommend_mass(VDouble& o, VDouble& u2, VDouble& o2, VVNodeType& pu, VVNodeType& po)
 {
     const NodeType n = pu.size();
     for(NodeType i = 0 ; i < n; i++){
@@ -29,12 +29,12 @@ int net_recommend_mass(VDouble& o, VDouble& u2, VDouble& o2, VVNodeType& pu, VVN
         stringstream ss;
         ss.clear();
         ss << "mass_" << i << ".txt";
-        net_recommend_save_i(o2, ss.str().c_str());
+        net_act_recommend_save_i(o2, ss.str().c_str());
     }
     return 0;
 }
 
-int net_recommend(Network &net)
+int net_act_recommend(Network &net)
 {
     // TODO
     return 0;

@@ -10,7 +10,7 @@ int net_random_clear(Network& net);
 int net_random_init(Network& net);
 
 // ER随机网络参数
-//      ER_p        连边概率p
+//      p           连边概率p
 //      nodeSize    节点数目
 int net_read_params_ER(std::istream& is, Network& net);
 int net_save_params_ER(std::ostream& os, const Network& net);

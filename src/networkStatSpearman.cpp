@@ -20,7 +20,7 @@ int net_clear_spearman(Network& net)
         net.neiAveDeg2OutOut.clear();
     }
 #ifdef MODEL_GAUSS
-    net.sp_GaussS2.clear();
+    net.stat_spearman.GaussS2.clear();
 #endif
     return 0;
 }
@@ -29,39 +29,39 @@ int net_clear_spearman(Network& net)
 int net_cal_spearman(Network& net)
 {
     if(!net.dirFlag){
-        if(!net.lkk.empty() && !net.weightFlag) cal_spearman_lkk(net.spearman, net.lkk, net.deg2ArrVal, net.linkSize);
+        if(!net.lkk.empty() && !net.weightFlag) cal_spearman_lkk(net.stat_spearman.spearman, net.lkk, net.deg2ArrVal, net.linkSize);
         if(!net.p2p.empty()){
             cal_nodeNeiAveDeg2_weight(net.nodeNeiAveDeg2, net.p2p, net.nodeDeg, net.deg2ArrVal, net.degArrNo, net.vvweight, net.nodeWeight, net.weightFlag);
             cal_neiAveDeg2_weight(net.neiAveDeg2, net.nodeNeiAveDeg2, net.nodeDeg, net.degArrSize, net.degArrNo, net.degArrVal, net.degArrWeight, net.nodeWeight, net.weightFlag);
             if(!net.weightFlag){
-                if(net.lkk.empty()) cal_spearman(net.spearman, net.p2p, net.deg2ArrVal, net.degArrNo, net.linkSize);
-            }else cal_spearman_dir_weight(net.spearman, net.sp_rho, net.p2p, net.vvweight, net.netWeight, net.nodeDeg, net.degArrNo, net.deg2ArrVal, net.nodeDeg, net.degArrNo, net.deg2ArrVal, net.weightFlag);
+                if(net.lkk.empty()) cal_spearman(net.stat_spearman.spearman, net.p2p, net.deg2ArrVal, net.degArrNo, net.linkSize);
+            }else cal_spearman_dir_weight(net.stat_spearman.spearman, net.stat_spearman.rho, net.p2p, net.vvweight, net.netWeight, net.nodeDeg, net.degArrNo, net.deg2ArrVal, net.nodeDeg, net.degArrNo, net.deg2ArrVal, net.weightFlag);
         }
 
     }else{ // net.dirFlag
         //AllAll
         cal_nodeNeiAveDeg2_AllAll(net.nodeNeiAveDeg2, net.p2p, net.nodeDeg, net.deg2ArrVal, net.degArrNo, net.vvweight, net.nodeWeight, net.weightFlag);
         cal_neiAveDeg2_weight(net.neiAveDeg2, net.nodeNeiAveDeg2, net.nodeDeg, net.degArrSize, net.degArrNo, net.degArrVal, net.degArrWeight, net.nodeWeight, net.weightFlag);
-        cal_spearman_dir_weight(net.spearman, net.sp_rho, net.p2p, net.vvweight, (net.weightFlag ? net.netWeightOut : net.linkSize), net.nodeDeg, net.degArrNo, net.deg2ArrVal, net.nodeDeg, net.degArrNo, net.deg2ArrVal, net.weightFlag);
+        cal_spearman_dir_weight(net.stat_spearman.spearman, net.stat_spearman.rho, net.p2p, net.vvweight, (net.weightFlag ? net.netWeightOut : net.linkSize), net.nodeDeg, net.degArrNo, net.deg2ArrVal, net.nodeDeg, net.degArrNo, net.deg2ArrVal, net.weightFlag);
 
         //OutIn
         cal_nodeNeiAveDeg2_weight(net.nodeNeiAveDeg2In, net.p2p, net.nodeDegIn, net.deg2ArrValIn, net.degArrNoIn, net.vvweight, net.nodeWeightOut, net.weightFlag);
         cal_neiAveDeg2_weight(net.neiAveDeg2OutIn, net.nodeNeiAveDeg2In, net.nodeDegOut, net.degArrSizeOut, net.degArrNoOut, net.degArrValOut, net.degArrWeightOut, net.nodeWeightOut, net.weightFlag);
-        cal_spearman_dir_weight(net.spearmanOutIn, net.sp_rhoOutIn, net.p2p, net.vvweight, (net.weightFlag ? net.netWeightOut : net.linkSize), net.nodeDegOut, net.degArrNoOut, net.deg2ArrValOut, net.nodeDegIn, net.degArrNoIn, net.deg2ArrValIn, net.weightFlag);
+        cal_spearman_dir_weight(net.stat_spearman.OutIn, net.stat_spearman.rhoOutIn, net.p2p, net.vvweight, (net.weightFlag ? net.netWeightOut : net.linkSize), net.nodeDegOut, net.degArrNoOut, net.deg2ArrValOut, net.nodeDegIn, net.degArrNoIn, net.deg2ArrValIn, net.weightFlag);
 
         if(STAT_TYPE_DIRAA){
             // OutOut
             cal_nodeNeiAveDeg2_weight(net.nodeNeiAveDeg2Out, net.p2p, net.nodeDegOut, net.deg2ArrValOut, net.degArrNoOut, net.vvweight, net.nodeWeightOut, net.weightFlag);
             cal_neiAveDeg2_weight(net.neiAveDeg2OutOut, net.nodeNeiAveDeg2Out, net.nodeDegOut, net.degArrSizeOut, net.degArrNoOut, net.degArrValOut, net.degArrWeightOut, net.nodeWeightOut, net.weightFlag);
-            cal_spearman_dir_weight(net.spearmanOutOut, net.sp_rhoOutOut, net.p2p, net.vvweight, (net.weightFlag ? net.netWeightOut : net.linkSize), net.nodeDegOut, net.degArrNoOut, net.deg2ArrValOut, net.nodeDegOut, net.degArrNoOut, net.deg2ArrValOut, net.weightFlag);
+            cal_spearman_dir_weight(net.stat_spearman.OutOut, net.stat_spearman.rhoOutOut, net.p2p, net.vvweight, (net.weightFlag ? net.netWeightOut : net.linkSize), net.nodeDegOut, net.degArrNoOut, net.deg2ArrValOut, net.nodeDegOut, net.degArrNoOut, net.deg2ArrValOut, net.weightFlag);
 
             // InIn
             cal_neiAveDeg2_weight(net.neiAveDeg2InIn, net.nodeNeiAveDeg2In, net.nodeDegIn, net.degArrSizeIn, net.degArrNoIn, net.degArrValIn, net.degArrWeightOut, net.nodeWeightOut, net.weightFlag);
-            cal_spearman_dir_weight(net.spearmanInIn, net.sp_rhoInIn, net.p2p, net.vvweight, (net.weightFlag ? net.netWeightOut : net.linkSize), net.nodeDegIn, net.degArrNoIn, net.deg2ArrValIn, net.nodeDegIn, net.degArrNoIn, net.deg2ArrValIn, net.weightFlag);
+            cal_spearman_dir_weight(net.stat_spearman.InIn, net.stat_spearman.rhoInIn, net.p2p, net.vvweight, (net.weightFlag ? net.netWeightOut : net.linkSize), net.nodeDegIn, net.degArrNoIn, net.deg2ArrValIn, net.nodeDegIn, net.degArrNoIn, net.deg2ArrValIn, net.weightFlag);
 
             // InOut
             cal_neiAveDeg2_weight(net.neiAveDeg2InOut, net.nodeNeiAveDeg2Out, net.nodeDegIn, net.degArrSizeIn, net.degArrNoIn, net.degArrValIn, net.degArrWeightOut, net.nodeWeightOut, net.weightFlag);
-            cal_spearman_dir_weight(net.spearmanInOut, net.sp_rhoInOut, net.p2p, net.vvweight, (net.weightFlag ? net.netWeightOut : net.linkSize), net.nodeDegIn, net.degArrNoIn, net.deg2ArrValIn, net.nodeDegOut, net.degArrNoOut, net.deg2ArrValOut, net.weightFlag);
+            cal_spearman_dir_weight(net.stat_spearman.InOut, net.stat_spearman.rhoInOut, net.p2p, net.vvweight, (net.weightFlag ? net.netWeightOut : net.linkSize), net.nodeDegIn, net.degArrNoIn, net.deg2ArrValIn, net.nodeDegOut, net.degArrNoOut, net.deg2ArrValOut, net.weightFlag);
         }
     }
 
@@ -127,37 +127,37 @@ int net_degArr_2_deg2ArrVal_weight(Network& net)
 int net_read_params_spearman(istream& is, Network& net)
 {
     for(string s; is >> s;){
-        if (s == "--spearman") {
-            is >> net.spearman;
-            cout << s << '\t'   << net.spearman << endl;
+        if (s == "--stat_spearman.spearman") {
+            is >> net.stat_spearman.spearman;
+            cout << s << '\t'   << net.stat_spearman.spearman << endl;
             continue;
         }
         if(net.dirFlag){
-            if (s == "--spearmanInIn") {
-                is >> net.spearmanInIn;
-                cout << s << '\t'   << net.spearmanInIn << endl;
+            if (s == "--stat_spearman.InIn") {
+                is >> net.stat_spearman.InIn;
+                cout << s << '\t'   << net.stat_spearman.InIn << endl;
                 continue;
             }
-            if (s == "--spearmanInOut") {
-                is >> net.spearmanInOut;
-                cout << s << '\t'   << net.spearmanInOut << endl;
+            if (s == "--stat_spearman.InOut") {
+                is >> net.stat_spearman.InOut;
+                cout << s << '\t'   << net.stat_spearman.InOut << endl;
                 continue;
             }
-            if (s == "--spearmanOutIn") {
-                is >> net.spearmanOutIn;
-                cout << s << '\t'   << net.spearmanOutIn << endl;
+            if (s == "--stat_spearman.OutIn") {
+                is >> net.stat_spearman.OutIn;
+                cout << s << '\t'   << net.stat_spearman.OutIn << endl;
                 continue;
             }
-            if (s == "--spearmanOutOut") {
-                is >> net.spearmanOutOut;
-                cout << s << '\t'   << net.spearmanOutOut << endl;
+            if (s == "--stat_spearman.OutOut") {
+                is >> net.stat_spearman.OutOut;
+                cout << s << '\t'   << net.stat_spearman.OutOut << endl;
                 continue;
             }
         }
 #ifdef MODEL_GAUSS
-        if (s == "--sp_r0") {
-            is >> net.sp_r0;
-            cout << s << '\t'   << net.sp_r0 << endl;
+        if (s == "--stat_spearman.r0") {
+            is >> net.stat_spearman.r0;
+            cout << s << '\t'   << net.stat_spearman.r0 << endl;
             continue;
         }
 #endif
@@ -170,22 +170,22 @@ int net_save_params_spearman(ostream& os, const Network& net)
     if(!os) return -1;
 
 #ifdef MODEL_GAUSS
-    os  << "--sp_r0\t" << net.sp_r0 << '\n';
+    os  << "--stat_spearman.r0\t" << net.stat_spearman.r0 << '\n';
 #endif
 
-    os  << "--spearman\t" << net.spearman << '\n';
+    os  << "--stat_spearman.spearman\t" << net.stat_spearman.spearman << '\n';
     if(net.dirFlag){
-        os  << "--sp_rho\t" << net.sp_rho
-            << "\n--spearmanOutIn\t" << net.spearmanOutIn
-            << "\n--sp_rhoOutIn\t" << net.sp_rhoOutIn
+        os  << "--stat_spearman.rho\t" << net.stat_spearman.rho
+            << "\n--stat_spearman.OutIn\t" << net.stat_spearman.OutIn
+            << "\n--stat_spearman.rhoOutIn\t" << net.stat_spearman.rhoOutIn
             << '\n';
         if(STAT_TYPE_DIRAA){
-            os  << "--spearmanOutOut\t" << net.spearmanOutOut
-                << "\n--sp_rhoOutOut\t" << net.sp_rhoOutOut
-                << "\n--spearmanInIn\t" << net.spearmanInIn
-                << "\n--sp_rhoInIn\t"   << net.sp_rhoInIn
-                << "\n--spearmanInOut\t" << net.spearmanInOut
-                << "\n--sp_rhoInOut\t"  << net.sp_rhoInOut
+            os  << "--stat_spearman.OutOut\t" << net.stat_spearman.OutOut
+                << "\n--stat_spearman.rhoOutOut\t" << net.stat_spearman.rhoOutOut
+                << "\n--stat_spearman.InIn\t" << net.stat_spearman.InIn
+                << "\n--stat_spearman.rhoInIn\t"   << net.stat_spearman.rhoInIn
+                << "\n--stat_spearman.InOut\t" << net.stat_spearman.InOut
+                << "\n--stat_spearman.rhoInOut\t"  << net.stat_spearman.rhoInOut
                 << '\n';
         }
     }
@@ -218,7 +218,7 @@ int net_save_spearman(const Network& net, const char *name)
     //}
 
 #ifdef MODEL_GAUSS
-    //if(net.sp_GaussS2.size() > 0) f |= common_save1((fn + "_SGaussS2.txt").c_str(), net.sp_GaussS2, net.priChar);
+    //if(net.stat_spearman.GaussS2.size() > 0) f |= common_save1((fn + "_SGaussS2.txt").c_str(), net.stat_spearman.GaussS2, net.priChar);
 #endif  // MODEL_GAUSS
     return f;
 }
@@ -256,7 +256,7 @@ int net_save_gauss(const Network& net, const char *name)
     if(net.nodeNeiAveDeg2.size() > 0) f |= common_save1((fn + "_nodeNeiAveDeg2.txt").c_str(), net.nodeNeiAveDeg2, net.priChar);
     if(net.neiAveDeg2.size() > 0) f |= common_save1((fn + "_neiAveDeg2.txt").c_str(), net.neiAveDeg2, net.priChar);
 
-    if(net.sp_GaussS2.size() > 0) f |= common_save1((fn + "_SGaussS2.txt").c_str(), net.sp_GaussS2, net.priChar);
+    if(net.stat_spearman.GaussS2.size() > 0) f |= common_save1((fn + "_SGaussS2.txt").c_str(), net.stat_spearman.GaussS2, net.priChar);
     if(net.lkkProb.size() > 0) f |= common_save2((fn + "_lkkProb.txt").c_str(), net.lkkProb, net.priChar);
 
     return f;
@@ -271,7 +271,7 @@ int net_read_SGaussS2(Network& net, const char *name)
     if(fn.size() <= 0)  return -1;
 
     net.p2p.clear();
-    if(0 != common_read1_0((fn + "_SGaussS2.txt").c_str(), net.sp_GaussS2)){
+    if(0 != common_read1_0((fn + "_SGaussS2.txt").c_str(), net.stat_spearman.GaussS2)){
         ERROR();
         return -1;
     }
@@ -282,17 +282,17 @@ int net_read_SGaussS2(Network& net, const char *name)
 int net_cal_lkkProb_gauss(Network &net)
 {
     const NodeType degSize = net.degArrVal.size();
-    if(net.argv.find("read_sp_GaussS2") != string::npos){
+    if(net.argv.find("read_stat_spearman.GaussS2") != string::npos){
         if(net_read_SGaussS2(net) != 0) return -1;
         else return 0;
     }
 
-    net.sp_GaussS2.resize(degSize);
+    net.stat_spearman.GaussS2.resize(degSize);
     for(NodeType i = 0; i < degSize; i++) {
-        cal_lkkProb_gaussS2(net.sp_GaussS2[i], net.deg2ArrVal, net.degArrVal, net.degArrSize, i, net.sp_r0);
+        cal_lkkProb_gaussS2(net.stat_spearman.GaussS2[i], net.deg2ArrVal, net.degArrVal, net.degArrSize, i, net.stat_spearman.r0);
     }
     net.lkkProb.resize(degSize, VDouble(degSize));
-    cal_lkkProb_gauss(net.lkkProb, net.sp_GaussS2, net.deg2ArrVal, net.sp_r0);
+    cal_lkkProb_gauss(net.lkkProb, net.stat_spearman.GaussS2, net.deg2ArrVal, net.stat_spearman.r0);
     return 0;
 }
 

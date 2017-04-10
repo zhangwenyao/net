@@ -17,7 +17,7 @@ int net_random_clear(Network& net)
 int net_random_init(Network& net)
 {
     net_random_clear(net);
-    if(net.kMin > net.kMax || net.kMax >= net.nodeSize || (net.kMin == net.kMax && net.nodeSize % 2 == 1 && net.kMin % 2 == 1) || net.ER_p < 0. || net.ER_p > 1.) return net.status = -1;
+    if(net.kMin > net.kMax || net.kMax >= net.nodeSize || (net.kMin == net.kMax && net.nodeSize % 2 == 1 && net.kMin % 2 == 1) || net.net_random.p < 0. || net.net_random.p > 1.) return net.status = -1;
     return 0;
 }
 
@@ -26,7 +26,7 @@ int net_ER(Network& net)
 {
     // 初始化连边信息
     const NodeType nodeSize = net.nodeSize;
-    int p = net.ER_p * RAND2_MAX;
+    int p = net.net_random.p * RAND2_MAX;
     net.p2p.clear();
     net.p2p.resize(nodeSize);
     for(NodeType i = 0; i < nodeSize; i++)
@@ -44,9 +44,9 @@ int net_ER(Network& net)
 int net_read_params_ER(istream& is, Network& net)
 {
     for(string s; is >> s;){
-        if (s == "--ER_p") {
-            is >> net.ER_p;
-            cout << s << '\t'   << net.ER_p << endl;
+        if (s == "--net_random.p") {
+            is >> net.net_random.p;
+            cout << s << '\t'   << net.net_random.p << endl;
             continue;
         }
     }
@@ -56,7 +56,7 @@ int net_read_params_ER(istream& is, Network& net)
 int net_save_params_ER(ostream& os, const Network& net)
 {
     if(!os) return -1;
-    os << "--ER_p\t" << net.ER_p
+    os << "--net_random.p\t" << net.net_random.p
         << '\n';
     return 0;
 }
@@ -108,7 +108,7 @@ int net_random_node_prob(Network& net) // 所有点按概率p连边
 
     // 连边
     net.linkSize = 0;
-    addLink_linkMatr_proNode(net.linkMatr, net.linkSize, net.ER_p, net.dirFlag); // 连边
+    addLink_linkMatr_proNode(net.linkMatr, net.linkSize, net.net_random.p, net.dirFlag); // 连边
     net.linkRemain = 0;
     linkMatr_2_p2p(net.p2p, net.linkMatr);
 
@@ -159,7 +159,7 @@ int net_random_ranNode(Network& net)   // 每次直接随机抽取两个点连�
     init_linkMatrC(net.linkMatrC, net.nodeSize);
 
     // 连边
-    net.linkRemain = net.linkSize = net.ER_p * (net.nodeSize - 1) * net.nodeSize / 2;
+    net.linkRemain = net.linkSize = net.net_random.p * (net.nodeSize - 1) * net.nodeSize / 2;
     addLink_linkMatrC_ranNode(net.linkMatrC, net.linkRemain);   // 每次直接随机抽取两个点连边
     linkMatrC_2_p2p(net.p2p, net.linkMatrC);
     for(NodeType i = 0; i < net.nodeSize; i++) net.nodeDeg[i] = net.p2p[i].size();

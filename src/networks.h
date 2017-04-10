@@ -59,9 +59,9 @@
 #include "networkStatCluster.h"
 #endif
 
-#ifdef STAT_KENDALLTAU
-#include "StatKendallTau.h"
-#include "networkStatKendallTau.h"
+#ifdef STAT_KENDALL
+#include "StatKendall.h"
+#include "networkStatKendall.h"
 #endif
 
 #ifdef ACT_RECOMMEND
@@ -81,11 +81,11 @@
 //**//************************************************************//*
 std::ostream& operator<<(std::ostream& os, const Network& net);
 int net_save_params(std::ostream& os, const Network& net);
-int net_save_params(const Network& net, const char *name = NULL);
+int net_save_params(const Network& net, const char* name = NULL);
 std::istream& operator>>(std::istream& is, Network& net);
 int net_read_params(std::istream& is, Network& net);
-int net_read_params(Network& net, const char *name = NULL);
-int net_read_params(Network& net, int argc, char **argv);
+int net_read_params(Network& net, const char* name = NULL);
+int net_read_params(Network& net, int argc, char** argv);
 
 int net_save0(const Network& net);
 int net_save(const Network& net, const char* name = NULL);

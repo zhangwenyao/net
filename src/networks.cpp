@@ -19,34 +19,8 @@ Network::Network() :
     linkSize(0),
     priChar('\n'),
     priChar2('\t'),
-
-#ifdef NET_DEGREE
-#ifdef DEG_POISSON
-    Poi_p(0.1),
-#endif
-#ifdef DEG_POWER
-    Pow_gamma(2.5),
-#endif
-#endif  // NET_DEGREE
-
-
-#ifdef NET_A
-    A_a(0),
-#endif
-
-#ifdef NET_RANDOM
-    ER_p(0.1),
-#endif
-
-#ifdef NET_BA
-    BA_M(0),
-    BA_M0(0),
-#endif
-
-#ifdef NET_GRID
-    Grid_NX(0),
-    Grid_NY(0),
-#endif
+    net2(NULL),
+    runStatus(0),
 
     degMean(0),
     degMeanOut(0),
@@ -61,61 +35,85 @@ Network::Network() :
     degWeightMeanOut(0),
     degWeightMeanIn(0),
 
-#ifdef STAT_PEARSON
-    pearson(0),
-    pearsonNo(0),
-    pearsonNoInIn(0),
-    pearsonNoInOut(0),
-    pearsonNoOutIn(0),
-    pearsonNoOutOut(0),
-    ps_rho(0),
-    ps_rhoInIn(0),
-    ps_rhoInOut(0),
-    ps_rhoOutIn(0),
-    ps_rhoOutOut(0),
-#endif
-
     deg2WeightMean(0),
     deg2WeightMeanOut(0),
-    deg2WeightMeanIn(0),
+    deg2WeightMeanIn(0)
+{
+#ifdef NET_DEGREE
+#ifdef DEG_POISSON
+    net_degree.poison_p = 0.1;
+#endif
+#ifdef DEG_POWER
+    net_degree.power_gamma = 2.5;
+#endif
+#endif  // NET_DEGREE
 
-#ifdef STAT_SPEARMAN
-    spearman(0),
-    spearmanInIn(0),
-    spearmanInOut(0),
-    spearmanOutIn(0),
-    spearmanOutOut(0),
-    sp_rho(0),
-    sp_rhoInIn(0),
-    sp_rhoInOut(0),
-    sp_rhoOutIn(0),
-    sp_rhoOutOut(0),
-#ifdef MODEL_GAUSS
-    sp_r0(0),
-#endif  // MODEL_GAUSS
-#endif  // STAT_SPEARMAN
 
-#ifdef STAT_BETWEENNESS
-    btNode(0), btEdge(0),
+#ifdef NET_RANDOM
+    net_random.p = 0.1;
 #endif
 
-#ifdef STAT_KENDALLTAU
-        kendallTau(0),
-        kendallTauOutIn(0),
-#endif  // STAT_KENDALLTAU
+#ifdef NET_BA
+    net_BA.M = 0;
+    net_BA.M0 = 0;
+#endif
+
+#ifdef NET_GRID
+    net_grid.NX = 0;
+    net_grid.NY = 0;
+#endif
+
+
+#ifdef STAT_PEARSON
+    stat_pearson.pearson = 0;
+    stat_pearson.No = 0;
+    stat_pearson.NoInIn = 0;
+    stat_pearson.NoInOut = 0;
+    stat_pearson.NoOutIn = 0;
+    stat_pearson.NoOutOut = 0;
+    stat_pearson.rho = 0;
+    stat_pearson.rhoInIn = 0;
+    stat_pearson.rhoInOut = 0;
+    stat_pearson.rhoOutIn = 0;
+    stat_pearson.rhoOutOut = 0;
+#endif
+
+
+#ifdef STAT_SPEARMAN
+    stat_spearman.spearman = 0;
+    stat_spearman.InIn = 0;
+    stat_spearman.InOut = 0;
+    stat_spearman.OutIn = 0;
+    stat_spearman.OutOut = 0;
+    stat_spearman.rho = 0;
+    stat_spearman.rhoInIn = 0;
+    stat_spearman.rhoInOut = 0;
+    stat_spearman.rhoOutIn = 0;
+    stat_spearman.rhoOutOut = 0;
+#ifdef MODEL_GAUSS
+    stat_spearman.r0 = 0;
+#endif  // MODEL_GAUSS
+#endif  
+
+#ifdef STAT_BETWEENNESS
+    stat_betweenness.node = 0;
+    stat_betweenness.edge = 0;
+#endif
+
+#ifdef STAT_KENDALL
+    stat_kendall.tau = 0;
+    stat_kendall.OutIn = 0;
+#endif
 
 #ifdef STAT_MODULARITY
-    moduCoef(0),
+    stat_modularity.coef = 0;
 #endif
 
 #ifdef STAT_CLUSTER
-    cluster_c(0),
+    stat_cluster.c = 0;
 #endif
+}
 
-    net2(NULL),
-    params(NULL),
-    runStatus(0)
-{}
 
 Network::~Network()
 {
@@ -175,7 +173,7 @@ ostream& operator<<(ostream& os, const Network& net)
     if(0 != net_save_params_spearman(os, net)) ERROR();
 #endif
 
-#ifdef STAT_KENDALLTAU
+#ifdef STAT_KENDALL
     if(0 != net_save_params_kendallTau(os, net)) ERROR();
 #endif
 
@@ -296,7 +294,7 @@ std::istream& operator>>(std::istream& is, Network& net)
     if(0 != net_read_params_spearman(is, net)) ERROR();
 #endif
 
-#ifdef STAT_KENDALLTAU
+#ifdef STAT_KENDALL
     is.clear();
     is.seekg(ios::beg);
     if(0 != net_read_params_kendallTau(is, net)) ERROR();
@@ -401,7 +399,7 @@ int net_save(const Network& net, const char *name)
     f |= net_save_spearman(net, fn.c_str());
 #endif
 
-#ifdef STAT_KENDALLTAU
+#ifdef STAT_KENDALL
     f |= net_save_kendallTau(net, fn.c_str());
 #endif
 
@@ -646,7 +644,7 @@ int net_clear(Network& net)
 #ifdef STAT_SPEARMAN
     net_clear_spearman(net);
 #ifdef MODEL_GAUSS
-    net.sp_GaussS2.clear();         // [nodeSize]   模型的联合概率的方差
+    net.stat_spearman.GaussS2.clear();         // [nodeSize]   模型的联合概率的方差
 #endif
 #endif
 
@@ -976,7 +974,7 @@ int net_stat(Network& net)
     }
 #endif
 
-#ifdef STAT_KENDALLTAU
+#ifdef STAT_KENDALL
     cout << "\tkendallTau\n";
     if(0 != net_cal_kendallTau(net)){
         ERROR();

@@ -378,10 +378,10 @@ int cal_spearman(double& spearman, const VVNodeType& p2p, const VDouble& deg2Arr
     return 0;
 }
 
-int cal_spearman_dir(double& spearman, double& sp_rho, const VVNodeType& p2p, const double linkSize, const VNodeType& nodeDeg1, MNodeType& degArrNo1, const VDouble& deg2ArrVal1, const VNodeType& nodeDeg2, MNodeType& degArrNo2, const VDouble& deg2ArrVal2)
+int cal_spearman_dir(double& spearman, double& stat_spearman.rho, const VVNodeType& p2p, const double linkSize, const VNodeType& nodeDeg1, MNodeType& degArrNo1, const VDouble& deg2ArrVal1, const VNodeType& nodeDeg2, MNodeType& degArrNo2, const VDouble& deg2ArrVal2)
 {
     if(deg2ArrVal1.size() <= 1 || deg2ArrVal2.size() <= 1){
-        spearman = sp_rho = 0;
+        spearman = stat_spearman.rho = 0;
         return 0;
     }
     double sx = 0., sxx = 0., sy = 0., syy = 0., sxy = 0.;
@@ -399,22 +399,22 @@ int cal_spearman_dir(double& spearman, double& sp_rho, const VVNodeType& p2p, co
         }
     }
     if(linkSize * sxx - sx * sx == 0){
-        spearman = sp_rho = 0;
+        spearman = stat_spearman.rho = 0;
     }else{
         if(linkSize * syy - sy * sy == 0) spearman = 0;
         else spearman = (linkSize * sxy - sx * sy) / sqrt((linkSize * sxx - sx * sx) * (linkSize * syy - sy * sy));
-        sp_rho = (linkSize * sxy - sx * sy) / (linkSize * sxx - sx * sx);
+        stat_spearman.rho = (linkSize * sxy - sx * sy) / (linkSize * sxx - sx * sx);
     }
     return 0;
 }
 
-int cal_spearman_dir_weight(double& spearman, double& sp_rho, const VVNodeType& p2p, const VVWeightType& vvweight, const double netWeight, const VNodeType& nodeDeg1, MNodeType& degArrNo1, const VDouble& deg2ArrVal1, const VNodeType& nodeDeg2, MNodeType& degArrNo2, const VDouble& deg2ArrVal2, const int weightFlag)
+int cal_spearman_dir_weight(double& spearman, double& stat_spearman.rho, const VVNodeType& p2p, const VVWeightType& vvweight, const double netWeight, const VNodeType& nodeDeg1, MNodeType& degArrNo1, const VDouble& deg2ArrVal1, const VNodeType& nodeDeg2, MNodeType& degArrNo2, const VDouble& deg2ArrVal2, const int weightFlag)
 {
     if(deg2ArrVal1.size() <= 1 || deg2ArrVal2.size() <= 1){
-        spearman = sp_rho = 0;
+        spearman = stat_spearman.rho = 0;
         return 0;
     }
-    if(!weightFlag) return cal_spearman_dir(spearman, sp_rho, p2p, netWeight, nodeDeg1, degArrNo1, deg2ArrVal1, nodeDeg2, degArrNo2, deg2ArrVal2);
+    if(!weightFlag) return cal_spearman_dir(spearman, stat_spearman.rho, p2p, netWeight, nodeDeg1, degArrNo1, deg2ArrVal1, nodeDeg2, degArrNo2, deg2ArrVal2);
     double sx = 0., sxx = 0., sy = 0., syy = 0., sxy = 0.;
     for(NodeType i = 0; i < p2p.size(); i++) {
         const NodeType s = p2p[i].size();
@@ -430,11 +430,11 @@ int cal_spearman_dir_weight(double& spearman, double& sp_rho, const VVNodeType& 
         }
     }
     if(netWeight * sxx - sx * sx == 0){
-        spearman = sp_rho = 0;
+        spearman = stat_spearman.rho = 0;
     }else{
         if(netWeight * syy - sy * sy == 0) spearman = 0;
         else spearman = (netWeight * sxy - sx * sy) / sqrt((netWeight * sxx - sx * sx) * (netWeight * syy - sy * sy));
-        sp_rho = (netWeight * sxy - sx * sy) / (netWeight * sxx - sx * sx);
+        stat_spearman.rho = (netWeight * sxy - sx * sy) / (netWeight * sxx - sx * sx);
     }
     return 0;
 }

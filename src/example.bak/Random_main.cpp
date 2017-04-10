@@ -12,7 +12,7 @@ int main(int argc, char **argv)
         net.seed = 4;
         net.saveName = net.readName = "data/random2.7_128";
         net.nodeSize = 128;     // 节点数
-        net.Pow_gamma = 2.7;     // 度分布幂律分布的幂指数
+        net.net_random.power_gamma = 2.7;     // 度分布幂律分布的幂指数
         net.kMin = 6;
         net.argv = "init_seed cal_deg power cal_p2p random stat print save";
 
@@ -22,7 +22,7 @@ int main(int argc, char **argv)
             break;
         }
 
-        net.kMax = net.kMin * pow(net.nodeSize, 1 / (net.Pow_gamma - 1.));    // 最大度
+        net.kMax = net.kMin * pow(net.nodeSize, 1 / (net.net_random.power_gamma - 1.));    // 最大度
         if(net.kMax < net.kMin) net.kMax = net.kMin;
         if(net.kMax >= net.nodeSize) net.kMax = net.nodeSize - 1;
        

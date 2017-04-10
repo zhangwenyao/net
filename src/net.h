@@ -26,7 +26,7 @@ const std::string NET_VERSION = "net2.0: " __DATE__ ", " __TIME__;
 //#define MODEL_GAUSS
 //#define MODEL_EXP
 
-//#define STAT_KENDALLTAU
+//#define STAT_KENDALL
 //#define STAT_BETWEENNESS
 //#define STAT_MODULARITY
 //#define STAT_CLUSTER

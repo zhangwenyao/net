@@ -5,7 +5,7 @@
 using namespace std;
 
 //**//****************************************************//*
-int cal_betweenness0(VDouble &betwNode, VVDouble &betwEdge, double &btNode, double& btEdge, VVDistType& minDistMatr, VDouble& minDistMean, const VVNodeType& p2p, const VVNodeType& p2pIn)
+int cal_betweenness0(VDouble &betwNode, VVDouble &betwEdge, double &meanNode, double& meanEdge, VVDistType& minDistMatr, VDouble& minDistMean, const VVNodeType& p2p, const VVNodeType& p2pIn)
 {
     if(p2p.size() <= 0 || p2pIn.size() <= 0){
         ERROR();
@@ -14,9 +14,9 @@ int cal_betweenness0(VDouble &betwNode, VVDouble &betwEdge, double &btNode, doub
 
     const NodeType nodeSize = p2p.size() >= p2pIn.size() ? p2p.size() : p2pIn.size();
     betwNode.assign(nodeSize, 0);
-    btNode = 0;
+    meanNode = 0;
     betwEdge.assign(nodeSize, VDouble(nodeSize, 0));
-    btEdge = 0;
+    meanEdge = 0;
     minDistMatr.resize(nodeSize, VDistType(nodeSize, 0));
     minDistMean.assign(nodeSize, 0);
     if(nodeSize < 2) return 0;
@@ -83,14 +83,14 @@ int cal_betweenness0(VDouble &betwNode, VVDouble &betwEdge, double &btNode, doub
         double t = 1. / nodeSize / (nodeSize - 1);
         for(NodeType i = 0; i < nodeSize; i++){
             for(NodeType j = 0; j < nodeSize; j++)
-                if(j != i) btEdge += betwEdge[i][j] *= t;
-            btEdge /= (nodeSize - 1.) * nodeSize;
+                if(j != i) meanEdge += betwEdge[i][j] *= t;
+            meanEdge /= (nodeSize - 1.) * nodeSize;
         }
     }
     if(nodeSize > 2){
         double t = 1. / (nodeSize - 1) / (nodeSize - 2);
-        for(NodeType i = 0; i < nodeSize; i++) btNode += betwNode[i] *= t;
-        btNode /= nodeSize;
+        for(NodeType i = 0; i < nodeSize; i++) meanNode += betwNode[i] *= t;
+        meanNode /= nodeSize;
     }
 
     return 0;
@@ -98,7 +98,7 @@ int cal_betweenness0(VDouble &betwNode, VVDouble &betwEdge, double &btNode, doub
 
 
 //**//****************************************************//*
-int cal_betweenness(VDouble  &betwNode, VVDouble &betwEdge, double &btNode, double& btEdge, VVDistType& minDistMatr, VDouble& minDistMean, const VVNodeType& p2p, const VVNodeType& p2pIn, const VVDistType& linkMatr)
+int cal_betweenness(VDouble  &betwNode, VVDouble &betwEdge, double &meanNode, double& meanEdge, VVDistType& minDistMatr, VDouble& minDistMean, const VVNodeType& p2p, const VVNodeType& p2pIn, const VVDistType& linkMatr)
 {
     if(p2p.size() <= 0 || p2pIn.size() <= 0 || linkMatr.size() <= 0 || linkMatr.size() != p2p.size()){
         ERROR();
@@ -107,9 +107,9 @@ int cal_betweenness(VDouble  &betwNode, VVDouble &betwEdge, double &btNode, doub
 
     const NodeType nodeSize = linkMatr.size();
     betwNode.assign(nodeSize, 0);
-    btNode = 0;
+    meanNode = 0;
     betwEdge.assign(nodeSize, VDouble(nodeSize, 0));
-    btEdge = 0;
+    meanEdge = 0;
     minDistMatr.resize(nodeSize, VDistType(nodeSize, 0));
     minDistMean.assign(nodeSize, 0);
     if(nodeSize < 2) return 0;
@@ -206,13 +206,13 @@ int cal_betweenness(VDouble  &betwNode, VVDouble &betwEdge, double &btNode, doub
         double t = 1. / nodeSize / (nodeSize - 1);
         for(NodeType i = 0; i < nodeSize; i++)
             for(NodeType j = 0; j < nodeSize; j++)
-                if(j != i) btEdge += betwEdge[i][j] *= t;
-        btEdge /= (nodeSize -1.) * nodeSize;
+                if(j != i) meanEdge += betwEdge[i][j] *= t;
+        meanEdge /= (nodeSize -1.) * nodeSize;
     }
     if(nodeSize > 2){
         double t = 1. / (nodeSize - 1) / (nodeSize - 2);
-        for(NodeType i = 0; i < nodeSize; i++) btNode += betwNode[i] *= t;
-        btNode /= nodeSize;
+        for(NodeType i = 0; i < nodeSize; i++) meanNode += betwNode[i] *= t;
+        meanNode /= nodeSize;
     }
 
     return 0;

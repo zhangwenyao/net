@@ -152,12 +152,14 @@ int net_save_params_0(ostream& os, const Network& net)
             << "\n--degWeightMean\t"    << net.degWeightMean;
     }
 
-    os << "\n--paramsIntSize\t"    << net.paramsInt.size();
-    if (!net.paramsInt.empty())
-        os << "\n--paramsInts\t" << net.paramsInt;
-    os  << "\n--paramsDoubleSize\t" << net.paramsDouble.size();
-    if (!net.paramsDouble.empty())
-        os << "\n--paramsDoubles\t" << net.paramsDouble;
+    if (!net.paramsInt.empty()){
+        os  << "\n--paramsIntSize\t"    << net.paramsInt.size()
+            << "\n--paramsInts\t"       << net.paramsInt;
+    }
+    if (!net.paramsDouble.empty()){
+        os  << "\n--paramsDoubleSize\t" << net.paramsDouble.size()
+            << "\n--paramsDoubles\t"    << net.paramsDouble;
+    }
 
     if(net.dirFlag && !net.degArrSumOut.empty()){
         os  << "\n--nodeSizeOut\t"  << (net.degArrSumOut.back() - (net.degArrValOut.front() <= 0 ? net.degArrSizeOut.front() : 0))

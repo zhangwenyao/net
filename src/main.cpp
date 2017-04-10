@@ -10,21 +10,19 @@ int main(int argc, char **argv)
     //**//****************************************************//*
     do{
         Network net, net2;
-        net.saveName = net.readName = "data/random-power2.5";
+        net.saveName = net.readName = "data/random-power2";
         net.dirFlag = 0;
         net.nodeSize = 1000;
-        net.Pow_gamma = 2.5;
+        net.net_degree.power_gamma = 2;
         net.kMin = 2;
         net.kMax = sqrt(net.nodeSize);
 
-        ParamsSIS params;
-        net.params = &params;
-        params.M = 70;
-        params.p0 = 0.1;
-        params.p = 0.01;
-        params.lambda = 0.16;
-        params.t_r = 800;
-        params.t_av = 1000;
+        net.act_SIS.M = 70;
+        net.act_SIS.p0 = 0.1;
+        net.act_SIS.p = 0.01;
+        net.act_SIS.lambda = 0.11;
+        net.act_SIS.t_r = 80;
+        net.act_SIS.t_av = 10;
 
         //while(0 == (net.seed = RAND2_INIT(net.seed)));    // 初始化随机数种子
         net.seed = RAND2_INIT(1);    // 初始化随机数种子
@@ -32,7 +30,7 @@ int main(int argc, char **argv)
             ERROR();
             break;
         }
-        if(0 != net_act_SIS(net, params)){
+        if(0 != net_act_SIS(net)){
             ERROR();
             break;
         }

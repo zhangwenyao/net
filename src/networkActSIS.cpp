@@ -5,31 +5,26 @@
 #include "common.h"
 using namespace std;
 //**//****************************************************//*
-int net_save_params_act_SIS(std::ostream& os, const ParamsSIS& params)
+int net_save_params_act_SIS(std::ostream& os, const Network& net)
 {
     if(!os) return -1;
-    os   << "--lambda_c\t" << params.lambda_c
-         << "\n--ksi\t"    << params.ksi
-         << "\n--lambda\t" << params.lambda
-         << "\n--p\t"      << params.p
-         << "\n--p0\t"     << params.p0
-         << "\n";
+    os    << "--act_SIS-lambda_c\t" << net.act_SIS.lambda_c
+          << "\n--act_SIS-ksi\t"    << net.act_SIS.ksi
+          << "\n--act_SIS-lambda\t" << net.act_SIS.lambda
+          << "\n--act_SIS-p0\t"     << net.act_SIS.p0
+          << "\n--act_SIS-p\t"      << net.act_SIS.p
+          << "\n";
     return 0;
 }
 
-int net_save_params_act_SIS(std::ostream& os, const Network& net)
+int net_act_SIS(Network &net)
 {
-    return net_save_params_act_SIS(os, *((const ParamsSIS*)net.params));
-}
-
-int net_act_SIS(Network &net, ParamsSIS& params)
-{
-    act_SIS_init(params.statusSN, params.SN, params.N_i, params.NDeg_i, params.t, net.p2p, params.p0, params.M);
-    params.nSum = 0;
-    params.n2Sum = 0;
-    params.nNum = 0;
-    act_SIS(params.statusSN, params.SN, params.N_i, params.NDeg_i, params.t, params.nSum, params.n2Sum, params.nNum, params.p, params.lambda, params.t_r, params.t_av, net.p2p, net.kMax);
-    act_SIS_cal_params(params.ksi, params.lambda_c, net.p2p, params.nSum, params.n2Sum, params.nNum);
+    act_SIS_init(net.act_SIS.statusSN, net.act_SIS.SN, net.act_SIS.N_i, net.act_SIS.NDeg_i, net.act_SIS.t, net.p2p, net.act_SIS.p0, net.act_SIS.M);
+    net.act_SIS.nSum = 0;
+    net.act_SIS.n2Sum = 0;
+    net.act_SIS.nNum = 0;
+    act_SIS(net.act_SIS.statusSN, net.act_SIS.SN, net.act_SIS.N_i, net.act_SIS.NDeg_i, net.act_SIS.t, net.act_SIS.nSum, net.act_SIS.n2Sum, net.act_SIS.nNum, net.act_SIS.p, net.act_SIS.lambda, net.act_SIS.t_r, net.act_SIS.t_av, net.p2p, net.kMax);
+    act_SIS_cal_params(net.act_SIS.ksi, net.act_SIS.lambda_c, net.p2p, net.act_SIS.nSum, net.act_SIS.n2Sum, net.act_SIS.nNum);
     return 0;
 }
 

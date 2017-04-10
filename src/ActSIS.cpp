@@ -108,6 +108,7 @@ int SIS_update2(VVNodeType &statusSN, VVNodeType &SN, VNodeType &N_i, VLinkType 
             t[i] = t[M];
         }
     }
+    cout << "\t" << N_i[M] << "\t" << t[M] << "\t" << dt << endl;
     return flag;
 }
 

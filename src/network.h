@@ -50,7 +50,7 @@
 class Network
 {
     public:
-        // params
+        // variables
         std::string argv;       // 参数
         std::string saveName;   // 保存文件名前缀
         std::string readName;   // 读取文件名前缀
@@ -65,31 +65,8 @@ class Network
         std::vector<int>    paramsInt;  // 整型参数
         std::vector<double> paramsDouble;   // 实数参数
         char        priChar, priChar2;    // 保存文件时的分隔符
-
-#ifdef NET_DEGREE
-#ifdef DEG_POISSON
-        double      Poi_p;
-#endif
-#ifdef DEG_POWER
-        double      Pow_gamma;
-#endif
-#endif  // NET_DEGREE
-
-#ifdef NET_A
-        int         A_a;
-#endif
-
-#ifdef NET_RANDOM
-        double      ER_p;
-#endif
-
-#ifdef NET_BA
-        int         BA_M, BA_M0;
-#endif
-
-#ifdef NET_GRID
-        int         Grid_NX, Grid_NY;
-#endif
+        Network     *net2;
+        int         runStatus;
 
         // deg
         VDouble     degArrProb; // [degSize]    度分布概率 p(k)
@@ -132,79 +109,138 @@ class Network
         VDouble     nodeNeiAveNo, nodeNeiAveNoInIn, nodeNeiAveNoInOut, nodeNeiAveNoOutIn, nodeNeiAveNoOutOut;   // [nodeSize]   各点的邻居编号平均值
         VDouble     neiAveNo, neiAveNoInIn, neiAveNoInOut, neiAveNoOutIn, neiAveNoOutOut;   // [degSize]    各度的邻居编号平均值
 
-#ifdef STAT_PEARSON
-        // pearson
-        double      pearson, pearsonInIn, pearsonInOut, pearsonOutIn, pearsonOutOut;
-        double      pearsonNo, pearsonNoInIn, pearsonNoInOut, pearsonNoOutIn, pearsonNoOutOut;
-        double      ps_rho, ps_rhoInIn, ps_rhoInOut, ps_rhoOutIn, ps_rhoOutOut;
-#endif
-
         VDouble     deg2ArrVal, deg2ArrValIn, deg2ArrValOut; // [degSize]    归一化后的度分布序列 k
         VDouble     nodeNeiAveDeg2, nodeNeiAveDeg2In, nodeNeiAveDeg2Out;// [nodeSize]
         VDouble     neiAveDeg2, neiAveDeg2InIn, neiAveDeg2InOut, neiAveDeg2OutIn, neiAveDeg2OutOut; // [degSize]
         VDouble     deg2ArrWeight, deg2ArrWeightOut, deg2ArrWeightIn;   // 同度节点连边总权重
         double      deg2WeightMean, deg2WeightMeanOut, deg2WeightMeanIn;
 
-#ifdef STAT_SPEARMAN
-        // spearman
-        double      spearman, spearmanInIn, spearmanInOut, spearmanOutIn, spearmanOutOut, sp_rho, sp_rhoInIn, sp_rhoInOut, sp_rhoOutIn, sp_rhoOutOut;
-#ifdef MODEL_GAUSS
-        // gauss模型
-        double      sp_r0;
-        VDouble     sp_GaussS2;     // [nodeSize]   模型的联合概率的方差
-#endif  // MODEL_GAUSS
-#endif  // STAT_SPEARMAN
 
-#ifdef STAT_KENDALLTAU
-        double      kendallTau, kendallTauOutIn;
-#endif  // STAT_KENDALLTAU
+#ifdef NET_DEGREE
+        struct{
+#ifdef DEG_POISSON
+            double      poison_p;
+#endif
+#ifdef DEG_POWER
+            double      power_gamma;
+#endif
+        }net_degree;
+#endif  // NET_DEGREE
+
+
+#ifdef NET_RANDOM
+        struct{
+            double      p;
+        }net_random;
+#endif
+
+#ifdef NET_BA
+        struct{
+            int         M, M0;
+        }net_BA;
+#endif
+
+#ifdef NET_GRID
+        struct{
+            int         NX, NY;
+        }net_grid;
+#endif
+
+
+#ifdef STAT_PEARSON
+        struct{
+            // pearson
+            double      pearson, InIn, InOut, OutIn, OutOut;
+            double      No, NoInIn, NoInOut, NoOutIn, NoOutOut;
+            double      rho, rhoInIn, rhoInOut, rhoOutIn, rhoOutOut;
+        }stat_pearson;
+#endif
+
+#ifdef STAT_SPEARMAN
+        struct{
+            // spearman
+            double      spearman, InIn, InOut, OutIn, OutOut, rho, rhoInIn, rhoInOut, rhoOutIn, rhoOutOut;
+#ifdef MODEL_GAUSS
+            // gauss模型
+            double      r0;
+            VDouble     GaussS2;     // [nodeSize]   模型的联合概率的方差
+#endif  // MODEL_GAUSS
+        }stat_spearman;
+#endif
+
+#ifdef STAT_KENDALL
+        struct{
+            double      tau, OutIn;
+        }stat_kendall;
+#endif
 
 #ifdef STAT_BETWEENNESS
-        double      btNode, btEdge;   // 平均介数
-        VDouble     betwNode;         // 各点介数
-        VVDouble    betwEdge;     // 各边介数
-        VVDistType  minDistMatr;  // 最短距离
-        VDouble     minDistMean;  // 平均最短距离
+        struct{
+            double      meanNode, meanEdge;   // 平均介数
+            VDouble     betwNode;         // 各点介数
+            VVDouble    betwEdge;     // 各边介数
+            VVDistType  minDistMatr;  // 最短距离
+            VDouble     minDistMean;  // 平均最短距离
+        }stat_betweenness;
 #endif
 
 #ifdef STAT_MODULARITY
-        double      moduCoef;   // 网络分组系数Q
-        VDouble     moduNodeCoef;   // 节点分组系数P
-        VNodeType   moduVal;    // 各节点分组的序号
-        VNodeType   moduStk;    // 按分组序号排列的节点编号
-        VNodeType   moduNum;    // 节点在moduStk中的位置
-        VRNodeType  moduRange;  // 各分组的范围
-        VVLinkType  moduLKK;    // 不同组之间连边数目
+        struct{
+            double      Coef;   // 网络分组系数Q
+            VDouble     NodeCoef;   // 节点分组系数P
+            VNodeType   Val;    // 各节点分组的序号
+            VNodeType   Stk;    // 按分组序号排列的节点编号
+            VNodeType   Num;    // 节点在moduStk中的位置
+            VRNodeType  Range;  // 各分组的范围
+            VVLinkType  LKK;    // 不同组之间连边数目
+        }stat_modularity;
 #endif
 
 #ifdef STAT_SIMILARITY
-        VVDouble     simiNodeCoef;   // 网络节点相似系数
-        VVDouble     simiEdgeCoef;   // 网络连边相似系数
+        struct{
+            VVDouble     NodeCoef;   // 网络节点相似系数
+            VVDouble     EdgeCoef;   // 网络连边相似系数
+        }stat_similarity;
 #endif
 
 #ifdef STAT_CLUSTER
-        double      cluster_c;
-        VDouble     cluster;    // clustering coefficient
+        struct{
+            double      coef;
+            VDouble     Node;    // clustering coefficient
+        }stat_cluster;
 #endif
 
 #ifdef STAT_SPREAD
-        NodeType SOURCE_HEAD, SOURCE_NULL;
-        std::vector<NodeType> source, nei, num, stk, time;
-        NodeType spreadSize;
-        NodeType head, nei1, nei0;
-        LinkType neiCountSize;
+        struct{
+            NodeType SOURCE_HEAD, SOURCE_NULL;
+            std::vector<NodeType> source, nei, num, stk, time;
+            NodeType spreadSize;
+            NodeType head, nei1, nei0;
+            LinkType neiCountSize;
 
-        double prob;
-        std::vector<int> prob_rand;
+            double prob;
+            std::vector<int> prob_rand;
 
-        NodeType dataSize;
-        std::vector<NodeType> data_node, data_time;
+            NodeType dataSize;
+            std::vector<NodeType> data_node, data_time;
+        }stat_spread;
 #endif
 
-        Network     *net2;
+#ifdef ACT_SIS
+        struct{
+            unsigned    M;
+            double      p0, p, lambda;
+            double      t_r, t_av, ksi, lambda_c;
+            LinkType    nSum, n2Sum;
+            NodeType    nNum;
+            VVNodeType  statusSN, SN;
+            VNodeType   N_i;
+            VLinkType   NDeg_i;
+            VDouble     t;
+        }act_SIS;
+#endif
 
-        void    *params;
-        int     runStatus;
+
         Network();
         ~Network();
         Network& run(const std::string& argv);
@@ -220,7 +256,7 @@ class Network
 
 int net_read_params_0(std::istream& is, Network& net);
 int net_save_params_0(std::ostream& os, const Network& net);
-int net_save_params_0(const Network& net, const char *namei = NULL);
+int net_save_params_0(const Network& net, const char *name = NULL);
 //**//************************************************************//*
 int net_clear_deg(Network& net);
 int net_clear_p2p(Network& net);

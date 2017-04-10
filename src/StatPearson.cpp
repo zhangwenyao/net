@@ -165,7 +165,7 @@ int cal_pearson(double& pearson, const VVNodeType& p2p, const LinkType linkSize)
     return 0;
 }
 
-int cal_pearson_dir(double& pearson, double& stat_pearson.rho, const VVNodeType& p2p, const LinkType linkSize, const VNodeType& nodeDegOut, const VNodeType& nodeDegIn)
+int cal_pearson_dir(double& pearson, double& rho, const VVNodeType& p2p, const LinkType linkSize, const VNodeType& nodeDegOut, const VNodeType& nodeDegIn)
 {
     double sx = 0., sxx = 0., sy = 0., syy = 0., sxy = 0.;
     for(NodeType i = 0; i < p2p.size(); i++) {
@@ -182,18 +182,18 @@ int cal_pearson_dir(double& pearson, double& stat_pearson.rho, const VVNodeType&
         }
     }
     if(linkSize * sxx - sx * sx == 0){
-        pearson = stat_pearson.rho = 0;
+        pearson = rho = 0;
     }else{
         if(linkSize * syy - sy * sy == 0) pearson = 0;
         else pearson = (linkSize * sxy - sx * sy) / sqrt((linkSize * sxx - sx * sx) * (linkSize * syy - sy * sy));
-        stat_pearson.rho = (linkSize * sxy - sx * sy) / (linkSize * sxx - sx * sx);
+        rho = (linkSize * sxy - sx * sy) / (linkSize * sxx - sx * sx);
     }
     return 0;
 }
 
-int cal_pearson_dir_weight(double& pearson, double& stat_pearson.rho, const VVNodeType& p2p, const VVWeightType& vvweight, const WeightSumType netWeight, const VNodeType& nodeDegOut, const VNodeType& nodeDegIn, const int weightFlag)
+int cal_pearson_dir_weight(double& pearson, double& rho, const VVNodeType& p2p, const VVWeightType& vvweight, const WeightSumType netWeight, const VNodeType& nodeDegOut, const VNodeType& nodeDegIn, const int weightFlag)
 {
-    if(!weightFlag) return cal_pearson_dir(pearson, stat_pearson.rho, p2p, netWeight, nodeDegOut, nodeDegIn);
+    if(!weightFlag) return cal_pearson_dir(pearson, rho, p2p, netWeight, nodeDegOut, nodeDegIn);
     double sx = 0., sxx = 0., sy = 0., syy = 0., sxy = 0.;
     for(NodeType i = 0; i < p2p.size(); i++) {
         if(p2p[i].empty()) continue;
@@ -208,11 +208,11 @@ int cal_pearson_dir_weight(double& pearson, double& stat_pearson.rho, const VVNo
         }
     }
     if(netWeight * sxx - sx * sx == 0){
-        pearson = stat_pearson.rho = 0;
+        pearson = rho = 0;
     }else{
         if(netWeight * syy - sy * sy == 0) pearson = 0;
         else pearson = (netWeight * sxy - sx * sy) / sqrt((netWeight * sxx - sx * sx) * (netWeight * syy - sy * sy));
-        stat_pearson.rho = (netWeight * sxy - sx * sy) / (netWeight * sxx - sx * sx);
+        rho = (netWeight * sxy - sx * sy) / (netWeight * sxx - sx * sx);
     }
     return 0;
 }
@@ -232,7 +232,7 @@ int cal_pearson_link(double& pearson, const VNodeType& link, const VNodeType& no
     return 0;
 }
 
-int cal_stat_pearson.No(double& stat_pearson.No, const VVNodeType& p2p, const LinkType linkSize)
+int cal_No(double& No, const VVNodeType& p2p, const LinkType linkSize)
 {
     const LinkType n = linkSize * 2;
     const NodeType nodeSize = p2p.size();
@@ -246,12 +246,12 @@ int cal_stat_pearson.No(double& stat_pearson.No, const VVNodeType& p2p, const Li
             sxy += (double)i * p2p[i][j];
         }
     }
-    if(n * sxx - sx * sx == 0) stat_pearson.No = 0;
-    else stat_pearson.No = (n * sxy - sx * sx) / (n * sxx - sx * sx);
+    if(n * sxx - sx * sx == 0) No = 0;
+    else No = (n * sxy - sx * sx) / (n * sxx - sx * sx);
     return 0;
 }
 
-int cal_stat_pearson.No_link(double& stat_pearson.No, const VNodeType& link)
+int cal_No_link(double& No, const VNodeType& link)
 {
     const LinkType n = link.size();
     double sx = 0., sxx = 0., sxy = 0.;
@@ -261,8 +261,8 @@ int cal_stat_pearson.No_link(double& stat_pearson.No, const VNodeType& link)
         sxx += x * x + y * y;
         sxy += x * y;
     }
-    if(n * sxx - sx * sx == 0) stat_pearson.No = 0;
-    else stat_pearson.No = (n * sxy - sx * sx) / (n * sxx - sx * sx);
+    if(n * sxx - sx * sx == 0) No = 0;
+    else No = (n * sxy - sx * sx) / (n * sxx - sx * sx);
     return 0;
 }
 

@@ -16,12 +16,12 @@ int cal_nodeNeiAveNo(VDouble& nodeNeiAveNo, const VVNodeType& p2p);
 
 int cal_pearson_lkk(double& pearson, const VVLinkType& lkk, const VNodeType& degArrVal, const LinkType& linkSize);
 int cal_pearson(double& pearson, const VVNodeType& p2p, const LinkType linkSize);
-int cal_pearson_dir(double& pearson, double& stat_pearson.rho, const VVNodeType& p2p, const LinkType linkSize, const VNodeType& nodeDegOut, const VNodeType& nodeDegIn);
-int cal_pearson_dir_weight(double& pearson, double& stat_pearson.rho, const VVNodeType& p2p, const VVWeightType& vvweight, const WeightSumType netWeight, const VNodeType& nodeDegOut, const VNodeType& nodeDegIn, const int weightFlag);
+int cal_pearson_dir(double& pearson, double& rho, const VVNodeType& p2p, const LinkType linkSize, const VNodeType& nodeDegOut, const VNodeType& nodeDegIn);
+int cal_pearson_dir_weight(double& pearson, double& rho, const VVNodeType& p2p, const VVWeightType& vvweight, const WeightSumType netWeight, const VNodeType& nodeDegOut, const VNodeType& nodeDegIn, const int weightFlag);
 int cal_pearson_link(double& pearson, const VNodeType& link, const VNodeType& nodeDeg);
 
-int cal_stat_pearson.No(double& stat_pearson.No, const VVNodeType& p2p, const LinkType linkSize);
-int cal_stat_pearson.No_link(double& stat_pearson.No, const VNodeType& link);
+int cal_No(double& No, const VVNodeType& p2p, const LinkType linkSize);
+int cal_No_link(double& No, const VNodeType& link);
 
 //**//****************************************************//*
 #endif  // STAT_PEARSON

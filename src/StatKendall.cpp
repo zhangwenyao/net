@@ -5,11 +5,11 @@
 using namespace std;
 
 //**//****************************************************//*
-int cal_kendallTau_lkk(double& stat_kendall.tau, const VVLinkType& lkk, const LinkType linkSize, const int dir)
+int cal_kendallTau_lkk(double& tau, const VVLinkType& lkk, const LinkType linkSize, const int dir)
 {
     const NodeType degSize = lkk.size();
     if(degSize == 0 || lkk[0].empty() || linkSize <= 1){
-        stat_kendall.tau = 0;
+        tau = 0;
         return 0;
     }
     LinkType ls = 0, ld = 0;
@@ -29,7 +29,7 @@ int cal_kendallTau_lkk(double& stat_kendall.tau, const VVLinkType& lkk, const Li
                 }
             }
         }
-        stat_kendall.tau = ((double)ls - ld) / linkSize / (linkSize - 1);
+        tau = ((double)ls - ld) / linkSize / (linkSize - 1);
     }else{ // !dir
         for(NodeType ti1 = 0; ti1 < degSize; ti1++){
             for(NodeType tj1 = 0; tj1 <= ti1; tj1++){
@@ -48,17 +48,17 @@ int cal_kendallTau_lkk(double& stat_kendall.tau, const VVLinkType& lkk, const Li
                 }
             }
         }
-        stat_kendall.tau = ((double)ls - ld) / linkSize / (linkSize - 1) / 2;
+        tau = ((double)ls - ld) / linkSize / (linkSize - 1) / 2;
     }
     return 0;
 }
 
-int cal_kendallTau_lkkSum(double& stat_kendall.tau, const VVLinkType& lkk, const VVLinkType& lkkSum, const int dir)
+int cal_kendallTau_lkkSum(double& tau, const VVLinkType& lkk, const VVLinkType& lkkSum, const int dir)
 {
     const NodeType degSize = lkkSum.size(), degEnd = degSize - 1;
     const LinkType linkSize = lkkSum.back().back();
     if(degSize == 0 || lkkSum[0].empty() || linkSize <= 1){
-        stat_kendall.tau = 0;
+        tau = 0;
         return 0;
     }
     LinkType ls = 0, ld = 0;
@@ -78,7 +78,7 @@ int cal_kendallTau_lkkSum(double& stat_kendall.tau, const VVLinkType& lkk, const
                 if(ti1 < degEnd && tj1 > 0) ld += n1 * (lkkSum[degEnd][tj1 - 1] - lkkSum[ti1][tj1 - 1]);
             }
         }
-        stat_kendall.tau = ((double)ls - ld) / linkSize / (linkSize - 1);
+        tau = ((double)ls - ld) / linkSize / (linkSize - 1);
     }else{  // !dir
         for(NodeType ti1 = 0; ti1 < degSize; ti1++){
             for(NodeType tj1 = 0; tj1 <= ti1; tj1++){
@@ -97,15 +97,15 @@ int cal_kendallTau_lkkSum(double& stat_kendall.tau, const VVLinkType& lkk, const
                 if(tj1 != ti1) ld -= n1; // self compare
             }
         }
-        stat_kendall.tau = ((double)ls - ld) / linkSize / (linkSize - 1) / 2;
+        tau = ((double)ls - ld) / linkSize / (linkSize - 1) / 2;
     }
     return 0;
 }
 
-int cal_kendallTau_p2p(double stat_kendall.tau, const VVNodeType& p2p, const VNodeType& nodeDegOut, const VNodeType& nodeDegIn, const LinkType linkSize, const int dir)
+int cal_kendallTau_p2p(double tau, const VVNodeType& p2p, const VNodeType& nodeDegOut, const VNodeType& nodeDegIn, const LinkType linkSize, const int dir)
 {
     if(p2p.empty() || nodeDegOut.empty()){
-        stat_kendall.tau = 0;
+        tau = 0;
         return 0;
     }
     LinkType ls = 0, ld = 0;
@@ -130,7 +130,7 @@ int cal_kendallTau_p2p(double stat_kendall.tau, const VVNodeType& p2p, const VNo
                 }
             }
         }
-        stat_kendall.tau = ((double)ls - ld) / linkSize / (linkSize - 1) / 2;
+        tau = ((double)ls - ld) / linkSize / (linkSize - 1) / 2;
     }else{ // dir
         for(NodeType i = 0, ni; i < p2p.size(); i++){
             ni = nodeDegOut[i];
@@ -149,7 +149,7 @@ int cal_kendallTau_p2p(double stat_kendall.tau, const VVNodeType& p2p, const VNo
                 }
             }
         }
-        stat_kendall.tau = ((double)ls - ld) / linkSize / (linkSize - 1);
+        tau = ((double)ls - ld) / linkSize / (linkSize - 1);
     }
     return 0;
 }

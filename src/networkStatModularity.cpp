@@ -51,14 +51,14 @@ int net_clear_modularity(Network& net)
 }
 
 //**//****************************************************//*
-int net_save_stat_modularity.Stk(const Network& net, ostream& os, const char c)
+int net_save_moduStk(const Network& net, ostream& os, const char c)
 {
-    return save_stat_modularity.Stk(os, net.stat_modularity.Stk, net.stat_modularity.Range, c);
+    return save_moduStk(os, net.stat_modularity.Stk, net.stat_modularity.Range, c);
 }
 
-int net_save_stat_modularity.Stk(const Network& net, const char *name, const char c)
+int net_save_moduStk(const Network& net, const char *name, const char c)
 {
-    return save_stat_modularity.Stk(net.stat_modularity.Stk, net.stat_modularity.Range, name, c);
+    return save_moduStk(net.stat_modularity.Stk, net.stat_modularity.Range, name, c);
 }
 
 //**//****************************************************//*

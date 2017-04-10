@@ -27,8 +27,8 @@ int cal_nodeNeiAveDeg2_AllAll(VDouble& nodeNeiAveDeg2, const VVNodeType& p2p, co
 
 int cal_spearman_lkk(double& spearman, const VVLinkType& lkk, const VDouble& deg2ArrVal, const LinkType linkSize);
 int cal_spearman(double& spearman, const VVNodeType& p2p, const VDouble& deg2ArrVal, MNodeType& degArrNo, const LinkType linkSize);
-int cal_spearman_dir(double& spearman, double& stat_spearman.rho, const VVNodeType& p2p, const double linkSize, const VNodeType& nodeDeg1, MNodeType& degArrNo1, const VDouble& deg2ArrVal1, const VNodeType& nodeDeg2, MNodeType& degArrNo2, const VDouble& deg2ArrVal2);
-int cal_spearman_dir_weight(double& spearman, double& stat_spearman.rho, const VVNodeType& p2p, const VVWeightType& vvweight, const double netWeight, const VNodeType& nodeDeg1, MNodeType& degArrNo1, const VDouble& deg2ArrVal1, const VNodeType& nodeDeg2, MNodeType& degArrNo2, const VDouble& deg2ArrVal2, const int weightFlag);
+int cal_spearman_dir(double& spearman, double& rho, const VVNodeType& p2p, const double linkSize, const VNodeType& nodeDeg1, MNodeType& degArrNo1, const VDouble& deg2ArrVal1, const VNodeType& nodeDeg2, MNodeType& degArrNo2, const VDouble& deg2ArrVal2);
+int cal_spearman_dir_weight(double& spearman, double& rho, const VVNodeType& p2p, const VVWeightType& vvweight, const double netWeight, const VNodeType& nodeDeg1, MNodeType& degArrNo1, const VDouble& deg2ArrVal1, const VNodeType& nodeDeg2, MNodeType& degArrNo2, const VDouble& deg2ArrVal2, const int weightFlag);
 int cal_spearman_link(double& spearman, const VNodeType& link, const VNodeType& nodeDeg, const VDouble& deg2ArrVal, MNodeType& degArrNo);
 
 //**//****************************************************//*

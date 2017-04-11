@@ -19,6 +19,7 @@
 #include "networkRandom.h"
 #endif
 
+
 #ifdef NET_BA
 #include "NetBA.h"
 #include "networkBA.h"
@@ -28,6 +29,15 @@
 #include "NetGrid.h"
 #include "networkGrid.h"
 #endif
+
+#ifdef NET_ACTOR
+#include "NetActor.h"
+#endif
+
+#ifdef NET_FOODWEB
+#include "NetFoodweb.h"
+#endif
+
 
 #ifdef STAT_PEARSON
 #include "StatPearson.h"

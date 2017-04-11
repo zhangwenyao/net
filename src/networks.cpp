@@ -41,76 +41,76 @@ Network::Network() :
 {
 #ifdef NET_DEGREE
 #ifdef DEG_POISSON
-    net_degree.poison_p = 0.1;
+    params_degree.poisson_p = 0.1;
 #endif
 #ifdef DEG_POWER
-    net_degree.power_gamma = 2.5;
+    params_degree.power_gamma = 2.5;
 #endif
 #endif  // NET_DEGREE
 
 
 #ifdef NET_RANDOM
-    net_random.p = 0.1;
+    params_random.p = 0.1;
 #endif
 
 #ifdef NET_BA
-    net_BA.M = 0;
-    net_BA.M0 = 0;
+    params_BA.M = 0;
+    params_BA.M0 = 0;
 #endif
 
 #ifdef NET_GRID
-    net_grid.NX = 0;
-    net_grid.NY = 0;
+    params_grid.NX = 0;
+    params_grid.NY = 0;
 #endif
 
 
 #ifdef STAT_PEARSON
-    stat_pearson.pearson = 0;
-    stat_pearson.No = 0;
-    stat_pearson.NoInIn = 0;
-    stat_pearson.NoInOut = 0;
-    stat_pearson.NoOutIn = 0;
-    stat_pearson.NoOutOut = 0;
-    stat_pearson.rho = 0;
-    stat_pearson.rhoInIn = 0;
-    stat_pearson.rhoInOut = 0;
-    stat_pearson.rhoOutIn = 0;
-    stat_pearson.rhoOutOut = 0;
+    params_pearson.pearson = 0;
+    params_pearson.No = 0;
+    params_pearson.NoInIn = 0;
+    params_pearson.NoInOut = 0;
+    params_pearson.NoOutIn = 0;
+    params_pearson.NoOutOut = 0;
+    params_pearson.rho = 0;
+    params_pearson.rhoInIn = 0;
+    params_pearson.rhoInOut = 0;
+    params_pearson.rhoOutIn = 0;
+    params_pearson.rhoOutOut = 0;
 #endif
 
 
 #ifdef STAT_SPEARMAN
-    stat_spearman.spearman = 0;
-    stat_spearman.InIn = 0;
-    stat_spearman.InOut = 0;
-    stat_spearman.OutIn = 0;
-    stat_spearman.OutOut = 0;
-    stat_spearman.rho = 0;
-    stat_spearman.rhoInIn = 0;
-    stat_spearman.rhoInOut = 0;
-    stat_spearman.rhoOutIn = 0;
-    stat_spearman.rhoOutOut = 0;
+    params_spearman.spearman = 0;
+    params_spearman.InIn = 0;
+    params_spearman.InOut = 0;
+    params_spearman.OutIn = 0;
+    params_spearman.OutOut = 0;
+    params_spearman.rho = 0;
+    params_spearman.rhoInIn = 0;
+    params_spearman.rhoInOut = 0;
+    params_spearman.rhoOutIn = 0;
+    params_spearman.rhoOutOut = 0;
 #ifdef MODEL_GAUSS
-    stat_spearman.r0 = 0;
+    params_spearman.r0 = 0;
 #endif  // MODEL_GAUSS
 #endif  
 
 #ifdef STAT_BETWEENNESS
-    stat_betweenness.node = 0;
-    stat_betweenness.edge = 0;
+    params_betweenness.node = 0;
+    params_betweenness.edge = 0;
 #endif
 
 #ifdef STAT_KENDALL
-    stat_kendall.tau = 0;
-    stat_kendall.OutIn = 0;
+    params_kendall.tau = 0;
+    params_kendall.OutIn = 0;
 #endif
 
 #ifdef STAT_MODULARITY
-    stat_modularity.coef = 0;
+    params_modularity.coef = 0;
 #endif
 
 #ifdef STAT_CLUSTER
-    stat_cluster.c = 0;
+    params_cluster.coef = 0;
 #endif
 }
 
@@ -575,6 +575,26 @@ int net_run(Network& net, const string& argv)
             continue;
         }
 
+#ifdef ACT_RECOMMEND
+        if(s == "recommend"){
+            if(!(ss >> s) || 0 != net_act_recommend(net, s)){
+                ERROR();
+                return net.status = -1;
+            }
+            continue;
+        }
+#endif
+
+#ifdef ACT_SIS
+        if(s == "SIS"){
+            if(0 != net_act_SIS(net)){
+                ERROR();
+                return net.status = -1;
+            }
+            continue;
+        }
+#endif
+
         if(s == "print"){
             if(0 != net_save_params(cout, net)){
                 ERROR();
@@ -644,7 +664,7 @@ int net_clear(Network& net)
 #ifdef STAT_SPEARMAN
     net_clear_spearman(net);
 #ifdef MODEL_GAUSS
-    net.stat_spearman.GaussS2.clear();         // [nodeSize]   模型的联合概率的方差
+    net.params_spearman.GaussS2.clear();         // [nodeSize]   模型的联合概率的方差
 #endif
 #endif
 

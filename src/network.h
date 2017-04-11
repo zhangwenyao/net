@@ -41,7 +41,9 @@
     推荐        recommend   mass            扩散
                             heat            热传导
     传播        SIS
+    输出        print
     保存        save
+                save0
     清理        clear
     结束        exit
  *//**/
@@ -119,31 +121,31 @@ class Network
 #ifdef NET_DEGREE
         struct{
 #ifdef DEG_POISSON
-            double      poison_p;
+            double      poisson_p;
 #endif
 #ifdef DEG_POWER
             double      power_gamma;
 #endif
-        }net_degree;
+        }params_degree;
 #endif  // NET_DEGREE
 
 
 #ifdef NET_RANDOM
         struct{
             double      p;
-        }net_random;
+        }params_random;
 #endif
 
 #ifdef NET_BA
         struct{
             int         M, M0;
-        }net_BA;
+        }params_BA;
 #endif
 
 #ifdef NET_GRID
         struct{
             int         NX, NY;
-        }net_grid;
+        }params_grid;
 #endif
 
 
@@ -153,7 +155,7 @@ class Network
             double      pearson, InIn, InOut, OutIn, OutOut;
             double      No, NoInIn, NoInOut, NoOutIn, NoOutOut;
             double      rho, rhoInIn, rhoInOut, rhoOutIn, rhoOutOut;
-        }stat_pearson;
+        }params_pearson;
 #endif
 
 #ifdef STAT_SPEARMAN
@@ -165,13 +167,13 @@ class Network
             double      r0;
             VDouble     GaussS2;     // [nodeSize]   模型的联合概率的方差
 #endif  // MODEL_GAUSS
-        }stat_spearman;
+        }params_spearman;
 #endif
 
 #ifdef STAT_KENDALL
         struct{
             double      tau, OutIn;
-        }stat_kendall;
+        }params_kendall;
 #endif
 
 #ifdef STAT_BETWEENNESS
@@ -181,7 +183,7 @@ class Network
             VVDouble    betwEdge;     // 各边介数
             VVDistType  minDistMatr;  // 最短距离
             VDouble     minDistMean;  // 平均最短距离
-        }stat_betweenness;
+        }params_betweenness;
 #endif
 
 #ifdef STAT_MODULARITY
@@ -193,21 +195,21 @@ class Network
             VNodeType   Num;    // 节点在moduStk中的位置
             VRNodeType  Range;  // 各分组的范围
             VVLinkType  LKK;    // 不同组之间连边数目
-        }stat_modularity;
+        }params_modularity;
 #endif
 
 #ifdef STAT_SIMILARITY
         struct{
             VVDouble     NodeCoef;   // 网络节点相似系数
             VVDouble     EdgeCoef;   // 网络连边相似系数
-        }stat_similarity;
+        }params_similarity;
 #endif
 
 #ifdef STAT_CLUSTER
         struct{
             double      coef;
             VDouble     Node;    // clustering coefficient
-        }stat_cluster;
+        }params_cluster;
 #endif
 
 #ifdef STAT_SPREAD
@@ -223,7 +225,7 @@ class Network
 
             NodeType dataSize;
             std::vector<NodeType> data_node, data_time;
-        }stat_spread;
+        }params_spread;
 #endif
 
 #ifdef ACT_SIS
@@ -237,7 +239,7 @@ class Network
             VNodeType   N_i;
             VLinkType   NDeg_i;
             VDouble     t;
-        }act_SIS;
+        }params_SIS;
 #endif
 
 

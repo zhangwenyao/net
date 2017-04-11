@@ -34,10 +34,16 @@ int net_act_recommend_mass(VDouble& o, VDouble& u2, VDouble& o2, VVNodeType& pu,
     return 0;
 }
 
-int net_act_recommend(Network &net)
+int net_act_recommend(Network &net, const string& s)
 {
     // TODO
-    return 0;
+    if(s == "mass"){
+        return 0;
+    }
+    if(s == "heat"){
+        return 0;
+    }
+    return net.status = -1;
 }
 //**//****************************************************//*
 #endif  // ACT_RECOMMEND

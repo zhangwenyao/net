@@ -6,8 +6,8 @@
 
 #ifdef NET_GRID
 //**//************************************************************//*
-// 参数：    net_grid.NX X方向格点数目
-//          net_grid.NY Y方向格点数目
+// 参数：    params_grid.NX X方向格点数目
+//          params_grid.NY Y方向格点数目
 // 节点i对应坐标（x，y）：i=x*NX+y
 int net_Grid_new(Network &net);
 

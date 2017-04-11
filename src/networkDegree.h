@@ -7,7 +7,7 @@
 #ifdef NET_DEGREE
 //**//****************************************************//*
 // Poisson度分布参数
-//      poison_p    连接概率p
+//      poisson_p    连接概率p
 //      nodeSize    网络节点数目
 #ifdef DEG_POISSON
 int net_deg_poisson(Network& net); // 生成度序列 各点均按概率取任意度

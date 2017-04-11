@@ -1,7 +1,6 @@
+#include "common.h"
 #include "ActFitnessComplexity.h"
 #ifdef ACT_FITNESS_COMPLEXITY
-
-#include "common.h"
 
 //**//*****************************************************//*
 int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp)

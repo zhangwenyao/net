@@ -18,14 +18,14 @@ int net_cal_kendallTau(Network& net)
         ERROR();
         return -1;
     }
-    cal_kendallTau_lkkSum(net.stat_kendall.tau, net.lkk, net.lkkSum, net.dirFlag);
-    //al_kendallTau_lkk(net.stat_kendall.tau, net.lkk, net.linkSize, net.dirFlag);
+    cal_kendallTau_lkkSum(net.params_kendall.tau, net.lkk, net.lkkSum, net.dirFlag);
+    //al_kendallTau_lkk(net.params_kendall.tau, net.lkk, net.linkSize, net.dirFlag);
     if(net.dirFlag){
         if(net.lkkSumOutIn.empty() && 0 != lkk_2_lkkSum(net.lkkSumOutIn, net.lkkOutIn, net.dirFlag)){
             ERROR();
             return -1;
         }
-        cal_kendallTau_lkkSum(net.stat_kendall.OutIn, net.lkkOutIn, net.lkkSumOutIn, net.dirFlag);
+        cal_kendallTau_lkkSum(net.params_kendall.OutIn, net.lkkOutIn, net.lkkSumOutIn, net.dirFlag);
     }
     return 0;
 }
@@ -34,14 +34,14 @@ int net_cal_kendallTau(Network& net)
 int net_read_params_kendallTau(istream& is, Network& net)
 {
     for(string s; is >> s;){
-        if (s == "--stat_kendall.tau") {
-            is >> net.stat_kendall.tau;
-            cout << s << '\t'   << net.stat_kendall.tau << endl;
+        if (s == "--params_kendall.tau") {
+            is >> net.params_kendall.tau;
+            cout << s << '\t'   << net.params_kendall.tau << endl;
             continue;
         }
-        if (s == "--stat_kendall.OutIn") {
-            is >> net.stat_kendall.OutIn;
-            cout << s << '\t'   << net.stat_kendall.OutIn << endl;
+        if (s == "--params_kendall.OutIn") {
+            is >> net.params_kendall.OutIn;
+            cout << s << '\t'   << net.params_kendall.OutIn << endl;
             continue;
         }
     }
@@ -51,8 +51,8 @@ int net_read_params_kendallTau(istream& is, Network& net)
 int net_save_params_kendallTau(ostream& os, const Network& net)
 {
     if(!os) return -1;
-    os << "--stat_kendall.tau\t" << net.stat_kendall.tau << '\n';
-    if(net.dirFlag) os << "--stat_kendall.OutIn\t" << net.stat_kendall.OutIn << '\n';
+    os << "--params_kendall.tau\t" << net.params_kendall.tau << '\n';
+    if(net.dirFlag) os << "--params_kendall.OutIn\t" << net.params_kendall.OutIn << '\n';
     return 0;
 }
 

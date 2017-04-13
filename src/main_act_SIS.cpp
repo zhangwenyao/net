@@ -12,17 +12,21 @@ int main(int argc, char **argv) {
     Network net, net2;
     net.saveName = net.readName = "data/random-power2";
     net.dirFlag = 0;
-    net.nodeSize = 1000;
+    net.nodeSize = 100000;
     net.params_degree.power_gamma = 2;
-    net.kMin = 2;
-    net.kMax = sqrt(net.nodeSize);
+    net.kMin = 3;
+    if (0 != cal_kmax_PowerLaw_NatureCutoff(net.kMax, net.nodeSize, net.kMin,
+                                            net.params_degree.power_gamma)) {
+      ERROR();
+      return -1;
+    }
 
     net.params_SIS.M = 70;
-    net.params_SIS.p0 = 0.1;
+    net.params_SIS.rho = 0.1;
     net.params_SIS.p = 0.01;
-    net.params_SIS.lambda = 0.11;
-    net.params_SIS.t_r = 8;
-    net.params_SIS.t_av = 1;
+    net.params_SIS.lambda = 0.01;
+    net.params_SIS.tau = 10000;
+    net.params_SIS.t_av = 100;
 
     // while(0 == (net.seed = RAND2_INIT(net.seed)));    // 初始化随机数种子
     net.seed = RAND2_INIT(1);  // 初始化随机数种子
@@ -31,7 +35,7 @@ int main(int argc, char **argv) {
       ERROR();
       break;
     }
-    if (0 != net_act_SIS(net)) {
+    if (0 != net_act_SIS_tau(net)) {
       ERROR();
       break;
     }

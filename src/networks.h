@@ -19,7 +19,6 @@
 #include "networkRandom.h"
 #endif
 
-
 #ifdef NET_BA
 #include "NetBA.h"
 #include "networkBA.h"
@@ -37,7 +36,6 @@
 #ifdef NET_FOODWEB
 #include "NetFoodweb.h"
 #endif
-
 
 #ifdef STAT_PEARSON
 #include "StatPearson.h"

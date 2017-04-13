@@ -4,9 +4,8 @@
 #ifdef NET_ACTOR
 
 //**//*****************************************************//*
-int data_read_actor_p2p(VVNodeType& p2p, const char *name);
+int data_read_actor_p2p(VVNodeType& p2p, const char* name);
 
 //**//*****************************************************//*
 #endif
 #endif  // NET_ACTOR_H
-

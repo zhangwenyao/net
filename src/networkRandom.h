@@ -30,13 +30,13 @@ int net_ER(Network& net);
     ranNode_nodeM       // 随机选点连边、重连时随机选点；用到linkMatr,p2p,remNodeNum
     ranNode_Gauss       // 随机选点按点的度之差的相应高斯概率连边、重连时所有边中随机选；用到p2p,remNodeNum,link
     ranNode_node        // 随机选点连边、重连时随机选点再选边；用到p2p,remNodeNum
- *//**/
-int net_random_node_prob(Network& net);    // 所有点按概率p连边
-int net_random_remDeg(Network& net);   // 随机抽取剩余度连边
-int net_random_ranNode_link(Network& net); // 随机选点连边，重连时所有边中随机选
+ */                                       /**/
+int net_random_node_prob(Network& net);  // 所有点按概率p连边
+int net_random_remDeg(Network& net);     // 随机抽取剩余度连边
+int net_random_ranNode_link(
+    Network& net);  // 随机选点连边，重连时所有边中随机选
 
 int net_random_ranNode(Network& net);  // 每次直接随机抽取两个点连边
 //**//****************************************************//*
 #endif  // NET_RANDOM
 #endif  // NETWORK_RANDOM_H
-

@@ -10,7 +10,8 @@ int main() {
     net.nodeSize = 100;  // 节点数
     net.params_BA.M0 = 3;
     net.params_BA.M = 2;
-    while (0 == (net.seed = RAND2_INIT(net.seed)));  // 初始化随机数种子
+    while (0 == (net.seed = RAND2_INIT(net.seed)))
+      continue;  // 初始化随机数种子
     if (0 != net_run(net, "cal_p2p BA save")) {
       ERROR();
       break;

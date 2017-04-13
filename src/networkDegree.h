@@ -10,7 +10,7 @@
 //      poisson_p    连接概率p
 //      nodeSize    网络节点数目
 #ifdef DEG_POISSON
-int net_deg_poisson(Network& net); // 生成度序列 各点均按概率取任意度
+int net_deg_poisson(Network& net);  // 生成度序列 各点均按概率取任意度
 int net_read_params_poisson(std::istream& is, Network& net);
 int net_save_params_poisson(std::ostream& os, const Network& net);
 #endif  // DEG_POISSON
@@ -31,4 +31,3 @@ int net_save_params_power(std::ostream& os, const Network& net);
 //**//****************************************************//*
 #endif  // NET_DEGREE
 #endif  // NETWORK_DEGREE_H
-

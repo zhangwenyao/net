@@ -13,4 +13,3 @@ int act_recommend_heat(VNodeType p2pJ, VDouble u, double& t);
 //**//*****************************************************//*
 #endif  // ACT_RECOMMEND
 #endif  // ACT_RECOMMEND_H
-

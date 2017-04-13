@@ -34,7 +34,8 @@ int main(int argc, char **argv) {
     }
 
     // 读取link -> p2p
-    if (0 != data_read_foodweb1(net.link, (net.readName + "_link.txt").c_str())) {
+    if (0 !=
+        data_read_foodweb1(net.link, (net.readName + "_link.txt").c_str())) {
       ERROR();
       break;
     }

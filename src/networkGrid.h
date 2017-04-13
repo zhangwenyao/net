@@ -9,11 +9,10 @@
 // 参数：    params_grid.NX X方向格点数目
 //          params_grid.NY Y方向格点数目
 // 节点i对应坐标（x，y）：i=x*NX+y
-int net_Grid_new(Network &net);
+int net_Grid_new(Network& net);
 
 int net_read_params_Grid(std::istream& is, Network& net);
 int net_save_params_Grid(std::ostream& os, const Network& net);
 //**//************************************************************//*
 #endif  // NET_GRID
 #endif  // NETWORK_GRID_H
-

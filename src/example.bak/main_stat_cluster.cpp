@@ -14,8 +14,8 @@ int main(int argc, char **argv) {
     net.weightFlag = 1;
     net.dirFlag = 1;
     net.saveName = net.readName = "data/stat_cluster";
-    if (0 != common_read2_0("data/example/linkMatr2.txt", net.weightMatr)
-            || net.weightMatr.size() <= 0 || net.weightMatr[0].size() <= 0) {
+    if (0 != common_read2_0("data/example/linkMatr2.txt", net.weightMatr) ||
+        net.weightMatr.size() <= 0 || net.weightMatr[0].size() <= 0) {
       ERROR();
       break;
     }

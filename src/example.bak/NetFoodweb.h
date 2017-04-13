@@ -5,9 +5,8 @@
 
 #ifdef NET_FOODWEB
 //**//********************************************************************
-int data_read_foodweb1(VNodeType& link, const char *name);
+int data_read_foodweb1(VNodeType& link, const char* name);
 
 //**//********************************************************************
 #endif
 #endif  // NET_FOODWEB_H
-

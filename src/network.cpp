@@ -4,136 +4,282 @@
 using namespace std;
 
 //**//****************************************************//*
-int net_read_params_0(istream& is, Network& net) {
-  if (!is) {
-    ERROR();
-    return -1;
-  }
+Network::Network(void)
+    : argv("."),
+      argv0("."),
+      saveName("data/test"),
+      readName("data/test"),
+      status(0),
+      seed(0),
+      dirFlag(0),
+      weightFlag(0),
+      distFlag(0),
+      nodeSize(0),
+      kMin(0),
+      kMax(0),
+      linkSize(0),
+      priChar('\n'),
+      priChar2('\t'),
+      runStatus(0),
 
-  for (string s; is >> s;) {
-    if (s.size() <= 0 || s == ".") {
-      continue;
+      degMean(0),
+      degMeanOut(0),
+      degMeanIn(0),
+      linkRemain(0),
+      weight_m(2),
+      weight_n(2),
+      netWeight(0),
+      netWeightOut(0),
+      netWeightIn(0),
+      degWeightMean(0),
+      degWeightMeanOut(0),
+      degWeightMeanIn(0),
+
+      deg2WeightMean(0),
+      deg2WeightMeanOut(0),
+      deg2WeightMeanIn(0) {
+#ifdef NET_BA
+  params_BA.M = 0;
+  params_BA.M0 = 0;
+#endif
+
+#ifdef NET_GRID
+  params_grid.NX = 0;
+  params_grid.NY = 0;
+#endif
+
+#ifdef STAT_PEARSON
+  params_pearson.pearson = 0;
+  params_pearson.No = 0;
+  params_pearson.NoInIn = 0;
+  params_pearson.NoInOut = 0;
+  params_pearson.NoOutIn = 0;
+  params_pearson.NoOutOut = 0;
+  params_pearson.rho = 0;
+  params_pearson.rhoInIn = 0;
+  params_pearson.rhoInOut = 0;
+  params_pearson.rhoOutIn = 0;
+  params_pearson.rhoOutOut = 0;
+#endif
+
+#ifdef STAT_SPEARMAN
+  params_spearman.spearman = 0;
+  params_spearman.InIn = 0;
+  params_spearman.InOut = 0;
+  params_spearman.OutIn = 0;
+  params_spearman.OutOut = 0;
+  params_spearman.rho = 0;
+  params_spearman.rhoInIn = 0;
+  params_spearman.rhoInOut = 0;
+  params_spearman.rhoOutIn = 0;
+  params_spearman.rhoOutOut = 0;
+#ifdef MODEL_GAUSS
+  params_spearman.r0 = 0;
+#endif  // MODEL_GAUSS
+#endif
+
+#ifdef STAT_BETWEENNESS
+  params_betweenness.node = 0;
+  params_betweenness.edge = 0;
+#endif
+
+#ifdef STAT_KENDALL
+  params_kendall.tau = 0;
+  params_kendall.OutIn = 0;
+#endif
+
+#ifdef STAT_MODULARITY
+  params_modularity.coef = 0;
+#endif
+
+#ifdef STAT_CLUSTER
+  params_cluster.coef = 0;
+#endif
+}
+
+//**//************************************************************//*
+istream& operator>>(istream& is, Network& net) {
+  if (0 != net.runStatus || !is) {
+    ERROR();
+    return is;
+  }
+  for (string& s = net.argv0; is; is >> s) {
+    if (s.size() <= 0) continue;
+    if (0 != net.read_params_1(is).runStatus || s.size() > 0) {
+      net.runStatus = -1;
+      ERROR();
+      break;
     }
+  }
+  return is;
+}
+
+Network& Network::read_params_1(istream& is) {
+  string& s = argv0;
+  if (0 != runStatus || s.size() <= 0) return *this;
+  int flag = 1;
+  do {
     if (s == "--file") {
       cout << s << '\t';
       is >> s;
       cout << s << endl;
-      if (!is || s.size() <= 0 || s == net.readName) {
+      if (!is || s.size() <= 0 || s == readName) {
+        runStatus = -1;
         ERROR();
-      } else {
-        net.readName = s;
-        net_read_params(net, s.c_str());
+        return *this;
       }
-      continue;
+      readName = s;
+      s.clear();
+      read_params(readName.c_str());
+      flag = 0;
+      break;
     }
     if (s == "--argv") {
-      is >> net.argv;
-      cout << s << '\t' << net.argv << endl;
-      continue;
+      getline(is, argv);
+      cout << s << '\t' << argv << endl;
+      break;
     }
     if (s == "--saveName") {
-      is >> net.saveName;
-      cout << s << '\t' << net.saveName << endl;
-      continue;
+      is >> saveName;
+      cout << s << '\t' << saveName << endl;
+      break;
     }
     if (s == "--readName") {
-      is >> net.readName;
-      cout << s << '\t' << net.readName << endl;
-      continue;
+      is >> readName;
+      cout << s << '\t' << readName << endl;
+      break;
     }
     if (s == "--status") {
-      is >> net.status;
-      cout << s << '\t' << net.status << endl;
-      continue;
+      is >> status;
+      cout << s << '\t' << status << endl;
+      break;
     }
     if (s == "--seed") {
-      is >> net.seed;
-      cout << s << '\t' << net.seed << endl;
-      continue;
+      is >> seed;
+      cout << s << '\t' << seed << endl;
+      break;
     }
     if (s == "--dirFlag") {
-      is >> net.dirFlag;
-      cout << s << '\t' << net.dirFlag << endl;
-      continue;
+      is >> dirFlag;
+      cout << s << '\t' << dirFlag << endl;
+      break;
     }
     if (s == "--weightFlag") {
-      is >> net.weightFlag;
-      cout << s << '\t' << net.weightFlag << endl;
-      continue;
+      is >> weightFlag;
+      cout << s << '\t' << weightFlag << endl;
+      break;
     }
     if (s == "--nodeSize") {
-      is >> net.nodeSize;
-      cout << s << '\t' << net.nodeSize << endl;
-      continue;
+      is >> nodeSize;
+      cout << s << '\t' << nodeSize << endl;
+      break;
     }
     if (s == "--kMin") {
-      is >> net.kMin;
-      cout << s << '\t' << net.kMin << endl;
-      continue;
+      is >> kMin;
+      cout << s << '\t' << kMin << endl;
+      break;
     }
     if (s == "--kMax") {
-      is >> net.kMax;
-      cout << s << '\t' << net.kMax << endl;
-      continue;
+      is >> kMax;
+      cout << s << '\t' << kMax << endl;
+      break;
     }
     if (s == "--linkSize") {
-      is >> net.linkSize;
-      cout << s << '\t' << net.linkSize << endl;
-      continue;
+      is >> linkSize;
+      cout << s << '\t' << linkSize << endl;
+      break;
     }
     if (s == "--paramsInt") {
-      common_read1_0(is, net.paramsInt);
-      cout << s << '\t' << net.paramsInt << endl;
-      continue;
+      common_read1_0(is, paramsInt);
+      cout << s << '\t' << paramsInt << endl;
+      break;
     }
     if (s == "--paramsIntSize") {
       vector<int>::size_type st = 0;
       is >> st;
-      net.paramsInt.resize(st);
+      paramsInt.resize(st);
       cout << s << '\t' << st << endl;
-      continue;
+      break;
     }
     if (s == "--paramsInt2") {
       vector<int>::size_type st = 0;
       is >> st;
-      if (net.paramsInt.size() < st) net.paramsInt.resize(st);
-      is >> net.paramsInt[st];
-      cout << s << '\t' << st << "\t" << net.paramsInt[st] << endl;
-      continue;
+      if (paramsInt.size() < st) paramsInt.resize(st);
+      is >> paramsInt[st];
+      cout << s << '\t' << st << "\t" << paramsInt[st] << endl;
+      break;
     }
     if (s == "--paramsDouble") {
-      common_read1_0(is, net.paramsDouble);
-      cout << s << '\t' << net.paramsDouble << endl;
-      continue;
+      common_read1_0(is, paramsDouble);
+      cout << s << '\t' << paramsDouble << endl;
+      break;
     }
     if (s == "--paramsDoubleSize") {
       vector<double>::size_type st = 0;
       is >> st;
-      net.paramsDouble.resize(st);
+      paramsDouble.resize(st);
       cout << s << '\t' << st << endl;
-      continue;
+      break;
     }
     if (s == "--paramsDouble2") {
       vector<double>::size_type st = 0;
       is >> st;
-      if (net.paramsDouble.size() < st) net.paramsDouble.resize(st);
-      is >> net.paramsDouble[st];
-      cout << s << '\t' << st << "\t" << net.paramsDouble[st] << endl;
-      continue;
+      if (paramsDouble.size() < st) paramsDouble.resize(st);
+      is >> paramsDouble[st];
+      cout << s << '\t' << st << "\t" << paramsDouble[st] << endl;
+      break;
     }
-  }
+    flag = 0;
+  } while (0);
+  if (flag) s.clear();
 
-  return 0;
+  return *this;
 }
 
-int net_save_params_0(ostream& os, const Network& net) {
-  if (!os) {
+Network& Network::read_params(const char* name) {
+  if (0 != runStatus) {
     ERROR();
-    return -1;
+    return *this;
+  }
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName;
+  if (fn.size() <= 0) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+
+  ifstream is((fn + "_params.txt").c_str());
+  if (!is) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  is >> *this;
+  is.close();
+
+  return *this;
+}
+
+Network& Network::read_params(int argc, char** argv) {
+  string s;
+  for (int i = 0; i < argc; i++) (s += '\t') += argv[i];
+  stringstream ss(s);
+  ss >> *this;
+  return *this;
+}
+
+//**//****************************************************//*
+ostream& operator<<(std::ostream& os, const Network& net) {
+  if (0 != net.runStatus || !os) {
+    ERROR();
+    return os;
   }
   os << "--version\t" << NET_VERSION << "\n--saveName\t" << net.saveName
-     << "\n--readName\t" << net.readName << "\n--argv\t\""
-     << (net.argv.size() <= 0 ? "." : net.argv) << "\""
+     << "\n--readName\t" << net.readName << "\n--argv\t" << net.argv
      << "\n--status\t" << net.status << "\n--seed\t" << net.seed
      << "\n--dirFlag\t" << net.dirFlag << "\n--weightFlag\t" << net.weightFlag
      << "\n--nodeSize\t" << net.nodeSize << "\n--kMin\t" << net.kMin
@@ -170,741 +316,953 @@ int net_save_params_0(ostream& os, const Network& net) {
   }
   os << '\n';
 
-  return 0;
+  return os;
 }
 
-int net_save_params_0(const Network& net, const char* name) {
-  string fn;
-  if (name != NULL && name[0] != '\0') {
-    fn = name;
-  } else {
-    stringstream ss;
-    ss << net.seed;
-    fn = net.saveName + '_' + ss.str() + "_params.txt";
+const Network& Network::save_params(ostream& os) const {
+  os << *this;
+  return *this;
+}
+
+const Network& Network::save_params(const char* name) const {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
   }
-  ofstream os(fn.c_str());
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else {
+    stringstream ss;
+    ss << seed;
+    fn = saveName + '_' + ss.str();
+  }
+  ofstream os((fn + "_params.txt").c_str());
   if (!os) {
-    return -1;
+    ERROR();
+    return *this;
   }
-  os << net;
+  os << *this;
   os.close();
-  return 0;
+  return *this;
+}
+
+Network& Network::save_data(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  string fn;
+  stringstream ss;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else {
+    ss.clear();
+    ss << seed;
+    fn = saveName + '_' + ss.str();
+  }
+
+// save_deg(fn.c_str());
+// save_p2p(fn.c_str());
+
+#ifdef STAT_BETWEENNESS
+  save_betweenness(fn.c_str());
+#endif
+
+#ifdef STAT_MODULARITY
+  save_modularity(fn.c_str());
+#endif
+
+#ifdef STAT_SIMILARITY
+  save_similarity(fn.c_str());
+#endif
+
+#ifdef STAT_PEARSON
+  save_pearson(fn.c_str());
+#endif
+
+#ifdef STAT_SPEARMAN
+  save_spearman(fn.c_str());
+#endif
+
+#ifdef STAT_KENDALL
+  save_kendallTau(fn.c_str());
+#endif
+
+#ifdef STAT_CLUSTER
+  save_cluster(fn.c_str());
+#endif
+
+  return *this;
+}
+
+Network& Network::save(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  save_params(name);
+  save_data(name);
+
+  return *this;
 }
 
 //**//****************************************************//*
-int net_clear_deg(Network& net) {
-  // deg
-  net.degArrProb.clear();  // [degSize]    度分布概率 p(k)
-  net.degArrVal.clear();   // [degSize]    度分布序列 k
-  net.degArrSize.clear();  // [degSize]    各度节点数 n(k)
-  net.degArrNo.clear();    // [kMax+1]     度k在degArrVal中的位置
-  net.degArrSum.clear();   // [degSize+1]  度分布累计序列
-  net.nodeDeg.clear();     // [nodeSize]   各节点度
-  net.remNodeNum.clear();  // [remNodeSize] 未全连边的节点编号
-  net.nodesName.clear(), net.nodesName2.clear();  // [nodeSize]   节点的映射关系
-  net.degArrWeight.clear(), net.degArrWeightOut.clear(),
-      net.degArrWeightIn.clear();
-  return 0;
+Network& Network::init_seed(void) {
+  if (runStatus != 0) {
+    ERROR();
+    return *this;
+  }
+  if (seed <= 0)
+    while (0 == (seed = RAND2_INIT(seed))) continue;
+  return *this;
 }
 
-int net_clear_p2p(Network& net) {
-  // link
-  net.link.clear();  // [nodeSize]   网络连边
-  net.p2pSize.clear();
-  for (VVNodeTypeItr i = net.p2p.begin(); i != net.p2p.end(); i++) i->clear();
-  net.p2p.clear();  // [nodeSize]   各点连边
-  for (VVNodeTypeItr i = net.p2pIn.begin(); i != net.p2pIn.end(); i++)
-    i->clear();
-  net.p2pIn.clear();  // [nodeSize]   各点连边
-  for (VVWeightTypeItr i = net.vvweight.begin(); i != net.vvweight.end(); i++)
-    i->clear();
-  net.vvweight.clear();  // [nodeSize]   各点连边
-  for (VVDistTypeItr i = net.linkMatr.begin(); i != net.linkMatr.end(); i++)
-    i->clear();
-  net.linkMatr.clear();  // [nodeSize]   网络连边矩阵
-  for (VVCharItr i = net.linkMatrC.begin(); i != net.linkMatrC.end(); i++)
-    i->clear();
-  net.linkMatrC.clear();  // [nodeSize]   网络连边矩阵
-  return 0;
-}
-
-int net_clear_lkk(Network& net) {
-  // lkk
-  for (VVLinkTypeItr i = net.lkk.begin(); i != net.lkk.end(); i++) i->clear();
-  net.lkk.clear();
-  for (VVDoubleItr i = net.lkkProb.begin(); i != net.lkkProb.end(); i++)
-    i->clear();
-  net.lkkProb.clear();
-  return 0;
+Network& Network::init_seed(const int s) {
+  if (runStatus != 0) {
+    ERROR();
+    return *this;
+  }
+  while (0 == (seed = RAND2_INIT(s))) continue;
+  return *this;
 }
 
 //**//****************************************************//*
-int net_read_nodeDeg_0(Network& net, const char* name) {
-  if (!net.nodeDeg.empty() || !net.degArrVal.empty()) {
+Network& Network::clear_deg(void) {
+  if (0 != runStatus) {
     ERROR();
-    return -1;
+    return *this;
   }
-
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = net.readName + "_nodeDeg.txt";
-
-  if (0 != common_read1_0(fn.c_str(), net.nodeDeg)) {
-    ERROR();
-    return -1;
-  }
-  cout << fn << "\tsize:\t" << net.nodeDeg.size() << '\n';
-
-  return 0;
+  degArrProb.clear();  // [degSize]    度分布概率 p(k)
+  degArrVal.clear();   // [degSize]    度分布序列 k
+  degArrSize.clear();  // [degSize]    各度节点数 n(k)
+  degArrNo.clear();    // [kMax+1]     度k在degArrVal中的位置
+  degArrSum.clear();   // [degSize+1]  度分布累计序列
+  nodeDeg.clear();     // [nodeSize]   各节点度
+  remNodeNum.clear();  // [remNodeSize] 未全连边的节点编号
+  nodesName.clear(), nodesName2.clear();  // [nodeSize]   节点的映射关系
+  degArrWeight.clear();
+  degArrWeightOut.clear();
+  degArrWeightIn.clear();
+  return *this;
 }
 
-int net_read_degArr_0(Network& net, const char* name) {
-  if (!net.nodeDeg.empty() || !net.degArrVal.empty()) {
+Network& Network::save_deg(const char* name) {
+  if (0 != runStatus) {
     ERROR();
-    return -1;
+    return *this;
   }
-
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = net.readName;
-
-  if (net.degArrVal.empty()) {
-    if (0 !=
-        common_read1_0((fn + "_degArrVal.txt").c_str(), net.degArrVal, 0)) {
-      ERROR();
-      return -1;
-    }
-    cout << '\t' << fn << "_degArrVal.txt\tsize:\t" << net.degArrVal.size()
-         << '\n';
-  }
-  if (net.degArrSize.empty()) {
-    if (0 != common_read1_0((fn + "_degArrSize.txt").c_str(), net.degArrSize,
-                            0) ||
-        net.degArrSize.size() != net.degArrVal.size()) {
-      ERROR();
-      return -1;
-    }
-    cout << '\t' << fn << "_degArrSize.txt\tsize:\t" << net.degArrVal.size()
-         << '\n';
-  }
-  if (net.degArrSum.empty())
-    degArrSize_2_degArrSum(net.degArrSum, net.degArrSize);
-
-  if (net.linkSize <= 0 &&
-      0 != degArr_2_linkSize(net.linkSize, net.degArrVal, net.degArrSize)) {
-    ERROR();
-    return -1;
-  }
-  if (net.nodeSize <= 0 &&
-      0 != degArr_2_nodeSize(net.nodeSize, net.degArrSize)) {
-    ERROR();
-    return -1;
-  }
-  if (net.nodeDeg.empty()) {
-    net.nodeDeg.reserve(net.nodeSize);
-    if (0 != degArr_2_nodeDeg(net.nodeDeg, net.degArrVal, net.degArrSize)) {
-      ERROR();
-      return -1;
-    }
-  }
-  if (net.degArrNo.empty() &&
-      0 != degArrVal_2_degArrNo(net.degArrNo, net.degArrVal)) {
-    ERROR();
-    return -1;
-  }
-
-  return 0;
-}
-
-int net_read_lkk_0(Network& net, const char* name) {
-  if (!net.lkk.empty()) {
-    ERROR();
-    return -1;
-  }
-
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = net.readName;
-
-  if (0 != net_read_degArr_0(net, name)) {
-    ERROR();
-    return -1;
-  }
-  if (0 != common_read2_0((fn + "_lkk.txt").c_str(), net.lkk)) {
-    ERROR();
-    return -1;
-  }
-  return 0;
-}
-
-//**//****************************************************//*
-int net_save_deg(const Network& net, const char* name) {
   string fn;
   if (name != NULL && name[0] != '\0') {
     fn = name;
   } else {
     stringstream ss;
     ss.clear();
-    ss << net.seed;
-    fn = net.saveName + '_' + ss.str();
+    ss << seed;
+    fn = saveName + '_' + ss.str();
   }
-  // if (!net.nodeDeg.empty())
-  // if(0 != common_save1((fn + "_nodeDeg.txt").c_str(), net.nodeDeg,
-  // net.priChar)) ERROR();
-  if (!net.degArrVal.empty())
-    if (0 != common_save1((fn + "_degArrVal.txt").c_str(), net.degArrVal,
-                          net.priChar))
-      ERROR();
-  if (!net.degArrSize.empty())
-    if (0 != common_save1((fn + "_degArrSize.txt").c_str(), net.degArrSize,
-                          net.priChar))
-      ERROR();
-  // if (!net.degArrSum.empty())
-  // if(0 != common_save1((fn + "_degArrSum.txt").c_str(), net.degArrSum,
-  // net.priChar)) ERROR();
-  // if (!net.nodesName.empty())
-  // if(0 != common_save1((fn + "_nodesName.txt").c_str(), net.nodesName,
-  // net.priChar)) ERROR();
-  // if (!net.nodesName2.empty())
-  // if(0 != common_save1((fn + "_nodesName2.txt").c_str(), net.nodesName2,
-  // net.priChar)) ERROR();
-  // if(net.weightFlag){
-  // if(!net.nodeWeight.empty() && 0 != common_save1((fn +
-  // "_nodeWeight.txt").c_str(), net.nodeWeight, net.priChar)) ERROR();
-  // if(!net.degArrWeight.empty() && 0 != common_save1((fn +
-  // "_degArrWeight.txt").c_str(), net.degArrWeight, net.priChar)) ERROR();
+  // if (!nodeDeg.empty())
+  // if (0 != common_save1((fn + "_nodeDeg.txt").c_str(), nodeDeg, priChar)) {
+  // runStatus = -1;
+  // ERROR();
+  // return *this;
   //}
-  if (net.dirFlag) {
-    if (!net.nodeDegOut.empty())
-      if (0 != common_save1((fn + "_nodeDegOut.txt").c_str(), net.nodeDegOut,
-                            net.priChar))
-        ERROR();
-    if (!net.degArrValOut.empty())
-      if (0 != common_save1((fn + "_degArrValOut.txt").c_str(),
-                            net.degArrValOut, net.priChar))
-        ERROR();
-    if (!net.degArrSizeOut.empty())
-      if (0 != common_save1((fn + "_degArrSizeOut.txt").c_str(),
-                            net.degArrSizeOut, net.priChar))
-        ERROR();
-    // if (!net.degArrSumOut.empty())
-    // if(0 != common_save1((fn + "_degArrSumOut.txt").c_str(),
-    // net.degArrSumOut, net.priChar)) ERROR();
-    if (!net.nodeDegIn.empty())
-      if (0 != common_save1((fn + "_nodeDegIn.txt").c_str(), net.nodeDegIn,
-                            net.priChar))
-        ERROR();
-    if (!net.degArrValIn.empty())
-      if (0 != common_save1((fn + "_degArrValIn.txt").c_str(), net.degArrValIn,
-                            net.priChar))
-        ERROR();
-    if (!net.degArrSizeIn.empty())
-      if (0 != common_save1((fn + "_degArrSizeIn.txt").c_str(),
-                            net.degArrSizeIn, net.priChar))
-        ERROR();
-    // if (!net.degArrSumIn.empty())
-    // if(0 != common_save1((fn + "_degArrSumIn.txt").c_str(), net.degArrSumIn,
-    // net.priChar)) ERROR();
-    if (net.weightFlag) {
-      if (!net.nodeWeightOut.empty() &&
-          0 != common_save1((fn + "_nodeWeightOut.txt").c_str(),
-                            net.nodeWeightOut, net.priChar))
-        ERROR();
-      if (!net.degArrWeightOut.empty() &&
-          0 != common_save1((fn + "_degArrWeightOut.txt").c_str(),
-                            net.degArrWeightOut, net.priChar))
-        ERROR();
-      if (!net.nodeWeightIn.empty() &&
-          0 != common_save1((fn + "_nodeWeightIn.txt").c_str(),
-                            net.nodeWeightIn, net.priChar))
-        ERROR();
-      if (!net.degArrWeightIn.empty() &&
-          0 != common_save1((fn + "_degArrWeightIn.txt").c_str(),
-                            net.degArrWeightIn, net.priChar))
-        ERROR();
+  if (!degArrVal.empty())
+    if (0 !=
+        common_save1((fn + "_degArrVal.txt").c_str(), degArrVal, priChar)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+  if (!degArrSize.empty())
+    if (0 !=
+        common_save1((fn + "_degArrSize.txt").c_str(), degArrSize, priChar)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+  // if (!degArrSum.empty())
+  // if (0 !=
+  // common_save1((fn + "_degArrSum.txt").c_str(), degArrSum, priChar)) {
+  // runStatus = -1;
+  // ERROR();
+  // return *this;
+  //}
+  if (!nodesName.empty())
+    if (0 !=
+        common_save1((fn + "_nodesName.txt").c_str(), nodesName, priChar)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+  if (!nodesName2.empty())
+    if (0 !=
+        common_save1((fn + "_nodesName2.txt").c_str(), nodesName2, priChar)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+  if (weightFlag) {
+    if (!nodeWeight.empty() &&
+        0 != common_save1((fn + "_nodeWeight.txt").c_str(), nodeWeight,
+                          priChar)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+    if (!degArrWeight.empty() &&
+        0 != common_save1((fn + "_degArrWeight.txt").c_str(), degArrWeight,
+                          priChar)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
     }
   }
-  return 0;
+  if (dirFlag) {
+    // if (!nodeDegOut.empty())
+    // if (0 !=
+    // common_save1((fn + "_nodeDegOut.txt").c_str(), nodeDegOut, priChar)) {
+    // runStatus = -1;
+    // ERROR();
+    // return *this;
+    //}
+    if (!degArrValOut.empty())
+      if (0 != common_save1((fn + "_degArrValOut.txt").c_str(), degArrValOut,
+                            priChar)) {
+        runStatus = -1;
+        ERROR();
+        return *this;
+      }
+    if (!degArrSizeOut.empty())
+      if (0 != common_save1((fn + "_degArrSizeOut.txt").c_str(), degArrSizeOut,
+                            priChar)) {
+        runStatus = -1;
+        ERROR();
+        return *this;
+      }
+    // if (!degArrSumOut.empty())
+    // if (0 != common_save1((fn + "_degArrSumOut.txt").c_str(), degArrSumOut,
+    // priChar)) {
+    // runStatus = -1;
+    // ERROR();
+    // return *this;
+    //}
+    // if (!nodeDegIn.empty())
+    // if (0 !=
+    // common_save1((fn + "_nodeDegIn.txt").c_str(), nodeDegIn, priChar)) {
+    // runStatus = -1;
+    // ERROR();
+    // return *this;
+    //}
+    if (!degArrValIn.empty())
+      if (0 != common_save1((fn + "_degArrValIn.txt").c_str(), degArrValIn,
+                            priChar)) {
+        runStatus = -1;
+        ERROR();
+        return *this;
+      }
+    if (!degArrSizeIn.empty())
+      if (0 != common_save1((fn + "_degArrSizeIn.txt").c_str(), degArrSizeIn,
+                            priChar)) {
+        runStatus = -1;
+        ERROR();
+        return *this;
+      }
+    // if (!degArrSumIn.empty())
+    // if (0 != common_save1((fn + "_degArrSumIn.txt").c_str(), degArrSumIn,
+    // priChar)) {
+    // runStatus = -1;
+    // ERROR();
+    // return *this;
+    //}
+    if (weightFlag) {
+      if (!nodeWeightOut.empty() &&
+          0 != common_save1((fn + "_nodeWeightOut.txt").c_str(), nodeWeightOut,
+                            priChar)) {
+        runStatus = -1;
+        ERROR();
+        return *this;
+      }
+      if (!degArrWeightOut.empty() &&
+          0 != common_save1((fn + "_degArrWeightOut.txt").c_str(),
+                            degArrWeightOut, priChar)) {
+        runStatus = -1;
+        ERROR();
+        return *this;
+      }
+      if (!nodeWeightIn.empty() &&
+          0 != common_save1((fn + "_nodeWeightIn.txt").c_str(), nodeWeightIn,
+                            priChar)) {
+        runStatus = -1;
+        ERROR();
+        return *this;
+      }
+      if (!degArrWeightIn.empty() &&
+          0 != common_save1((fn + "_degArrWeightIn.txt").c_str(),
+                            degArrWeightIn, priChar)) {
+        runStatus = -1;
+        ERROR();
+        return *this;
+      }
+    }
+  }
+  return *this;
 }
 
-int net_save_p2p(const Network& net, const char* name) {
+//**//****************************************************//*
+Network& Network::clear_p2p(void) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  // link
+  link.clear();  // [nodeSize]   网络连边
+  p2pSize.clear();
+  for (VVNodeTypeItr i = p2p.begin(); i != p2p.end(); i++) i->clear();
+  p2p.clear();  // [nodeSize]   各点连边
+  for (VVNodeTypeItr i = p2pIn.begin(); i != p2pIn.end(); i++) i->clear();
+  p2pIn.clear();  // [nodeSize]   各点连边
+  for (VVWeightTypeItr i = vvweight.begin(); i != vvweight.end(); i++)
+    i->clear();
+  vvweight.clear();  // [nodeSize]   各点连边
+  for (VVDistTypeItr i = linkMatr.begin(); i != linkMatr.end(); i++) i->clear();
+  linkMatr.clear();  // [nodeSize]   网络连边矩阵
+  for (VVCharItr i = linkMatrC.begin(); i != linkMatrC.end(); i++) i->clear();
+  linkMatrC.clear();  // [nodeSize]   网络连边矩阵
+  return *this;
+}
+
+Network& Network::save_p2p(const char* name) {
   string fn;
   if (name != NULL && name[0] != '\0') {
     fn = name;
   } else {
     stringstream ss;
     ss.clear();
-    ss << net.seed;
-    fn = net.saveName + '_' + ss.str();
+    ss << seed;
+    fn = saveName + '_' + ss.str();
   }
-  if (!net.p2p.empty() &&
-      0 != common_save2((fn + "_p2p.txt").c_str(), net.p2p, net.priChar2))
+
+  if (!p2p.empty() &&
+      0 != common_save2((fn + "_p2p.txt").c_str(), p2p, priChar2)) {
+    runStatus = -1;
     ERROR();
+    return *this;
+  }
 
   // link
-  if (!net.link.empty() &&
-      0 != common_save2((fn + "_link.txt").c_str(), &net.link[0], net.linkSize,
-                        2, net.priChar2))
+  if (!link.empty() &&
+      0 != common_save2((fn + "_link.txt").c_str(), &link[0], linkSize, 2,
+                        priChar2)) {
+    runStatus = -1;
     ERROR();
+    return *this;
+  }
 
-  if (net.linkMatr.size() > 0) {
-    if (0 != common_save2((fn + "_linkMatr.txt").c_str(), net.linkMatr,
-                          net.priChar2))
+  if (linkMatr.size() > 0) {
+    if (0 != common_save2((fn + "_linkMatr.txt").c_str(), linkMatr, priChar2)) {
+      runStatus = -1;
       ERROR();
+      return *this;
+    }
   }
-  if (net.status == -2 &&
-      0 != common_save1((fn + "_p2pSize.txt").c_str(), net.p2pSize))
+  if (status == -2 &&
+      0 != common_save1((fn + "_p2pSize.txt").c_str(), p2pSize)) {
+    runStatus = -1;
     ERROR();
+    return *this;
+  }
 
-  if (!net.lkk.empty() &&
-      0 != common_save2((fn + "_lkk.txt").c_str(), net.lkk, net.priChar2))
+  if (!lkk.empty() &&
+      0 != common_save2((fn + "_lkk.txt").c_str(), lkk, priChar2)) {
+    runStatus = -1;
     ERROR();
+    return *this;
+  }
 
-  if (net.weightFlag && !net.vvweight.empty() &&
-      0 != common_save2((fn + "_vvweight.txt").c_str(), net.vvweight,
-                        net.priChar2))
+  if (weightFlag && !vvweight.empty() &&
+      0 != common_save2((fn + "_vvweight.txt").c_str(), vvweight, priChar2)) {
+    runStatus = -1;
     ERROR();
+    return *this;
+  }
 
-  return 0;
+  return *this;
 }
 
 //**//****************************************************//*
-int net_read_link_0(Network& net, const char* name) {
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = net.readName + "_link.txt";
-
-  if (0 != read0_link(net.link, fn.c_str(), net.weight_n)) {
+Network& Network::clear_lkk(void) {
+  if (0 != runStatus) {
     ERROR();
-    return -1;
+    return *this;
   }
-  net.linkSize = net.link.size() / 2;
-
-  return 0;
-}
-
-int net_read_link(Network& net, const char* name) {
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = net.readName + "_link.txt";
-
-  if (0 != read_link(net.link, fn.c_str())) {
-    ERROR();
-    return -1;
-  }
-  net.linkSize = net.link.size() / 2;
-
-  return 0;
-}
-
-int net_read_weight_link(Network& net, const char* name) {
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = net.readName + "_link.txt";
-
-  if (net.weight_m < 2 || net.weight_m >= net.weight_n) {
-    ERROR();
-    return -1;
-  }
-  if (0 != read_weight_link(net.vvweight, net.vvweightIn, net.linkSize,
-                            fn.c_str(), net.weight_m, net.weight_n,
-                            net.dirFlag)) {
-    ERROR();
-    return -1;
-  }
-  return 0;
-}
-
-int net_read_link_weight_0(Network& net, const char* name) {
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = net.readName + "_link.txt";
-
-  if (net.weight_m < 2 || net.weight_m >= net.weight_n) {
-    ERROR();
-    return -1;
-  }
-  if (0 != read_link_weight_0(net.link, net.linkSize, net.vvweight,
-                              net.vvweightIn, fn.c_str(), net.weight_m,
-                              net.weight_n, net.dirFlag)) {
-    ERROR();
-    return -1;
-  }
-  return 0;
-}
-
-int net_read_p2p_0(Network& net, const char* name) {
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = net.readName + "_p2p.txt";
-
-  net.p2p.clear();
-  if (0 != common_read2_0(fn.c_str(), net.p2p)) {
-    ERROR();
-    return -1;
-  }
-  cout << fn << "\tsize:\t" << net.p2p.size() << '\n';
-
-  return 0;
-}
-
-int net_read_linkMatr_0(Network& net, const char* name) {
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = net.readName + "_linkMatr.txt";
-
-  net.linkMatr.clear();
-  if (0 != common_read2_0(fn.c_str(), net.linkMatr)) {
-    ERROR();
-    return -1;
-  }
-  cout << fn << "\tsize:\t" << net.linkMatr.size() << '\n';
-
-  // linkMatr_fix_max(net.linkMatr);
-
-  return 0;
-}
-
-int net_read_weightMatr_0(Network& net, const char* name) {
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = net.readName + "_weightMatr.txt";
-
-  net.weightMatr.clear();
-  if (0 != common_read2_0(fn.c_str(), net.weightMatr)) {
-    ERROR();
-    return -1;
-  }
-  cout << fn << "\tsize:\t" << net.weightMatr.size() << '\n';
-
-  if (net.linkMatr.empty()) weightMatr_2_linkMatr(net.linkMatr, net.weightMatr);
-
-  return 0;
+  // lkk
+  for (VVLinkTypeItr i = lkk.begin(); i != lkk.end(); i++) i->clear();
+  lkk.clear();
+  for (VVDoubleItr i = lkkProb.begin(); i != lkkProb.end(); i++) i->clear();
+  lkkProb.clear();
+  return *this;
 }
 
 //**//****************************************************//*
-int net_lkk_2_degArr(Network& net) {
-  if (net.lkk.empty()) {
-    ERROR();
-    return -1;
-  }
-  if (net.linkSize <= 0 &&
-      0 != degArr_2_linkSize(net.linkSize, net.degArrVal, net.degArrSize)) {
-    ERROR();
-    return -1;
-  }
-  if (net.nodeSize <= 0 &&
-      0 != degArr_2_nodeSize(net.nodeSize, net.degArrSize)) {
-    ERROR();
-    return -1;
-  }
-  if (net.degArrNo.empty() &&
-      0 != degArrVal_2_degArrNo(net.degArrNo, net.degArrVal)) {
-    ERROR();
-    return -1;
-  }
-  if (net.degArrSum.empty())
-    degArrSize_2_degArrSum(net.degArrSum, net.degArrSize);
-
-  if (net.kMax <= 0) {
-    net.kMin = net.degArrVal.front();
-    net.kMax = net.degArrVal.back();
-  }
-  if (net.linkSize > 0) {  // degMean
-    net.degMean = 2. * net.linkSize /
-                  (net.degArrSum.back() -
-                   (net.degArrVal.front() <= 0 ? net.degArrSize.front() : 0));
-  }
-
-  return 0;
+Network& Network::clear(void) {
+  status = 0;
+  runStatus = 0;
+  clear_deg();
+  clear_p2p();
+  clear_lkk();
+  return *this;
 }
 
-int net_p2p_2_degArr(Network& net) {
-  if (net.p2p.empty()) {
+//**//****************************************************//*
+Network& Network::read_nodeDeg(const char* name) {
+  if (0 != runStatus) {
     ERROR();
-    return -1;
+    return *this;
   }
-  if (net.nodeSize <= 0) p2p_2_nodeSize(net.nodeSize, net.p2p);
-  if (net.nodeSize <= 0) {
+  if (!nodeDeg.empty() || !degArrVal.empty()) {
+    runStatus = -1;
     ERROR();
-    return -1;
+    return *this;
   }
-  while (net.p2p.size() < net.nodeSize) net.p2p.resize(net.nodeSize);
 
-  if (!net.dirFlag) {  // !dirFlag
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName + "_nodeDeg.txt";
+
+  if (0 != common_read1_0(fn.c_str(), nodeDeg)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  cout << fn << "\tsize:\t" << nodeDeg.size() << '\n';
+
+  return *this;
+}
+
+Network& Network::read_degArr(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (!nodeDeg.empty() || !degArrVal.empty()) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName;
+
+  if (degArrVal.empty()) {
+    if (0 != common_read1_0((fn + "_degArrVal.txt").c_str(), degArrVal, 0)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+    cout << '\t' << fn << "_degArrVal.txt\tsize:\t" << degArrVal.size() << '\n';
+  }
+  if (degArrSize.empty()) {
+    if (0 != common_read1_0((fn + "_degArrSize.txt").c_str(), degArrSize, 0) ||
+        degArrSize.size() != degArrVal.size()) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+    cout << '\t' << fn << "_degArrSize.txt\tsize:\t" << degArrVal.size()
+         << '\n';
+  }
+  if (degArrSum.empty()) degArrSize_2_degArrSum(degArrSum, degArrSize);
+
+  if (linkSize <= 0 &&
+      0 != degArr_2_linkSize(linkSize, degArrVal, degArrSize)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  if (nodeSize <= 0 && 0 != degArr_2_nodeSize(nodeSize, degArrSize)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  if (nodeDeg.empty()) {
+    nodeDeg.reserve(nodeSize);
+    if (0 != degArr_2_nodeDeg(nodeDeg, degArrVal, degArrSize)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+  }
+  if (degArrNo.empty() && 0 != degArrVal_2_degArrNo(degArrNo, degArrVal)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+
+  return *this;
+}
+
+Network& Network::read_lkk(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (!lkk.empty()) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName;
+
+  if (0 != read_degArr(name).runStatus) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  if (0 != common_read2_0((fn + "_lkk.txt").c_str(), lkk)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+
+  return *this;
+}
+
+//**//****************************************************//*
+Network& Network::read_link_0(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName + "_link.txt";
+
+  if (0 != read0_link(link, fn.c_str(), weight_n)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  linkSize = link.size() / 2;
+
+  return *this;
+}
+
+Network& Network::read_link(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName + "_link.txt";
+
+  if (0 != ::read_link(link, fn.c_str())) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  linkSize = link.size() / 2;
+
+  return *this;
+}
+
+Network& Network::read_weight_link(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName + "_link.txt";
+
+  if (weight_m < 2 || weight_m >= weight_n) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  if (0 != ::read_weight_link(vvweight, vvweightIn, linkSize, fn.c_str(),
+                              weight_m, weight_n, dirFlag)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+
+  return *this;
+}
+
+Network& Network::read_link_weight(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName + "_link.txt";
+
+  if (weight_m < 2 || weight_m >= weight_n) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  if (0 != read_link_weight_0(link, linkSize, vvweight, vvweightIn, fn.c_str(),
+                              weight_m, weight_n, dirFlag)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+
+  return *this;
+}
+
+Network& Network::read_p2p(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName + "_p2p.txt";
+
+  p2p.clear();
+  if (0 != common_read2_0(fn.c_str(), p2p)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  cout << fn << "\tsize:\t" << p2p.size() << '\n';
+
+  return *this;
+}
+
+Network& Network::read_linkMatr(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName + "_linkMatr.txt";
+
+  linkMatr.clear();
+  if (0 != common_read2_0(fn.c_str(), linkMatr)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  cout << fn << "\tsize:\t" << linkMatr.size() << '\n';
+
+  // linkMatr_fix_max(linkMatr);
+
+  return *this;
+}
+
+Network& Network::read_weightMatr(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName + "_weightMatr.txt";
+
+  weightMatr.clear();
+  if (0 != common_read2_0(fn.c_str(), weightMatr)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  cout << fn << "\tsize:\t" << weightMatr.size() << '\n';
+
+  if (linkMatr.empty()) weightMatr_2_linkMatr(linkMatr, weightMatr);
+
+  return *this;
+}
+
+//**//****************************************************//*
+Network& Network::lkk_2_degArr(void) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (lkk.empty()) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  if (linkSize <= 0 &&
+      0 != degArr_2_linkSize(linkSize, degArrVal, degArrSize)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  if (nodeSize <= 0 && 0 != degArr_2_nodeSize(nodeSize, degArrSize)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  if (degArrNo.empty() && 0 != degArrVal_2_degArrNo(degArrNo, degArrVal)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  if (degArrSum.empty()) degArrSize_2_degArrSum(degArrSum, degArrSize);
+
+  if (kMax <= 0) {
+    kMin = degArrVal.front();
+    kMax = degArrVal.back();
+  }
+  if (linkSize > 0) {  // degMean
+    degMean =
+        2. * linkSize /
+        (degArrSum.back() - (degArrVal.front() <= 0 ? degArrSize.front() : 0));
+  }
+
+  return *this;
+}
+
+Network& Network::p2p_2_degArr(void) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (p2p.empty()) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  if (nodeSize <= 0) p2p_2_nodeSize(nodeSize, p2p);
+  if (nodeSize <= 0) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  while (p2p.size() < nodeSize) p2p.resize(nodeSize);
+
+  if (!dirFlag) {  // !dirFlag
     // All
-    if (net.nodeDeg.empty() &&
-        p2p_2_nodeDeg(net.nodeDeg, net.p2p) != 0) {  // nodeDeg
+    if (nodeDeg.empty() && p2p_2_nodeDeg(nodeDeg, p2p) != 0) {  // nodeDeg
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.degArrVal.empty() &&
-        nodeDeg_2_degArr(net.nodeDeg, net.degArrVal, net.degArrSize,
-                         net.degArrSum) != 0) {  // degArr
+    if (degArrVal.empty() &&
+        nodeDeg_2_degArr(nodeDeg, degArrVal, degArrSize,
+                         degArrSum) != 0) {  // degArr
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.degArrNo.empty() &&
-        0 != degArrVal_2_degArrNo(net.degArrNo, net.degArrVal)) {  // degArrNo
+    if (degArrNo.empty() &&
+        0 != degArrVal_2_degArrNo(degArrNo, degArrVal)) {  // degArrNo
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.linkSize <= 0 &&
-        nodeDeg_2_linkSize(net.linkSize, net.nodeDeg) != 0) {  // linkSize
+    if (linkSize <= 0 &&
+        nodeDeg_2_linkSize(linkSize, nodeDeg) != 0) {  // linkSize
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.lkk.empty() &&
-        0 != p2p_2_lkk(net.lkk, net.p2p, net.degArrNo,
-                       net.degArrVal.size())) {  // lkkMatr
+    if (lkk.empty() &&
+        0 != p2p_2_lkk(lkk, p2p, degArrNo,
+                       degArrVal.size())) {  // lkkMatr
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
     // weightFlag
-    if (net.weightFlag) {  // nodeWeight degArrWeight
-      if (net.nodeWeight.empty() && !net.vvweight.empty())
-        vvweight_2_nodeWeight(net.nodeWeight, net.p2p, net.vvweight,
-                              net.netWeight);
-      if (net.degArrWeight.empty() && !net.nodeWeight.empty())
-        nodeWeight_2_degArrWeight(net.degArrWeight, net.nodeWeight, net.nodeDeg,
-                                  net.degArrNo, net.degArrVal.size());
+    if (weightFlag) {  // nodeWeight degArrWeight
+      if (nodeWeight.empty() && !vvweight.empty())
+        vvweight_2_nodeWeight(nodeWeight, p2p, vvweight, netWeight);
+      if (degArrWeight.empty() && !nodeWeight.empty())
+        nodeWeight_2_degArrWeight(degArrWeight, nodeWeight, nodeDeg, degArrNo,
+                                  degArrVal.size());
     }
 
   } else {  // dirFlag
     // Out
-    if (net.nodeDegOut.empty() && p2p_2_nodeDeg(net.nodeDegOut, net.p2p) != 0) {
+    if (nodeDegOut.empty() && p2p_2_nodeDeg(nodeDegOut, p2p) != 0) {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.nodeDegOut.size() <= net.nodeSize) {
-      net.nodeDegOut.resize(net.nodeSize, 0);
+    if (nodeDegOut.size() <= nodeSize) {
+      nodeDegOut.resize(nodeSize, 0);
     } else {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.degArrValOut.empty() &&
-        nodeDeg_2_degArr(net.nodeDegOut, net.degArrValOut, net.degArrSizeOut,
-                         net.degArrSumOut) != 0) {
+    if (degArrValOut.empty() &&
+        nodeDeg_2_degArr(nodeDegOut, degArrValOut, degArrSizeOut,
+                         degArrSumOut) != 0) {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.degArrNoOut.empty() &&
-        0 != degArrVal_2_degArrNo(net.degArrNoOut, net.degArrValOut)) {
+    if (degArrNoOut.empty() &&
+        0 != degArrVal_2_degArrNo(degArrNoOut, degArrValOut)) {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
     // Out Weight
-    if (net.weightFlag) {
-      if (net.nodeWeightOut.empty() && !net.vvweight.empty())
-        vvweight_2_nodeWeight(net.nodeWeightOut, net.p2p, net.vvweight,
-                              net.netWeightOut);
-      if (net.degArrWeightOut.empty() && !net.nodeWeightOut.empty())
-        nodeWeight_2_degArrWeight(net.degArrWeightOut, net.nodeWeightOut,
-                                  net.nodeDegOut, net.degArrNoOut,
-                                  net.degArrValOut.size());
+    if (weightFlag) {
+      if (nodeWeightOut.empty() && !vvweight.empty())
+        vvweight_2_nodeWeight(nodeWeightOut, p2p, vvweight, netWeightOut);
+      if (degArrWeightOut.empty() && !nodeWeightOut.empty())
+        nodeWeight_2_degArrWeight(degArrWeightOut, nodeWeightOut, nodeDegOut,
+                                  degArrNoOut, degArrValOut.size());
     }
 
     // In
-    if (net.p2pIn.empty() && p2p_2_p2pIn(net.p2pIn, net.p2p) != 0) {
+    if (p2pIn.empty() && p2p_2_p2pIn(p2pIn, p2p) != 0) {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.nodeDegIn.empty() && p2p_2_nodeDeg(net.nodeDegIn, net.p2pIn) != 0) {
+    if (nodeDegIn.empty() && p2p_2_nodeDeg(nodeDegIn, p2pIn) != 0) {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.nodeDegIn.size() <= net.nodeSize) {
-      net.nodeDegIn.resize(net.nodeSize, 0);
+    if (nodeDegIn.size() <= nodeSize) {
+      nodeDegIn.resize(nodeSize, 0);
     } else {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.degArrValIn.empty() &&
-        nodeDeg_2_degArr(net.nodeDegIn, net.degArrValIn, net.degArrSizeIn,
-                         net.degArrSumIn) != 0) {
+    if (degArrValIn.empty() &&
+        nodeDeg_2_degArr(nodeDegIn, degArrValIn, degArrSizeIn, degArrSumIn) !=
+            0) {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.degArrNoIn.empty() &&
-        0 != degArrVal_2_degArrNo(net.degArrNoIn, net.degArrValIn)) {
+    if (degArrNoIn.empty() &&
+        0 != degArrVal_2_degArrNo(degArrNoIn, degArrValIn)) {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
     // In Weight
-    if (net.weightFlag) {
-      if (net.nodeWeightIn.empty() && !net.vvweightIn.empty())
-        vvweight_2_nodeWeight(net.nodeWeightIn, net.p2pIn, net.vvweightIn,
-                              net.netWeightIn);
-      if (net.degArrWeightIn.empty() && !net.nodeWeightIn.empty())
-        nodeWeight_2_degArrWeight(net.degArrWeightIn, net.nodeWeightIn,
-                                  net.nodeDegIn, net.degArrNoIn,
-                                  net.degArrValIn.size());
+    if (weightFlag) {
+      if (nodeWeightIn.empty() && !vvweightIn.empty())
+        vvweight_2_nodeWeight(nodeWeightIn, p2pIn, vvweightIn, netWeightIn);
+      if (degArrWeightIn.empty() && !nodeWeightIn.empty())
+        nodeWeight_2_degArrWeight(degArrWeightIn, nodeWeightIn, nodeDegIn,
+                                  degArrNoIn, degArrValIn.size());
     }
 
     // All
-    if (net.nodeDeg.empty() &&
-        nodeDegIO_2_nodeDeg(net.nodeDeg, net.nodeDegOut, net.nodeDegIn) != 0) {
+    if (nodeDeg.empty() &&
+        nodeDegIO_2_nodeDeg(nodeDeg, nodeDegOut, nodeDegIn) != 0) {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.degArrVal.empty() &&
-        nodeDeg_2_degArr(net.nodeDeg, net.degArrVal, net.degArrSize,
-                         net.degArrSum) != 0) {
+    if (degArrVal.empty() &&
+        nodeDeg_2_degArr(nodeDeg, degArrVal, degArrSize, degArrSum) != 0) {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.degArrNo.empty() &&
-        0 != degArrVal_2_degArrNo(net.degArrNo, net.degArrVal)) {
+    if (degArrNo.empty() && 0 != degArrVal_2_degArrNo(degArrNo, degArrVal)) {
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.linkSize <= 0 &&
-        nodeDeg_2_linkSize(net.linkSize, net.nodeDeg) != 0) {  // linkSize
+    if (linkSize <= 0 &&
+        nodeDeg_2_linkSize(linkSize, nodeDeg) != 0) {  // linkSize
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.lkk.empty() &&
-        0 != p2p_2_lkk_dir(net.lkk, net.p2p, net.nodeDeg, net.nodeDeg,
-                           net.degArrNo, net.degArrNo, net.degArrVal.size(),
-                           net.degArrVal.size())) {  // lkk
+    if (lkk.empty() &&
+        0 != p2p_2_lkk_dir(lkk, p2p, nodeDeg, nodeDeg, degArrNo, degArrNo,
+                           degArrVal.size(),
+                           degArrVal.size())) {  // lkk
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
-    if (net.lkkOutIn.empty() &&
-        0 != p2p_2_lkk_dir(net.lkkOutIn, net.p2p, net.nodeDegOut, net.nodeDegIn,
-                           net.degArrNoOut, net.degArrNoIn,
-                           net.degArrValOut.size(),
-                           net.degArrValIn.size())) {  // lkkOutIn
+    if (lkkOutIn.empty() &&
+        0 != p2p_2_lkk_dir(lkkOutIn, p2p, nodeDegOut, nodeDegIn, degArrNoOut,
+                           degArrNoIn, degArrValOut.size(),
+                           degArrValIn.size())) {  // lkkOutIn
+      runStatus = -1;
       ERROR();
-      return -1;
+      return *this;
     }
     // All Weight
-    if (net.weightFlag) {
-      if (net.nodeWeight.empty() && !net.nodeWeight.empty())
-        nodeWeightIO_2_nodeWeight(net.nodeWeight, net.nodeWeightOut,
-                                  net.nodeWeightIn);
-      net.netWeight = net.netWeightOut + net.netWeightIn;
-      if (net.degArrWeight.empty() && !net.nodeWeight.empty())
-        nodeWeight_2_degArrWeight(net.degArrWeight, net.nodeWeight, net.nodeDeg,
-                                  net.degArrNo, net.degArrVal.size());
+    if (weightFlag) {
+      if (nodeWeight.empty() && !nodeWeight.empty())
+        nodeWeightIO_2_nodeWeight(nodeWeight, nodeWeightOut, nodeWeightIn);
+      netWeight = netWeightOut + netWeightIn;
+      if (degArrWeight.empty() && !nodeWeight.empty())
+        nodeWeight_2_degArrWeight(degArrWeight, nodeWeight, nodeDeg, degArrNo,
+                                  degArrVal.size());
     }
   }
 
-  if (net.kMax <= 0) {
-    net.kMin = net.degArrVal.front();
-    net.kMax = net.degArrVal.back();
+  if (kMax <= 0) {
+    kMin = degArrVal.front();
+    kMax = degArrVal.back();
   }
-  if (net.linkSize > 0) {  // degMean degWeightMean
-    net.degMean = 2. * net.linkSize /
-                  (net.degArrSum.back() -
-                   (net.degArrVal.front() <= 0 ? net.degArrSize.front() : 0));
-    if (net.weightFlag)
-      net.degWeightMean =
-          (double)net.netWeight /
-          (net.degArrSum.back() -
-           (net.degArrVal.front() <= 0 ? net.degArrSize.front() : 0));
-    if (net.dirFlag) {
-      net.degMeanOut =
-          (double)net.linkSize /
-          (net.degArrSumOut.back() -
-           (net.degArrValOut.front() <= 0 ? net.degArrSizeOut.front() : 0));
-      net.degMeanIn =
-          (double)net.linkSize /
-          (net.degArrSumIn.back() -
-           (net.degArrValIn.front() <= 0 ? net.degArrSizeIn.front() : 0));
-      if (net.weightFlag) {
-        net.degWeightMeanOut =
-            (double)net.netWeightOut /
-            (net.degArrSum.back() -
-             (net.degArrVal.front() <= 0 ? net.degArrSize.front() : 0));
-        net.degWeightMeanIn =
-            (double)net.netWeightIn /
-            (net.degArrSum.back() -
-             (net.degArrVal.front() <= 0 ? net.degArrSize.front() : 0));
+  if (linkSize > 0) {  // degMean degWeightMean
+    degMean =
+        2. * linkSize /
+        (degArrSum.back() - (degArrVal.front() <= 0 ? degArrSize.front() : 0));
+    if (weightFlag)
+      degWeightMean = (double)netWeight /
+                      (degArrSum.back() -
+                       (degArrVal.front() <= 0 ? degArrSize.front() : 0));
+    if (dirFlag) {
+      degMeanOut = (double)linkSize /
+                   (degArrSumOut.back() -
+                    (degArrValOut.front() <= 0 ? degArrSizeOut.front() : 0));
+      degMeanIn = (double)linkSize /
+                  (degArrSumIn.back() -
+                   (degArrValIn.front() <= 0 ? degArrSizeIn.front() : 0));
+      if (weightFlag) {
+        degWeightMeanOut = (double)netWeightOut /
+                           (degArrSum.back() -
+                            (degArrVal.front() <= 0 ? degArrSize.front() : 0));
+        degWeightMeanIn = (double)netWeightIn /
+                          (degArrSum.back() -
+                           (degArrVal.front() <= 0 ? degArrSize.front() : 0));
       }
     }
   }
-  return 0;
-}
 
-//**//****************************************************//*
-// 节点按度排序 net->net2 剔除度为0的点
-int net_fix_p2p_nodeDeg0(Network& net) {
-  if (net.status < 0 || net.p2p.empty() ||
-      (net.degArrVal.empty() && 0 != net_p2p_2_degArr(net))) {
-    ERROR();
-    return -1;
-  }
-  int flag = check_nodeDeg0(net.nodeDeg);
-  cout << "check_nodeDeg0\t" << flag << endl;
-  if (flag == 0) return 0;
-  if (flag < 0 || (flag > 0 && net.net2 == NULL)) {
-    ERROR();
-    return flag;
-  }
-  Network& net2 = *net.net2;
-  if (net.degArrVal.back() <= 0) {  // net2.nodeSize = 0
-    ERROR();
-    return -1;
-  }
-  net2.dirFlag = net.dirFlag;
-
-  // net2.nodesName[i] <- i
-  net.nodeSize = net.p2p.size();
-  net2.nodeSize = net.nodeSize - net.degArrSize.front();
-  net2.nodesName.resize(net.nodeSize);
-  for (NodeType i = 0; i < net.nodeSize; i++) net2.nodesName[i] = i;
-  net2.nodesName2 = net2.nodesName;
-  common_sort_p_val(net2.nodesName.rbegin(), net2.nodesName.rend(),
-                    &net.nodeDeg.front());  // 按度从大到小排
-
-  // i -> net2.nodesName2[i]
-  common_sort_p_val(net2.nodesName2.begin(), net2.nodesName2.end(),
-                    &net2.nodesName.front());
-
-  // 更新net2的连边信息net2.p2p
-  net2.p2p.resize(net2.nodeSize);
-  for (NodeType i = 0; i < net2.nodeSize; i++)
-    net2.p2p[i].reserve(net.nodeDeg[net2.nodesName[i]]);
-  for (NodeType i2 = 0; i2 < net2.p2p.size(); i2++) {
-    NodeType i = net2.nodesName[i2];
-    for (VNodeTypeCItr j = net.p2p[i].begin(); j != net.p2p[i].end(); j++) {
-      net2.p2p[i2].push_back(net2.nodesName2[*j]);
-    }
-  }
-  for (VVNodeTypeItr i = net2.p2p.begin(); i != net2.p2p.end(); i++)
-    sort(i->begin(), i->end());  // net2.p2p从小到大排序
-
-  // 更新net2的度信息
-  if (0 != net_p2p_2_degArr(net2)) {
-    ERROR();
-    return -1;
-  }
-  net2.kMin = net2.degArrVal.front();
-  net2.kMax = net2.degArrVal.back();
-  net2.status = 1;
-
-  return 0;
+  return *this;
 }
 
 //**//****************************************************//*

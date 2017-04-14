@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include "networks.h"
-
 #ifdef ACT_RECOMMEND
+
 //**//****************************************************//*
 // 参数：   mass
 //          heat
@@ -14,5 +14,4 @@ int net_act_recommend_mass(VDouble& o, VDouble& u2, VDouble& o2, VVNodeType& pu,
 
 //**//****************************************************//*
 #endif  // ACT_RECOMMEND
-
 #endif  // NETWORK_ACT_RECOMMEND_H

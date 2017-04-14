@@ -2,19 +2,21 @@
 #define NETWORK_RANDOM_H
 
 #include <iostream>
-#include "network.h"
+#include "networks.h"
 
 #ifdef NET_RANDOM
+//**//*******************************************************;
+std::ostream& operator<<(std::ostream& os, const Net_random& random);
+
 //**//****************************************************//*
-int net_random_clear(Network& net);
-int net_random_init(Network& net);
+int net_random_clear(Networks& net);
+int net_random_init(Networks& net);
 
 // ER随机网络参数
 //      p           连边概率p
 //      nodeSize    节点数目
-int net_read_params_ER(std::istream& is, Network& net);
-int net_save_params_ER(std::ostream& os, const Network& net);
-int net_ER(Network& net);
+int net_read_params_ER(std::istream& is, Networks& net);
+int net_save_params_ER(std::ostream& os, const Networks& net);
 
 //**//****************************************************//*
 /*
@@ -31,12 +33,11 @@ int net_ER(Network& net);
     ranNode_Gauss       // 随机选点按点的度之差的相应高斯概率连边、重连时所有边中随机选；用到p2p,remNodeNum,link
     ranNode_node        // 随机选点连边、重连时随机选点再选边；用到p2p,remNodeNum
  */                                       /**/
-int net_random_node_prob(Network& net);  // 所有点按概率p连边
-int net_random_remDeg(Network& net);     // 随机抽取剩余度连边
+int net_random_node_prob(Networks& net);  // 所有点按概率p连边
 int net_random_ranNode_link(
-    Network& net);  // 随机选点连边，重连时所有边中随机选
+    Networks& net);  // 随机选点连边，重连时所有边中随机选
 
-int net_random_ranNode(Network& net);  // 每次直接随机抽取两个点连边
+int net_random_ranNode(Networks& net);  // 每次直接随机抽取两个点连边
 //**//****************************************************//*
 #endif  // NET_RANDOM
 #endif  // NETWORK_RANDOM_H

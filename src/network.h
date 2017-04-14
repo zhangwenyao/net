@@ -52,9 +52,9 @@
 class Network {
  public:
   // variables
-  std::string argv;      // 参数
-  std::string saveName;  // 保存文件名前缀
-  std::string readName;  // 读取文件名前缀
+  std::string argv, argv0;  // 参数
+  std::string saveName;     // 保存文件名前缀
+  std::string readName;     // 读取文件名前缀
   int status;  // 网络状态 0：空，1：正常，-1：有错，-2：未连完
   int seed;    // 随机数种子值
   int dirFlag;                 // 网络是否有向，0无向，非0有向
@@ -66,7 +66,6 @@ class Network {
   std::vector<int> paramsInt;  // 整型参数
   std::vector<double> paramsDouble;  // 实数参数
   char priChar, priChar2;            // 保存文件时的分隔符
-  Network* net2;
   int runStatus;
 
   // deg
@@ -125,23 +124,6 @@ class Network {
   VDouble deg2ArrWeight, deg2ArrWeightOut,
       deg2ArrWeightIn;  // 同度节点连边总权重
   double deg2WeightMean, deg2WeightMeanOut, deg2WeightMeanIn;
-
-#ifdef NET_DEGREE
-  struct ParamsDegree {
-#ifdef DEG_POISSON
-    double poisson_p;
-#endif
-#ifdef DEG_POWER
-    double power_gamma;
-#endif
-  } params_degree;
-#endif  // NET_DEGREE
-
-#ifdef NET_RANDOM
-  struct ParamsRandom {
-    double p;
-  } params_random;
-#endif
 
 #ifdef NET_BA
   struct ParamsBA {
@@ -235,60 +217,107 @@ class Network {
   } params_spread;
 #endif
 
-#ifdef ACT_SIS
-  struct ParamsSIS {
-    unsigned M;
-    double rho, p, lambda;
-    double tau, t_av, ksi, lambda_c;
-    LinkType nSum, n2Sum;
-    NodeType nNum;
-    VVNodeType statusSN, SN;
-    VNodeType N_i;
-    VLinkType NDeg_i;
-    VDouble t;
-  } params_SIS;
+  Network(void);
+  friend std::istream& operator>>(std::istream& is, Network& net);
+  Network& read_params_1(std::istream& is);
+  Network& read_params(const char* name = NULL);
+  Network& read_params(int argc, char** argv);
+  friend std::ostream& operator<<(std::ostream& os, const Network& net);
+  const Network& save_params(std::ostream& os) const;
+  const Network& save_params(const char* name = NULL) const;
+  Network& save_data(const char* name = NULL);
+  Network& save(const char* name = NULL);
+
+  Network& init_seed(void);
+  Network& init_seed(const int s);
+  Network& clear_deg(void);
+  Network& save_deg(const char* name = NULL);
+  Network& clear_p2p(void);
+  Network& save_p2p(const char* name = NULL);
+  Network& clear_lkk(void);
+  Network& clear(void);
+
+  Network& read_nodeDeg(const char* name = NULL);
+  Network& read_degArr(const char* name = NULL);
+  Network& read_lkk(const char* name = NULL);
+  Network& read_link_0(const char* name = NULL);
+  Network& read_link(const char* name = NULL);
+  Network& read_weight_link(const char* name = NULL);
+  Network& read_link_weight(const char* name = NULL);
+  Network& read_p2p(const char* name = NULL);
+  Network& read_linkMatr(const char* name = NULL);
+  Network& read_weightMatr(const char* name = NULL);
+  Network& lkk_2_degArr(void);
+  Network& p2p_2_degArr(void);
+};
+std::ostream& operator<<(std::ostream& os, const Network& net);
+
+//**//************************************************************//*
+#ifdef NET_DEGREE
+class Net_degree {
+ public:
+#ifdef DEG_POISSON
+  double poisson_p;
 #endif
 
-  Network();
-  ~Network();
-  Network& run(const std::string& argv);
-  Network& init_seed(void);
-  Network& init_seed(const int seed);
-  Network& cal_deg(const std::string& argv);
-  Network& cal_p2p(const std::string& argv);
-  Network& stat(void);
-  Network& save0(void);
-  Network& save(const char* name = NULL);
-  Network& clear_net(void);
+#ifdef DEG_POWER
+  double power_gamma;
+#endif
+  Net_degree(void);
+  friend std::ostream& operator<<(std::ostream& os, const Net_degree& degree);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL);
+  int save(const char* name = NULL);
+  int read_params_1(std::string& s, std::istream& is);
 };
 
-int net_read_params_0(std::istream& is, Network& net);
-int net_save_params_0(std::ostream& os, const Network& net);
-int net_save_params_0(const Network& net, const char* name = NULL);
-//**//************************************************************//*
-int net_clear_deg(Network& net);
-int net_clear_p2p(Network& net);
-int net_clear_lkk(Network& net);
+std::ostream& operator<<(std::ostream& os, const Net_degree& degree);
+#endif
 
 //**//************************************************************//*
-int net_save_deg(const Network& net, const char* name = NULL);
-int net_save_p2p(const Network& net, const char* name = NULL);
+#ifdef NET_RANDOM
+class Net_random {
+ public:
+  double p;
+  Net_random(void);
+  friend std::ostream& operator<<(std::ostream& os, const Net_random& random);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL);
+  int save(const char* name = NULL);
+  int read_params_1(std::string& s, std::istream& is);
+};
 
-int net_read_nodeDeg_0(Network& net, const char* name = NULL);
-int net_read_degArr_0(Network& net, const char* name = NULL);
-int net_read_lkk_0(Network& net, const char* name = NULL);
-int net_read_link_0(Network& net, const char* name = NULL);
-int net_read_link(Network& net, const char* name = NULL);
-int net_read_weight_link(Network& net, const char* name = NULL);
-int net_read_link_weight_0(Network& net, const char* name = NULL);
-int net_read_p2p_0(Network& net, const char* name = NULL);
-int net_read_linkMatr_0(Network& net, const char* name = NULL);
-int net_read_weightMatr_0(Network& net, const char* name = NULL);
+std::ostream& operator<<(std::ostream& os, const Net_random& random);
+#endif
 
 //**//************************************************************//*
-int net_lkk_2_degArr(Network& net);
-int net_p2p_2_degArr(Network& net);
-int net_fix_p2p_nodeDeg0(Network& net);
+#ifdef ACT_SIS
+class Act_SIS {
+ public:
+  unsigned M;
+  double rho, p, lambda;
+  double tau, t_av, ksi, lambda_c;
+  LinkType nSum, n2Sum;
+  NodeType nNum;
+  VVNodeType statusSN, SN;
+  VNodeType N_i;
+  VLinkType NDeg_i;
+  VDouble t;
+
+  Act_SIS(void);
+  friend std::ostream& operator<<(std::ostream& os, const Act_SIS& sis);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL);
+  int save(const char* name = NULL);
+  int read_params_1(std::string& s, std::istream& is);
+  Act_SIS& clear(void);
+};
+
+std::ostream& operator<<(std::ostream& os, const Act_SIS& sis);
+#endif
 
 //**//************************************************************//*
 #endif  // NETWORK_H

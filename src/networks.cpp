@@ -4,135 +4,61 @@
 using namespace std;
 
 //**//****************************************************//*
-Network::Network()
-    : argv("."),
-      saveName("data/test"),
-      readName("data/test"),
-      status(0),
-      seed(0),
-      dirFlag(0),
-      weightFlag(0),
-      distFlag(0),
-      nodeSize(0),
-      kMin(0),
-      kMax(0),
-      linkSize(0),
-      priChar('\n'),
-      priChar2('\t'),
-      net2(NULL),
-      runStatus(0),
+Networks::Networks(void) : net2(NULL) {}
 
-      degMean(0),
-      degMeanOut(0),
-      degMeanIn(0),
-      linkRemain(0),
-      weight_m(2),
-      weight_n(2),
-      netWeight(0),
-      netWeightOut(0),
-      netWeightIn(0),
-      degWeightMean(0),
-      degWeightMeanOut(0),
-      degWeightMeanIn(0),
+// Networks::~Networks(void) {}
 
-      deg2WeightMean(0),
-      deg2WeightMeanOut(0),
-      deg2WeightMeanIn(0) {
-#ifdef NET_DEGREE
-#ifdef DEG_POISSON
-  params_degree.poisson_p = 0.1;
-#endif
-#ifdef DEG_POWER
-  params_degree.power_gamma = 2.5;
-#endif
-#endif  // NET_DEGREE
-
-#ifdef NET_RANDOM
-  params_random.p = 0.1;
-#endif
-
-#ifdef NET_BA
-  params_BA.M = 0;
-  params_BA.M0 = 0;
-#endif
-
-#ifdef NET_GRID
-  params_grid.NX = 0;
-  params_grid.NY = 0;
-#endif
+Networks& Networks::clear(void) {
+  Network::clear();
 
 #ifdef STAT_PEARSON
-  params_pearson.pearson = 0;
-  params_pearson.No = 0;
-  params_pearson.NoInIn = 0;
-  params_pearson.NoInOut = 0;
-  params_pearson.NoOutIn = 0;
-  params_pearson.NoOutOut = 0;
-  params_pearson.rho = 0;
-  params_pearson.rhoInIn = 0;
-  params_pearson.rhoInOut = 0;
-  params_pearson.rhoOutIn = 0;
-  params_pearson.rhoOutOut = 0;
+  net_clear_pearson(net);
 #endif
 
 #ifdef STAT_SPEARMAN
-  params_spearman.spearman = 0;
-  params_spearman.InIn = 0;
-  params_spearman.InOut = 0;
-  params_spearman.OutIn = 0;
-  params_spearman.OutOut = 0;
-  params_spearman.rho = 0;
-  params_spearman.rhoInIn = 0;
-  params_spearman.rhoInOut = 0;
-  params_spearman.rhoOutIn = 0;
-  params_spearman.rhoOutOut = 0;
+  net_clear_spearman(net);
 #ifdef MODEL_GAUSS
-  params_spearman.r0 = 0;
-#endif  // MODEL_GAUSS
+  net.params_spearman.GaussS2.clear();  // [nodeSize]   模型的联合概率的方差
+#endif
+#endif
+
+#ifdef STAT_KELDALLTAU
+  net_clear_kendallTau(net);
 #endif
 
 #ifdef STAT_BETWEENNESS
-  params_betweenness.node = 0;
-  params_betweenness.edge = 0;
-#endif
-
-#ifdef STAT_KENDALL
-  params_kendall.tau = 0;
-  params_kendall.OutIn = 0;
+  net_clear_betweenness(net);
 #endif
 
 #ifdef STAT_MODULARITY
-  params_modularity.coef = 0;
+  net_clear_modularity(net);
 #endif
 
 #ifdef STAT_CLUSTER
-  params_cluster.coef = 0;
+  net_clear_cluster(net);
 #endif
+
+#ifdef ACT_SIS
+  sis.clear();
+#endif
+  return *this;
 }
 
-Network::~Network() { net_clear(*this); }
-
 //**//****************************************************//*
-ostream& operator<<(ostream& os, const Network& net) {
-  if (!os) return os;
+ostream& operator<<(ostream& os, const Networks& net) {
+  if (0 != net.runStatus || !os) {
+    ERROR();
+    return os;
+  }
 
-  if (0 != net_save_params_0(os, net)) ERROR();
+  { ((const Network)net).save_params(os); }
 
 #ifdef NET_DEGREE
-#ifdef DEG_POISSON
-  if (0 != net_save_params_poisson(os, net)) ERROR();
-#endif
-#ifdef DEG_POWER
-  if (0 != net_save_params_power(os, net)) ERROR();
-#endif
+  os << net.degree;
 #endif  // DEGREE
 
-#ifdef NET_A
-  if (0 != net_save_params_A(os, net)) ERROR();
-#endif  // NET_BA
-
 #ifdef NET_RANDOM
-  if (0 != net_save_params_ER(os, net)) ERROR();
+  os << net.random;
 #endif
 
 #ifdef NET_BA
@@ -168,338 +94,277 @@ ostream& operator<<(ostream& os, const Network& net) {
 #endif
 
 #ifdef ACT_SIS
-  if (0 != net_save_params_act_SIS(os, net)) ERROR();
+  os << net.sis;
 #endif
 
   return os;
 }
 
-int net_save_params(ostream& os, const Network& net) {
-  if (!os) return -1;
-  os << net;
-  return 0;
+const Networks& Networks::save_params(std::ostream& os) const {
+  os << *this;
+  return *this;
 }
 
-int net_save_params(const Network& net, const char* name) {
+const Networks& Networks::save_params(const char* name) const {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
   string fn;
   if (name != NULL && name[0] != '\0')
     fn = name;
   else {
     stringstream ss;
-    ss << net.seed;
-    fn = net.saveName + '_' + ss.str() + "_params.txt";
+    ss << seed;
+    fn = saveName + '_' + ss.str();
   }
-  ofstream os(fn.c_str());
-  if (!os) return -1;
-  os << net;
+  ofstream os((fn + "_params.txt").c_str());
+  if (!os) {
+    ERROR();
+    return *this;
+  }
+  os << *this;
   os.close();
-  return 0;
-}
-
-//**//****************************************************//*
-std::istream& operator>>(std::istream& is, Network& net) {
-  if (!is) {
-    ERROR();
-    return is;
-  }
-
-  if (0 != net_read_params_0(is, net)) {
-    ERROR();
-    net.status = -1;
-  }
-
-#ifdef NET_DEGREE
-#ifdef DEG_POISSON
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_poisson(is, net)) {
-    ERROR();
-    net.status = -1;
-  }
-#endif
-#ifdef DEG_POWER
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_power(is, net)) {
-    ERROR();
-    net.status = -1;
-  }
-#endif
-#endif  // DEGREE
-
-#ifdef NET_A
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_A(is, net)) ERROR();
-#endif  // NET_BA
-
-#ifdef NET_RANDOM
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_ER(is, net)) ERROR();
-#endif
-
-#ifdef NET_BA
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_BA(is, net)) ERROR();
-#endif  // NET_BA
-
-#ifdef NET_GRID
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_Grid(is, net)) ERROR();
-#endif  // NET_GRID
-
-#ifdef STAT_BETWEENNESS
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_betweenness(is, net)) ERROR();
-#endif  // STAT_BETWEENNESS
-
-#ifdef STAT_MODULARITY
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_modularity(is, net)) ERROR();
-#endif
-
-#ifdef STAT_CLUSTER
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_cluster(is, net)) ERROR();
-#endif
-
-#ifdef STAT_PEARSON
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_pearson(is, net)) ERROR();
-#endif
-
-#ifdef STAT_SPEARMAN
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_spearman(is, net)) ERROR();
-#endif
-
-#ifdef STAT_KENDALL
-  is.clear();
-  is.seekg(ios::beg);
-  if (0 != net_read_params_kendallTau(is, net)) ERROR();
-#endif
-
-  return is;
-}
-
-int net_read_params(istream& is, Network& net) {
-  if (!is) return -1;
-  is >> net;
-  return 0;
-}
-
-int net_read_params(Network& net, const char* name) {
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = net.readName;
-  if (fn.size() <= 0) return -1;
-
-  ifstream is((fn + "_params.txt").c_str());
-  if (!is) return -1;
-  is >> net;
-  is.close();
-
-  return net.status;
-}
-
-int net_read_params(Network& net, int argc, char** argv) {
-  string s;
-  for (int i = 0; i < argc; i++) (s += '\t') += argv[i];
-  stringstream ss(s);
-  ss >> net;
-  ss.clear();
-  return net.status;
-}
-
-//**//****************************************************//*
-Network& Network::save0(void) {
-  if (runStatus != 0) {
-    ERROR();
-    return *this;
-  }
-  runStatus = net_save0(*this);
-  if (runStatus != 0) ERROR();
   return *this;
 }
 
-Network& Network::save(const char* name) {
-  if (runStatus != 0) {
+Networks& Networks::save_data(const char* name) {
+  if (0 != runStatus) {
     ERROR();
     return *this;
   }
-  runStatus = net_save(*this, name);
-  if (runStatus != 0) ERROR();
-  return *this;
-}
-
-int net_save0(const Network& net) {
-  return net_save(net, net.saveName.c_str());
-}
-
-int net_save(const Network& net, const char* name) {
   string fn;
   stringstream ss;
   if (name != NULL && name[0] != '\0')
     fn = name;
   else {
     ss.clear();
-    ss << net.seed;
-    fn = net.saveName + '_' + ss.str();
+    ss << seed;
+    fn = saveName + '_' + ss.str();
   }
 
-  int f = 0;
-  f |= net_save_params(net, (fn + "_params.txt").c_str());
-// f |= net_save_deg(net, fn.c_str());
-// f |= net_save_p2p(net, fn.c_str());
+  Network::save_data(fn.c_str());
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+
+#ifdef ACT_SIS
+  runStatus = sis.save_data(fn.c_str());
+#endif
+
+  return *this;
+}
+
+Networks& Networks::save(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  save_params(name);
+  save_data(name);
+  return *this;
+}
+
+//**//****************************************************//*
+std::istream& operator>>(std::istream& is, Networks& net) {
+  if (0 != net.runStatus || !is) {
+    ERROR();
+    return is;
+  }
+  for (string& s = net.argv0; is; is >> s) {
+    if (s.size() <= 0) continue;
+    if (0 != net.read_params_1(is).runStatus || s.size() > 0) {
+      net.runStatus = -1;
+      ERROR();
+      break;
+    }
+  }
+  return is;
+}
+
+Networks& Networks::read_params_1(istream& is) {
+  string& s = argv0;
+  if (0 != runStatus || s.size() <= 0) return *this;
+  do {
+    if (s == "--file") {
+      cout << s << '\t';
+      is >> s;
+      cout << s << endl;
+      if (!is || s.size() <= 0 || s == readName) {
+        runStatus = -1;
+        ERROR();
+        return *this;
+      }
+      readName = s;
+      s.clear();
+      read_params(readName.c_str());
+      break;
+    }
+
+#ifdef NET_DEGREE
+#ifdef DEG_POISSON
+    if (0 != degree.read_params_1(s, is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
+#endif
+#ifdef DEG_POWER
+    if (0 != degree.read_params_1(s, is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
+#endif
+#endif  // DEGREE
+
+#ifdef NET_RANDOM
+    if (0 != random.read_params_1(s, is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
+#endif
+
+#ifdef NET_BA
+    is.clear();
+    is.seekg(ios::beg);
+    if (0 != net_read_params_BA(is, net)) ERROR();
+#endif  // NET_BA
+
+#ifdef NET_GRID
+    is.clear();
+    is.seekg(ios::beg);
+    if (0 != net_read_params_Grid(is, net)) ERROR();
+#endif  // NET_GRID
 
 #ifdef STAT_BETWEENNESS
-  f |= net_save_betweenness(net, fn.c_str());
-#endif
+    is.clear();
+    is.seekg(ios::beg);
+    if (0 != net_read_params_betweenness(is, net)) ERROR();
+#endif  // STAT_BETWEENNESS
 
 #ifdef STAT_MODULARITY
-  f |= net_save_modularity(net, fn.c_str());
-#endif
-
-#ifdef STAT_SIMILARITY
-  f |= net_save_similarity(net, fn.c_str());
-#endif
-
-#ifdef STAT_PEARSON
-  f |= net_save_pearson(net, fn.c_str());
-#endif
-
-#ifdef STAT_SPEARMAN
-  f |= net_save_spearman(net, fn.c_str());
-#endif
-
-#ifdef STAT_KENDALL
-  f |= net_save_kendallTau(net, fn.c_str());
+    is.clear();
+    is.seekg(ios::beg);
+    if (0 != net_read_params_modularity(is, net)) ERROR();
 #endif
 
 #ifdef STAT_CLUSTER
-  f |= net_save_cluster(net, fn.c_str());
+    is.clear();
+    is.seekg(ios::beg);
+    if (0 != net_read_params_cluster(is, net)) ERROR();
 #endif
 
-  return f;
+#ifdef STAT_PEARSON
+    is.clear();
+    is.seekg(ios::beg);
+    if (0 != net_read_params_pearson(is, net)) ERROR();
+#endif
+
+#ifdef STAT_SPEARMAN
+    is.clear();
+    is.seekg(ios::beg);
+    if (0 != net_read_params_spearman(is, net)) ERROR();
+#endif
+
+#ifdef STAT_KENDALL
+    is.clear();
+    is.seekg(ios::beg);
+    if (0 != net_read_params_kendallTau(is, net)) ERROR();
+#endif
+
+#ifdef ACT_SIS
+    if (0 != sis.read_params_1(s, is)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+    if (s.size() <= 0) break;
+#endif
+
+  } while (0);
+
+  return *this;
 }
 
 //**//****************************************************//*
-Network& Network::init_seed(void) {
-  if (runStatus != 0) {
+Networks& Networks::run(const string argv2) {
+  if (0 != runStatus) {
     ERROR();
     return *this;
   }
-  runStatus = net_init_seed(*this);
-  if (runStatus != 0) ERROR();
-  return *this;
-}
 
-int net_init_seed(Network& net) {
-  if (net.seed <= 0) {
-    while (0 == (net.seed = RAND2_INIT(net.seed)))
-      continue;
-    cout << "\tseed\t" << net.seed << '\n';
-  }
-  return 0;
-}
-
-Network& Network::init_seed(const int seed) {
-  if (runStatus != 0) {
-    ERROR();
-    return *this;
-  }
-  runStatus = net_init_seed(*this, seed);
-  if (runStatus != 0) ERROR();
-  return *this;
-}
-
-int net_init_seed(Network& net, const int seed) {
-  while (0 == (net.seed = RAND2_INIT(seed)))
-    continue;
-  cout << '\t' << net.seed << '\n';
-  return 0;
-}
-
-//**//****************************************************//*
-Network& Network::run(const string& argv) {
-  if (runStatus == 0) runStatus = net_run(*this, argv);
-  if (runStatus != 0) ERROR();
-  return *this;
-}
-
-int net_run(Network& net, const string& argv) {
   string s;
   istringstream ss;
   if (argv.size() > 0)
-    ss.str(argv);
+    ss.str(argv2);
   else
-    ss.str(net.argv);
+    ss.str(argv);
+
   while (ss >> s) {
     cout << s << '\n';
     if (s.size() <= 0 || s == ".") continue;
 
     if (s == "cal_params") {
       common_get_string(ss, s);
-      if (0 != net_cal_params(net, s)) {
+      if (0 != cal_params(s).runStatus) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
 
     if (s == "init_seed0") {
-      if (net.seed <= 0)
-        while (0 == (net.seed = RAND2_INIT(net.seed)))
-          continue;
-      cout << "\tseed\t" << net.seed << '\n';
+      if (seed <= 0)
+        while (0 == (seed = RAND2_INIT(seed))) continue;
+      cout << "\tseed\t" << seed << '\n';
       continue;
     }
 
     if (s == "init_seed") {
-      while (0 == (net.seed = RAND2_INIT(net.seed)))
-        continue;
-      cout << "\tseed\t" << net.seed << '\n';
+      while (0 == (seed = RAND2_INIT(seed))) continue;
+      cout << "\tseed\t" << seed << '\n';
       continue;
     }
 
     if (s == "cal_deg") {
-      if (!(ss >> s) || 0 != net_cal_nodeDeg(net, s)) {
+      if (!(ss >> s) || 0 != cal_nodeDeg(s).runStatus) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
 
     if (s == "cal_p2p") {
-      if (!(ss >> s) || 0 != net_cal_p2p(net, s)) {
+      if (!(ss >> s) || 0 != cal_p2p(s).runStatus) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
 
     if (s == "fix_p2p") {
-      if (0 != fix_p2p(net.p2p, net.dirFlag)) {
+      if (0 != ::fix_p2p(p2p, dirFlag)) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
 
     if (s == "fix_p2p_nodeDeg0") {
-      if (0 != net_fix_p2p_nodeDeg0(net)) {
+      if (0 != fix_p2p_nodeDeg0().runStatus) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
@@ -508,14 +373,16 @@ int net_run(Network& net, const string& argv) {
     if (s == "lkk_max") {
       if (0 != net_extreme_lkk(net, 1)) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
     if (s == "lkk_min") {
       if (0 != net_extreme_lkk(net, 0)) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
@@ -523,7 +390,8 @@ int net_run(Network& net, const string& argv) {
       unsigned t;
       if (!(ss >> t) || 0 != net_extreme_lkk(net, 1, t)) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
@@ -531,30 +399,34 @@ int net_run(Network& net, const string& argv) {
       unsigned t;
       if (!(ss >> t) || 0 != net_extreme_lkk(net, 0, t)) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
     if (s == "MinLkk") {
       if (0 != net_Min_new_lkk(net, 0)) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
     if (s == "MinLkkFix") {
       if (0 != net_Min_new_lkk(net, 1)) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
 #endif
 
     if (s == "stat") {
-      if (0 != net_stat(net)) {
+      if (0 != stat().runStatus) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
@@ -563,7 +435,8 @@ int net_run(Network& net, const string& argv) {
     if (s == "recommend") {
       if (!(ss >> s) || 0 != net_act_recommend(net, s)) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
@@ -571,371 +444,79 @@ int net_run(Network& net, const string& argv) {
 
 #ifdef ACT_SIS
     if (s == "SIS") {
-      if (0 != net_act_SIS(net)) {
+      if (0 != act_SIS()) {
+        runStatus = -1;
         ERROR();
-        return net.status = -1;
+        return *this;
       }
       continue;
     }
 #endif
 
     if (s == "print") {
-      if (0 != net_save_params(cout, net)) {
+      cout << *this;
+      if (0 != runStatus) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
 
     if (s == "save") {
-      if (0 != net_save(net)) {
+      if (0 != save().runStatus) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
     if (s == "save0") {
-      if (0 != net_save0(net)) {
+      if (0 != save(saveName.c_str()).runStatus) {
         ERROR();
-        return net.status = -1;
+        runStatus = -1;
+        return *this;
       }
       continue;
     }
 
     if (s == "clear") {
-      if (0 != net_clear(net)) {
-        ERROR();
-        return net.status = -1;
-      }
+      clear();
       continue;
     }
 
-    if (s == "exit") return 0;
+    if (s == "exit") return *this;
 
     ERROR(s);
-    return net.status = -1;
+    runStatus = -1;
+    return *this;
   }
 
-  return 0;
+  return *this;
 }
 
-//**//****************************************************//*
-Network& Network::clear_net(void) {
+//**//************************************************************//*
+Networks& Networks::stat(void) {
   if (runStatus != 0) {
     ERROR();
     return *this;
   }
-  runStatus = net_clear(*this);
-  if (runStatus != 0) ERROR();
-  return *this;
-}
 
-int net_clear(Network& net) {
-  net_clear_deg(net);
-  net_clear_p2p(net);
-  net_clear_lkk(net);
-
-#ifdef NET_A
-  net_clear_A(net);
-#endif
-
-#ifdef STAT_PEARSON
-  net_clear_pearson(net);
-#endif
-
-#ifdef STAT_SPEARMAN
-  net_clear_spearman(net);
-#ifdef MODEL_GAUSS
-  net.params_spearman.GaussS2.clear();  // [nodeSize]   模型的联合概率的方差
-#endif
-#endif
-
-#ifdef STAT_KELDALLTAU
-  net_clear_kendallTau(net);
-#endif
-
-#ifdef STAT_BETWEENNESS
-  net_clear_betweenness(net);
-#endif
-
-#ifdef STAT_MODULARITY
-  net_clear_modularity(net);
-#endif
-
-#ifdef STAT_CLUSTER
-  net_clear_cluster(net);
-#endif
-
-  return 0;
-}
-
-//**//****************************************************//*
-int net_cal_params(Network& net, const string& s) {
-  string t;
-  istringstream ss(s);
-  while (ss >> t) {
-    if (t.size() <= 0) continue;
-    if (t == "dirFlag") {
-      net.dirFlag = 1;
-      continue;
-    }
-    if (t == "!dirFlag") {
-      net.dirFlag = 0;
-      continue;
-    }
-    if (t == "weightFlag") {
-      net.weightFlag = 1;
-      continue;
-    }
-    if (t == "!weightFlag") {
-      net.weightFlag = 0;
-      continue;
-    }
-    ERROR(s);
-    return -1;
-  }
-  return 0;
-}
-
-//**//****************************************************//*
-int net_cal_nodeDeg(Network& net, const string& s) {
-  cout << "\t" << s << '\n';
-  if (!net.nodeDeg.empty() || s.size() <= 0) {
-    ERROR(s);
-    return -1;
-  }
-
-  if (s == "p2p") {
-    if (!net.p2p.empty())
-      return net_p2p_2_degArr(net);
-    else
-      return -1;
-  }
-
-  if (s == "read_deg") return net_read_nodeDeg_0(net);
-
-  if (s == "read_degArr") return net_read_degArr_0(net);
-
-  if (s == "read_lkk") return net_read_lkk_0(net);
-
-#ifdef NET_DEGREE
-#ifdef DEG_POWER
-  if (s == "power") return net_deg_power(net);
-#endif
-#ifdef DEG_POISSON
-  if (s == "poisson") return net_deg_poisson(net);
-#endif
-#endif  // NET_DEG
-
-  ERROR(s);
-  return -1;
-}
-
-//**//****************************************************//*
-int net_cal_p2p(Network& net, const string& s) {
-  cout << "\t" << s << '\n';
-  if (net.status < 0) {
+  if (lkk.empty() && p2p.empty()) {
     ERROR();
-    return net.status;
-  }
-  if (net.p2p.empty()) {
-    do {
-      if (s.size() <= 0) {
-        ERROR();
-        return net.status = -1;
-      }
-      if (s == "read_p2p" || s == "read_p2p_fix") {
-        if (!net.p2p.empty() || 0 != net_read_p2p_0(net)) {
-          ERROR();
-          return -1;
-        }
-        break;
-      }
-
-      if (s == "read_linkMatr" || s == "read_linkMatr_fix") {
-        if (!net.p2p.empty() || 0 != net_read_linkMatr_0(net)) {
-          ERROR();
-          return -1;
-        }
-      }
-      if (s == "read_link" || s == "read_link_fix") {
-        if (!net.link.empty() || 0 != net_read_link(net)) {
-          ERROR();
-          return -1;
-        }
-      }
-      if (s == "read_link_0" || s == "read_link_0_fix") {
-        if (!net.link.empty() || 0 != net_read_link_0(net)) {
-          ERROR();
-          return -1;
-        }
-      }
-
-      if (s == "read_weightMatr") {
-        if (!net.weightMatr.empty() || 0 != net_read_weightMatr_0(net)) {
-          ERROR();
-          return -1;
-        }
-      }
-      if (s == "read_weight_link") {
-        if (!net.weightFlag || net.link.empty() || !net.vvweight.empty() ||
-            0 != net_read_weight_link(net)) {
-          ERROR();
-          return -1;
-        }
-      }
-      if (s == "read_link_weight_0") {
-        if (!net.weightFlag || !net.link.empty() || !net.vvweight.empty() ||
-            0 != net_read_link_weight_0(net)) {
-          ERROR();
-          return -1;
-        }
-      }
-
-      if (s == "p2p" || s == "p2p_fix" || s.find("read_") != string::npos) {
-        if (net.weightFlag && !net.weightMatr.empty() && net.linkMatr.empty()) {
-          if (0 != weightMatr_2_linkMatr(net.linkMatr, net.weightMatr)) {
-            ERROR();
-            return -1;
-          }
-          // break;
-        }
-        if (!net.linkMatr.empty()) {
-          if (0 != linkMatr_2_p2p(net.p2p, net.linkMatr)) ERROR();
-          break;
-        }
-        if (!net.linkMatrC.empty()) {
-          if (0 != linkMatrC_2_p2p(net.p2p, net.linkMatrC)) ERROR();
-          break;
-        }
-        if (!net.link.empty()) {
-          if (0 != link_2_p2p(net.p2p, net.link, net.p2pIn, net.nodeSize,
-                              net.dirFlag)) {
-            ERROR();
-            return -1;
-          }
-          break;
-        }
-        ERROR(s);
-        return net.status = -1;
-      }
-
-#ifdef NET_EXTREMUM
-      if (s == "Max") {
-        net.status = net_Max_new(net);
-        break;
-      }
-      if (s == "Min") {
-        net.status = net_Min_new(net);
-        break;
-      }
-      if (s == "MinLkkP2p") {
-        net.status = net_Min_new_lkk_p2p(net, 0);
-        break;
-      }
-      if (s == "MinLkkP2pFix") {
-        net.status = net_Min_new_lkk_p2p(net, 1);
-        break;
-      }
-#endif
-
-// TODO: lkk_2_p2p // lkk生成p2p
-
-#ifdef NET_RANDOM
-      if (s == "ER") {
-        net.status = net_ER(net);
-        break;
-      }
-      if (s == "random") {
-        net.status = net_random_remDeg(net);
-        break;
-      }
-#endif
-
-#ifdef NET_BA
-      if (s == "BA") {
-        net.status = net_BA(net);
-        break;
-      }
-#endif
-
-#ifdef NET_GRID
-      if (s == "Grid") {
-        net.status = net_Grid_new(net);
-        break;
-      }
-#endif
-
-#ifdef STAT_SPEARMAN
-      if (s == "Spearman") {
-#ifdef MODEL_GAUSS
-        net.status = net_gauss_new_ranLink(net);
-#else
-        net.status = -1;
-#endif
-        break;
-      }
-#endif
-
-      ERROR(s);
-      return net.status = -1;
-    } while (0);
-  } else if (net.status == 0)
-    net.status = 1;
-
-  if (net.status < 0 || net.p2p.empty()) {
-    ERROR();
-    return net.status = -1;
-  }
-
-  if (s.find("_fix") != string::npos) {
-    fix_p2p(net.p2p, net.dirFlag);
-    net.linkSize = 0;
-  }
-
-  if (net.dirFlag && net.p2pIn.empty() &&
-      0 != p2p_2_p2pIn(net.p2pIn, net.p2p)) {
-    ERROR();
-    return -1;
-  }
-
-  if (0 != net_p2p_2_degArr(net)) {
-    ERROR();
-    return -1;
-  }
-  if (net.kMax <= 0 || s.find("read_") != string::npos) {
-    net.kMin = net.degArrVal.front();
-    net.kMax = net.degArrVal.back();
-  }
-
-  net.status = 1;
-  return 0;
-}
-
-//**//****************************************************//*
-Network& Network::stat(void) {
-  if (runStatus != 0) {
-    ERROR();
+    runStatus = -1;
     return *this;
   }
-  runStatus = net_stat(*this);
-  if (runStatus != 0) ERROR();
-  return *this;
-}
-
-int net_stat(Network& net) {
-  if (net.lkk.empty() && net.p2p.empty()) {
-    ERROR();
-    return -1;
-  }
-  if (!net.p2p.empty()) {
-    if (0 != net_p2p_2_degArr(net)) {
+  if (!p2p.empty()) {
+    if (0 != p2p_2_degArr().runStatus) {
       ERROR();
-      return -1;
+      runStatus = -1;
+      return *this;
     }
-  } else if (0 != net_lkk_2_degArr(net)) {
+  } else if (0 != lkk_2_degArr().runStatus) {
     ERROR();
-    return -1;
+    runStatus = -1;
+    return *this;
   }
 
 #ifdef STAT_PEARSON
@@ -986,7 +567,361 @@ int net_stat(Network& net) {
   }
 #endif
 
-  return 0;
+  return *this;
+}
+
+//**//****************************************************//*
+Networks& Networks::cal_params(const string& s) {
+  if (runStatus != 0) {
+    ERROR();
+    return *this;
+  }
+  string t;
+  istringstream ss(s);
+  while (ss >> t) {
+    if (t.size() <= 0) continue;
+    if (t == "dirFlag") {
+      dirFlag = 1;
+      continue;
+    }
+    if (t == "!dirFlag") {
+      dirFlag = 0;
+      continue;
+    }
+    if (t == "weightFlag") {
+      weightFlag = 1;
+      continue;
+    }
+    if (t == "!weightFlag") {
+      weightFlag = 0;
+      continue;
+    }
+    ERROR(s);
+    runStatus = -1;
+    return *this;
+  }
+  return *this;
+}
+
+//**//****************************************************//*
+Networks& Networks::cal_nodeDeg(const string& s) {
+  if (runStatus != 0) {
+    ERROR();
+    return *this;
+  }
+  cout << "\t" << s << '\n';
+  if (!nodeDeg.empty() || s.size() <= 0) {
+    ERROR(s);
+    runStatus = -1;
+    return *this;
+  }
+
+  if (s == "p2p") {
+    if (!p2p.empty())
+      p2p_2_degArr();
+    else {
+      ERROR();
+      runStatus = -1;
+    }
+    return *this;
+  }
+
+  if (s == "read_deg") {
+    if (0 != read_nodeDeg().runStatus) ERROR();
+    return *this;
+  }
+
+  if (s == "read_degArr") {
+    if (0 != read_degArr().runStatus) ERROR();
+    return *this;
+  }
+
+  if (s == "read_lkk") {
+    if (0 != read_lkk().runStatus) ERROR();
+    return *this;
+  }
+
+#ifdef NET_DEGREE
+#ifdef DEG_POWER
+  if (s == "power") {
+    if (0 != deg_power().runStatus) ERROR();
+    return *this;
+  }
+#endif
+#ifdef DEG_POISSON
+  if (s == "poisson") {
+    if (0 != deg_poisson().runStatus) ERROR();
+    return *this;
+  }
+#endif
+#endif  // NET_DEG
+
+  ERROR(s);
+  runStatus = -1;
+  return *this;
+}
+
+//**//****************************************************//*
+Networks& Networks::cal_p2p(const string& s) {
+  if (runStatus != 0) {
+    ERROR();
+    return *this;
+  }
+  cout << "\t" << s << '\n';
+  if (status < 0) {
+    ERROR();
+    runStatus = -1;
+    return *this;
+  }
+  if (p2p.empty()) {
+    do {
+      if (s.size() <= 0) {
+        ERROR();
+        runStatus = -1;
+        return *this;
+      }
+      if (s == "read_p2p" || s == "read_p2p_fix") {
+        if (!p2p.empty() || 0 != read_p2p().runStatus) {
+          ERROR();
+          runStatus = -1;
+          return *this;
+        }
+        break;
+      }
+
+      if (s == "read_linkMatr" || s == "read_linkMatr_fix") {
+        if (!p2p.empty() || 0 != read_linkMatr().runStatus) {
+          ERROR();
+          runStatus = -1;
+          return *this;
+        }
+      }
+      if (s == "read_link" || s == "read_link_fix") {
+        if (!link.empty() || 0 != read_link().runStatus) {
+          ERROR();
+          runStatus = -1;
+          return *this;
+        }
+      }
+      if (s == "read_link_0" || s == "read_link_0_fix") {
+        if (!link.empty() || 0 != read_link().runStatus) {
+          ERROR();
+          runStatus = -1;
+          return *this;
+        }
+      }
+
+      if (s == "read_weightMatr") {
+        if (!weightMatr.empty() || 0 != read_weightMatr().runStatus) {
+          ERROR();
+          runStatus = -1;
+          return *this;
+        }
+      }
+      if (s == "read_weight_link") {
+        if (!weightFlag || link.empty() || !vvweight.empty() ||
+            0 != read_weight_link().runStatus) {
+          ERROR();
+          runStatus = -1;
+          return *this;
+        }
+      }
+      if (s == "read_link_weight_0") {
+        if (!weightFlag || !link.empty() || !vvweight.empty() ||
+            0 != read_link_weight().runStatus) {
+          ERROR();
+          runStatus = -1;
+          return *this;
+        }
+      }
+
+      if (s == "p2p" || s == "p2p_fix" || s.find("read_") != string::npos) {
+        if (weightFlag && !weightMatr.empty() && linkMatr.empty()) {
+          if (0 != weightMatr_2_linkMatr(linkMatr, weightMatr)) {
+            ERROR();
+            runStatus = -1;
+            return *this;
+          }
+          // break;
+        }
+        if (!linkMatr.empty()) {
+          if (0 != ::linkMatr_2_p2p(p2p, linkMatr)) ERROR();
+          break;
+        }
+        if (!linkMatrC.empty()) {
+          if (0 != ::linkMatrC_2_p2p(p2p, linkMatrC)) ERROR();
+          break;
+        }
+        if (!link.empty()) {
+          if (0 != ::link_2_p2p(p2p, link, p2pIn, nodeSize, dirFlag)) {
+            ERROR();
+            runStatus = -1;
+            return *this;
+          }
+          break;
+        }
+        ERROR(s);
+        runStatus = -1;
+        return *this;
+      }
+
+#ifdef NET_EXTREMUM
+      if (s == "Max") {
+        status = net_Max_new(net);
+        break;
+      }
+      if (s == "Min") {
+        status = net_Min_new(net);
+        break;
+      }
+      if (s == "MinLkkP2p") {
+        status = net_Min_new_lkk_p2p(net, 0);
+        break;
+      }
+      if (s == "MinLkkP2pFix") {
+        status = net_Min_new_lkk_p2p(net, 1);
+        break;
+      }
+#endif
+
+// TODO: lkk_2_p2p // lkk生成p2p
+
+#ifdef NET_RANDOM
+      if (s == "ER") {
+        net_ER();
+        break;
+      }
+      if (s == "random") {
+        net_random_remDeg();
+        break;
+      }
+#endif
+
+#ifdef NET_BA
+      if (s == "BA") {
+        status = net_BA(net);
+        break;
+      }
+#endif
+
+#ifdef NET_GRID
+      if (s == "Grid") {
+        status = net_Grid_new(net);
+        break;
+      }
+#endif
+
+#ifdef STAT_SPEARMAN
+      if (s == "Spearman") {
+#ifdef MODEL_GAUSS
+        status = net_gauss_new_ranLink(net);
+#else
+        runStatus = -1;
+#endif
+        break;
+      }
+#endif
+
+      ERROR(s);
+      runStatus = -1;
+      return *this;
+    } while (0);
+  } else if (runStatus == 0)
+    runStatus = -1;
+
+  if (status < 0 || p2p.empty()) {
+    ERROR();
+    runStatus = -1;
+    return *this;
+  }
+
+  if (s.find("_fix") != string::npos) {
+    fix_p2p(p2p, dirFlag);
+    linkSize = 0;
+  }
+
+  if (dirFlag && p2pIn.empty() && 0 != p2p_2_p2pIn(p2pIn, p2p)) {
+    ERROR();
+    runStatus = -1;
+    return *this;
+  }
+
+  if (0 != p2p_2_degArr().runStatus) {
+    ERROR();
+    runStatus = -1;
+    return *this;
+  }
+  if (kMax <= 0 || s.find("read_") != string::npos) {
+    kMin = degArrVal.front();
+    kMax = degArrVal.back();
+  }
+
+  status = 1;
+  return *this;
+}
+
+//**//****************************************************//*
+// 节点按度排序 net->net2 剔除度为0的点
+Networks& Networks::fix_p2p_nodeDeg0(void) {
+  if (status < 0 || p2p.empty() ||
+      (degArrVal.empty() && 0 != p2p_2_degArr().runStatus)) {
+    ERROR();
+    runStatus = -1;
+    return *this;
+  }
+  int flag = check_nodeDeg0(nodeDeg);
+  cout << "check_nodeDeg0\t" << flag << endl;
+  if (flag == 0) return *this;
+  if (flag < 0 || (flag > 0 && net2 == NULL)) {
+    ERROR();
+    runStatus = flag;
+    return *this;
+  }
+  Networks& net2 = *this->net2;
+  if (degArrVal.back() <= 0) {  // net2.nodeSize = 0
+    ERROR();
+    runStatus = -1;
+    return *this;
+  }
+  net2.dirFlag = dirFlag;
+
+  // net2.nodesName[i] <- i
+  nodeSize = p2p.size();
+  net2.nodeSize = nodeSize - degArrSize.front();
+  net2.nodesName.resize(nodeSize);
+  for (NodeType i = 0; i < nodeSize; i++) net2.nodesName[i] = i;
+  net2.nodesName2 = net2.nodesName;
+  common_sort_p_val(net2.nodesName.rbegin(), net2.nodesName.rend(),
+                    &nodeDeg.front());  // 按度从大到小排
+
+  // i -> net2.nodesName2[i]
+  common_sort_p_val(net2.nodesName2.begin(), net2.nodesName2.end(),
+                    &net2.nodesName.front());
+
+  // 更新net2的连边信息net2.p2p
+  net2.p2p.resize(net2.nodeSize);
+  for (NodeType i = 0; i < net2.nodeSize; i++)
+    net2.p2p[i].reserve(nodeDeg[net2.nodesName[i]]);
+  for (NodeType i2 = 0; i2 < net2.p2p.size(); i2++) {
+    NodeType i = net2.nodesName[i2];
+    for (VNodeTypeCItr j = p2p[i].begin(); j != p2p[i].end(); j++) {
+      net2.p2p[i2].push_back(net2.nodesName2[*j]);
+    }
+  }
+  for (VVNodeTypeItr i = net2.p2p.begin(); i != net2.p2p.end(); i++)
+    sort(i->begin(), i->end());  // net2.p2p从小到大排序
+
+  // 更新net2的度信息
+  if (0 != net2.p2p_2_degArr().runStatus) {
+    ERROR();
+    runStatus = -1;
+    return *this;
+  }
+  net2.kMin = net2.degArrVal.front();
+  net2.kMax = net2.degArrVal.back();
+  net2.status = 1;
+
+  return *this;
 }
 
 //**//****************************************************//*

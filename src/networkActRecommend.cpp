@@ -1,9 +1,10 @@
 #include "networkActRecommend.h"
-#include "ActRecommend.h"
 #ifdef ACT_RECOMMEND
 
+#include "ActRecommend.h"
 #include "common.h"
 using namespace std;
+
 //**//****************************************************//*
 int net_act_recommend_save_i(VDouble& o, char* name) {
   common_save1(name, o);

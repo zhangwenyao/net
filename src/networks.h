@@ -4,19 +4,10 @@
 #include "network.h"
 
 //**//************************************************************//*
-#ifdef NET_DEGREE
-#include "NetDegree.h"
-#include "networkDegree.h"
-#endif
 
 #ifdef NET_EXTREMUM
 #include "NetExtremum.h"
 #include "networkExtremum.h"
-#endif
-
-#ifdef NET_RANDOM
-#include "NetRandom.h"
-#include "networkRandom.h"
 #endif
 
 #ifdef NET_BA
@@ -81,32 +72,54 @@
 #include "ActFitnessComplexity.h"
 #endif
 
-#ifdef ACT_SIS
-#include "ActSIS.h"
-#include "networkActSIS.h"
+//**//************************************************************//*
+class Networks : public Network {
+ public:
+  Networks* net2;
+
+  Networks(void);
+  //~Networks(void);
+  Networks& clear(void);
+  friend std::ostream& operator<<(std::ostream& os, const Networks& net);
+  const Networks& save_params(std::ostream& os) const;
+  const Networks& save_params(const char* name = NULL) const;
+  Networks& save_data(const char* name = NULL);
+  Networks& save(const char* name = NULL);
+  friend std::istream& operator>>(std::istream& is, Networks& net);
+  Networks& read_params_1(std::istream& is);
+  Networks& run(const std::string argv2 = "");
+  Networks& stat(void);
+
+  Networks& cal_params(const std::string& s);
+  Networks& cal_nodeDeg(const std::string& s);
+  Networks& cal_p2p(const std::string& s);
+  Networks& fix_p2p_nodeDeg0(void);
+
+#ifdef NET_DEGREE
+  Net_degree degree;
+#ifdef DEG_POWER
+  Networks& deg_power(void);
+  Networks& power_check_params(void);
+#endif
+#ifdef DEF_POISSON
+  Networks& deg_poisson(void);
+#endif
 #endif
 
-//**//************************************************************//*
-std::ostream& operator<<(std::ostream& os, const Network& net);
-int net_save_params(std::ostream& os, const Network& net);
-int net_save_params(const Network& net, const char* name = NULL);
-std::istream& operator>>(std::istream& is, Network& net);
-int net_read_params(std::istream& is, Network& net);
-int net_read_params(Network& net, const char* name = NULL);
-int net_read_params(Network& net, int argc, char** argv);
+#ifdef NET_RANDOM
+  Net_random random;
+  Networks& net_ER(void);
+  Networks& net_random_remDeg(void);
+#endif
 
-int net_save0(const Network& net);
-int net_save(const Network& net, const char* name = NULL);
+#ifdef ACT_SIS
+  Act_SIS sis;
+  int act_SIS();
+  int cal_SIS_tau();
+#endif
+};
 
-//**//************************************************************//*
-int net_run(Network& net, const std::string& argv = "");
-int net_clear(Network& net);
-int net_cal_params(Network& net, const std::string& s);
-int net_init_seed(Network& net);
-int net_init_seed(Network& net, const int seed);
-int net_cal_nodeDeg(Network& net, const std::string& s);
-int net_cal_p2p(Network& net, const std::string& s);
-int net_stat(Network& net);
+std::ostream& operator<<(std::ostream& os, const Networks& net);
 
 //**//************************************************************//*
 #endif  // NETWOKS_H

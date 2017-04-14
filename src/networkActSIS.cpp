@@ -1,52 +1,71 @@
 #include "networkActSIS.h"
-#include "ActSIS.h"
 #ifdef ACT_SIS
 
+#include "ActSIS.h"
 #include "common.h"
 using namespace std;
+
 //**//****************************************************//*
-int net_save_params_act_SIS(std::ostream& os, const Network& net) {
-  if (!os) return -1;
-  os << "--params_SIS.lambda_c\t" << net.params_SIS.lambda_c
-     << "\n--params_SIS.tau\t" << net.params_SIS.tau << "\n--params_SIS.ksi\t"
-     << net.params_SIS.ksi << "\n--params_SIS.lambda\t" << net.params_SIS.lambda
-     << "\n--params_SIS.rho\t" << net.params_SIS.rho << "\n--params_SIS.p\t"
-     << net.params_SIS.p << "\n";
+Act_SIS::Act_SIS(void)
+    : M(0),
+      rho(0),
+      p(0),
+      lambda(0),
+      tau(0),
+      t_av(0),
+      ksi(0),
+      lambda_c(0),
+      nSum(0),
+      n2Sum(0) {}
+
+std::ostream& operator<<(std::ostream& os, const Act_SIS& sis) {
+  if (!os) {
+    ERROR();
+    return os;
+  }
+  os << "--sis.lambda_c\t" << sis.lambda_c << "\n--sis.tau\t" << sis.tau
+     << "\n--sis.ksi\t" << sis.ksi << "\n--sis.lambda\t" << sis.lambda
+     << "\n--sis.rho\t" << sis.rho << "\n--sis.p\t" << sis.p << "\n";
+  return os;
+}
+
+int Act_SIS::save_params(std::ostream& os)const {
+  os << *this;
   return 0;
 }
 
-int net_act_SIS(Network& net) {
-  act_SIS_init(net.params_SIS.statusSN, net.params_SIS.SN, net.params_SIS.N_i,
-               net.params_SIS.NDeg_i, net.params_SIS.t, net.p2p,
-               net.params_SIS.rho, net.params_SIS.M);
-  net.params_SIS.nSum = 0;
-  net.params_SIS.n2Sum = 0;
-  net.params_SIS.nNum = 0;
-  act_SIS(net.params_SIS.statusSN, net.params_SIS.SN, net.params_SIS.N_i,
-          net.params_SIS.NDeg_i, net.params_SIS.t, net.params_SIS.nSum,
-          net.params_SIS.n2Sum, net.params_SIS.nNum, net.params_SIS.p,
-          net.params_SIS.lambda, net.params_SIS.tau, net.params_SIS.t_av,
-          net.p2p, net.kMax);
-  act_SIS_cal_params(net.params_SIS.ksi, net.params_SIS.lambda_c, net.p2p,
-                     net.params_SIS.nSum, net.params_SIS.n2Sum,
-                     net.params_SIS.nNum);
+int Act_SIS::save_params(const char* name)const { return 0; }
+int Act_SIS::save_data(const char* name) { return 0; }
+int Act_SIS::save(const char* name) { return 0; }
+
+int Act_SIS::read_params_1(string& s, istream& is) { return 0; }
+
+//**//****************************************************//*
+Act_SIS& Act_SIS::clear(void) { return *this; }
+
+//**//****************************************************//*
+int Networks::cal_SIS_tau() {
+  ::act_SIS_init(sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t, p2p, sis.rho,
+                 sis.M);
+  sis.nSum = 0;
+  sis.n2Sum = 0;
+  sis.nNum = 0;
+  ::act_SIS_tau(sis.tau, sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t,
+                sis.nSum, sis.n2Sum, sis.nNum, sis.p, sis.lambda, p2p, kMax);
   return 0;
 }
 
-int net_act_SIS_tau(Network& net) {
-  act_SIS_init(net.params_SIS.statusSN, net.params_SIS.SN, net.params_SIS.N_i,
-               net.params_SIS.NDeg_i, net.params_SIS.t, net.p2p,
-               net.params_SIS.rho, net.params_SIS.M);
-  net.params_SIS.nSum = 0;
-  net.params_SIS.n2Sum = 0;
-  net.params_SIS.nNum = 0;
-  act_SIS_tau(net.params_SIS.tau, net.params_SIS.statusSN, net.params_SIS.SN,
-              net.params_SIS.N_i, net.params_SIS.NDeg_i, net.params_SIS.t,
-              net.params_SIS.nSum, net.params_SIS.n2Sum, net.params_SIS.nNum,
-              net.params_SIS.p, net.params_SIS.lambda, net.p2p, net.kMax);
-  act_SIS_cal_params(net.params_SIS.ksi, net.params_SIS.lambda_c, net.p2p,
-                     net.params_SIS.nSum, net.params_SIS.n2Sum,
-                     net.params_SIS.nNum);
+int Networks::act_SIS() {
+  ::act_SIS_init(sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t, p2p, sis.rho,
+                 sis.M);
+  sis.nSum = 0;
+  sis.n2Sum = 0;
+  sis.nNum = 0;
+  ::act_SIS(sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t, sis.nSum,
+            sis.n2Sum, sis.nNum, sis.p, sis.lambda, sis.tau, sis.t_av, p2p,
+            kMax);
+  ::act_SIS_cal_params(sis.ksi, sis.lambda_c, p2p, sis.nSum, sis.n2Sum,
+                       sis.nNum);
   return 0;
 }
 

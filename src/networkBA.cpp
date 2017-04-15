@@ -1,8 +1,8 @@
 #include "networks.h"
 #ifdef NET_BA
 
-#include "NetBA.h"
 #include "common.h"
+#include "NetBA.h"
 using namespace std;
 //**//****************************************************//*
 // 参数：   M0  全连通子网络节点数目
@@ -98,9 +98,10 @@ Networks& Networks::net_BA(void) {
     ERROR();
     return *this;
   }
-  if (0 != BA_new(ba.M, ba.M0, nodeSize, p2p, kMin, kMax)) {
+  if (0 != ::BA_new(ba.M, ba.M0, nodeSize, p2p, kMin, kMax)) {
     runStatus = -1;
     status = -1;
+    ERROR();
   } else
     status = 1;
   return *this;

@@ -1,8 +1,8 @@
 #include "networks.h"
 #ifdef NET_RANDOM
 
-#include "NetRandom.h"
 #include "common.h"
+#include "NetRandom.h"
 using namespace std;
 
 //**//****************************************************//*
@@ -194,10 +194,6 @@ Networks& Networks::net_random_ranNode_link(
 
 Networks& Networks::net_random_node_prob(void)  // 所有点按概率p连边
 {
-  if (0 != runStatus) {
-    ERROR();
-    return *this;
-  }
   if (0 != runStatus) {
     ERROR();
     return *this;

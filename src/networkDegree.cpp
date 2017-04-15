@@ -1,8 +1,8 @@
 #include "networks.h"
 #ifdef NET_DEGREE
 
-#include "common.h"
 #include "NetDegree.h"
+#include "common.h"
 using namespace std;
 
 //**//****************************************************//*
@@ -120,6 +120,10 @@ int Net_degree::read_params_1(string& s, istream& is) {
 //      nodeSize    网络节点数目
 Networks& Networks::deg_poisson(void)  // 生成度序列 各点均按概率取任意度
 {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
   // 生成度分布概率
   ::poisson_cal_degArr(degree.poisson_p, degArrVal, degArrProb, kMin, kMax,
                        nodeSize);
@@ -147,6 +151,10 @@ Networks& Networks::deg_poisson(void)  // 生成度序列 各点均按概率取�
 //      kMin        最小度
 //      kMax        最大度
 Networks& Networks::power_check_params(void) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
   if (kMin > kMax || kMax >= nodeSize ||
       (kMin == kMax && nodeSize % 2 == 1 && kMin % 2 == 1) ||
       degree.power_gamma < 0) {
@@ -157,6 +165,10 @@ Networks& Networks::power_check_params(void) {
 
 // 生成度分布
 Networks& Networks::deg_power(void) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
   // 生成度分布概率
   ::power_cal_degArr(degree.power_gamma, degArrVal, degArrProb, kMin, kMax);
   nodeDeg.resize(nodeSize);

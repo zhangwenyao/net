@@ -52,7 +52,7 @@ ostream& operator<<(ostream& os, Networks& net) {
     return os;
   }
 
-  if (0 != net.Network::save_params(os).runStatus) ERROR();
+  net.Network::save_params(os);
 
 #ifdef NET_DEGREE
   os << net.degree;
@@ -382,7 +382,7 @@ Networks& Networks::run(const string argv2) {
     }
 
     if (s == "cal_p2p") {
-      if (!(ss >> s) || 0 != cal_p2p(s).runStatus) {
+      if (!(ss >> s) || 0 != cal_p2p(s, ss).runStatus) {
         ERROR();
         runStatus = -1;
         return *this;
@@ -409,50 +409,8 @@ Networks& Networks::run(const string argv2) {
     }
 
 #ifdef NET_EXTREMUM
-    if (s == "lkk_max") {
-      if (0 != net_extreme_lkk(net, 1)) {
-        ERROR();
-        runStatus = -1;
-        return *this;
-      }
-      continue;
-    }
-    if (s == "lkk_min") {
-      if (0 != net_extreme_lkk(net, 0)) {
-        ERROR();
-        runStatus = -1;
-        return *this;
-      }
-      continue;
-    }
-    if (s == "lkk_maxN") {
-      unsigned t;
-      if (!(ss >> t) || 0 != net_extreme_lkk(net, 1, t)) {
-        ERROR();
-        runStatus = -1;
-        return *this;
-      }
-      continue;
-    }
-    if (s == "lkk_minN") {
-      unsigned t;
-      if (!(ss >> t) || 0 != net_extreme_lkk(net, 0, t)) {
-        ERROR();
-        runStatus = -1;
-        return *this;
-      }
-      continue;
-    }
-    if (s == "MinLkk") {
-      if (0 != net_Min_new_lkk(net, 0)) {
-        ERROR();
-        runStatus = -1;
-        return *this;
-      }
-      continue;
-    }
-    if (s == "MinLkkFix") {
-      if (0 != net_Min_new_lkk(net, 1)) {
+    if (s == "cal_extrLKK") {
+      if (!(ss >> s) || 0 != extremum_cal_lkk(s, ss).runStatus) {
         ERROR();
         runStatus = -1;
         return *this;
@@ -701,7 +659,7 @@ Networks& Networks::cal_nodeDeg(const string& s) {
 }
 
 //**//****************************************************//*
-Networks& Networks::cal_p2p(const string& s) {
+Networks& Networks::cal_p2p(const string& s, istream& is) {
   cout << "\t" << s << '\n';
   if (runStatus != 0) {
     ERROR();
@@ -806,19 +764,35 @@ Networks& Networks::cal_p2p(const string& s) {
 
 #ifdef NET_EXTREMUM
       if (s == "Max") {
-        status = net_Max_new(net);
+        net_Max();
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
         break;
       }
       if (s == "Min") {
-        status = net_Min_new(net);
+        net_Min();
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
         break;
       }
       if (s == "MinLkkP2p") {
-        status = net_Min_new_lkk_p2p(net, 0);
+        net_Min_new_lkk_p2p(0);
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
         break;
       }
       if (s == "MinLkkP2pFix") {
-        status = net_Min_new_lkk_p2p(net, 1);
+        net_Min_new_lkk_p2p(1);
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
         break;
       }
 #endif

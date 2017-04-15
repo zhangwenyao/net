@@ -31,12 +31,12 @@
                             Spearman        sp系数给定的网络
     修正        fix_p2p                     修正自环、重边、缺边
                 fix_p2p_nodeDeg0            按p2p度排序重新映射节点，度为0在最后（剔除）
-    连边矩阵    lkk_max                     lkk最强pearson同配
-                lkk_min                     lkk最强pearson异配
-                lkk_maxN    countN          lkk最强pearson同配
-                lkk_minN    countN          lkk最强pearson异配
-                MinLkk                      最小度关联网络
-                MinLkkFix                   最小度关联网络
+    连边矩阵    cal_extrLKK lkk_max         lkk最强pearson同配
+                            lkk_min         lkk最强pearson异配
+                            lkk_maxN  countN  lkk最强pearson同配
+                            lkk_minN  countN  lkk最强pearson异配
+                            MinLkk          最小度关联网络
+                            MinLkkFix       最小度关联网络
     统计        stat
     推荐        recommend   mass            扩散
                             heat            热传导

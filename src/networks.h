@@ -25,7 +25,7 @@ class Networks : public Network {
 
   Networks& cal_params(const std::string& s);
   Networks& cal_nodeDeg(const std::string& s);
-  Networks& cal_p2p(const std::string& s);
+  Networks& cal_p2p(const std::string& s, std::istream& is);
   Networks& fix_p2p_nodeDeg0(void);
 
 #ifdef NET_DEGREE
@@ -53,6 +53,15 @@ class Networks : public Network {
 #ifdef NET_BA
   Net_BA ba;
   Networks& net_BA(void);
+#endif
+
+#ifdef NET_EXTREMUM
+  Networks& net_Max(void);
+  Networks& net_Min(void);
+  Networks& net_Min_new_lkk_p2p(const int fix);
+  Networks& net_Min_new_lkk(const int fix = 0);
+  Networks& net_extreme_lkk(const int extrMax, const unsigned countN = 3);
+  Networks& extremum_cal_lkk(std::string& s, std::istream& is);
 #endif
 
 #ifdef ACT_SIS

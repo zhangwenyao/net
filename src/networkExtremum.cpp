@@ -1,33 +1,151 @@
-#include "networkExtremum.h"
-#include "NetExtremum.h"
+#include "networks.h"
 #ifdef NET_EXTREMUM
 
+#include "NetExtremum.h"
+#include "common.h"
+using namespace std;
+
 //**//****************************************************//*
+// 特殊网络参数
+//      nodeSize    网络节点数目
+//      nodeDeg     节点度分布序列
+// Max: 极大同配网络
+// Min: 极小同配网络（极大异配网络）
+
 // 最大相关网络
-int net_Max_new(Network& net) {
-  return Max_new(net.p2p, net.nodeDeg, net.degArrVal, net.degArrSize,
-                 net.degArrSum);
+Networks& Networks::net_Max(void) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (0 != ::Max_new(p2p, nodeDeg, degArrVal, degArrSize, degArrSum)) {
+    ERROR();
+    runStatus = -1;
+    status = -1;
+  } else
+    status = 1;
+  return *this;
 }
 
 // 最小相关网络
-int net_Min_new(Network& net) {
-  return Min_new(net.p2p, net.nodeDeg, net.degArrVal, net.degArrSize,
-                 net.degArrSum);
+Networks& Networks::net_Min(void) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (0 != ::Min_new(p2p, nodeDeg, degArrVal, degArrSize, degArrSum)) {
+    ERROR();
+    runStatus = -1;
+    status = -1;
+  } else
+    status = 1;
+  return *this;
 }
 
-int net_Min_new_lkk_p2p(Network& net, const int fix) {
-  return Min_new_lkk_p2p(net.p2p, net.lkk, net.nodeDeg, net.degArrVal,
-                         net.degArrSize, net.degArrSum, net.linkSum, fix);
+Networks& Networks::net_Min_new_lkk_p2p(const int fix) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (0 != ::Min_new_lkk_p2p(p2p, lkk, nodeDeg, degArrVal, degArrSize,
+                             degArrSum, linkSum, fix)) {
+    ERROR();
+    runStatus = -1;
+    status = -1;
+  } else
+    status = 1;
+  return *this;
 }
 
-int net_Min_new_lkk(Network& net, const int fix) {
-  return Min_new_lkk(net.lkk, net.degArrVal, net.degArrSize, net.linkSum, fix);
+Networks& Networks::net_Min_new_lkk(const int fix) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (0 != ::Min_new_lkk(lkk, degArrVal, degArrSize, linkSum, fix)) {
+    ERROR();
+    runStatus = -1;
+    status = -1;
+  } else
+    status = 1;
+  return *this;
 }
 
-int net_extreme_lkk(Network& net, const int extrMax, const unsigned countN) {
-  return lkk_extreme_pearson(net.lkk, net.degArrVal, net.degArrSize, extrMax,
-                             countN);
+Networks& Networks::net_extreme_lkk(const int extrMax, const unsigned countN) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (0 != ::lkk_extreme_pearson(lkk, degArrVal, degArrSize, extrMax, countN)) {
+    ERROR();
+    runStatus = -1;
+  }
+  return *this;
 }
 
 //**//****************************************************//*
-#endif  // NET_EXTREMUM
+Networks& Networks::extremum_cal_lkk(string& s, istream& is) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  do {
+    if (s == "lkk_max") {
+      if (0 != net_extreme_lkk(1).runStatus) {
+        ERROR();
+        runStatus = -1;
+        return *this;
+      }
+      break;
+    }
+    if (s == "lkk_min") {
+      if (0 != net_extreme_lkk(0).runStatus) {
+        ERROR();
+        runStatus = -1;
+        return *this;
+      }
+      break;
+    }
+    if (s == "lkk_maxN") {
+      unsigned t;
+      if (!(is >> t) || 0 != net_extreme_lkk(1, t).runStatus) {
+        ERROR();
+        runStatus = -1;
+        return *this;
+      }
+      break;
+    }
+    if (s == "lkk_minN") {
+      unsigned t;
+      if (!(is >> t) || 0 != net_extreme_lkk(0, t).runStatus) {
+        ERROR();
+        runStatus = -1;
+        return *this;
+      }
+      break;
+    }
+    if (s == "MinLkk") {
+      if (0 != net_Min_new_lkk(0).runStatus) {
+        ERROR();
+        runStatus = -1;
+        return *this;
+      }
+      break;
+    }
+    if (s == "MinLkkFix") {
+      if (0 != net_Min_new_lkk(1).runStatus) {
+        ERROR();
+        runStatus = -1;
+        return *this;
+      }
+      break;
+    }
+    ERROR(s);
+    runStatus = -1;
+    return *this;
+  } while (0);
+
+  return *this;
+}
+//**//****************************************************//*
+#endif

@@ -4,16 +4,16 @@
 
 #include "common.h"
 using namespace std;
-//**//********************************************************************
+//**//**************************************************//**//*
 int main(int argc, char **argv) {
   SHOW_TIME(cout);  // 显示系统时间
 
   do {
     Networks net;
     net.saveName = net.readName = "data/degree";
-    net.nodeSize = 128;            // 节点数
+    net.nodeSize = 1000;            // 节点数
     net.degree.power_gamma = 2.7;  // 度分布幂律分布的幂指数
-    net.kMin = 6;
+    net.kMin = 3;
     net.seed = 1;
     net.argv = "init_seed0 cal_deg power cal_p2p random print save";
 
@@ -38,5 +38,5 @@ int main(int argc, char **argv) {
   SHOW_TIME(cout);  // 显示系统时间
   return 0;
 }
-//**//********************************************************************
+//**//**************************************************//**//*
 #endif

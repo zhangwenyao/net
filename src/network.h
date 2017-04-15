@@ -52,9 +52,9 @@
 class Network {
  public:
   // variables
-  std::string argv;  // 参数
-  std::string saveName;     // 保存文件名前缀
-  std::string readName;     // 读取文件名前缀
+  std::string argv;      // 参数
+  std::string saveName;  // 保存文件名前缀
+  std::string readName;  // 读取文件名前缀
   int status;  // 网络状态 0：空，1：正常，-1：有错，-2：未连完
   int seed;    // 随机数种子值
   int dirFlag;                 // 网络是否有向，0无向，非0有向
@@ -124,12 +124,6 @@ class Network {
   VDouble deg2ArrWeight, deg2ArrWeightOut,
       deg2ArrWeightIn;  // 同度节点连边总权重
   double deg2WeightMean, deg2WeightMeanOut, deg2WeightMeanIn;
-
-#ifdef NET_BA
-  struct ParamsBA {
-    int M, M0;
-  } params_BA;
-#endif
 
 #ifdef NET_GRID
   struct ParamsGrid {
@@ -288,6 +282,24 @@ class Net_random {
 };
 
 std::ostream& operator<<(std::ostream& os, const Net_random& random);
+#endif
+
+//**//************************************************************//*
+#ifdef NET_BA
+class Net_BA {
+ public:
+  int M, M0;
+
+  Net_BA(void);
+  friend std::ostream& operator<<(std::ostream& os, const Net_BA& ba);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
+  int read_params_1(std::string& s, std::istream& is);
+};
+
+std::ostream& operator<<(std::ostream& os, const Net_BA& random);
 #endif
 
 //**//************************************************************//*

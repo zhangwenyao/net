@@ -46,37 +46,33 @@ Networks& Networks::clear(void) {
 
 //**//****************************************************//*
 ostream& operator<<(ostream& os, Networks& net) {
-  if (0 != net.runStatus) {
-    ERROR();
-    return os;
-  }
   if (!os) {
     net.runStatus = -1;
     ERROR();
     return os;
   }
 
-  net.Network::save_params(os);
+  if (0 != net.Network::save_params(os).runStatus) ERROR();
 
 #ifdef NET_DEGREE
   os << net.degree;
-#endif  // DEGREE
+#endif
 
 #ifdef NET_RANDOM
   os << net.random;
 #endif
 
 #ifdef NET_BA
-  if (0 != net_save_params_BA(os, net)) ERROR();
-#endif  // NET_BA
+  os << net.ba;
+#endif
 
 #ifdef NET_GRID
   if (0 != net_save_params_Grid(os, net)) ERROR();
-#endif  // NET_GRID
+#endif
 
 #ifdef STAT_BETWEENNESS
   if (0 != net_save_params_betweenness(os, net)) ERROR();
-#endif  // STAT_BETWEENNESS
+#endif
 
 #ifdef STAT_MODULARITY
   if (0 != net_save_params_modularity(os, net)) ERROR();
@@ -106,15 +102,15 @@ ostream& operator<<(ostream& os, Networks& net) {
 }
 
 Networks& Networks::save_params(std::ostream& os) {
+  if (!os) {
+    runStatus = 1;
+    ERROR();
+  }
   os << *this;
   return *this;
 }
 
 Networks& Networks::save_params(const char* name) {
-  if (0 != runStatus) {
-    ERROR();
-    return *this;
-  }
   string fn;
   if (name != NULL && name[0] != '\0')
     fn = name;
@@ -134,10 +130,6 @@ Networks& Networks::save_params(const char* name) {
 }
 
 Networks& Networks::save_data(const char* name) {
-  if (0 != runStatus) {
-    ERROR();
-    return *this;
-  }
   string fn;
   stringstream ss;
   if (name != NULL && name[0] != '\0')
@@ -149,43 +141,29 @@ Networks& Networks::save_data(const char* name) {
   }
 
   Network::save_data(fn.c_str());
-  if (0 != runStatus) {
-    ERROR();
-    return *this;
-  }
+  if (0 != runStatus) ERROR();
 
 #ifdef NET_DEGREE
   runStatus = degree.save_data(fn.c_str());
-  if (0 != runStatus) {
-    ERROR();
-    return *this;
-  }
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef NET_BA
+  runStatus = ba.save_data(fn.c_str());
+  if (0 != runStatus) ERROR();
 #endif
 
 #ifdef ACT_SIS
   runStatus = sis.save_data(fn.c_str());
-  if (0 != runStatus) {
-    ERROR();
-    return *this;
-  }
+  if (0 != runStatus) ERROR();
 #endif
 
   return *this;
 }
 
 Networks& Networks::save(const char* name) {
-  if (0 != runStatus) {
-    ERROR();
-    return *this;
-  }
-  if (0 != save_params(name).runStatus) {
-    ERROR();
-    return *this;
-  }
-  if (0 != save_data(name).runStatus) {
-    ERROR();
-    return *this;
-  }
+  if (0 != save_params(name).runStatus) ERROR();
+  if (0 != save_data(name).runStatus) ERROR();
   return *this;
 }
 
@@ -239,7 +217,7 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       return *this;
     }
     if (s.size() <= 0) break;
-#endif  // DEGREE
+#endif
 
 #ifdef NET_RANDOM
     if (0 != random.read_params_1(s, is)) {
@@ -251,10 +229,13 @@ Networks& Networks::read_params_1(string& s, istream& is) {
 #endif
 
 #ifdef NET_BA
-    is.clear();
-    is.seekg(ios::beg);
-    if (0 != net_read_params_BA(is, net)) ERROR();
-#endif  // NET_BA
+    if (0 != ba.read_params_1(s, is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
+#endif
 
 #ifdef NET_GRID
     is.clear();
@@ -865,7 +846,11 @@ Networks& Networks::cal_p2p(const string& s) {
 
 #ifdef NET_BA
       if (s == "BA") {
-        status = net_BA(net);
+        net_BA();
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
         break;
       }
 #endif
@@ -892,8 +877,10 @@ Networks& Networks::cal_p2p(const string& s) {
       runStatus = -1;
       return *this;
     } while (0);
-  } else if (status == 0)
-    status = -1;
+  } else {
+    // !p2p.empty()
+    if (status == 0) status = -1;
+  }
 
   if (status < 0 || p2p.empty()) {
     ERROR();

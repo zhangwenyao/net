@@ -50,6 +50,11 @@ class Networks : public Network {
   Networks& net_random_ranNode(void);
 #endif
 
+#ifdef NET_BA
+  Net_BA ba;
+  Networks& net_BA(void);
+#endif
+
 #ifdef ACT_SIS
   Act_SIS sis;
   int act_SIS();

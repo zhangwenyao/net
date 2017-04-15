@@ -101,6 +101,10 @@ Networks& Networks::net_random_init(void) {
 //      p           连边概率p
 //      nodeSize    节点数目
 Networks& Networks::net_ER(void) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
   // 初始化连边信息
   int p = random.p * RAND2_MAX;
   p2p.clear();

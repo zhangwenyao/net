@@ -1,42 +1,110 @@
-#include "networkBA.h"
-#include "NetBA.h"
+#include "networks.h"
 #ifdef NET_BA
 
-#include <iostream>
-#include <string>
+#include "NetBA.h"
 #include "common.h"
 using namespace std;
 //**//****************************************************//*
-int net_BA(Network& net) {
-  if (0 != BA_new(net.params_BA.M, net.params_BA.M0, net.nodeSize, net.p2p,
-                  net.kMin, net.kMax))
-    return net.status = -1;
-  net.status = 1;
+// 参数：   M0  全连通子网络节点数目
+//          M   新节点的度（M<=M0）
+//          nodeize 网络总节点数
+
+Net_BA::Net_BA(void) : M(1), M0(2) {}
+
+std::ostream& operator<<(std::ostream& os, const Net_BA& ba) {
+  if (!os) {
+    ERROR();
+    return os;
+  }
+  os << "--ba.M0\t" << ba.M0 << "\n--ba.M\t" << ba.M << '\n';
+  return os;
+}
+
+int Net_BA::save_params(std::ostream& os) const {
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  os << *this;
   return 0;
 }
 
-//**//****************************************************//*
-int net_read_params_BA(istream& is, Network& net) {
-  for (string s; is >> s;) {
-    if (s == "--params_BA.M") {
-      is >> net.params_BA.M;
-      cout << s << '\t' << net.params_BA.M << endl;
-      continue;
-    }
-    if (s == "--params_BA.M0") {
-      is >> net.params_BA.M0;
-      cout << s << '\t' << net.params_BA.M0 << endl;
-      continue;
-    }
+int Net_BA::save_params(const char* name) const {
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  os << *this;
+  os.close();
+  return 0;
+}
+
+int Net_BA::save_data(const char* name) const {
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
   }
   return 0;
 }
 
-int net_save_params_BA(ostream& os, const Network& net) {
-  if (!os) return -1;
-  os << "--params_BA.M\t" << net.params_BA.M << "\n--params_BA.M0\t"
-     << net.params_BA.M0 << '\n';
+int Net_BA::save(const char* name) const {
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  string fn = name;
+  if (0 != save_params((fn + "_BA_params.txt").c_str())) {
+    ERROR();
+    return -1;
+  }
+  if (0 != save_data((fn + "_BA").c_str())) {
+    ERROR();
+    return -1;
+  }
   return 0;
 }
+
+int Net_BA::read_params_1(string& s, istream& is) {
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  int flag = 1;
+  do {
+    if (s == "--ba.M0") {
+      is >> M0;
+      cout << s << '\t' << M0 << endl;
+      break;
+    }
+    if (s == "--ba.M") {
+      is >> M;
+      cout << s << '\t' << M << endl;
+      break;
+    }
+    flag = 0;
+  } while (0);
+  if (flag) s.clear();
+  return 0;
+}
+
+//**//****************************************************//*
+Networks& Networks::net_BA(void) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (0 != BA_new(ba.M, ba.M0, nodeSize, p2p, kMin, kMax)) {
+    runStatus = -1;
+    status = -1;
+  } else
+    status = 1;
+  return *this;
+}
+
 //**//****************************************************//*
 #endif  // NET_BA

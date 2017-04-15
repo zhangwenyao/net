@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
   SHOW_TIME(cout);  // 显示系统时间
 
   do {
-    Network net;
+    Networks net;
     net.saveName = net.readName = "data/Max_power2.5";
     net.nodeSize = 1024;                  // 节点数
     net.params_degree.power_gamma = 2.5;  // 度分布幂律分布的幂指数

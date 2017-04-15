@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
   SHOW_TIME(cout);  // 显示系统时间
 
   do {
-    Network net, net2;
+    Networks net, net2;
     net.saveName = net.readName = "data/matrix1";
     net2.saveName = net2.readName = "data/matrix2";
     net.dirFlag = net2.dirFlag = 1;

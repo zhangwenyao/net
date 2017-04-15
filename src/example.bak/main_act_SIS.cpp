@@ -1,8 +1,8 @@
 // g++ -o main.exe *.cpp -O3 -Wall
-#include "common.h"
 #include "networks.h"
 #ifdef ACT_SIS
 
+#include "common.h"
 using namespace std;
 //**//****************************************************//*
 int main(int argc, char **argv) {
@@ -10,12 +10,12 @@ int main(int argc, char **argv) {
 
   do {
     Networks net, net2;
-    net.saveName = net.readName = "data/random-power2";
+    net.saveName = net.readName = "data/test";
     net.dirFlag = 0;
     net.nodeSize = 100000;
-    net.degree.power_gamma = 2;
     net.kMin = 3;
-    if (0 != cal_kmax_PowerLaw_NatureCutoff(net.kMax, net.nodeSize, net.kMin,
+    net.degree.power_gamma = 2;
+    if (0 != cal_kMax_PowerLaw_NatureCutoff(net.kMax, net.nodeSize, net.kMin,
                                             net.degree.power_gamma)) {
       ERROR();
       return -1;

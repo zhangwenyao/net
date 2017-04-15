@@ -273,18 +273,24 @@ Network& Network::read_params(int argc, char** argv) {
 }
 
 //**//****************************************************//*
-ostream& operator<<(std::ostream& os, const Network& net) {
-  if (0 != net.runStatus || !os) {
+ostream& operator<<(std::ostream& os, Network& net) {
+  if (0 != net.runStatus) {
+    ERROR();
+    return os;
+  }
+  if (!os) {
+    net.runStatus = -1;
     ERROR();
     return os;
   }
   os << "--version\t" << NET_VERSION << "\n--saveName\t" << net.saveName
      << "\n--readName\t" << net.readName << "\n--argv\t" << net.argv
-     << "\n--status\t" << net.status << "\n--seed\t" << net.seed
-     << "\n--dirFlag\t" << net.dirFlag << "\n--weightFlag\t" << net.weightFlag
-     << "\n--nodeSize\t" << net.nodeSize << "\n--kMin\t" << net.kMin
-     << "\n--kMax\t" << net.kMax << "\n--degSize\t" << net.degArrVal.size()
-     << "\n--degMean\t" << net.degMean << "\n--linkSize\t" << net.linkSize;
+     << "\n--runStatus\t" << net.runStatus << "\n--status\t" << net.status
+     << "\n--seed\t" << net.seed << "\n--dirFlag\t" << net.dirFlag
+     << "\n--weightFlag\t" << net.weightFlag << "\n--nodeSize\t" << net.nodeSize
+     << "\n--kMin\t" << net.kMin << "\n--kMax\t" << net.kMax << "\n--degSize\t"
+     << net.degArrVal.size() << "\n--degMean\t" << net.degMean
+     << "\n--linkSize\t" << net.linkSize;
   if (net.weightFlag) {
     os << "\n--netWeight\t" << net.netWeight << "\n--degWeightMean\t"
        << net.degWeightMean;
@@ -319,12 +325,17 @@ ostream& operator<<(std::ostream& os, const Network& net) {
   return os;
 }
 
-const Network& Network::save_params(ostream& os) const {
-  os << *this;
+Network& Network::save_params(ostream& os) {
+  if (0 != runStatus)
+    ERROR();
+  else if (!os)
+    runStatus = -1;
+  else
+    os << *this;
   return *this;
 }
 
-const Network& Network::save_params(const char* name) const {
+Network& Network::save_params(const char* name) {
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -339,6 +350,7 @@ const Network& Network::save_params(const char* name) const {
   }
   ofstream os((fn + "_params.txt").c_str());
   if (!os) {
+    runStatus = -1;
     ERROR();
     return *this;
   }
@@ -362,8 +374,15 @@ Network& Network::save_data(const char* name) {
     fn = saveName + '_' + ss.str();
   }
 
-// save_deg(fn.c_str());
-// save_p2p(fn.c_str());
+  if (0 != save_deg(fn.c_str()).runStatus) {
+    ERROR();
+    return *this;
+  }
+
+// if (0 != save_p2p(fn.c_str()).runStatus) {
+// ERROR();
+// return *this;
+//}
 
 #ifdef STAT_BETWEENNESS
   save_betweenness(fn.c_str());
@@ -401,8 +420,14 @@ Network& Network::save(const char* name) {
     ERROR();
     return *this;
   }
-  save_params(name);
-  save_data(name);
+  if (0 != save_params(name).runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (0 != save_data(name).runStatus) {
+    ERROR();
+    return *this;
+  }
 
   return *this;
 }

@@ -45,13 +45,18 @@ Networks& Networks::clear(void) {
 }
 
 //**//****************************************************//*
-ostream& operator<<(ostream& os, const Networks& net) {
-  if (0 != net.runStatus || !os) {
+ostream& operator<<(ostream& os, Networks& net) {
+  if (0 != net.runStatus) {
+    ERROR();
+    return os;
+  }
+  if (!os) {
+    net.runStatus = -1;
     ERROR();
     return os;
   }
 
-  { ((const Network)net).save_params(os); }
+  net.Network::save_params(os);
 
 #ifdef NET_DEGREE
   os << net.degree;
@@ -100,12 +105,12 @@ ostream& operator<<(ostream& os, const Networks& net) {
   return os;
 }
 
-const Networks& Networks::save_params(std::ostream& os) const {
+Networks& Networks::save_params(std::ostream& os) {
   os << *this;
   return *this;
 }
 
-const Networks& Networks::save_params(const char* name) const {
+Networks& Networks::save_params(const char* name) {
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -149,8 +154,20 @@ Networks& Networks::save_data(const char* name) {
     return *this;
   }
 
+#ifdef NET_DEGREE
+  runStatus = degree.save_data(fn.c_str());
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+#endif
+
 #ifdef ACT_SIS
   runStatus = sis.save_data(fn.c_str());
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
 #endif
 
   return *this;
@@ -161,8 +178,14 @@ Networks& Networks::save(const char* name) {
     ERROR();
     return *this;
   }
-  save_params(name);
-  save_data(name);
+  if (0 != save_params(name).runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (0 != save_data(name).runStatus) {
+    ERROR();
+    return *this;
+  }
   return *this;
 }
 
@@ -301,7 +324,7 @@ Networks& Networks::run(const string argv2) {
 
   string s;
   istringstream ss;
-  if (argv.size() > 0)
+  if (argv2.size() > 0)
     ss.str(argv2);
   else
     ss.str(argv);

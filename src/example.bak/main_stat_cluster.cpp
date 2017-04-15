@@ -8,7 +8,7 @@ using namespace std;
 int main(int argc, char **argv) {
   SHOW_TIME(cout);  // 显示系统时间
 
-  Network net;
+  Networks net;
   do {
     net.seed = 1;
     net.weightFlag = 1;

@@ -1,6 +1,6 @@
 // g++ -o main.exe *.cpp -O3 -Wall
 #include "networks.h"
-#ifdef NET_RANDOM
+#ifdef NET_DEGREE
 
 #include "common.h"
 using namespace std;
@@ -10,12 +10,12 @@ int main(int argc, char **argv) {
 
   do {
     Networks net;
-    net.seed = 4;
-    net.saveName = net.readName = "data/random2.7_128";
+    net.saveName = net.readName = "data/degree";
     net.nodeSize = 128;            // 节点数
     net.degree.power_gamma = 2.7;  // 度分布幂律分布的幂指数
     net.kMin = 6;
-    net.argv = "init_seed cal_deg power cal_p2p random stat print save";
+    net.seed = 1;
+    net.argv = "init_seed cal_deg poisson print save0";
 
     // 带参数运行
     if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {

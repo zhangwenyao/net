@@ -2395,7 +2395,7 @@ int read_link_weight_0(VNodeType& link, LinkType& linkSize,
 }
 
 //**//***********************************************************//*
-int cal_kmax_PowerLaw_NatureCutoff(NodeType& kMax, const NodeType nodeSize,
+int cal_kMax_PowerLaw_NatureCutoff(NodeType& kMax, const NodeType nodeSize,
                                    const NodeType kMin, const double gamma) {
   if (kMin < 1 || nodeSize < kMin) {
     ERROR();

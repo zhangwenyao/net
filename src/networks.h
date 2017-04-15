@@ -80,9 +80,9 @@ class Networks : public Network {
   Networks(void);
   //~Networks(void);
   Networks& clear(void);
-  friend std::ostream& operator<<(std::ostream& os, const Networks& net);
-  const Networks& save_params(std::ostream& os) const;
-  const Networks& save_params(const char* name = NULL) const;
+  friend std::ostream& operator<<(std::ostream& os, Networks& net);
+  Networks& save_params(std::ostream& os) ;
+  Networks& save_params(const char* name = NULL) ;
   Networks& save_data(const char* name = NULL);
   Networks& save(const char* name = NULL);
   friend std::istream& operator>>(std::istream& is, Networks& net);
@@ -101,7 +101,7 @@ class Networks : public Network {
   Networks& deg_power(void);
   Networks& power_check_params(void);
 #endif
-#ifdef DEF_POISSON
+#ifdef DEG_POISSON
   Networks& deg_poisson(void);
 #endif
 #endif
@@ -119,7 +119,7 @@ class Networks : public Network {
 #endif
 };
 
-std::ostream& operator<<(std::ostream& os, const Networks& net);
+std::ostream& operator<<(std::ostream& os, Networks& net);
 
 //**//************************************************************//*
 #endif  // NETWOKS_H

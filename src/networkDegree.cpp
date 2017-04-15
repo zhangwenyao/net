@@ -38,9 +38,45 @@ int Net_degree::save_params(std::ostream& os) const {
   return 0;
 }
 
-int Net_degree::save_params(const char* name) const { return 0; }
-int Net_degree::save_data(const char* name) { return 0; }
-int Net_degree::save(const char* name) { return 0; }
+int Net_degree::save_params(const char* name) const {
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  os << *this;
+  os.close();
+  return 0;
+}
+
+int Net_degree::save_data(const char* name) const {
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  return 0;
+}
+
+int Net_degree::save(const char* name) const {
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  string fn = name;
+  if (0 != save_params((fn + "_degree_params.txt").c_str())) {
+    ERROR();
+    return -1;
+  }
+  if (0 != save_data((fn + "_degree").c_str())) {
+    ERROR();
+    return -1;
+  }
+  return 0;
+}
 
 int Net_degree::read_params_1(string& s, istream& is) { return 0; }
 
@@ -63,7 +99,7 @@ Networks& Networks::deg_poisson(void)  // 生成度序列 各点均按概率取�
   ::sort(nodeDeg.begin(),
          nodeDeg.end());  // 调用系统函数sort，对节点按度从小到大排序
   ::nodeDeg_2_degArr_Sort(nodeDeg, degArrVal, degArrSize, degArrSum);
-  return 0;
+  return *this;
 }
 
 //**//****************************************************//*

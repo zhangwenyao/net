@@ -23,8 +23,8 @@ int Net_random::save_params(std::ostream& os) const {
 }
 
 int Net_random::save_params(const char* name) const { return 0; }
-int Net_random::save_data(const char* name) { return 0; }
-int Net_random::save(const char* name) { return 0; }
+int Net_random::save_data(const char* name) const { return 0; }
+int Net_random::save(const char* name) const { return 0; }
 
 int Net_random::read_params_1(string& s, istream& is) { return 0; }
 

@@ -7,7 +7,7 @@
 using namespace std;
 
 //**//*******************************************************
-int net_clear_spread(Network& net) {
+int net_clear_spread(Networks& net) {
   net.source.clear();
   net.nei.clear();
   net.num.clear();
@@ -21,7 +21,7 @@ int net_clear_spread(Network& net) {
 }
 
 //**//*******************************************************
-int net_read_params_spread(istream& is, Network& net) {
+int net_read_params_spread(istream& is, Networks& net) {
   for (string s; is >> s;) {
     // TODO
     continue;
@@ -29,7 +29,7 @@ int net_read_params_spread(istream& is, Network& net) {
   return 0;
 }
 
-int net_save_params_spread(ostream& os, const Network& net) {
+int net_save_params_spread(ostream& os, const Networks& net) {
   if (!os) return -1;
   os << "--SOURCE_HEAD\t" << net.SOURCE_HEAD << "\n--SOURCE_NULL\t"
      << net.SOURCE_NULL << "\n--spread_mode\t" << net.mode << "\n--head\t"
@@ -42,7 +42,7 @@ int net_save_params_spread(ostream& os, const Network& net) {
 
 //**//*******************************************************
 
-int Spread::init(const Network& net) {
+int Spread::init(const Networks& net) {
   clear();
   const NodeType kMax = net.kMax;
   nodeSize = net.nodeSize;
@@ -74,7 +74,7 @@ int Spread::init(const Network& net) {
   return 0;
 }
 
-int Spread::check(const Network& net) {
+int Spread::check(const Networks& net) {
   const NodeType nodeSize = net.nodeSize;
   if (head < nodeSize && (SOURCE_HEAD == SOURCE_NULL ||
                           SOURCE_HEAD < nodeSize || SOURCE_NULL < nodeSize)) {
@@ -83,7 +83,7 @@ int Spread::check(const Network& net) {
   return 0;
 }
 
-int Spread::save(const Network& net) {
+int Spread::save(const Networks& net) {
   saveParams(net);
   saveData(net);
 #ifndef NET_GRID_SAVE
@@ -95,7 +95,7 @@ int Spread::save(const Network& net) {
   return 0;
 }
 
-int Spread::cal(const Network& net) {
+int Spread::cal(const Networks& net) {
   if (init(net) != 0) {
     ERROR("init");
     return -1;
@@ -111,7 +111,7 @@ int Spread::cal(const Network& net) {
 }
 
 //**//*******************************************************
-int Spread::saveSpread(const Network& net) {
+int Spread::saveSpread(const Networks& net) {
   stringstream fileName("");
   fileName.clear();
   fileName << net.outName << '_' << net.seed
@@ -159,7 +159,7 @@ int Spread::saveSpread(const Grid& net) {
 }
 #endif  // NET_GRID_SAVE
 
-int Spread::spread_same(const Network& net) {
+int Spread::spread_same(const Networks& net) {
   nei1 = 0;
   nei0 = 1;
   source[head] = SOURCE_HEAD;
@@ -195,7 +195,7 @@ int Spread::spread_same(const Network& net) {
   return 0;
 }
 
-int Spread::spread_diff(const Network& net) {
+int Spread::spread_diff(const Networks& net) {
   nei1 = 0;
   nei0 = 1;
   source[head] = SOURCE_HEAD;
@@ -222,7 +222,7 @@ int Spread::spread_diff(const Network& net) {
   return 0;
 }
 
-inline void Spread::update_nei(const Network& net, const NodeType ni) {
+inline void Spread::update_nei(const Networks& net, const NodeType ni) {
   NodeType inum = num[ni];
   if (inum != nei1) {  //交换stk[nei1-inum]
     NodeType nj = stk[nei1];
@@ -277,7 +277,7 @@ int Spread::calData() {
   return 0;
 }
 
-int Spread::saveData(const Network& net) {
+int Spread::saveData(const Networks& net) {
   stringstream fileName("");
   fileName.clear();
   fileName << net.outName << '_' << net.seed << "_spread_dataNode.txt";

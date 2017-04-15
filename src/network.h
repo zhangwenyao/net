@@ -222,9 +222,9 @@ class Network {
   Network& read_params_1(std::istream& is);
   Network& read_params(const char* name = NULL);
   Network& read_params(int argc, char** argv);
-  friend std::ostream& operator<<(std::ostream& os, const Network& net);
-  const Network& save_params(std::ostream& os) const;
-  const Network& save_params(const char* name = NULL) const;
+  friend std::ostream& operator<<(std::ostream& os, Network& net);
+  Network& save_params(std::ostream& os);
+  Network& save_params(const char* name = NULL);
   Network& save_data(const char* name = NULL);
   Network& save(const char* name = NULL);
 
@@ -250,7 +250,7 @@ class Network {
   Network& lkk_2_degArr(void);
   Network& p2p_2_degArr(void);
 };
-std::ostream& operator<<(std::ostream& os, const Network& net);
+std::ostream& operator<<(std::ostream& os, Network& net);
 
 //**//************************************************************//*
 #ifdef NET_DEGREE
@@ -267,8 +267,8 @@ class Net_degree {
   friend std::ostream& operator<<(std::ostream& os, const Net_degree& degree);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
-  int save_data(const char* name = NULL);
-  int save(const char* name = NULL);
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
   int read_params_1(std::string& s, std::istream& is);
 };
 
@@ -284,8 +284,8 @@ class Net_random {
   friend std::ostream& operator<<(std::ostream& os, const Net_random& random);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
-  int save_data(const char* name = NULL);
-  int save(const char* name = NULL);
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
   int read_params_1(std::string& s, std::istream& is);
 };
 
@@ -310,8 +310,8 @@ class Act_SIS {
   friend std::ostream& operator<<(std::ostream& os, const Act_SIS& sis);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
-  int save_data(const char* name = NULL);
-  int save(const char* name = NULL);
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
   int read_params_1(std::string& s, std::istream& is);
   Act_SIS& clear(void);
 };

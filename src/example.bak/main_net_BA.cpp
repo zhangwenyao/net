@@ -5,7 +5,7 @@
 //**//********************************************************************
 int main() {
   do {
-    Network net;
+    Networks net;
     net.saveName = net.readName = "data/BA";
     net.nodeSize = 100;  // 节点数
     net.params_BA.M0 = 3;

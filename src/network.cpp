@@ -6,7 +6,6 @@ using namespace std;
 //**//****************************************************//*
 Network::Network(void)
     : argv("."),
-      argv0("."),
       saveName("data/test"),
       readName("data/test"),
       status(0),
@@ -103,37 +102,25 @@ istream& operator>>(istream& is, Network& net) {
     ERROR();
     return is;
   }
-  for (string& s = net.argv0; is; is >> s) {
+  for (string s; is; is >> s) {
     if (s.size() <= 0) continue;
-    if (0 != net.read_params_1(is).runStatus || s.size() > 0) {
+    if (0 != net.read_params_1(s, is).runStatus || s.size() > 0) {
       net.runStatus = -1;
-      ERROR();
+      ERROR(s);
       break;
     }
   }
   return is;
 }
 
-Network& Network::read_params_1(istream& is) {
-  string& s = argv0;
-  if (0 != runStatus || s.size() <= 0) return *this;
+Network& Network::read_params_1(string& s, istream& is) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (s.size() <= 0) return *this;
   int flag = 1;
   do {
-    if (s == "--file") {
-      cout << s << '\t';
-      is >> s;
-      cout << s << endl;
-      if (!is || s.size() <= 0 || s == readName) {
-        runStatus = -1;
-        ERROR();
-        return *this;
-      }
-      readName = s;
-      s.clear();
-      read_params(readName.c_str());
-      flag = 0;
-      break;
-    }
     if (s == "--argv") {
       getline(is, argv);
       cout << s << '\t' << argv << endl;
@@ -152,6 +139,11 @@ Network& Network::read_params_1(istream& is) {
     if (s == "--status") {
       is >> status;
       cout << s << '\t' << status << endl;
+      break;
+    }
+    if (s == "--runStatus") {
+      is >> runStatus;
+      cout << s << '\t' << runStatus << endl;
       break;
     }
     if (s == "--seed") {
@@ -233,42 +225,6 @@ Network& Network::read_params_1(istream& is) {
   } while (0);
   if (flag) s.clear();
 
-  return *this;
-}
-
-Network& Network::read_params(const char* name) {
-  if (0 != runStatus) {
-    ERROR();
-    return *this;
-  }
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = readName;
-  if (fn.size() <= 0) {
-    runStatus = -1;
-    ERROR();
-    return *this;
-  }
-
-  ifstream is((fn + "_params.txt").c_str());
-  if (!is) {
-    runStatus = -1;
-    ERROR();
-    return *this;
-  }
-  is >> *this;
-  is.close();
-
-  return *this;
-}
-
-Network& Network::read_params(int argc, char** argv) {
-  string s;
-  for (int i = 0; i < argc; i++) (s += '\t') += argv[i];
-  stringstream ss(s);
-  ss >> *this;
   return *this;
 }
 
@@ -379,10 +335,10 @@ Network& Network::save_data(const char* name) {
     return *this;
   }
 
-// if (0 != save_p2p(fn.c_str()).runStatus) {
-// ERROR();
-// return *this;
-//}
+  if (0 != save_p2p(fn.c_str()).runStatus) {
+    ERROR();
+    return *this;
+  }
 
 #ifdef STAT_BETWEENNESS
   save_betweenness(fn.c_str());

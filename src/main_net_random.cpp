@@ -1,21 +1,21 @@
 // g++ -o main.exe *.cpp -O3 -Wall
 #include "networks.h"
-#ifdef NET_DEGREE
+#ifdef NET_RANDOM
 
 #include "common.h"
 using namespace std;
-//**//********************************************************************
+//**//****************************************************//*
 int main(int argc, char **argv) {
   SHOW_TIME(cout);  // 显示系统时间
 
   do {
     Networks net;
-    net.saveName = net.readName = "data/degree";
-    net.nodeSize = 128;            // 节点数
+    net.saveName = net.readName = "data/random";
+    net.nodeSize = 1000;            // 节点数
     net.degree.power_gamma = 2.7;  // 度分布幂律分布的幂指数
-    net.kMin = 6;
+    net.kMin = 3;
     net.seed = 1;
-    net.argv = "init_seed cal_deg poisson print save0";
+    net.argv = "init_seed0 cal_deg power cal_p2p random stat print save";
 
     // 带参数运行
     if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {
@@ -38,5 +38,5 @@ int main(int argc, char **argv) {
   SHOW_TIME(cout);  // 显示系统时间
   return 0;
 }
-//**//********************************************************************
+//**//****************************************************//*
 #endif

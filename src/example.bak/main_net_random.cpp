@@ -10,11 +10,11 @@ int main(int argc, char **argv) {
 
   do {
     Networks net;
-    net.seed = 4;
-    net.saveName = net.readName = "data/random2.7_128";
-    net.nodeSize = 128;            // 节点数
+    net.saveName = net.readName = "data/random";
+    net.nodeSize = 1000;            // 节点数
     net.degree.power_gamma = 2.7;  // 度分布幂律分布的幂指数
-    net.kMin = 6;
+    net.kMin = 3;
+    net.seed = 1;
     net.argv = "init_seed cal_deg power cal_p2p random stat print save";
 
     // 带参数运行

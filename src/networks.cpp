@@ -195,20 +195,23 @@ std::istream& operator>>(std::istream& is, Networks& net) {
     ERROR();
     return is;
   }
-  for (string& s = net.argv0; is; is >> s) {
+  for (string s; is >> s;) {
     if (s.size() <= 0) continue;
-    if (0 != net.read_params_1(is).runStatus || s.size() > 0) {
+    if (0 != net.read_params_1(s, is).runStatus || s.size() > 0) {
       net.runStatus = -1;
-      ERROR();
+      ERROR(s);
       break;
     }
   }
   return is;
 }
 
-Networks& Networks::read_params_1(istream& is) {
-  string& s = argv0;
-  if (0 != runStatus || s.size() <= 0) return *this;
+Networks& Networks::read_params_1(string& s, istream& is) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (s.size() <= 0) return *this;
   do {
     if (s == "--file") {
       cout << s << '\t';
@@ -221,27 +224,21 @@ Networks& Networks::read_params_1(istream& is) {
       }
       readName = s;
       s.clear();
-      read_params(readName.c_str());
+      if (0 != read_params(readName.c_str()).runStatus) {
+        runStatus = -1;
+        ERROR();
+        return *this;
+      }
       break;
     }
 
 #ifdef NET_DEGREE
-#ifdef DEG_POISSON
     if (0 != degree.read_params_1(s, is)) {
       ERROR();
       runStatus = -1;
       return *this;
     }
     if (s.size() <= 0) break;
-#endif
-#ifdef DEG_POWER
-    if (0 != degree.read_params_1(s, is)) {
-      ERROR();
-      runStatus = -1;
-      return *this;
-    }
-    if (s.size() <= 0) break;
-#endif
 #endif  // DEGREE
 
 #ifdef NET_RANDOM
@@ -310,8 +307,46 @@ Networks& Networks::read_params_1(istream& is) {
     if (s.size() <= 0) break;
 #endif
 
+    ERROR(s);
+    runStatus = -1;
   } while (0);
 
+  return *this;
+}
+
+Networks& Networks::read_params(const char* name) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName;
+  if (fn.size() <= 0) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+
+  ifstream is((fn + "_params.txt").c_str());
+  if (!is) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  is >> *this;
+  is.close();
+
+  return *this;
+}
+
+Networks& Networks::read_params(int argc, char** argv) {
+  string s;
+  for (int i = 0; i < argc; i++) (s += '\t') += argv[i];
+  stringstream ss(s);
+  ss >> *this;
   return *this;
 }
 
@@ -686,11 +721,11 @@ Networks& Networks::cal_nodeDeg(const string& s) {
 
 //**//****************************************************//*
 Networks& Networks::cal_p2p(const string& s) {
+  cout << "\t" << s << '\n';
   if (runStatus != 0) {
     ERROR();
     return *this;
   }
-  cout << "\t" << s << '\n';
   if (status < 0) {
     ERROR();
     runStatus = -1;
@@ -812,10 +847,18 @@ Networks& Networks::cal_p2p(const string& s) {
 #ifdef NET_RANDOM
       if (s == "ER") {
         net_ER();
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
         break;
       }
       if (s == "random") {
         net_random_remDeg();
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
         break;
       }
 #endif
@@ -849,8 +892,8 @@ Networks& Networks::cal_p2p(const string& s) {
       runStatus = -1;
       return *this;
     } while (0);
-  } else if (runStatus == 0)
-    runStatus = -1;
+  } else if (status == 0)
+    status = -1;
 
   if (status < 0 || p2p.empty()) {
     ERROR();

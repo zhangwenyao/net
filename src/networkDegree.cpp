@@ -1,8 +1,8 @@
-#include "networkDegree.h"
+#include "networks.h"
 #ifdef NET_DEGREE
 
-#include "NetDegree.h"
 #include "common.h"
+#include "NetDegree.h"
 using namespace std;
 
 //**//****************************************************//*
@@ -34,6 +34,10 @@ std::ostream& operator<<(std::ostream& os, const Net_degree& degree) {
 }
 
 int Net_degree::save_params(std::ostream& os) const {
+  if (!os) {
+    ERROR();
+    return -1;
+  }
   os << *this;
   return 0;
 }
@@ -78,10 +82,42 @@ int Net_degree::save(const char* name) const {
   return 0;
 }
 
-int Net_degree::read_params_1(string& s, istream& is) { return 0; }
+int Net_degree::read_params_1(string& s, istream& is) {
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+
+  int flag = 1;
+  do {
+#ifdef DEG_POWER
+    if (s == "--degree.power_gamma") {
+      is >> power_gamma;
+      cout << s << '\t' << power_gamma << endl;
+      break;
+    }
+#endif
+
+#ifdef DEG_POISSON
+    if (s == "--degree.poisson_p") {
+      is >> poisson_p;
+      cout << s << '\t' << poisson_p << endl;
+      break;
+    }
+#endif
+
+    flag = 0;
+  } while (0);
+  if (flag) s.clear();
+
+  return 0;
+}
 
 //**//****************************************************//*
 #ifdef DEG_POISSON
+// Poisson度分布参数
+//      poisson_p    连接概率p
+//      nodeSize    网络节点数目
 Networks& Networks::deg_poisson(void)  // 生成度序列 各点均按概率取任意度
 {
   // 生成度分布概率
@@ -101,29 +137,15 @@ Networks& Networks::deg_poisson(void)  // 生成度序列 各点均按概率取�
   ::nodeDeg_2_degArr_Sort(nodeDeg, degArrVal, degArrSize, degArrSum);
   return *this;
 }
-
-//**//****************************************************//*
-int net_read_params_poisson(istream& is, Networks& net) {
-  for (string s; is >> s;) {
-    if (s == "--degree.poisson_p") {
-      is >> net.degree.poisson_p;
-      cout << s << '\t' << net.degree.poisson_p << endl;
-      continue;
-    }
-  }
-  return 0;
-}
-
-int net_save_params_poisson(ostream& os, const Networks& net) {
-  if (!os) return -1;
-  os << "--degree.poisson_p\t" << net.degree.poisson_p << '\n';
-  return 0;
-}
-
 #endif  // DEG_POISSON
 
 //**//****************************************************//*
 #ifdef DEG_POWER
+// 幂律度分布参数
+//      power_gamma 幂指数
+//      nodeSize    节点数目
+//      kMin        最小度
+//      kMax        最大度
 Networks& Networks::power_check_params(void) {
   if (kMin > kMax || kMax >= nodeSize ||
       (kMin == kMax && nodeSize % 2 == 1 && kMin % 2 == 1) ||
@@ -151,25 +173,6 @@ Networks& Networks::deg_power(void) {
   ::nodeDeg_2_degArr_Sort(nodeDeg, degArrVal, degArrSize, degArrSum);
   return *this;
 }
-
-//**//****************************************************//*
-int net_read_params_power(istream& is, Networks& net) {
-  for (string s; is >> s;) {
-    if (s == "--degree.power_gamma") {
-      is >> net.degree.power_gamma;
-      cout << s << '\t' << net.degree.power_gamma << endl;
-      continue;
-    }
-  }
-  return 0;
-}
-
-int net_save_params_power(ostream& os, const Networks& net) {
-  if (!os) return -1;
-  os << "--degree.power_gamma\t" << net.degree.power_gamma << '\n';
-  return 0;
-}
-
 #endif  // DEG_POWER
 
 //**//****************************************************//*

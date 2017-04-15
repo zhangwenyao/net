@@ -52,7 +52,7 @@
 class Network {
  public:
   // variables
-  std::string argv, argv0;  // 参数
+  std::string argv;  // 参数
   std::string saveName;     // 保存文件名前缀
   std::string readName;     // 读取文件名前缀
   int status;  // 网络状态 0：空，1：正常，-1：有错，-2：未连完
@@ -219,9 +219,7 @@ class Network {
 
   Network(void);
   friend std::istream& operator>>(std::istream& is, Network& net);
-  Network& read_params_1(std::istream& is);
-  Network& read_params(const char* name = NULL);
-  Network& read_params(int argc, char** argv);
+  Network& read_params_1(std::string& s, std::istream& is);
   friend std::ostream& operator<<(std::ostream& os, Network& net);
   Network& save_params(std::ostream& os);
   Network& save_params(const char* name = NULL);

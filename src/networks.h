@@ -4,75 +4,6 @@
 #include "network.h"
 
 //**//************************************************************//*
-
-#ifdef NET_EXTREMUM
-#include "NetExtremum.h"
-#include "networkExtremum.h"
-#endif
-
-#ifdef NET_BA
-#include "NetBA.h"
-#include "networkBA.h"
-#endif
-
-#ifdef NET_GRID
-#include "NetGrid.h"
-#include "networkGrid.h"
-#endif
-
-#ifdef NET_ACTOR
-#include "NetActor.h"
-#endif
-
-#ifdef NET_FOODWEB
-#include "NetFoodweb.h"
-#endif
-
-#ifdef STAT_PEARSON
-#include "StatPearson.h"
-#include "networkStatPearson.h"
-#endif
-
-#ifdef STAT_SPEARMAN
-#include "StatSpearman.h"
-#include "networkStatSpearman.h"
-#endif
-
-#ifdef STAT_BETWEENNESS
-#include "StatBetweenness.h"
-#include "networkStatBetweenness.h"
-#endif
-
-#ifdef STAT_MODULARITY
-#include "StatModularity.h"
-#include "networkStatModularity.h"
-#endif
-
-#ifdef STAT_SIMILARITY
-#include "StatSimilarity.h"
-#include "networkStatSimilarity.h"
-#endif
-
-#ifdef STAT_CLUSTER
-#include "StatCluster.h"
-#include "networkStatCluster.h"
-#endif
-
-#ifdef STAT_KENDALL
-#include "StatKendall.h"
-#include "networkStatKendall.h"
-#endif
-
-#ifdef ACT_RECOMMEND
-#include "ActRecommend.h"
-#include "networkActRecommend.h"
-#endif
-
-#ifdef ACT_FITNESS_COMPLEXITY
-#include "ActFitnessComplexity.h"
-#endif
-
-//**//************************************************************//*
 class Networks : public Network {
  public:
   Networks* net2;
@@ -81,12 +12,14 @@ class Networks : public Network {
   //~Networks(void);
   Networks& clear(void);
   friend std::ostream& operator<<(std::ostream& os, Networks& net);
-  Networks& save_params(std::ostream& os) ;
-  Networks& save_params(const char* name = NULL) ;
+  Networks& save_params(std::ostream& os);
+  Networks& save_params(const char* name = NULL);
   Networks& save_data(const char* name = NULL);
   Networks& save(const char* name = NULL);
   friend std::istream& operator>>(std::istream& is, Networks& net);
-  Networks& read_params_1(std::istream& is);
+  Networks& read_params_1(std::string& s, std::istream& is);
+  Networks& read_params(const char* name = NULL);
+  Networks& read_params(int argc, char** argv);
   Networks& run(const std::string argv2 = "");
   Networks& stat(void);
 
@@ -108,8 +41,13 @@ class Networks : public Network {
 
 #ifdef NET_RANDOM
   Net_random random;
+  Networks& net_random_clear(void);
+  Networks& net_random_init(void);
   Networks& net_ER(void);
+  Networks& net_random_ranNode_link(void);
+  Networks& net_random_node_prob(void);
   Networks& net_random_remDeg(void);
+  Networks& net_random_ranNode(void);
 #endif
 
 #ifdef ACT_SIS

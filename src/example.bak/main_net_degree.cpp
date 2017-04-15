@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     net.degree.power_gamma = 2.7;  // 度分布幂律分布的幂指数
     net.kMin = 6;
     net.seed = 1;
-    net.argv = "init_seed cal_deg poisson print save0";
+    net.argv = "init_seed0 cal_deg power cal_p2p random print save";
 
     // 带参数运行
     if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {

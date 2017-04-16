@@ -1,8 +1,8 @@
 #include "net.h"
 #ifdef NET_BA
 
-#include "common.h"
 #include "NetBA.h"
+#include "common.h"
 #include "networks.h"
 using namespace std;
 //**//****************************************************//*

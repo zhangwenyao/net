@@ -125,86 +125,6 @@ class Network {
       deg2ArrWeightIn;  // 同度节点连边总权重
   double deg2WeightMean, deg2WeightMeanOut, deg2WeightMeanIn;
 
-#ifdef STAT_PEARSON
-  struct ParamsPearson {
-    // pearson
-    double pearson, InIn, InOut, OutIn, OutOut;
-    double No, NoInIn, NoInOut, NoOutIn, NoOutOut;
-    double rho, rhoInIn, rhoInOut, rhoOutIn, rhoOutOut;
-  } params_pearson;
-#endif
-
-#ifdef STAT_SPEARMAN
-  struct ParamsSpearman {
-    // spearman
-    double spearman, InIn, InOut, OutIn, OutOut, rho, rhoInIn, rhoInOut,
-        rhoOutIn, rhoOutOut;
-#ifdef MODEL_GAUSS
-    // gauss模型
-    double r0;
-    VDouble GaussS2;  // [nodeSize]   模型的联合概率的方差
-#endif                // MODEL_GAUSS
-  } params_spearman;
-#endif
-
-#ifdef STAT_KENDALL
-  struct ParamsKendall {
-    double tau, OutIn;
-  } params_kendall;
-#endif
-
-#ifdef STAT_BETWEENNESS
-  struct ParamsBetweenness {
-    double meanNode, meanEdge;  // 平均介数
-    VDouble betwNode;           // 各点介数
-    VVDouble betwEdge;          // 各边介数
-    VVDistType minDistMatr;     // 最短距离
-    VDouble minDistMean;        // 平均最短距离
-  } params_betweenness;
-#endif
-
-#ifdef STAT_MODULARITY
-  struct ParamsModularity {
-    double Coef;       // 网络分组系数Q
-    VDouble NodeCoef;  // 节点分组系数P
-    VNodeType Val;     // 各节点分组的序号
-    VNodeType Stk;     // 按分组序号排列的节点编号
-    VNodeType Num;     // 节点在moduStk中的位置
-    VRNodeType Range;  // 各分组的范围
-    VVLinkType LKK;    // 不同组之间连边数目
-  } params_modularity;
-#endif
-
-#ifdef STAT_SIMILARITY
-  struct ParamsSimilarity {
-    VVDouble NodeCoef;  // 网络节点相似系数
-    VVDouble EdgeCoef;  // 网络连边相似系数
-  } params_similarity;
-#endif
-
-#ifdef STAT_CLUSTER
-  struct ParamsCluster {
-    double coef;
-    VDouble Node;  // clustering coefficient
-  } params_cluster;
-#endif
-
-#ifdef STAT_SPREAD
-  struct ParamsSpread {
-    NodeType SOURCE_HEAD, SOURCE_NULL;
-    std::vector<NodeType> source, nei, num, stk, time;
-    NodeType spreadSize;
-    NodeType head, nei1, nei0;
-    LinkType neiCountSize;
-
-    double prob;
-    std::vector<int> prob_rand;
-
-    NodeType dataSize;
-    std::vector<NodeType> data_node, data_time;
-  } params_spread;
-#endif
-
   Network(void);
   friend std::istream& operator>>(std::istream& is, Network& net);
   Network& read_params_1(std::string& s, std::istream& is);
@@ -309,6 +229,179 @@ class Net_grid {
   int read_params_1(std::string& s, std::istream& is);
 };
 std::ostream& operator<<(std::ostream& os, const Net_grid& grid);
+#endif
+
+//**//****************************************************//*
+#ifdef STAT_PEARSON
+class Stat_pearson {
+ public:
+  double pearson, InIn, InOut, OutIn, OutOut;
+  double No, NoInIn, NoInOut, NoOutIn, NoOutOut;
+  double rho, rhoInIn, rhoInOut, rhoOutIn, rhoOutOut;
+
+  Stat_pearson(void);
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const Stat_pearson& pearson);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
+  int read_params_1(std::string& s, std::istream& is);
+  Stat_pearson& clear(void);
+};
+std::ostream& operator<<(std::ostream& os, const Stat_pearson& pearson);
+#endif
+
+//**//****************************************************//*
+#ifdef STAT_SPEARMAN
+class Stat_spearman {
+ public:
+  double spearman, InIn, InOut, OutIn, OutOut, rho, rhoInIn, rhoInOut, rhoOutIn,
+      rhoOutOut;
+#ifdef MODEL_GAUSS
+  // gauss模型
+  double r0;
+  VDouble GaussS2;  // [nodeSize]   模型的联合概率的方差
+#endif              // MODEL_GAUSS
+
+  Stat_spearman(void);
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const Stat_spearman& spearman);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
+  int read_params_1(std::string& s, std::istream& is);
+  Stat_spearman& clear(void);
+};
+std::ostream& operator<<(std::ostream& os, const Stat_spearman& spearman);
+#endif
+
+//**//****************************************************//*
+#ifdef STAT_KENDALL
+class Stat_kendall {
+ public:
+  double tau, OutIn;
+
+  Stat_kendall(void);
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const Stat_kendall& kendall);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
+  int read_params_1(std::string& s, std::istream& is);
+  Stat_kendall& clear(void);
+};
+std::ostream& operator<<(std::ostream& os, const Stat_kendall& kendall);
+#endif
+
+//**//****************************************************//*
+#ifdef STAT_BETWEENNESS
+class Stat_betweenness {
+ public:
+  double meanNode, meanEdge;  // 平均介数
+  VDouble betwNode;           // 各点介数
+  VVDouble betwEdge;          // 各边介数
+  VVDistType minDistMatr;     // 最短距离
+  VDouble minDistMean;        // 平均最短距离
+  double pearson, InIn, InOut, OutIn, OutOut;
+  double No, NoInIn, NoInOut, NoOutIn, NoOutOut;
+  double rho, rhoInIn, rhoInOut, rhoOutIn, rhoOutOut;
+
+  Stat_betweenness(void);
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const Stat_betweenness& betweenness);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
+  int read_params_1(std::string& s, std::istream& is);
+  Stat_betweenness& clear(void);
+};
+std::ostream& operator<<(std::ostream& os, const Stat_betweenness& betweenness);
+#endif
+
+//**//****************************************************//*
+#ifdef STAT_MODULARITY
+class Stat_modularity {
+ public:
+  double Coef;       // 网络分组系数Q
+  VDouble NodeCoef;  // 节点分组系数P
+  VNodeType Val;     // 各节点分组的序号
+  VNodeType Stk;     // 按分组序号排列的节点编号
+  VNodeType Num;     // 节点在moduStk中的位置
+  VRNodeType Range;  // 各分组的范围
+  VVLinkType LKK;    // 不同组之间连边数目
+
+  Stat_modularity(void);
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const Stat_modularity& modularity);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
+  int read_params_1(std::string& s, std::istream& is);
+  Stat_modularity& clear(void);
+};
+std::ostream& operator<<(std::ostream& os, const Stat_modularity& modularity);
+#endif
+
+//**//****************************************************//*
+#ifdef STAT_SIMILARITY
+class Stat_similarity {
+ public:
+  VVDouble NodeCoef;  // 网络节点相似系数
+  VVDouble EdgeCoef;  // 网络连边相似系数
+
+  Stat_similarity(void);
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const Stat_similarity& similarity);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
+  int read_params_1(std::string& s, std::istream& is);
+  Stat_similarity& clear(void);
+};
+std::ostream& operator<<(std::ostream& os, const Stat_similarity& similarity);
+#endif
+
+//**//****************************************************//*
+#ifdef STAT_CLUSTER
+class Stat_cluster {
+ public:
+  double coef;
+  VDouble Node;  // clustering coefficient
+
+  Stat_cluster(void);
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const Stat_cluster& cluster);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
+  int read_params_1(std::string& s, std::istream& is);
+  Stat_cluster& clear(void);
+};
+std::ostream& operator<<(std::ostream& os, const Stat_cluster& cluster);
+#endif
+
+//**//****************************************************//*
+#ifdef STAT_SPREAD
+struct ParamsSpread {
+  NodeType SOURCE_HEAD, SOURCE_NULL;
+  std::vector<NodeType> source, nei, num, stk, time;
+  NodeType spreadSize;
+  NodeType head, nei1, nei0;
+  LinkType neiCountSize;
+
+  double prob;
+  std::vector<int> prob_rand;
+
+  NodeType dataSize;
+  std::vector<NodeType> data_node, data_time;
+} params_spread;
 #endif
 
 //**//************************************************************//*

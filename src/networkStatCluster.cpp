@@ -1,64 +1,117 @@
-#include "StatCluster.h"
+#include "net.h"
 #ifdef STAT_CLUSTER
 
 #include "common.h"
-#include "networkStatCluster.h"
+#include "StatCluster.h"
+#include "networks.h"
 using namespace std;
 //**//****************************************************//*
-int net_read_params_cluster(std::istream& is, Network& net) {
-  for (string s; is >> s;) {
-    if (s == "--params_cluster.coef") {
-      is >> net.params_cluster.Node;
-      cout << s << '\t' << net.params_cluster.coef << endl;
-      continue;
+Stat_cluster::Stat_cluster(void) : coef(0) {}
+
+ostream& operator<<(ostream& os, const Stat_cluster& cluster) {
+  if (!os) {
+    ERROR();
+    return os;
+  }
+  os << "--cluster.coef\t" << cluster.coef << '\n';
+  return os;
+}
+
+int Stat_cluster::save_params(ostream& os) const {
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  os << *this;
+  return 0;
+}
+
+int Stat_cluster::save_params(const char* name) const {
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  os << *this;
+  os.close();
+  return 0;
+}
+
+int Stat_cluster::save_data(const char* name) const {
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  return 0;
+}
+
+int Stat_cluster::save(const char* name) const {
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  string fn = name;
+  if (0 != save_params((fn + "_cluster_params.txt").c_str())) {
+    ERROR();
+    return -1;
+  }
+  if (0 != save_data((fn + "_cluster").c_str())) {
+    ERROR();
+    return -1;
+  }
+  return 0;
+}
+
+int Stat_cluster::read_params_1(string& s, istream& is) {
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  int flag = 1;
+  do {
+    if (s == "--cluster.coef") {
+      is >> coef;
+      cout << s << '\t' << coef << endl;
+      break;
     }
+    flag = 0;
+  } while (0);
+  if (flag) s.clear();
+  return 0;
+}
+
+Stat_cluster& Stat_cluster::clear(void) {
+  coef = 0;
+  Node.clear();
+  return *this;
+}
+
+//**//****************************************************//*
+Networks& Networks::stat_cluster(void) {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
   }
-  return 0;
-}
-
-int net_save_params_cluster(std::ostream& os, const Network& net) {
-  if (!os) return -1;
-  os << "--params_cluster.coef\t" << net.params_cluster.coef << '\n';
-  return 0;
-}
-
-int net_save_cluster(const Network& net, const char* name) {
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else {
-    stringstream ss;
-    ss << net.seed;
-    fn = net.saveName + '_' + ss.str();
-  }
-  int f = 0;
-  if (!net.params_cluster.Node.empty())
-    f |= common_save1((fn + "_cluster.txt").c_str(), net.params_cluster.Node,
-                      net.priChar);
-  return f;
-}
-
-int net_clear_cluster(Network& net) {
-  net.params_cluster.Node.clear();
-  net.params_cluster.coef = 0;
-  return 0;
-}
-
-int net_cal_cluster(Network& net) {
-  if (net.linkMatr.empty() && net.weightFlag) {
-    if (net.weightMatr.empty()) {
+  if (linkMatr.empty() && weightFlag) {
+    if (weightMatr.empty()) {
       ERROR();
-      return -1;
+      runStatus = -1;
+      return *this;
     }
-    weightMatr_2_linkMatr(net.linkMatr, net.weightMatr);
+    weightMatr_2_linkMatr(linkMatr, weightMatr);
   }
-  if (net.weightFlag)
-    return cal_cluster_directed_weight(net.params_cluster.coef,
-                                       net.params_cluster.Node, net.weightMatr,
-                                       net.linkMatr);
+  if (weightFlag)
+    runStatus = cal_cluster_directed_weight(cluster.coef, cluster.Node,
+                                            weightMatr, linkMatr);
   else
-    return cal_cluster_directed_unweight(net.params_cluster.coef,
-                                         net.params_cluster.Node, net.linkMatr);
+    runStatus =
+        cal_cluster_directed_unweight(cluster.coef, cluster.Node, linkMatr);
+  if (0 != runStatus) ERROR();
+  return *this;
 }
 
 //**//****************************************************//*

@@ -1,8 +1,8 @@
 #include "net.h"
 #ifdef ACT_SIS
 
-#include "ActSis.h"
 #include "common.h"
+#include "ActSis.h"
 #include "networks.h"
 using namespace std;
 
@@ -150,7 +150,11 @@ int Act_sis::read_params_1(string& s, istream& is) {
 Act_sis& Act_sis::clear(void) { return *this; }
 
 //**//****************************************************//*
-int Networks::cal_sis_tau() {
+Networks& Networks::act_sis_tau() {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
   ::act_SIS_init(sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t, p2p, sis.rho,
                  sis.M);
   sis.nSum = 0;
@@ -158,10 +162,14 @@ int Networks::cal_sis_tau() {
   sis.nNum = 0;
   ::act_SIS_tau(sis.tau, sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t,
                 sis.nSum, sis.n2Sum, sis.nNum, sis.p, sis.lambda, p2p, kMax);
-  return 0;
+  return *this;
 }
 
-int Networks::act_sis() {
+Networks& Networks::act_sis() {
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
   ::act_SIS_init(sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t, p2p, sis.rho,
                  sis.M);
   sis.nSum = 0;
@@ -172,7 +180,7 @@ int Networks::act_sis() {
             kMax);
   ::act_SIS_cal_params(sis.ksi, sis.lambda_c, p2p, sis.nSum, sis.n2Sum,
                        sis.nNum);
-  return 0;
+  return *this;
 }
 
 //**//****************************************************//*

@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 
   do {
     Networks net, net2;
-    net.saveName = net.readName = "data/test";
+    net.saveName = net.readName = "data/sis";
     net.dirFlag = 0;
     net.nodeSize = 10000;
     net.kMin = 3;
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
       ERROR();
       break;
     }
-    if (0 != net.cal_sis_tau()) {
+    if (0 != net.act_sis_tau()) {
       ERROR();
       break;
     }

@@ -69,10 +69,15 @@ class Networks : public Network {
   Networks& extremum_cal_lkk(std::string& s, std::istream& is);
 #endif
 
+#ifdef STAT_CLUSTER
+  Stat_cluster cluster;
+  Networks& stat_cluster(void);
+#endif
+
 #ifdef ACT_SIS
   Act_sis sis;
-  int act_sis();
-  int cal_sis_tau();
+  Networks& act_sis(void);
+  Networks& act_sis_tau(void);
 #endif
 };
 

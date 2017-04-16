@@ -20,7 +20,7 @@ const std::string NET_VERSION = "net2.0: " __DATE__ ", " __TIME__;
 //#define NET_BA          // BA网络
 //#define NET_GRID        // 网格网络
 //#define NET_ACTOR
-#define NET_FOODWEB
+//#define NET_FOODWEB
 
 // const bool STAT_TYPE_DIRAA = 0;  // 0:OutIn, 1: OutIn OutOut InOut InIn
 //#define STAT_PEARSON
@@ -31,7 +31,7 @@ const std::string NET_VERSION = "net2.0: " __DATE__ ", " __TIME__;
 //#define STAT_KENDALL
 //#define STAT_BETWEENNESS
 //#define STAT_MODULARITY
-//#define STAT_CLUSTER
+#define STAT_CLUSTER
 //#define STAT_SIMILARITY
 
 //#define ACT_RECOMMEND

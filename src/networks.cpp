@@ -12,30 +12,27 @@ Networks& Networks::clear(void) {
   Network::clear();
 
 #ifdef STAT_PEARSON
-  net_clear_pearson(net);
+  pearson.clear();
 #endif
 
 #ifdef STAT_SPEARMAN
-  net_clear_spearman(net);
-#ifdef MODEL_GAUSS
-  net.params_spearman.GaussS2.clear();  // [nodeSize]   模型的联合概率的方差
-#endif
+  spearman.clear();
 #endif
 
 #ifdef STAT_KELDALLTAU
-  net_clear_kendallTau(net);
+  kendallTau.clear();
 #endif
 
 #ifdef STAT_BETWEENNESS
-  net_clear_betweenness(net);
+  betweenness.clear();
 #endif
 
 #ifdef STAT_MODULARITY
-  net_clear_modularity(net);
+  modularity.clear();
 #endif
 
 #ifdef STAT_CLUSTER
-  net_clear_cluster(net);
+  cluster.clear();
 #endif
 
 #ifdef ACT_SIS
@@ -72,27 +69,27 @@ ostream& operator<<(ostream& os, Networks& net) {
 #endif
 
 #ifdef STAT_BETWEENNESS
-  if (0 != net_save_params_betweenness(os, net)) ERROR();
+  os << net.betweenness;
 #endif
 
 #ifdef STAT_MODULARITY
-  if (0 != net_save_params_modularity(os, net)) ERROR();
+  os << net.modularity;
 #endif
 
 #ifdef STAT_CLUSTER
-  if (0 != net_save_params_cluster(os, net)) ERROR();
+  os << net.cluster;
 #endif
 
 #ifdef STAT_PEARSON
-  if (0 != net_save_params_pearson(os, net)) ERROR();
+  os << net.pearson;
 #endif
 
 #ifdef STAT_SPEARMAN
-  if (0 != net_save_params_spearman(os, net)) ERROR();
+  os << net.spearman;
 #endif
 
 #ifdef STAT_KENDALL
-  if (0 != net_save_params_kendallTau(os, net)) ERROR();
+  os << net.kendall;
 #endif
 
 #ifdef ACT_SIS
@@ -151,6 +148,41 @@ Networks& Networks::save_data(const char* name) {
 
 #ifdef NET_BA
   runStatus = ba.save_data(fn.c_str());
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef STAT_BETWEENNESS
+  runStatus = betweeness.save_data(fn.c_str());
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef STAT_MODULARITY
+  runStatus = modularity.save_data(fn.c_str());
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef STAT_SIMILARITY
+  runStatus = similarity.save_data(fn.c_str());
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef STAT_PEARSON
+  runStatus = pearson.save_data(fn.c_str());
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef STAT_SPEARMAN
+  runStatus = spearman.save_data(fn.c_str());
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef STAT_KENDALL
+  runStatus = kendall.save_data(fn.c_str());
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef STAT_CLUSTER
+  runStatus = cluster.save_data(fn.c_str());
   if (0 != runStatus) ERROR();
 #endif
 
@@ -248,39 +280,57 @@ Networks& Networks::read_params_1(string& s, istream& is) {
 #endif  // NET_GRID
 
 #ifdef STAT_BETWEENNESS
-    is.clear();
-    is.seekg(ios::beg);
-    if (0 != net_read_params_betweenness(is, net)) ERROR();
+    if (0 != betweenness.read_params_1(s,is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
 #endif  // STAT_BETWEENNESS
 
 #ifdef STAT_MODULARITY
-    is.clear();
-    is.seekg(ios::beg);
-    if (0 != net_read_params_modularity(is, net)) ERROR();
+    if (0 != modularity.read_params_1(s,is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
 #endif
 
 #ifdef STAT_CLUSTER
-    is.clear();
-    is.seekg(ios::beg);
-    if (0 != net_read_params_cluster(is, net)) ERROR();
+    if (0 != cluster.read_params_1(s,is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
 #endif
 
 #ifdef STAT_PEARSON
-    is.clear();
-    is.seekg(ios::beg);
-    if (0 != net_read_params_pearson(is, net)) ERROR();
+    if (0 != pearson.read_params_1(s,is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
 #endif
 
 #ifdef STAT_SPEARMAN
-    is.clear();
-    is.seekg(ios::beg);
-    if (0 != net_read_params_spearman(is, net)) ERROR();
+    if (0 != spearman.read_params_1(s,is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
 #endif
 
 #ifdef STAT_KENDALL
-    is.clear();
-    is.seekg(ios::beg);
-    if (0 != net_read_params_kendallTau(is, net)) ERROR();
+    if (0 != kendall.read_params_1(s,is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
 #endif
 
 #ifdef ACT_SIS
@@ -434,7 +484,7 @@ Networks& Networks::run(const string argv2) {
 
 #ifdef ACT_RECOMMEND
     if (s == "recommend") {
-      if (!(ss >> s) || 0 != net_act_recommend(net, s)) {
+      if (!(ss >> s) || 0 != act_recommend(net, s).runStatus) {
         ERROR();
         runStatus = -1;
         return *this;
@@ -445,8 +495,8 @@ Networks& Networks::run(const string argv2) {
 
 #ifdef ACT_SIS
     if (s == "sis") {
-      if (0 != act_sis()) {
-        runStatus = -1;
+      act_sis();
+      if (0 != runStatus) {
         ERROR();
         return *this;
       }
@@ -554,9 +604,10 @@ Networks& Networks::stat(void) {
 
 #ifdef STAT_CLUSTER
   cout << "\tcluster\n";
-  if (0 != net_cal_cluster(net)) {
+  stat_cluster();
+  if (0 != runStatus) {
     ERROR();
-    return -1;
+    return *this;
   }
 #endif
 
@@ -847,10 +898,14 @@ Networks& Networks::cal_p2p(const string& s) {
 #ifdef STAT_SPEARMAN
       if (s == "Spearman") {
 #ifdef MODEL_GAUSS
-        status = net_gauss_new_ranLink(net);
+        net_gauss_new_ranLink();
 #else
         runStatus = -1;
 #endif
+        if (0 != runStatus) {
+          ERROR();
+          return *this;
+        }
         break;
       }
 #endif

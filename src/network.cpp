@@ -67,11 +67,6 @@ Network::Network(void)
 #endif  // MODEL_GAUSS
 #endif
 
-#ifdef STAT_BETWEENNESS
-  params_betweenness.node = 0;
-  params_betweenness.edge = 0;
-#endif
-
 #ifdef STAT_KENDALL
   params_kendall.tau = 0;
   params_kendall.OutIn = 0;

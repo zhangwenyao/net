@@ -151,38 +151,38 @@ Networks& Networks::save_data(const char* name) {
   if (0 != runStatus) ERROR();
 #endif
 
-#ifdef STAT_BETWEENNESS
-  runStatus = betweeness.save_data(fn.c_str());
-  if (0 != runStatus) ERROR();
-#endif
-
-#ifdef STAT_MODULARITY
-  runStatus = modularity.save_data(fn.c_str());
-  if (0 != runStatus) ERROR();
-#endif
-
-#ifdef STAT_SIMILARITY
-  runStatus = similarity.save_data(fn.c_str());
-  if (0 != runStatus) ERROR();
-#endif
-
 #ifdef STAT_PEARSON
-  runStatus = pearson.save_data(fn.c_str());
+  runStatus = pearson.save_data(fn.c_str(), priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef STAT_SPEARMAN
-  runStatus = spearman.save_data(fn.c_str());
+  runStatus = spearman.save_data(fn.c_str(), priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef STAT_KENDALL
-  runStatus = kendall.save_data(fn.c_str());
+  runStatus = kendall.save_data(fn.c_str(), priChar, priChar2);
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef STAT_BETWEENNESS
+  runStatus = betweenness.save_data(fn.c_str(), priChar, priChar2);
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef STAT_MODULARITY
+  runStatus = modularity.save_data(fn.c_str(), priChar, priChar2);
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef STAT_SIMILARITY
+  runStatus = similarity.save_data(fn.c_str(), priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef STAT_CLUSTER
-  runStatus = cluster.save_data(fn.c_str());
+  runStatus = cluster.save_data(fn.c_str(), priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
@@ -279,35 +279,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
     if (s.size() <= 0) break;
 #endif  // NET_GRID
 
-#ifdef STAT_BETWEENNESS
-    if (0 != betweenness.read_params_1(s,is)) {
-      ERROR();
-      runStatus = -1;
-      return *this;
-    }
-    if (s.size() <= 0) break;
-#endif  // STAT_BETWEENNESS
-
-#ifdef STAT_MODULARITY
-    if (0 != modularity.read_params_1(s,is)) {
-      ERROR();
-      runStatus = -1;
-      return *this;
-    }
-    if (s.size() <= 0) break;
-#endif
-
-#ifdef STAT_CLUSTER
-    if (0 != cluster.read_params_1(s,is)) {
-      ERROR();
-      runStatus = -1;
-      return *this;
-    }
-    if (s.size() <= 0) break;
-#endif
-
 #ifdef STAT_PEARSON
-    if (0 != pearson.read_params_1(s,is)) {
+    if (0 != pearson.read_params_1(s, is)) {
       ERROR();
       runStatus = -1;
       return *this;
@@ -316,7 +289,7 @@ Networks& Networks::read_params_1(string& s, istream& is) {
 #endif
 
 #ifdef STAT_SPEARMAN
-    if (0 != spearman.read_params_1(s,is)) {
+    if (0 != spearman.read_params_1(s, is)) {
       ERROR();
       runStatus = -1;
       return *this;
@@ -325,7 +298,34 @@ Networks& Networks::read_params_1(string& s, istream& is) {
 #endif
 
 #ifdef STAT_KENDALL
-    if (0 != kendall.read_params_1(s,is)) {
+    if (0 != kendall.read_params_1(s, is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
+#endif
+
+#ifdef STAT_BETWEENNESS
+    if (0 != betweenness.read_params_1(s, is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
+#endif  // STAT_BETWEENNESS
+
+#ifdef STAT_MODULARITY
+    if (0 != modularity.read_params_1(s, is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
+#endif
+
+#ifdef STAT_CLUSTER
+    if (0 != cluster.read_params_1(s, is)) {
       ERROR();
       runStatus = -1;
       return *this;
@@ -572,33 +572,46 @@ Networks& Networks::stat(void) {
 
 #ifdef STAT_PEARSON
   cout << "\tpearson\n";
-  if (0 != net_cal_pearson(net)) {
+  stat_pearson();
+  if (0 != runStatus) {
     ERROR();
-    return -1;
+    return *this;
   }
 #endif
 
 #ifdef STAT_SPEARMAN
   cout << "\tspearman\n";
-  if (0 != net_degArr_2_deg2ArrVal_weight(net) || 0 != net_cal_spearman(net)) {
+  if (0 != degArr_2_deg2ArrVal_weight().runStatus ||
+      0 != stat_spearman().runStatus) {
     ERROR();
-    return -1;
+    return *this;
+  }
+#endif
+
+#ifdef STAT_KENDALL
+  cout << "\tkendall\n";
+  stat_kendall();
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
   }
 #endif
 
 #ifdef STAT_BETWEENNESS
   cout << "\tbetweenness\n";
-  if (0 != net_betweenness(net)) {
+  stat_betweenness();
+  if (0 != runStatus) {
     ERROR();
-    return -1;
+    return *this;
   }
 #endif
 
 #ifdef STAT_MODULARITY
   cout << "\tmodularity\n";
-  if (0 != net_modularity(net)) {
+  stat_modularity();
+  if (0 != runStatus) {
     ERROR();
-    return -1;
+    return *this;
   }
 #endif
 
@@ -608,14 +621,6 @@ Networks& Networks::stat(void) {
   if (0 != runStatus) {
     ERROR();
     return *this;
-  }
-#endif
-
-#ifdef STAT_KENDALL
-  cout << "\tkendallTau\n";
-  if (0 != net_cal_kendallTau(net)) {
-    ERROR();
-    return -1;
   }
 #endif
 

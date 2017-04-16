@@ -1,8 +1,8 @@
 #include "net.h"
 #ifdef STAT_CLUSTER
 
-#include "common.h"
 #include "StatCluster.h"
+#include "common.h"
 #include "networks.h"
 using namespace std;
 //**//****************************************************//*
@@ -41,7 +41,8 @@ int Stat_cluster::save_params(const char* name) const {
   return 0;
 }
 
-int Stat_cluster::save_data(const char* name) const {
+int Stat_cluster::save_data(const char* name, const char priChar,
+                            const char priChar2 =) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -49,7 +50,8 @@ int Stat_cluster::save_data(const char* name) const {
   return 0;
 }
 
-int Stat_cluster::save(const char* name) const {
+int Stat_cluster::save(const char* name, const char priChar,
+                       const char priChar2) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -59,7 +61,7 @@ int Stat_cluster::save(const char* name) const {
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + "_cluster").c_str())) {
+  if (0 != save_data((fn + "_cluster").c_str(), priChar, priChar2)) {
     ERROR();
     return -1;
   }

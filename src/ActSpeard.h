@@ -1,9 +1,9 @@
-#ifndef SPREAD_H
-#define SPREAD_H
+#ifndef ACT_SPREAD_H
+#define ACT_SPREAD_H
 
 #include "net.h"
 
-#ifdef STAT_SPREAD
+#ifdef ACT_SPREAD
 //**//*******************************************************
 
 //**//*******************************************************

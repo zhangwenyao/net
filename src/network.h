@@ -244,8 +244,9 @@ class Stat_pearson {
                                   const Stat_pearson& pearson);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
-  int save_data(const char* name = NULL) const;
-  int save(const char* name = NULL) const;
+  int save_data(const char* name = NULL, const char priChar = '\n',
+                const char priChar2 = '\t') const;
+  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_pearson& clear(void);
 };
@@ -269,8 +270,9 @@ class Stat_spearman {
                                   const Stat_spearman& spearman);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
-  int save_data(const char* name = NULL) const;
-  int save(const char* name = NULL) const;
+  int save_data(const char* name = NULL, const char priChar = '\n',
+                const char priChar2 = '\t') const;
+  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_spearman& clear(void);
 };
@@ -288,8 +290,9 @@ class Stat_kendall {
                                   const Stat_kendall& kendall);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
-  int save_data(const char* name = NULL) const;
-  int save(const char* name = NULL) const;
+  int save_data(const char* name = NULL, const char priChar = '\n',
+                const char priChar2 = '\t') const;
+  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_kendall& clear(void);
 };
@@ -305,17 +308,15 @@ class Stat_betweenness {
   VVDouble betwEdge;          // 各边介数
   VVDistType minDistMatr;     // 最短距离
   VDouble minDistMean;        // 平均最短距离
-  double pearson, InIn, InOut, OutIn, OutOut;
-  double No, NoInIn, NoInOut, NoOutIn, NoOutOut;
-  double rho, rhoInIn, rhoInOut, rhoOutIn, rhoOutOut;
 
   Stat_betweenness(void);
   friend std::ostream& operator<<(std::ostream& os,
                                   const Stat_betweenness& betweenness);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
-  int save_data(const char* name = NULL) const;
-  int save(const char* name = NULL) const;
+  int save_data(const char* name = NULL, const char priChar = '\n',
+                const char priChar2 = '\t') const;
+  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_betweenness& clear(void);
 };
@@ -339,8 +340,9 @@ class Stat_modularity {
                                   const Stat_modularity& modularity);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
-  int save_data(const char* name = NULL) const;
-  int save(const char* name = NULL) const;
+  int save_data(const char* name = NULL, const char priChar = '\n',
+                const char priChar2 = '\t') const;
+  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_modularity& clear(void);
 };
@@ -359,8 +361,9 @@ class Stat_similarity {
                                   const Stat_similarity& similarity);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
-  int save_data(const char* name = NULL) const;
-  int save(const char* name = NULL) const;
+  int save_data(const char* name = NULL, const char priChar = '\n',
+                const char priChar2 = '\t') const;
+  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_similarity& clear(void);
 };
@@ -379,8 +382,8 @@ class Stat_cluster {
                                   const Stat_cluster& cluster);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
-  int save_data(const char* name = NULL) const;
-  int save(const char* name = NULL) const;
+  int save_data(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
+  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_cluster& clear(void);
 };
@@ -388,8 +391,9 @@ std::ostream& operator<<(std::ostream& os, const Stat_cluster& cluster);
 #endif
 
 //**//****************************************************//*
-#ifdef STAT_SPREAD
-struct ParamsSpread {
+#ifdef ACT_SPREAD
+class Act_spread {
+ public:
   NodeType SOURCE_HEAD, SOURCE_NULL;
   std::vector<NodeType> source, nei, num, stk, time;
   NodeType spreadSize;
@@ -401,7 +405,17 @@ struct ParamsSpread {
 
   NodeType dataSize;
   std::vector<NodeType> data_node, data_time;
-} params_spread;
+
+  Act_spread(void);
+  friend std::ostream& operator<<(std::ostream& os, const Act_spread& spread);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
+  int read_params_1(std::string& s, std::istream& is);
+  Act_spread& clear(void);
+};
+std::ostream& operator<<(std::ostream& os, const Act_spread& spread);
 #endif
 
 //**//************************************************************//*

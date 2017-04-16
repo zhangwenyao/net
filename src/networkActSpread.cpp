@@ -1,9 +1,10 @@
-#include "netStatSpread.h"
-#ifdef STAT_SPREAD
+#include "net.h"
+#ifdef ACT_SPREAD
 
 #include <iostream>
 #include <string>
-#include "networkStatSpread.h"
+#include "ActSpread.h"
+#include "networkActSpread.h"
 using namespace std;
 
 //**//*****************************************************//*

@@ -1,8 +1,9 @@
-#include "networks.h"
+#include "net.h"
 #ifdef NET_EXTREMUM
 
-#include "NetExtremum.h"
 #include "common.h"
+#include "NetExtremum.h"
+#include "networks.h"
 using namespace std;
 
 //**//****************************************************//*

@@ -1,5 +1,6 @@
+// g++ -o main.exe *.cpp -O3 -Wall
 #include "net.h"
-#ifdef NET_BA
+#ifdef NET_EXTREMUM
 
 #include "common.h"
 #include "networks.h"
@@ -10,12 +11,13 @@ int main(int argc, char **argv) {
 
   do {
     Networks net;
-    net.saveName = net.readName = "data/BA";
-    net.nodeSize = 100;  // 节点数
-    net.ba.M0 = 3;
-    net.ba.M = 2;
-    net.seed = -1;
-    net.argv = "init_seed0 cal_p2p BA stat print save0";
+    net.saveName = net.readName = "data/extremum";
+    net.nodeSize = 1000;           // 节点数
+    net.degree.power_gamma = 2.5;  // 度分布幂律分布的幂指数
+    net.kMin = 4;                  // 最小度
+    net.kMax = net.kMin + sqrt(net.nodeSize) - 1;  // 最大度
+    //net.argv = "cal_deg power cal_p2p Max stat print save0";
+    net.argv = "cal_deg power cal_p2p Max stat print save0";
 
     // 带参数运行
     if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {

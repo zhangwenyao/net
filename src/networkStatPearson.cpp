@@ -1,8 +1,8 @@
-#include "networkStatPearson.h"
 #include "StatPearson.h"
 #ifdef STAT_PEARSON
 
 #include "common.h"
+#include "networkStatPearson.h"
 using namespace std;
 
 //**//****************************************************//*

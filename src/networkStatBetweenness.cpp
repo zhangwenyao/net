@@ -1,8 +1,8 @@
-#include "networkStatBetweenness.h"
 #include "StatBetweenness.h"
 #ifdef STAT_BETWEENNESS
 
 #include "common.h"
+#include "networkStatBetweenness.h"
 using namespace std;
 //**//****************************************************//*
 int net_read_params_betweenness(istream& is, Network& net) {

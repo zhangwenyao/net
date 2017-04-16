@@ -1,12 +1,10 @@
-#include <algorithm>
-#include <fstream>
-#include <iostream>
-#include "common.h"
-#include "networks.h"
+#include "net.h"
 #ifdef NET_FOODWEB
 
+#include "common.h"
+#include "networks.h"
 using namespace std;
-//**//************************** code example *****************************//*
+//**//****************************************************//*
 int main(int argc, char **argv) {
   do {
     Networks net;
@@ -49,5 +47,5 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-//**//********************************************************************
+//**//****************************************************//*
 #endif

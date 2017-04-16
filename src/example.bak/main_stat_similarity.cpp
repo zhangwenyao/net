@@ -1,8 +1,9 @@
 // g++ -o main.exe *.cpp -O3 -Wall
-#include "common.h"
-#include "networks.h"
+#include "net.h"
 #ifdef STAT_SIMILARITY
 
+#include "common.h"
+#include "networks.h"
 using namespace std;
 //**//****************************************************//*
 int main(int argc, char **argv) {
@@ -13,9 +14,9 @@ int main(int argc, char **argv) {
     net.saveName = net.readName = "data/matrix1";
     net2.saveName = net2.readName = "data/matrix2";
     net.dirFlag = net2.dirFlag = 1;
+    // net.seed = RAND2_INIT(1);    // 初始化随机数种子
     // while(0 == (net.seed = RAND2_INIT(net.seed)))
     //   continue;    // 初始化随机数种子
-    // net.seed = RAND2_INIT(1);    // 初始化随机数种子
     if (0 != net_read_linkMatr_0(net, "data/example/linkMatr2.txt") ||
         0 != linkMatr_2_p2p(net.p2p, net.linkMatr) ||
         0 != net_p2p_2_degArr(net)) {
@@ -28,11 +29,11 @@ int main(int argc, char **argv) {
       ERROR();
       break;
     }
-    if (0 != net_similarity(net, net2)) {
+    if (0 != net.stat_similarity(net2)) {
       ERROR();
       break;
     }
-    if (0 != net_save(net)) {
+    if (0 != net.save()) {
       ERROR();
       break;
     }
@@ -41,4 +42,5 @@ int main(int argc, char **argv) {
   SHOW_TIME(cout);  // 显示系统时间
   return 0;
 }
+//**//****************************************************//*
 #endif

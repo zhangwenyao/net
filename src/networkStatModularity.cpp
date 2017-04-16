@@ -1,8 +1,8 @@
-#include "networkStatModularity.h"
 #include "StatModularity.h"
 #ifdef STAT_MODULARITY
 
 #include "common.h"
+#include "networkStatModularity.h"
 using namespace std;
 
 //**//****************************************************//*

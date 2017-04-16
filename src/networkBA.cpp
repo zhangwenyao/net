@@ -1,17 +1,18 @@
-#include "networks.h"
+#include "net.h"
 #ifdef NET_BA
 
 #include "common.h"
 #include "NetBA.h"
+#include "networks.h"
 using namespace std;
 //**//****************************************************//*
 // 参数：   M0  全连通子网络节点数目
 //          M   新节点的度（M<=M0）
 //          nodeize 网络总节点数
 
-Net_BA::Net_BA(void) : M(1), M0(2) {}
+Net_BA::Net_BA(void) : M0(0), M(0) {}
 
-std::ostream& operator<<(std::ostream& os, const Net_BA& ba) {
+ostream& operator<<(ostream& os, const Net_BA& ba) {
   if (!os) {
     ERROR();
     return os;
@@ -20,7 +21,7 @@ std::ostream& operator<<(std::ostream& os, const Net_BA& ba) {
   return os;
 }
 
-int Net_BA::save_params(std::ostream& os) const {
+int Net_BA::save_params(ostream& os) const {
   if (!os) {
     ERROR();
     return -1;

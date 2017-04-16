@@ -1,8 +1,8 @@
-#include "networkStatSimilarity.h"
 #include "StatSimilarity.h"
 #ifdef STAT_SIMILARITY
 
 #include "common.h"
+#include "networkStatSimilarity.h"
 using namespace std;
 
 //**//****************************************************//*

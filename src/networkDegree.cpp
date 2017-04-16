@@ -1,18 +1,19 @@
-#include "networks.h"
+#include "net.h"
 #ifdef NET_DEGREE
 
-#include "NetDegree.h"
 #include "common.h"
+#include "NetDegree.h"
+#include "networks.h"
 using namespace std;
 
 //**//****************************************************//*
 Net_degree::Net_degree(void) {
 #ifdef DEG_POISSON
-  poisson_p = 0.1;
+  poisson_p = 0;
 #endif
 
 #ifdef DEG_POWER
-  power_gamma = 2.5;
+  power_gamma = 0;
 #endif
 }
 

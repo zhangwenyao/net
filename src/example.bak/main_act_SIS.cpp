@@ -1,8 +1,9 @@
 // g++ -o main.exe *.cpp -O3 -Wall
-#include "networks.h"
+#include "net.h"
 #ifdef ACT_SIS
 
 #include "common.h"
+#include "networks.h"
 using namespace std;
 //**//****************************************************//*
 int main(int argc, char **argv) {
@@ -30,7 +31,7 @@ int main(int argc, char **argv) {
 
     // while(0 == (net.seed = RAND2_INIT(net.seed)));    // 初始化随机数种子
     net.seed = RAND2_INIT(1);  // 初始化随机数种子
-    if (0 != net.run("cal_deg power cal_p2p random stat").runStatus ||
+    if (0 != net.run("cal_deg power cal_p2p Random stat print save").runStatus ||
         0 != net.p2p_2_degArr().runStatus) {
       ERROR();
       break;

@@ -1,8 +1,8 @@
-#include "networkStatKendall.h"
 #include "StatKendall.h"
 #ifdef STAT_KENDALL
 
 #include "common.h"
+#include "networkStatKendall.h"
 using namespace std;
 
 //**//****************************************************//*

@@ -1,10 +1,11 @@
 #ifndef NETWORK_STAT_PEARSON_H
 #define NETWORK_STAT_PEARSON_H
 
+#include "net.h"
+#ifdef STAT_PEARSON
+
 #include <iostream>
 #include "network.h"
-
-#ifdef STAT_PEARSON
 //**//****************************************************//*
 int net_clear_pearson(Network& net);
 int net_cal_pearson(Network& net);

@@ -1,7 +1,7 @@
-#include "commonRandom.h"
-#include <sys/time.h>
 #include <cstdlib>
 #include <ctime>
+#include <sys/time.h>
+#include "commonRandom.h"
 
 unsigned srand_init(const int seed) {
   if (seed <= 0) {

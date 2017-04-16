@@ -1,10 +1,11 @@
 #ifndef NETWORK_ACT_RECOMMEND_H
 #define NETWORK_ACT_RECOMMEND_H
 
-#include <iostream>
-#include "networks.h"
+#include "net.h"
 #ifdef ACT_RECOMMEND
 
+#include <iostream>
+#include "networks.h"
 //**//****************************************************//*
 // 参数：   mass
 //          heat

@@ -1,9 +1,9 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <iostream>
 #include "net.h"
 
+#include <iostream>
 //**//*****************************************************************//*
 /*
     net_run     argv        options
@@ -25,7 +25,7 @@
                             MinLkkP2p       min lkk -> p2p
                             MinLkkP2pFix    min lkk -> p2p fix
                             ER              ER随机网络
-                            random          随机网络
+                            Random          随机网络
                             BA              BA网络
                             Grid            网格网络
                             Spearman        sp系数给定的网络
@@ -124,12 +124,6 @@ class Network {
   VDouble deg2ArrWeight, deg2ArrWeightOut,
       deg2ArrWeightIn;  // 同度节点连边总权重
   double deg2WeightMean, deg2WeightMeanOut, deg2WeightMeanIn;
-
-#ifdef NET_GRID
-  struct ParamsGrid {
-    int NX, NY;
-  } params_grid;
-#endif
 
 #ifdef STAT_PEARSON
   struct ParamsPearson {
@@ -280,7 +274,6 @@ class Net_random {
   int save(const char* name = NULL) const;
   int read_params_1(std::string& s, std::istream& is);
 };
-
 std::ostream& operator<<(std::ostream& os, const Net_random& random);
 #endif
 
@@ -288,7 +281,7 @@ std::ostream& operator<<(std::ostream& os, const Net_random& random);
 #ifdef NET_BA
 class Net_BA {
  public:
-  int M, M0;
+  int M0, M;
 
   Net_BA(void);
   friend std::ostream& operator<<(std::ostream& os, const Net_BA& ba);
@@ -298,8 +291,24 @@ class Net_BA {
   int save(const char* name = NULL) const;
   int read_params_1(std::string& s, std::istream& is);
 };
+std::ostream& operator<<(std::ostream& os, const Net_BA& ba);
+#endif
 
-std::ostream& operator<<(std::ostream& os, const Net_BA& random);
+//**//************************************************************//*
+#ifdef NET_GRID
+class Net_grid {
+ public:
+  int NX, NY;
+
+  Net_grid(void);
+  friend std::ostream& operator<<(std::ostream& os, const Net_grid& grid);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
+  int read_params_1(std::string& s, std::istream& is);
+};
+std::ostream& operator<<(std::ostream& os, const Net_grid& grid);
 #endif
 
 //**//************************************************************//*
@@ -325,7 +334,6 @@ class Act_SIS {
   int read_params_1(std::string& s, std::istream& is);
   Act_SIS& clear(void);
 };
-
 std::ostream& operator<<(std::ostream& os, const Act_SIS& sis);
 #endif
 

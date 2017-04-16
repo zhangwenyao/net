@@ -1,8 +1,9 @@
 // g++ -o main.exe *.cpp -O3 -Wall
-#include "common.h"
-#include "networks.h"
+#include "net.h"
 #ifdef STAT_CLUSTER
 
+#include "common.h"
+#include "networks.h"
 using namespace std;
 //**//********************************************************************
 int main(int argc, char **argv) {

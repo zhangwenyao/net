@@ -1,12 +1,12 @@
 #include "netStatSpread.h"
-#include "networkStatSpread.h"
 #ifdef STAT_SPREAD
 
 #include <iostream>
 #include <string>
+#include "networkStatSpread.h"
 using namespace std;
 
-//**//*******************************************************
+//**//*****************************************************//*
 int net_clear_spread(Networks& net) {
   net.source.clear();
   net.nei.clear();
@@ -290,5 +290,5 @@ int Spread::saveData(const Networks& net) {
   return 0;
 }
 
-//**//****************************************************************
+//**//*****************************************************//*
 #endif  // NET_GRID

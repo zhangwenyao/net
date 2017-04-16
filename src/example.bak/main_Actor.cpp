@@ -1,8 +1,9 @@
 // g++ -o main.exe *.cpp -O3 -Wall
-#include "common.h"
-#include "networks.h"
+#include "net.h"
 #ifdef NET_ACTOR
 
+#include "common.h"
+#include "networks.h"
 using namespace std;
 //**//****************************************************//*
 int main(int argc, char **argv) {
@@ -36,5 +37,5 @@ int main(int argc, char **argv) {
   SHOW_TIME(cout);  // 显示系统时间
   return 0;
 }
-
+//**//****************************************************//*
 #endif

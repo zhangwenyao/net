@@ -55,6 +55,11 @@ class Networks : public Network {
   Networks& net_BA(void);
 #endif
 
+#ifdef NET_GRID
+  Net_grid grid;
+  Networks& net_grid(void);
+#endif
+
 #ifdef NET_EXTREMUM
   Networks& net_Max(void);
   Networks& net_Min(void);

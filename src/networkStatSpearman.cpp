@@ -1,9 +1,9 @@
-#include "networkStatSpearman.h"
 #include "StatSpearman.h"
 #ifdef STAT_SPEARMAN
 
-#include "NetRandom.h"
 #include "common.h"
+#include "NetRandom.h"
+#include "networkStatSpearman.h"
 using namespace std;
 
 //**//****************************************************//*

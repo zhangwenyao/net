@@ -1,12 +1,13 @@
-#include "networks.h"
+#include "net.h"
 #ifdef NET_RANDOM
 
 #include "common.h"
 #include "NetRandom.h"
+#include "networks.h"
 using namespace std;
 
 //**//****************************************************//*
-Net_random::Net_random(void) : p(0.1) {}
+Net_random::Net_random(void) : p(0) {}
 
 std::ostream& operator<<(std::ostream& os, const Net_random& random) {
   if (!os) {

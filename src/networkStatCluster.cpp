@@ -1,8 +1,8 @@
-#include "networkStatCluster.h"
 #include "StatCluster.h"
 #ifdef STAT_CLUSTER
 
 #include "common.h"
+#include "networkStatCluster.h"
 using namespace std;
 //**//****************************************************//*
 int net_read_params_cluster(std::istream& is, Network& net) {

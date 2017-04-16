@@ -1,10 +1,11 @@
 #ifndef NETWORK_STAT_KENDALL_H
 #define NETWORK_STAT_KENDALL_H
 
+#include "net.h"
+#ifdef STAT_KENDALL
+
 #include <iostream>
 #include "network.h"
-
-#ifdef STAT_KENDALL
 //**//****************************************************//*
 int net_clear_kendallTau(Network& net);
 int net_cal_kendallTau(Network& net);

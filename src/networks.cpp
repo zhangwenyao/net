@@ -1,6 +1,6 @@
 #include "networks.h"
-#include "common.h"
 
+#include "common.h"
 using namespace std;
 
 //**//****************************************************//*
@@ -41,6 +41,7 @@ Networks& Networks::clear(void) {
 #ifdef ACT_SIS
   sis.clear();
 #endif
+
   return *this;
 }
 
@@ -67,7 +68,7 @@ ostream& operator<<(ostream& os, Networks& net) {
 #endif
 
 #ifdef NET_GRID
-  if (0 != net_save_params_Grid(os, net)) ERROR();
+  os << net.grid;
 #endif
 
 #ifdef STAT_BETWEENNESS
@@ -238,9 +239,12 @@ Networks& Networks::read_params_1(string& s, istream& is) {
 #endif
 
 #ifdef NET_GRID
-    is.clear();
-    is.seekg(ios::beg);
-    if (0 != net_read_params_Grid(is, net)) ERROR();
+    if (0 != grid.read_params_1(s, is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0) break;
 #endif  // NET_GRID
 
 #ifdef STAT_BETWEENNESS
@@ -808,7 +812,7 @@ Networks& Networks::cal_p2p(const string& s, istream& is) {
         }
         break;
       }
-      if (s == "random") {
+      if (s == "Random") {
         net_random_remDeg();
         if (0 != runStatus || 0 > status) {
           ERROR();
@@ -831,7 +835,11 @@ Networks& Networks::cal_p2p(const string& s, istream& is) {
 
 #ifdef NET_GRID
       if (s == "Grid") {
-        status = net_Grid_new(net);
+        net_grid();
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
         break;
       }
 #endif

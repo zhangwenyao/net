@@ -1,4 +1,4 @@
-#include "networks.h"
+#include "network.h"
 
 #include "common.h"
 using namespace std;
@@ -37,11 +37,6 @@ Network::Network(void)
       deg2WeightMean(0),
       deg2WeightMeanOut(0),
       deg2WeightMeanIn(0) {
-
-#ifdef NET_GRID
-  params_grid.NX = 0;
-  params_grid.NY = 0;
-#endif
 
 #ifdef STAT_PEARSON
   params_pearson.pearson = 0;

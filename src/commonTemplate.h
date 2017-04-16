@@ -818,5 +818,4 @@ bool common_compare_vector(const std::vector<T> &a,
 }
 
 //**//***********************************************************//*
-
 #endif  // COMMON_TEMPLATE_H

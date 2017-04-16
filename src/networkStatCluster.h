@@ -1,10 +1,11 @@
 #ifndef NETWORK_STAT_CLUSTER_H
 #define NETWORK_STAT_CLUSTER_H
 
+#include "net.h"
+#ifdef STAT_CLUSTER
+
 #include <iostream>
 #include "network.h"
-
-#ifdef STAT_CLUSTER
 //**//****************************************************//*
 int net_read_params_cluster(std::istream& is, Network& net);
 int net_save_params_cluster(std::ostream& os, const Network& net);

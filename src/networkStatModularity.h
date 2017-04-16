@@ -1,10 +1,11 @@
 #ifndef NETWORK_STAT_MODULARITY_H
 #define NETWORK_STAT_MODULARITY_H
 
+#include "net.h"
+#ifdef STAT_MODULARITY
+
 #include <iostream>
 #include "network.h"
-
-#ifdef STAT_MODULARITY
 //**//****************************************************//*
 int net_read_params_modularity(std::istream& is, Network& net);
 int net_save_params_modularity(std::ostream& os, const Network& net);

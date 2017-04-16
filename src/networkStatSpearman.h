@@ -1,10 +1,11 @@
 #ifndef NETWORK_STAT_SPEARMAN_H
 #define NETWORK_STAT_SPEARMAN_H
 
+#include "net.h"
+#ifdef STAT_SPEARMAN
+
 #include <iostream>
 #include "network.h"
-
-#ifdef STAT_SPEARMAN
 //**//****************************************************//*
 int net_clear_spearman(Network& net);
 int net_cal_spearman(Network& net);

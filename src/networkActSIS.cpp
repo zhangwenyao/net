@@ -1,8 +1,8 @@
-#include "networkActSIS.h"
+#include "net.h"
 #ifdef ACT_SIS
 
-#include "ActSIS.h"
 #include "common.h"
+#include "ActSIS.h"
 using namespace std;
 
 //**//****************************************************//*
@@ -18,7 +18,7 @@ Act_SIS::Act_SIS(void)
       nSum(0),
       n2Sum(0) {}
 
-std::ostream& operator<<(std::ostream& os, const Act_SIS& sis) {
+ostream& operator<<(ostream& os, const Act_SIS& sis) {
   if (!os) {
     ERROR();
     return os;

@@ -1,10 +1,11 @@
 #ifndef NETWORK_STAT_SIMILARITY_H
 #define NETWORK_STAT_SIMILARITY_H
 
+#include "net.h"
+#ifdef STAT_SIMILARITY
+
 #include <iostream>
 #include "network.h"
-
-#ifdef STAT_SIMILARITY
 //**//****************************************************//*
 int net_read_params_similarity(std::istream& is, Network& net);
 int net_save_params_similarity(std::ostream& os, const Network& net);

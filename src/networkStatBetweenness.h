@@ -1,10 +1,11 @@
 #ifndef NETWORK_STAT_BETWEENNESS_H
 #define NETWORK_STAT_BETWEENNESS_H
 
+#include "net.h"
+#ifdef STAT_BETWEENNESS
+
 #include <iostream>
 #include "network.h"
-
-#ifdef STAT_BETWEENNESS
 //**//****************************************************//*
 int net_read_params_betweenness(std::istream& is, Network& net);
 int net_save_params_betweenness(std::ostream& os, const Network& net);

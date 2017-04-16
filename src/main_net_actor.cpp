@@ -2,6 +2,7 @@
 #include "net.h"
 #ifdef NET_ACTOR
 
+#include "NetActor.h"
 #include "common.h"
 #include "networks.h"
 using namespace std;
@@ -22,14 +23,15 @@ int main(int argc, char **argv) {
     net.argv = "cal_p2p p2p_fix stat save0 print";
 
     // 带参数运行
-    if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1)) {
-      ERROR("net_read(argc, argv)");
+    if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {
+      ERROR("net.read_params(argc, argv)");
       break;
     }
 
     // 功能模块
-    if (0 != net.run() || net.runStatus < 0) {
-      ERROR("net_new");
+    if (0 != net.run().runStatus) {
+      ERROR("net.run");
+      cerr << net << endl;
       break;
     }
   } while (0);

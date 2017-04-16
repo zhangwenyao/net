@@ -3,31 +3,35 @@
 
 #include "common.h"
 #include "networks.h"
+#include "NetFoodweb.h"
 using namespace std;
 //**//****************************************************//*
 int main(int argc, char **argv) {
-  do {
-    Networks net;
-    net.readName = "database/foodWeb/Grassland/Grassland";
-    net.saveName = net.readName + "_n0";
-    net.dirFlag = 1;
-    net.argv = "cal_p2p read_link stat save0 print";
-    if (0 != net.run().runStatus) {
-      ERROR("net.run");
-      break;
-    }
-  } while (0);
+  SHOW_TIME(cout);  // 显示系统时间
+
+  // do {
+  // Networks net;
+  // net.readName = "database/foodWeb/Grassland/Grassland";
+  // net.saveName = net.readName + "_n0";
+  // net.dirFlag = 1;
+  // net.argv = "cal_p2p read_link stat save0 print";
+  // if (0 != net.run().runStatus) {
+  // ERROR("net.run");
+  // break;
+  //}
+  //} while (0);
+
   do {
     Networks net;
     net.readName = "database/foodWeb/Grassland/Grassland";
     net.saveName = net.readName + "_n1";
     net.dirFlag = 1;
-    net.argv = "cal_p2p p2p stat save0 print";
+    net.seed = 1;
+    net.argv = "init_seed0 cal_p2p p2p stat save0 print";
 
-    // net.argv = "init_seed0 cal_p2p p2p stat save print";
     // 带参数运行
-    if (argc > 1 && 0 != net.read_params(net, argc - 1, argv + 1)) {
-      ERROR("net_read(argc, argv)");
+    if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {
+      ERROR("net.read_params(argc, argv)");
       break;
     }
 
@@ -39,11 +43,14 @@ int main(int argc, char **argv) {
     }
 
     // 功能模块
-    if (0 != net.run().runStatus < 0) {
+    if (0 != net.run().runStatus) {
       ERROR("net.run");
+      cerr << net << endl;
       break;
     }
   } while (0);
+
+  SHOW_TIME(cout);  // 显示系统时间
   return 0;
 }
 

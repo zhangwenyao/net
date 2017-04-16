@@ -359,8 +359,8 @@ std::ostream& operator<<(std::ostream& os, const Stat_modularity& modularity);
 #ifdef STAT_SIMILARITY
 class Stat_similarity {
  public:
-  VVDouble NodeCoef;  // 网络节点相似系数
-  VVDouble EdgeCoef;  // 网络连边相似系数
+  VVDouble nodeCoef;  // 网络节点相似系数
+  VVDouble edgeCoef;  // 网络连边相似系数
 
   Stat_similarity(void);
   friend std::ostream& operator<<(std::ostream& os,

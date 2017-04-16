@@ -114,7 +114,7 @@ class Networks : public Network {
 
 #ifdef STAT_SIMILARITY
   Stat_similarity similarity;
-  Networks& stat_similarity(void);
+  Networks& stat_similarity(Networks& net2);
 #endif
 
 #ifdef STAT_CLUSTER

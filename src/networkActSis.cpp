@@ -68,11 +68,11 @@ int Act_sis::save(const char* name) const {
     return -1;
   }
   string fn = name;
-  if (0 != save_params((fn + "_sis_params.txt").c_str())) {
+  if (0 != save_params((fn + ".sis.params.txt").c_str())) {
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + "_sis").c_str())) {
+  if (0 != save_data((fn + ".sis").c_str())) {
     ERROR();
     return -1;
   }
@@ -150,7 +150,7 @@ int Act_sis::read_params_1(string& s, istream& is) {
 Act_sis& Act_sis::clear(void) { return *this; }
 
 //**//****************************************************//*
-Networks& Networks::act_sis_tau() {
+Networks& Networks::act_sis_tau(void) {
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -165,7 +165,7 @@ Networks& Networks::act_sis_tau() {
   return *this;
 }
 
-Networks& Networks::act_sis() {
+Networks& Networks::act_sis(void) {
   if (0 != runStatus) {
     ERROR();
     return *this;

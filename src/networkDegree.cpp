@@ -72,11 +72,11 @@ int Net_degree::save(const char* name) const {
     return -1;
   }
   string fn = name;
-  if (0 != save_params((fn + "_degree_params.txt").c_str())) {
+  if (0 != save_params((fn + ".degree.params.txt").c_str())) {
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + "_degree").c_str())) {
+  if (0 != save_data((fn + ".degree").c_str())) {
     ERROR();
     return -1;
   }

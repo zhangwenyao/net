@@ -41,7 +41,7 @@ int Stat_cluster::save_params(const char* name) const {
   return 0;
 }
 
-int Stat_cluster::save_data(const char* name) const {
+int Stat_cluster::save_data(const char* name, const char priChar, const char priChar2) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -49,17 +49,17 @@ int Stat_cluster::save_data(const char* name) const {
   return 0;
 }
 
-int Stat_cluster::save(const char* name) const {
+int Stat_cluster::save(const char* name, const char priChar, const char priChar2) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
   }
   string fn = name;
-  if (0 != save_params((fn + "_cluster_params.txt").c_str())) {
+  if (0 != save_params((fn + ".cluster.params.txt").c_str())) {
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + "_cluster").c_str())) {
+  if (0 != save_data((fn + ".cluster").c_str(), priChar, priChar2)) {
     ERROR();
     return -1;
   }

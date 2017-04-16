@@ -56,11 +56,11 @@ int Net_random::save(const char* name) const {
     return -1;
   }
   string fn = name;
-  if (0 != save_params((fn + "_random_params.txt").c_str())) {
+  if (0 != save_params((fn + ".random.params.txt").c_str())) {
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + "_random").c_str())) {
+  if (0 != save_data((fn + ".random").c_str())) {
     ERROR();
     return -1;
   }

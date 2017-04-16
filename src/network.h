@@ -246,7 +246,8 @@ class Stat_pearson {
   int save_params(const char* name = NULL) const;
   int save_data(const char* name = NULL, const char priChar = '\n',
                 const char priChar2 = '\t') const;
-  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
+  int save(const char* name = NULL, const char priChar = '\n',
+           const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_pearson& clear(void);
 };
@@ -272,7 +273,8 @@ class Stat_spearman {
   int save_params(const char* name = NULL) const;
   int save_data(const char* name = NULL, const char priChar = '\n',
                 const char priChar2 = '\t') const;
-  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
+  int save(const char* name = NULL, const char priChar = '\n',
+           const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_spearman& clear(void);
 };
@@ -292,7 +294,8 @@ class Stat_kendall {
   int save_params(const char* name = NULL) const;
   int save_data(const char* name = NULL, const char priChar = '\n',
                 const char priChar2 = '\t') const;
-  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
+  int save(const char* name = NULL, const char priChar = '\n',
+           const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_kendall& clear(void);
 };
@@ -316,7 +319,8 @@ class Stat_betweenness {
   int save_params(const char* name = NULL) const;
   int save_data(const char* name = NULL, const char priChar = '\n',
                 const char priChar2 = '\t') const;
-  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
+  int save(const char* name = NULL, const char priChar = '\n',
+           const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_betweenness& clear(void);
 };
@@ -327,7 +331,7 @@ std::ostream& operator<<(std::ostream& os, const Stat_betweenness& betweenness);
 #ifdef STAT_MODULARITY
 class Stat_modularity {
  public:
-  double Coef;       // 网络分组系数Q
+  double coef;       // 网络分组系数Q
   VDouble NodeCoef;  // 节点分组系数P
   VNodeType Val;     // 各节点分组的序号
   VNodeType Stk;     // 按分组序号排列的节点编号
@@ -342,7 +346,9 @@ class Stat_modularity {
   int save_params(const char* name = NULL) const;
   int save_data(const char* name = NULL, const char priChar = '\n',
                 const char priChar2 = '\t') const;
-  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
+  int save_Stk(const char* name = NULL, const char priChar2 = '\t') const;
+  int save(const char* name = NULL, const char priChar = '\n',
+           const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_modularity& clear(void);
 };
@@ -363,7 +369,8 @@ class Stat_similarity {
   int save_params(const char* name = NULL) const;
   int save_data(const char* name = NULL, const char priChar = '\n',
                 const char priChar2 = '\t') const;
-  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
+  int save(const char* name = NULL, const char priChar = '\n',
+           const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_similarity& clear(void);
 };
@@ -382,8 +389,10 @@ class Stat_cluster {
                                   const Stat_cluster& cluster);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
-  int save_data(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
-  int save(const char* name = NULL, const char priChar = '\n', const char priChar2 = '\n') const;
+  int save_data(const char* name = NULL, const char priChar = '\n',
+                const char priChar2 = '\n') const;
+  int save(const char* name = NULL, const char priChar = '\n',
+           const char priChar2 = '\n') const;
   int read_params_1(std::string& s, std::istream& is);
   Stat_cluster& clear(void);
 };

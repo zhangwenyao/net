@@ -57,11 +57,11 @@ int Stat_cluster::save(const char* name, const char priChar,
     return -1;
   }
   string fn = name;
-  if (0 != save_params((fn + "_cluster_params.txt").c_str())) {
+  if (0 != save_params((fn + ".cluster.params.txt").c_str())) {
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + "_cluster").c_str(), priChar, priChar2)) {
+  if (0 != save_data((fn + ".cluster").c_str(), priChar, priChar2)) {
     ERROR();
     return -1;
   }

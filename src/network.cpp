@@ -72,9 +72,6 @@ Network::Network(void)
   params_kendall.OutIn = 0;
 #endif
 
-#ifdef STAT_MODULARITY
-  params_modularity.coef = 0;
-#endif
 }
 
 //**//************************************************************//*
@@ -283,7 +280,7 @@ Network& Network::save_params(const char* name) {
     ss << seed;
     fn = saveName + '_' + ss.str();
   }
-  ofstream os((fn + "_params.txt").c_str());
+  ofstream os((fn + ".params.txt").c_str());
   if (!os) {
     runStatus = -1;
     ERROR();
@@ -367,52 +364,49 @@ Network& Network::save_deg(const char* name) {
   }
 
   if (!nodeDeg.empty())
-    if (0 != common_save1((fn + "_nodeDeg.txt").c_str(), nodeDeg, priChar)) {
+    if (0 != common_save1((fn + ".nodeDeg.txt").c_str(), nodeDeg, priChar)) {
       runStatus = -1;
       ERROR();
     }
   if (!degArrVal.empty())
     if (0 !=
-        common_save1((fn + "_degArrVal.txt").c_str(), degArrVal, priChar)) {
+        common_save1((fn + ".degArrVal.txt").c_str(), degArrVal, priChar)) {
       runStatus = -1;
       ERROR();
     }
   if (!degArrSize.empty())
     if (0 !=
-        common_save1((fn + "_degArrSize.txt").c_str(), degArrSize, priChar)) {
+        common_save1((fn + ".degArrSize.txt").c_str(), degArrSize, priChar)) {
       runStatus = -1;
       ERROR();
     }
   // if (!degArrSum.empty())
   // if (0 !=
-  // common_save1((fn + "_degArrSum.txt").c_str(), degArrSum, priChar)) {
+  // common_save1((fn + ".degArrSum.txt").c_str(), degArrSum, priChar)) {
   // runStatus = -1;
   // ERROR();
-  // return *this;
   //}
   if (!nodesName.empty())
     if (0 !=
-        common_save1((fn + "_nodesName.txt").c_str(), nodesName, priChar)) {
+        common_save1((fn + ".nodesName.txt").c_str(), nodesName, priChar)) {
       runStatus = -1;
       ERROR();
-      return *this;
     }
   if (!nodesName2.empty())
     if (0 !=
-        common_save1((fn + "_nodesName2.txt").c_str(), nodesName2, priChar)) {
+        common_save1((fn + ".nodesName2.txt").c_str(), nodesName2, priChar)) {
       runStatus = -1;
       ERROR();
-      return *this;
     }
   if (weightFlag) {
     if (!nodeWeight.empty() &&
-        0 != common_save1((fn + "_nodeWeight.txt").c_str(), nodeWeight,
+        0 != common_save1((fn + ".nodeWeight.txt").c_str(), nodeWeight,
                           priChar)) {
       runStatus = -1;
       ERROR();
     }
     if (!degArrWeight.empty() &&
-        0 != common_save1((fn + "_degArrWeight.txt").c_str(), degArrWeight,
+        0 != common_save1((fn + ".degArrWeight.txt").c_str(), degArrWeight,
                           priChar)) {
       runStatus = -1;
       ERROR();
@@ -421,73 +415,73 @@ Network& Network::save_deg(const char* name) {
   if (dirFlag) {
     if (!nodeDegOut.empty())
       if (0 !=
-          common_save1((fn + "_nodeDegOut.txt").c_str(), nodeDegOut, priChar)) {
+          common_save1((fn + ".nodeDegOut.txt").c_str(), nodeDegOut, priChar)) {
         runStatus = -1;
         ERROR();
       }
     if (!degArrValOut.empty())
-      if (0 != common_save1((fn + "_degArrValOut.txt").c_str(), degArrValOut,
+      if (0 != common_save1((fn + ".degArrValOut.txt").c_str(), degArrValOut,
                             priChar)) {
         runStatus = -1;
         ERROR();
       }
     if (!degArrSizeOut.empty())
-      if (0 != common_save1((fn + "_degArrSizeOut.txt").c_str(), degArrSizeOut,
+      if (0 != common_save1((fn + ".degArrSizeOut.txt").c_str(), degArrSizeOut,
                             priChar)) {
         runStatus = -1;
         ERROR();
       }
     // if (!degArrSumOut.empty())
-    // if (0 != common_save1((fn + "_degArrSumOut.txt").c_str(), degArrSumOut,
+    // if (0 != common_save1((fn + ".degArrSumOut.txt").c_str(), degArrSumOut,
     // priChar)) {
     // runStatus = -1;
     // ERROR();
     //}
     if (!nodeDegIn.empty())
       if (0 !=
-          common_save1((fn + "_nodeDegIn.txt").c_str(), nodeDegIn, priChar)) {
+          common_save1((fn + ".nodeDegIn.txt").c_str(), nodeDegIn, priChar)) {
         runStatus = -1;
         ERROR();
       }
     if (!degArrValIn.empty())
-      if (0 != common_save1((fn + "_degArrValIn.txt").c_str(), degArrValIn,
+      if (0 != common_save1((fn + ".degArrValIn.txt").c_str(), degArrValIn,
                             priChar)) {
         runStatus = -1;
         ERROR();
       }
     if (!degArrSizeIn.empty())
-      if (0 != common_save1((fn + "_degArrSizeIn.txt").c_str(), degArrSizeIn,
+      if (0 != common_save1((fn + ".degArrSizeIn.txt").c_str(), degArrSizeIn,
                             priChar)) {
         runStatus = -1;
         ERROR();
       }
     // if (!degArrSumIn.empty())
-    // if (0 != common_save1((fn + "_degArrSumIn.txt").c_str(), degArrSumIn,
+    // if (0 != common_save1((fn + ".degArrSumIn.txt").c_str(), degArrSumIn,
     // priChar)) {
     // runStatus = -1;
     // ERROR();
     //}
     if (weightFlag) {
       if (!nodeWeightOut.empty() &&
-          0 != common_save1((fn + "_nodeWeightOut.txt").c_str(), nodeWeightOut,
+          0 != common_save1((fn + ".nodeWeightOut.txt").c_str(), nodeWeightOut,
                             priChar)) {
         runStatus = -1;
         ERROR();
       }
       if (!degArrWeightOut.empty() &&
-          0 != common_save1((fn + "_degArrWeightOut.txt").c_str(),
+          0 != common_save1((fn + ".degArrWeightOut.txt").c_str(),
                             degArrWeightOut, priChar)) {
         runStatus = -1;
         ERROR();
       }
       if (!nodeWeightIn.empty() &&
-          0 != common_save1((fn + "_nodeWeightIn.txt").c_str(), nodeWeightIn,
+          0 != common_save1((fn + ".nodeWeightIn.txt").c_str(), nodeWeightIn,
                             priChar)) {
         runStatus = -1;
         ERROR();
       }
       if (!degArrWeightIn.empty() &&
-          0 != common_save1((fn + "_degArrWeightIn.txt").c_str(),
+          0 != common_save1((fn + ".degArrWeightIn.txt").c_str(),
                             degArrWeightIn, priChar)) {
         runStatus = -1;
         ERROR();
@@ -532,58 +526,58 @@ Network& Network::save_p2p(const char* name) {
   }
 
   if (!p2p.empty() &&
-      0 != common_save2((fn + "_p2p.txt").c_str(), p2p, priChar2)) {
+      0 != common_save2((fn + ".p2p.txt").c_str(), p2p, priChar2)) {
     runStatus = -1;
     ERROR();
   }
   if (dirFlag && !p2pIn.empty() &&
-      0 != common_save2((fn + "_p2pIn.txt").c_str(), p2pIn, priChar2)) {
+      0 != common_save2((fn + ".p2pIn.txt").c_str(), p2pIn, priChar2)) {
     runStatus = -1;
     ERROR();
   }
 
   // link
   if (!link.empty() &&
-      0 != common_save2((fn + "_link.txt").c_str(), &link[0], linkSize, 2,
+      0 != common_save2((fn + ".link.txt").c_str(), &link[0], linkSize, 2,
                         priChar2)) {
     runStatus = -1;
     ERROR();
   }
 
   if (linkMatr.size() > 0) {
-    if (0 != common_save2((fn + "_linkMatr.txt").c_str(), linkMatr, priChar2)) {
+    if (0 != common_save2((fn + ".linkMatr.txt").c_str(), linkMatr, priChar2)) {
       runStatus = -1;
       ERROR();
     }
   }
   if (status == -2 &&
-      0 != common_save1((fn + "_p2pSize.txt").c_str(), p2pSize)) {
+      0 != common_save1((fn + ".p2pSize.txt").c_str(), p2pSize)) {
     runStatus = -1;
     ERROR();
   }
 
   if (!lkk.empty() &&
-      0 != common_save2((fn + "_lkk.txt").c_str(), lkk, priChar2)) {
+      0 != common_save2((fn + ".lkk.txt").c_str(), lkk, priChar2)) {
     runStatus = -1;
     ERROR();
   }
 
   if (weightFlag) {
     if (!weightMatr.empty() &&
-        0 != common_save2((fn + "_weightMatr.txt").c_str(), weightMatr,
+        0 != common_save2((fn + ".weightMatr.txt").c_str(), weightMatr,
                           priChar2)) {
       runStatus = -1;
       ERROR();
     }
     if (dirFlag) {
       if (!vvweight.empty() &&
-          0 != common_save2((fn + "_vvweight.txt").c_str(), vvweight,
+          0 != common_save2((fn + ".vvweight.txt").c_str(), vvweight,
                             priChar2)) {
         runStatus = -1;
         ERROR();
       }
       if (!vvweightIn.empty() &&
-          0 != common_save2((fn + "_vvweightIn.txt").c_str(), vvweightIn,
+          0 != common_save2((fn + ".vvweightIn.txt").c_str(), vvweightIn,
                             priChar2)) {
         runStatus = -1;
         ERROR();
@@ -634,7 +628,7 @@ Network& Network::read_nodeDeg(const char* name) {
   if (name != NULL && name[0] != '\0')
     fn = name;
   else
-    fn = readName + "_nodeDeg.txt";
+    fn = readName + ".nodeDeg.txt";
 
   if (0 != common_read1_0(fn.c_str(), nodeDeg)) {
     runStatus = -1;
@@ -664,21 +658,21 @@ Network& Network::read_degArr(const char* name) {
     fn = readName;
 
   if (degArrVal.empty()) {
-    if (0 != common_read1_0((fn + "_degArrVal.txt").c_str(), degArrVal, 0)) {
+    if (0 != common_read1_0((fn + ".degArrVal.txt").c_str(), degArrVal, 0)) {
       runStatus = -1;
       ERROR();
       return *this;
     }
-    cout << '\t' << fn << "_degArrVal.txt\tsize:\t" << degArrVal.size() << '\n';
+    cout << '\t' << fn << ".degArrVal.txt\tsize:\t" << degArrVal.size() << '\n';
   }
   if (degArrSize.empty()) {
-    if (0 != common_read1_0((fn + "_degArrSize.txt").c_str(), degArrSize, 0) ||
+    if (0 != common_read1_0((fn + ".degArrSize.txt").c_str(), degArrSize, 0) ||
         degArrSize.size() != degArrVal.size()) {
       runStatus = -1;
       ERROR();
       return *this;
     }
-    cout << '\t' << fn << "_degArrSize.txt\tsize:\t" << degArrVal.size()
+    cout << '\t' << fn << ".degArrSize.txt\tsize:\t" << degArrVal.size()
          << '\n';
   }
   if (degArrSum.empty()) degArrSize_2_degArrSum(degArrSum, degArrSize);
@@ -733,7 +727,7 @@ Network& Network::read_lkk(const char* name) {
     ERROR();
     return *this;
   }
-  if (0 != common_read2_0((fn + "_lkk.txt").c_str(), lkk)) {
+  if (0 != common_read2_0((fn + ".lkk.txt").c_str(), lkk)) {
     runStatus = -1;
     ERROR();
     return *this;
@@ -752,7 +746,7 @@ Network& Network::read_link_0(const char* name) {
   if (name != NULL && name[0] != '\0')
     fn = name;
   else
-    fn = readName + "_link.txt";
+    fn = readName + ".link.txt";
 
   if (0 != read0_link(link, fn.c_str(), weight_n)) {
     runStatus = -1;
@@ -773,7 +767,7 @@ Network& Network::read_link(const char* name) {
   if (name != NULL && name[0] != '\0')
     fn = name;
   else
-    fn = readName + "_link.txt";
+    fn = readName + ".link.txt";
 
   if (0 != ::read_link(link, fn.c_str())) {
     runStatus = -1;
@@ -794,7 +788,7 @@ Network& Network::read_weight_link(const char* name) {
   if (name != NULL && name[0] != '\0')
     fn = name;
   else
-    fn = readName + "_link.txt";
+    fn = readName + ".link.txt";
 
   if (weight_m < 2 || weight_m >= weight_n) {
     runStatus = -1;
@@ -820,7 +814,7 @@ Network& Network::read_link_weight(const char* name) {
   if (name != NULL && name[0] != '\0')
     fn = name;
   else
-    fn = readName + "_link.txt";
+    fn = readName + ".link.txt";
 
   if (weight_m < 2 || weight_m >= weight_n) {
     runStatus = -1;
@@ -846,7 +840,7 @@ Network& Network::read_p2p(const char* name) {
   if (name != NULL && name[0] != '\0')
     fn = name;
   else
-    fn = readName + "_p2p.txt";
+    fn = readName + ".p2p.txt";
 
   p2p.clear();
   if (0 != common_read2_0(fn.c_str(), p2p)) {
@@ -868,7 +862,7 @@ Network& Network::read_linkMatr(const char* name) {
   if (name != NULL && name[0] != '\0')
     fn = name;
   else
-    fn = readName + "_linkMatr.txt";
+    fn = readName + ".linkMatr.txt";
 
   linkMatr.clear();
   if (0 != common_read2_0(fn.c_str(), linkMatr)) {
@@ -892,7 +886,7 @@ Network& Network::read_weightMatr(const char* name) {
   if (name != NULL && name[0] != '\0')
     fn = name;
   else
-    fn = readName + "_weightMatr.txt";
+    fn = readName + ".weightMatr.txt";
 
   weightMatr.clear();
   if (0 != common_read2_0(fn.c_str(), weightMatr)) {

@@ -117,7 +117,7 @@ Networks& Networks::save_params(const char* name) {
     ss << seed;
     fn = saveName + '_' + ss.str();
   }
-  ofstream os((fn + "_params.txt").c_str());
+  ofstream os((fn + ".params.txt").c_str());
   if (!os) {
     ERROR();
     return *this;
@@ -142,52 +142,55 @@ Networks& Networks::save_data(const char* name) {
   if (0 != runStatus) ERROR();
 
 #ifdef NET_DEGREE
-  runStatus = degree.save_data(fn.c_str());
+  runStatus = degree.save_data(fn.c_str() + ".degree");
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef NET_BA
-  runStatus = ba.save_data(fn.c_str());
+  runStatus = ba.save_data(fn.c_str() + ".ba");
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef STAT_PEARSON
-  runStatus = pearson.save_data(fn.c_str(), priChar, priChar2);
+  runStatus = pearson.save_data(fn.c_str() + ".pearson", priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef STAT_SPEARMAN
-  runStatus = spearman.save_data(fn.c_str(), priChar, priChar2);
+  runStatus = spearman.save_data(fn.c_str() +."spearman", priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef STAT_KENDALL
-  runStatus = kendall.save_data(fn.c_str(), priChar, priChar2);
+  runStatus = kendall.save_data(fn.c_str() + ".kendall", priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef STAT_BETWEENNESS
-  runStatus = betweenness.save_data(fn.c_str(), priChar, priChar2);
+  runStatus =
+      betweenness.save_data((fn + ".betweenness").c_str(), priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef STAT_MODULARITY
-  runStatus = modularity.save_data(fn.c_str(), priChar, priChar2);
+  runStatus =
+      modularity.save_data((fn + ".modularity").c_str(), priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef STAT_SIMILARITY
-  runStatus = similarity.save_data(fn.c_str(), priChar, priChar2);
+  runStatus =
+      similarity.save_data((fn + ".similarity").c_str(), priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef STAT_CLUSTER
-  runStatus = cluster.save_data(fn.c_str(), priChar, priChar2);
+  runStatus = cluster.save_data((fn + ".cluster").c_str(), priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef ACT_SIS
-  runStatus = sis.save_data(fn.c_str());
+  runStatus = sis.save_data((fn+ ".sis").c_str();
   if (0 != runStatus) ERROR();
 #endif
 
@@ -365,7 +368,7 @@ Networks& Networks::read_params(const char* name) {
     return *this;
   }
 
-  ifstream is((fn + "_params.txt").c_str());
+  ifstream is((fn + ".params.txt").c_str());
   if (!is) {
     runStatus = -1;
     ERROR();

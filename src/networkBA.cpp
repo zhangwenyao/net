@@ -59,11 +59,11 @@ int Net_BA::save(const char* name) const {
     return -1;
   }
   string fn = name;
-  if (0 != save_params((fn + "_BA_params.txt").c_str())) {
+  if (0 != save_params((fn + ".BA.params.txt").c_str())) {
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + "_BA").c_str())) {
+  if (0 != save_data((fn + ".BA").c_str())) {
     ERROR();
     return -1;
   }

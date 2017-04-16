@@ -51,13 +51,13 @@ int Stat_betweenness::save_data(const char* name, const char priChar,
   string fn = name;
   int f = 0;
   if (!betwNode.empty())
-    f |= common_save1((fn + "_betwNode.txt").c_str(), betwNode, priChar);
+    f |= common_save1((fn + ".betwNode.txt").c_str(), betwNode, priChar);
   if (!betwEdge.empty())
-    f |= common_save2((fn + "_betwEdge.txt").c_str(), betwEdge, priChar2);
+    f |= common_save2((fn + ".betwEdge.txt").c_str(), betwEdge, priChar2);
   if (!minDistMatr.empty())
-    f |= common_save2((fn + "_minDistMatr.txt").c_str(), minDistMatr, priChar2);
+    f |= common_save2((fn + ".minDistMatr.txt").c_str(), minDistMatr, priChar2);
   if (!minDistMean.empty())
-    f |= common_save1((fn + "_minDistMean.txt").c_str(), minDistMean, priChar);
+    f |= common_save1((fn + ".minDistMean.txt").c_str(), minDistMean, priChar);
   if (0 != f) ERROR();
   return f;
 }
@@ -69,11 +69,11 @@ int Stat_betweenness::save(const char* name, const char priChar,
     return -1;
   }
   string fn = name;
-  if (0 != save_params((fn + "_betweenness_params.txt").c_str())) {
+  if (0 != save_params((fn + ".betweenness.params.txt").c_str())) {
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + "_betweenness").c_str(), priChar, priChar2)) {
+  if (0 != save_data((fn + ".betweenness").c_str(), priChar, priChar2)) {
     ERROR();
     return -1;
   }

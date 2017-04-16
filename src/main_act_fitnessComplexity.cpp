@@ -2,6 +2,7 @@
 #ifdef ACT_FITNESS_COMPLEXITY
 
 #include "common.h"
+#include "ActFitnessComplexity.h"
 //#include "networks.h"
 using namespace std;
 //**//*****************************************************//*

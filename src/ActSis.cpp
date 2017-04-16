@@ -1,4 +1,4 @@
-#include "ActSIS.h"
+#include "ActSis.h"
 #ifdef ACT_SIS
 
 #include "common.h"
@@ -121,7 +121,7 @@ int SIS_update2(VVNodeType &statusSN, VVNodeType &SN, VNodeType &N_i,
   return flag;
 }
 
-int act_SIS(VVNodeType &statusSN, VVNodeType &SN, VNodeType &N_i,
+int act_sis(VVNodeType &statusSN, VVNodeType &SN, VNodeType &N_i,
             VLinkType &NDeg_i, VDouble &t, LinkType &nSum, LinkType &n2Sum,
             NodeType &nNum, const double p, const double lambda,
             const double tau, double t_av, const VVNodeType &p2p,

@@ -13,30 +13,35 @@ int main(int argc, char **argv) {
     Networks net, net2;
     net.saveName = net.readName = "data/test";
     net.dirFlag = 0;
-    net.nodeSize = 100000;
+    net.nodeSize = 10000;
     net.kMin = 3;
     net.degree.power_gamma = 2;
-    if (0 != cal_kMax_PowerLaw_NatureCutoff(net.kMax, net.nodeSize, net.kMin,
-                                            net.degree.power_gamma)) {
-      ERROR();
-      return -1;
-    }
-
     net.sis.M = 70;
     net.sis.rho = 0.1;
     net.sis.p = 0.01;
     net.sis.lambda = 0.01;
     net.sis.tau = 100;
     net.sis.t_av = 10;
-
-    // while(0 == (net.seed = RAND2_INIT(net.seed)));    // 初始化随机数种子
-    net.seed = RAND2_INIT(1);  // 初始化随机数种子
-    if (0 != net.run("cal_deg power cal_p2p Random stat print save").runStatus ||
-        0 != net.p2p_2_degArr().runStatus) {
+    net.seed = 1;
+    net.argv = "init_seed0 cal_deg power cal_p2p Random stat print save0";
+    if (0 != cal_kMax_PowerLaw_NatureCutoff(net.kMax, net.nodeSize, net.kMin,
+                                            net.degree.power_gamma)) {
       ERROR();
       break;
     }
-    if (0 != net.cal_SIS_tau()) {
+
+    // 带参数运行
+    if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {
+      ERROR("net.read_params(argc, argv)");
+      break;
+    }
+
+    // 功能模块
+    if (0 != net.run().runStatus || 0 != net.p2p_2_degArr().runStatus) {
+      ERROR();
+      break;
+    }
+    if (0 != net.cal_sis_tau()) {
       ERROR();
       break;
     }

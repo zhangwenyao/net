@@ -37,7 +37,6 @@ Network::Network(void)
       deg2WeightMean(0),
       deg2WeightMeanOut(0),
       deg2WeightMeanIn(0) {
-
 #ifdef STAT_PEARSON
   params_pearson.pearson = 0;
   params_pearson.No = 0;
@@ -112,6 +111,12 @@ Network& Network::read_params_1(string& s, istream& is) {
   if (s.size() <= 0) return *this;
   int flag = 1;
   do {
+    if (s == "--version") {
+      string v;
+      getline(is, v);
+      cout << s << '\t' << v << endl;
+      break;
+    }
     if (s == "--argv") {
       getline(is, argv);
       cout << s << '\t' << argv << endl;

@@ -40,7 +40,7 @@
     统计        stat
     推荐        recommend   mass            扩散
                             heat            热传导
-    传播        SIS
+    传播        sis
     输出        print
     保存        save
                 save0
@@ -313,7 +313,7 @@ std::ostream& operator<<(std::ostream& os, const Net_grid& grid);
 
 //**//************************************************************//*
 #ifdef ACT_SIS
-class Act_SIS {
+class Act_sis {
  public:
   unsigned M;
   double rho, p, lambda;
@@ -325,16 +325,36 @@ class Act_SIS {
   VLinkType NDeg_i;
   VDouble t;
 
-  Act_SIS(void);
-  friend std::ostream& operator<<(std::ostream& os, const Act_SIS& sis);
+  Act_sis(void);
+  friend std::ostream& operator<<(std::ostream& os, const Act_sis& sis);
   int save_params(std::ostream& os) const;
   int save_params(const char* name = NULL) const;
   int save_data(const char* name = NULL) const;
   int save(const char* name = NULL) const;
   int read_params_1(std::string& s, std::istream& is);
-  Act_SIS& clear(void);
+  Act_sis& clear(void);
 };
-std::ostream& operator<<(std::ostream& os, const Act_SIS& sis);
+std::ostream& operator<<(std::ostream& os, const Act_sis& sis);
+#endif
+
+//**//************************************************************//*
+#ifdef ACT_RECOMMEND
+class Act_recommend {
+ public:
+  VDouble user;
+  VDouble object;
+
+  Act_recommend(void);
+  friend std::ostream& operator<<(std::ostream& os,
+                                  const Act_recommend& recommend);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL) const;
+  int save(const char* name = NULL) const;
+  int read_params_1(std::string& s, std::istream& is);
+  Act_recommend& clear(void);
+};
+std::ostream& operator<<(std::ostream& os, const Act_recommend& recommend);
 #endif
 
 //**//************************************************************//*

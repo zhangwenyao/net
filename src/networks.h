@@ -25,7 +25,7 @@ class Networks : public Network {
 
   Networks& cal_params(const std::string& s);
   Networks& cal_nodeDeg(const std::string& s);
-  Networks& cal_p2p(const std::string& s, std::istream& is);
+  Networks& cal_p2p(const std::string& s);
   Networks& fix_p2p_nodeDeg0(void);
 
 #ifdef NET_DEGREE
@@ -70,9 +70,9 @@ class Networks : public Network {
 #endif
 
 #ifdef ACT_SIS
-  Act_SIS sis;
-  int act_SIS();
-  int cal_SIS_tau();
+  Act_sis sis;
+  int act_sis();
+  int cal_sis_tau();
 #endif
 };
 

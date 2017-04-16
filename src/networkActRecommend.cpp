@@ -1,9 +1,36 @@
-#include "networkActRecommend.h"
+#include "net.h"
 #ifdef ACT_RECOMMEND
 
-#include "common.h"
 #include "ActRecommend.h"
+#include "common.h"
 using namespace std;
+
+//**//****************************************************//*
+Act_recommend::Act_recommend(void) {}
+
+ostream& operator<<(ostream& os, const Act_recommend& recommend) {
+  if (!os) {
+    ERROR();
+    return os;
+  }
+  return os;
+}
+
+int Act_recommend::save_params(std::ostream& os) const {
+  os << *this;
+  return 0;
+}
+
+int Act_recommend::save_params(const char* name) const { return 0; }
+int Act_recommend::save_data(const char* name) { return 0; }
+int Act_recommend::save(const char* name) { return 0; }
+
+int Act_recommend::read_params_1(string& s, istream& is) { return 0; }
+
+Act_recommend& Act_recommend::clear(void) {
+  user.clear();
+  object.clear();
+}
 
 //**//****************************************************//*
 int net_act_recommend_save_i(VDouble& o, char* name) {

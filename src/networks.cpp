@@ -386,7 +386,7 @@ Networks& Networks::run(const string argv2) {
     }
 
     if (s == "cal_p2p") {
-      if (!(ss >> s) || 0 != cal_p2p(s, ss).runStatus) {
+      if (!(ss >> s) || 0 != cal_p2p(s).runStatus) {
         ERROR();
         runStatus = -1;
         return *this;
@@ -444,8 +444,8 @@ Networks& Networks::run(const string argv2) {
 #endif
 
 #ifdef ACT_SIS
-    if (s == "SIS") {
-      if (0 != act_SIS()) {
+    if (s == "sis") {
+      if (0 != act_sis()) {
         runStatus = -1;
         ERROR();
         return *this;
@@ -663,7 +663,7 @@ Networks& Networks::cal_nodeDeg(const string& s) {
 }
 
 //**//****************************************************//*
-Networks& Networks::cal_p2p(const string& s, istream& is) {
+Networks& Networks::cal_p2p(const string& s) {
   cout << "\t" << s << '\n';
   if (runStatus != 0) {
     ERROR();

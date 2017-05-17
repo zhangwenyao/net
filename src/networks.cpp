@@ -152,12 +152,14 @@ Networks& Networks::save_data(const char* name) {
 #endif
 
 #ifdef STAT_PEARSON
-  runStatus = pearson.save_data(fn.c_str() + ".pearson", priChar, priChar2);
+  runStatus =
+      pearson.save_data(fn.c_str() + ".pearson", dirFlag, priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
 #ifdef STAT_SPEARMAN
-  runStatus = spearman.save_data(fn.c_str() +."spearman", priChar, priChar2);
+  runStatus =
+      spearman.save_data(fn.c_str() +."spearman", dirFlag, priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 

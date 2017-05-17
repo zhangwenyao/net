@@ -37,20 +37,6 @@ Network::Network(void)
       deg2WeightMean(0),
       deg2WeightMeanOut(0),
       deg2WeightMeanIn(0) {
-#ifdef STAT_PEARSON
-  params_pearson.pearson = 0;
-  params_pearson.No = 0;
-  params_pearson.NoInIn = 0;
-  params_pearson.NoInOut = 0;
-  params_pearson.NoOutIn = 0;
-  params_pearson.NoOutOut = 0;
-  params_pearson.rho = 0;
-  params_pearson.rhoInIn = 0;
-  params_pearson.rhoInOut = 0;
-  params_pearson.rhoOutIn = 0;
-  params_pearson.rhoOutOut = 0;
-#endif
-
 #ifdef STAT_SPEARMAN
   params_spearman.spearman = 0;
   params_spearman.InIn = 0;
@@ -71,7 +57,6 @@ Network::Network(void)
   params_kendall.tau = 0;
   params_kendall.OutIn = 0;
 #endif
-
 }
 
 //**//************************************************************//*

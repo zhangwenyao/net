@@ -22,8 +22,8 @@ const std::string NET_VERSION = "net2.0: " __DATE__ ", " __TIME__;
 //#define NET_ACTOR
 //#define NET_FOODWEB
 
-// const bool STAT_TYPE_DIRAA = 0;  // 0:OutIn, 1: OutIn OutOut InOut InIn
-//#define STAT_PEARSON
+const bool STAT_TYPE_DIRAA = 0;  // 0:OutIn, 1: OutIn OutOut InOut InIn
+#define STAT_PEARSON
 //#define STAT_SPEARMAN
 //#define MODEL_GAUSS
 //#define MODEL_EXP
@@ -32,7 +32,7 @@ const std::string NET_VERSION = "net2.0: " __DATE__ ", " __TIME__;
 //#define STAT_BETWEENNESS
 //#define STAT_MODULARITY
 ////#define STAT_CLUSTER
-#define STAT_SIMILARITY
+//#define STAT_SIMILARITY
 
 //#define ACT_RECOMMEND
 //#define ACT_FITNESS_COMPLEXITY

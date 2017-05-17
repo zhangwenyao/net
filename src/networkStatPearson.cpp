@@ -1,32 +1,51 @@
 #include "net.h"
 #ifdef STAT_PEARSON
 
-#include "common.h"
 #include "StatPearson.h"
+#include "common.h"
 #include "networks.h"
 using namespace std;
 //**//****************************************************//*
-Stat_cluster::Stat_cluster(void) : coef(0) {}
+Stat_pearson::Stat_pearson(void)
+    : pearson(0),
+      No(0),
+      NoInIn(0),
+      NoInOut(0),
+      NoOutIn(0),
+      NoOutOut(0),
+      rho(0),
+      rhoInIn(0),
+      rhoInOut(0),
+      rhoOutIn(0),
+      rhoOutOut(0) {}
 
-ostream& operator<<(ostream& os, const Stat_cluster& cluster) {
-  if (!os) {
-    ERROR();
-    return os;
-  }
-  os << "--cluster.coef\t" << cluster.coef << '\n';
+ostream& operator<<(ostream& os, const Stat_pearson& pearson) {
+  if (!os || 0 != pearson.save_params(os)) ERROR();
   return os;
 }
 
-int Stat_cluster::save_params(ostream& os) const {
+int Stat_pearson::save_params(ostream& os, const int dirFlag) const {
   if (!os) {
     ERROR();
     return -1;
   }
-  os << *this;
+  if (!dirFlag) {
+    os << "--pearson.pearson\t" << pearson << '\n';
+  } else {
+    os << "--pearson.pearson\t" << pearson << "\n--pearson.rho\t" << rho
+       << "\n--pearson.OutIn\t" << OutIn << "\n--pearson.rhoOutIn\t" << rhoOutIn
+       << '\n';
+    if (STAT_TYPE_DIRAA) {
+      os << "--pearson.OutOut\t" << OutOut << "\n--pearson.rhoOutOut\t"
+         << rhoOutOut << "\n--pearson.InIn\t" << InIn << "\n--pearson.rhoInIn\t"
+         << rhoInIn << "\n--pearson.InOut\t" << InOut
+         << "\n--pearson.rhoInOut\t" << rhoInOut << '\n';
+    }
+  }
   return 0;
 }
 
-int Stat_cluster::save_params(const char* name) const {
+int Stat_pearson::save_params(const char* name, const int dirFlag) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -36,46 +55,96 @@ int Stat_cluster::save_params(const char* name) const {
     ERROR();
     return -1;
   }
-  os << *this;
+  save_params(os, dirFlag);
   os.close();
   return 0;
 }
 
-int Stat_cluster::save_data(const char* name, const char priChar, const char priChar2) const {
-  if (name == NULL || name[0] == '\0') {
-    ERROR();
-    return -1;
-  }
-  return 0;
-}
-
-int Stat_cluster::save(const char* name, const char priChar, const char priChar2) const {
+int Stat_pearson::save_data(const char* name, const Networks& net,
+                            const char priChar, const char priChar2) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
   }
   string fn = name;
-  if (0 != save_params((fn + ".cluster.params.txt").c_str())) {
+  int f = 0;
+  if (!nodeNeiAveDeg.empty())
+    f |= common_save1((fn + ".nodeNeiAveDeg.txt").c_str(), nodeNeiAveDeg,
+                      priChar);
+  if (!neiAveDeg.empty())
+    f |= common_save1((fn + ".neiAveDeg.txt").c_str(), neiAveDeg, priChar);
+
+  if (dirFlag) {
+    if (!nodeNeiAveDegIn.empty())
+      f |= common_save1((fn + ".nodeNeiAveDegIn.txt").c_str(), nodeNeiAveDegIn,
+                        priChar);
+    if (!nodeNeiAveDegOut.empty())
+      f |= common_save1((fn + ".nodeNeiAveDegOut.txt").c_str(),
+                        nodeNeiAveDegOut, priChar);
+    if (!neiAveDegInIn.empty())
+      f |= common_save1((fn + ".neiAveDegInIn.txt").c_str(), neiAveDegInIn,
+                        priChar);
+    if (!neiAveDegInOut.empty())
+      f |= common_save1((fn + ".neiAveDegInOut.txt").c_str(), neiAveDegInOut,
+                        priChar);
+    if (!neiAveDegOutIn.empty())
+      f |= common_save1((fn + ".neiAveDegOutIn.txt").c_str(), neiAveDegOutIn,
+                        priChar);
+    if (!neiAveDegOutOut.empty())
+      f |= common_save1((fn + ".neiAveDegOutOut.txt").c_str(), neiAveDegOutOut,
+                        priChar);
+  }
+  return 0;
+}
+
+int Stat_pearson::save(const char* name, const int dirFlag, const char priChar,
+                       const char priChar2) const {
+  if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + ".cluster").c_str(), priChar, priChar2)) {
+  string fn = name;
+  if (0 != save_params((fn + ".params.txt").c_str(), dirFlag)) {
+    ERROR();
+    return -1;
+  }
+  if (0 != save_data(fn.c_str(), priChar, priChar2)) {
     ERROR();
     return -1;
   }
   return 0;
 }
 
-int Stat_cluster::read_params_1(string& s, istream& is) {
+int Stat_pearson::read_params_1(string& s, istream& is) {
   if (!is) {
     ERROR();
     return -1;
   }
   int flag = 1;
   do {
-    if (s == "--cluster.coef") {
-      is >> coef;
-      cout << s << '\t' << coef << endl;
+    if (s == "--pearson.pearson") {
+      is >> pearson;
+      cout << s << '\t' << pearson << endl;
+      break;
+    }
+    if (s == "--pearson.InIn") {
+      is >> InIn;
+      cout << s << '\t' << InIn << endl;
+      break;
+    }
+    if (s == "--pearson.InOut") {
+      is >> InOut;
+      cout << s << '\t' << InOut << endl;
+      break;
+    }
+    if (s == "--pearson.OutIn") {
+      is >> OutIn;
+      cout << s << '\t' << OutIn << endl;
+      break;
+    }
+    if (s == "--pearson.OutOut") {
+      is >> OutOut;
+      cout << s << '\t' << OutOut << endl;
       break;
     }
     flag = 0;
@@ -84,14 +153,14 @@ int Stat_cluster::read_params_1(string& s, istream& is) {
   return 0;
 }
 
-Stat_cluster& Stat_cluster::clear(void) {
+Stat_pearson& Stat_pearson::clear(void) {
   coef = 0;
   Node.clear();
   return *this;
 }
 
 //**//****************************************************//*
-Networks& Networks::stat_cluster(void) {
+Networks& Networks::stat_pearson(void) {
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -105,11 +174,11 @@ Networks& Networks::stat_cluster(void) {
     weightMatr_2_linkMatr(linkMatr, weightMatr);
   }
   if (weightFlag)
-    runStatus = cal_cluster_directed_weight(cluster.coef, cluster.Node,
+    runStatus = cal_pearson_directed_weight(pearson.coef, pearson.Node,
                                             weightMatr, linkMatr);
   else
     runStatus =
-        cal_cluster_directed_unweight(cluster.coef, cluster.Node, linkMatr);
+        cal_pearson_directed_unweight(pearson.coef, pearson.Node, linkMatr);
   if (0 != runStatus) ERROR();
   return *this;
 }
@@ -133,174 +202,72 @@ int net_clear_pearson(Network& net) {
 int net_cal_pearson(Network& net) {
   if (!dirFlag) {
     if (!lkk.empty() && !weightFlag)
-      cal_pearson_lkk(params_pearson.pearson, lkk, degArrVal,
-                      linkSize);
+      cal_pearson_lkk(pearson.pearson, lkk, degArrVal, linkSize);
     if (!p2p.empty()) {
-      cal_nodeNeiAveDeg_weight(nodeNeiAveDeg, p2p, nodeDeg,
-                               vvweight, nodeWeight, weightFlag);
-      cal_neiAveDeg_weight(neiAveDeg, nodeNeiAveDeg, nodeDeg,
-                           degArrSize, degArrNo, degArrVal,
-                           degArrWeight, nodeWeight, weightFlag);
+      cal_nodeNeiAveDeg_weight(nodeNeiAveDeg, p2p, nodeDeg, vvweight,
+                               nodeWeight, weightFlag);
+      cal_neiAveDeg_weight(neiAveDeg, nodeNeiAveDeg, nodeDeg, degArrSize,
+                           degArrNo, degArrVal, degArrWeight, nodeWeight,
+                           weightFlag);
       if (!weightFlag) {
-        if (lkk.empty())
-          cal_pearson(params_pearson.pearson, p2p, linkSize);
+        if (lkk.empty()) cal_pearson(pearson.pearson, p2p, linkSize);
       } else
-        cal_pearson_dir_weight(params_pearson.pearson,
-                               params_pearson.rho, p2p, vvweight,
-                               netWeight, nodeDeg, nodeDeg,
-                               weightFlag);
+        cal_pearson_dir_weight(pearson.pearson, pearson.rho, p2p, vvweight,
+                               netWeight, nodeDeg, nodeDeg, weightFlag);
     }
 
   } else {
     // AllAll
-    cal_nodeNeiAveDeg_AllAll_weight(nodeNeiAveDeg, p2p, nodeDeg,
-                                    vvweight, nodeWeight,
-                                    weightFlag);
-    cal_neiAveDeg_weight(neiAveDeg, nodeNeiAveDeg, nodeDeg,
-                         degArrSize, degArrNo, degArrVal,
-                         degArrWeight, nodeWeight, weightFlag);
-    cal_pearson_dir_weight(params_pearson.pearson, params_pearson.rho,
-                           p2p, vvweight,
-                           (weightFlag ? netWeightOut : linkSize),
-                           nodeDeg, nodeDeg, weightFlag);
+    cal_nodeNeiAveDeg_AllAll_weight(nodeNeiAveDeg, p2p, nodeDeg, vvweight,
+                                    nodeWeight, weightFlag);
+    cal_neiAveDeg_weight(neiAveDeg, nodeNeiAveDeg, nodeDeg, degArrSize,
+                         degArrNo, degArrVal, degArrWeight, nodeWeight,
+                         weightFlag);
+    cal_pearson_dir_weight(pearson.pearson, pearson.rho, p2p, vvweight,
+                           (weightFlag ? netWeightOut : linkSize), nodeDeg,
+                           nodeDeg, weightFlag);
 
     // OutIn
-    cal_nodeNeiAveDeg_weight(nodeNeiAveDegIn, p2p, nodeDegIn,
-                             vvweight, nodeWeightOut, weightFlag);
-    cal_neiAveDeg_weight(neiAveDegOutIn, nodeNeiAveDegIn,
-                         nodeDegOut, degArrSizeOut, degArrNoOut,
-                         degArrValOut, degArrWeightOut,
-                         nodeWeightOut, weightFlag);
-    cal_pearson_dir_weight(params_pearson.OutIn,
-                           params_pearson.rhoOutIn, p2p, vvweight,
-                           (weightFlag ? netWeightOut : linkSize),
-                           nodeDegOut, nodeDegIn, weightFlag);
+    cal_nodeNeiAveDeg_weight(nodeNeiAveDegIn, p2p, nodeDegIn, vvweight,
+                             nodeWeightOut, weightFlag);
+    cal_neiAveDeg_weight(neiAveDegOutIn, nodeNeiAveDegIn, nodeDegOut,
+                         degArrSizeOut, degArrNoOut, degArrValOut,
+                         degArrWeightOut, nodeWeightOut, weightFlag);
+    cal_pearson_dir_weight(pearson.OutIn, pearson.rhoOutIn, p2p, vvweight,
+                           (weightFlag ? netWeightOut : linkSize), nodeDegOut,
+                           nodeDegIn, weightFlag);
 
     if (STAT_TYPE_DIRAA) {
       // OutOut
-      cal_nodeNeiAveDeg_weight(nodeNeiAveDegOut, p2p, nodeDegOut,
-                               vvweight, nodeWeightOut, weightFlag);
-      cal_neiAveDeg_weight(neiAveDegOutOut, nodeNeiAveDegOut,
-                           nodeDegOut, degArrSizeOut, degArrNoOut,
-                           degArrValOut, degArrWeightOut,
-                           nodeWeightOut, weightFlag);
-      cal_pearson_dir_weight(
-          params_pearson.OutOut, params_pearson.rhoOutOut, p2p,
-          vvweight, (weightFlag ? netWeightOut : linkSize),
-          nodeDegOut, nodeDegOut, weightFlag);
+      cal_nodeNeiAveDeg_weight(nodeNeiAveDegOut, p2p, nodeDegOut, vvweight,
+                               nodeWeightOut, weightFlag);
+      cal_neiAveDeg_weight(neiAveDegOutOut, nodeNeiAveDegOut, nodeDegOut,
+                           degArrSizeOut, degArrNoOut, degArrValOut,
+                           degArrWeightOut, nodeWeightOut, weightFlag);
+      cal_pearson_dir_weight(pearson.OutOut, pearson.rhoOutOut, p2p, vvweight,
+                             (weightFlag ? netWeightOut : linkSize), nodeDegOut,
+                             nodeDegOut, weightFlag);
 
       // InIn
-      cal_neiAveDeg_weight(neiAveDegInIn, nodeNeiAveDegIn,
-                           nodeDegIn, degArrSizeIn, degArrNoIn,
-                           degArrValIn, degArrWeightOut,
-                           nodeWeightOut, weightFlag);
-      cal_pearson_dir_weight(params_pearson.InIn,
-                             params_pearson.rhoInIn, p2p, vvweight,
-                             (weightFlag ? netWeightOut : linkSize),
-                             nodeDegIn, nodeDegIn, weightFlag);
+      cal_neiAveDeg_weight(neiAveDegInIn, nodeNeiAveDegIn, nodeDegIn,
+                           degArrSizeIn, degArrNoIn, degArrValIn,
+                           degArrWeightOut, nodeWeightOut, weightFlag);
+      cal_pearson_dir_weight(pearson.InIn, pearson.rhoInIn, p2p, vvweight,
+                             (weightFlag ? netWeightOut : linkSize), nodeDegIn,
+                             nodeDegIn, weightFlag);
 
       // InOut
-      cal_neiAveDeg_weight(neiAveDegInOut, nodeNeiAveDegOut,
-                           nodeDegIn, degArrSizeIn, degArrNoIn,
-                           degArrValIn, degArrWeightOut,
-                           nodeWeightOut, weightFlag);
-      cal_pearson_dir_weight(params_pearson.InOut,
-                             params_pearson.rhoInOut, p2p, vvweight,
-                             (weightFlag ? netWeightOut : linkSize),
-                             nodeDegIn, nodeDegOut, weightFlag);
+      cal_neiAveDeg_weight(neiAveDegInOut, nodeNeiAveDegOut, nodeDegIn,
+                           degArrSizeIn, degArrNoIn, degArrValIn,
+                           degArrWeightOut, nodeWeightOut, weightFlag);
+      cal_pearson_dir_weight(pearson.InOut, pearson.rhoInOut, p2p, vvweight,
+                             (weightFlag ? netWeightOut : linkSize), nodeDegIn,
+                             nodeDegOut, weightFlag);
     }
   }
 
   return 0;
 }
 
-//**//****************************************************//*
-int net_read_params_pearson(istream& is, Network& net) {
-  for (string s; is >> s;) {
-    if (s == "--params_pearson.pearson") {
-      is >> params_pearson.pearson;
-      cout << s << '\t' << params_pearson.pearson << endl;
-      continue;
-    }
-    if (dirFlag) {
-      if (s == "--params_pearson.InIn") {
-        is >> params_pearson.InIn;
-        cout << s << '\t' << params_pearson.InIn << endl;
-        continue;
-      }
-      if (s == "--params_pearson.InOut") {
-        is >> params_pearson.InOut;
-        cout << s << '\t' << params_pearson.InOut << endl;
-        continue;
-      }
-      if (s == "--params_pearson.OutIn") {
-        is >> params_pearson.OutIn;
-        cout << s << '\t' << params_pearson.OutIn << endl;
-        continue;
-      }
-      if (s == "--params_pearson.OutOut") {
-        is >> params_pearson.OutOut;
-        cout << s << '\t' << params_pearson.OutOut << endl;
-        continue;
-      }
-    }
-  }
-  return 0;
-}
-
-int net_save_params_pearson(ostream& os, const Network& net) {
-  if (!os) return -1;
-  if (!dirFlag) {
-    os << "--params_pearson.pearson\t" << params_pearson.pearson << '\n';
-  } else {
-    os << "--params_pearson.pearson\t" << params_pearson.pearson
-       << "\n--params_pearson.rho\t" << params_pearson.rho
-       << "\n--params_pearson.OutIn\t" << params_pearson.OutIn
-       << "\n--params_pearson.rhoOutIn\t" << params_pearson.rhoOutIn
-       << '\n';
-    if (STAT_TYPE_DIRAA) {
-      os << "--params_pearson.OutOut\t" << params_pearson.OutOut
-         << "\n--params_pearson.rhoOutOut\t" << params_pearson.rhoOutOut
-         << "\n--params_pearson.InIn\t" << params_pearson.InIn
-         << "\n--params_pearson.rhoInIn\t" << params_pearson.rhoInIn
-         << "\n--params_pearson.InOut\t" << params_pearson.InOut
-         << "\n--params_pearson.rhoInOut\t" << params_pearson.rhoInOut
-         << '\n';
-    }
-  }
-  return 0;
-}
-
-int net_save_pearson(const Network& net, const char* name) {
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else {
-    stringstream ss;
-    ss << seed;
-    fn = saveName + '_' + ss.str();
-  }
-  int f = 0;
-  // if(!nodeNeiAveDeg.empty()) f |= common_save1((fn +
-  // "_nodeNeiAveDeg.txt").c_str(), nodeNeiAveDeg, priChar);
-  // if(!neiAveDeg.empty()) f |= common_save1((fn +
-  // "_neiAveDeg.txt").c_str(), neiAveDeg, priChar);
-
-  // if(dirFlag){
-  // if(!nodeNeiAveDegIn.empty()) f |= common_save1((fn +
-  // "_nodeNeiAveDegIn.txt").c_str(), nodeNeiAveDegIn, priChar);
-  // if(!nodeNeiAveDegOut.empty()) f |= common_save1((fn +
-  // "_nodeNeiAveDegOut.txt").c_str(), nodeNeiAveDegOut, priChar);
-  // if(!neiAveDegInIn.empty()) f |= common_save1((fn +
-  // "_neiAveDegInIn.txt").c_str(), neiAveDegInIn, priChar);
-  // if(!neiAveDegInOut.empty()) f |= common_save1((fn +
-  // "_neiAveDegInOut.txt").c_str(), neiAveDegInOut, priChar);
-  // if(!neiAveDegOutIn.empty()) f |= common_save1((fn +
-  // "_neiAveDegOutIn.txt").c_str(), neiAveDegOutIn, priChar);
-  // if(!neiAveDegOutOut.empty()) f |= common_save1((fn +
-  // "_neiAveDegOutOut.txt").c_str(), neiAveDegOutOut, priChar);
-  //}
-  return f;
-}
 //**//****************************************************//*
 #endif  // STAT_PEARSON

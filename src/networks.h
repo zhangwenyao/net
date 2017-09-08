@@ -31,11 +31,11 @@ class Networks : public Network {
 #ifdef NET_DEGREE
   Net_degree degree;
 #ifdef DEG_POWER
-  Networks& deg_power(void);
-  Networks& power_check_params(void);
+  Networks& degree_power(void);
+  Networks& degree_power_check_params(void);
 #endif
 #ifdef DEG_POISSON
-  Networks& deg_poisson(void);
+  Networks& degree_poisson(void);
 #endif
 #endif
 
@@ -65,7 +65,7 @@ class Networks : public Network {
   Networks& net_Min(void);
   Networks& net_Min_new_lkk_p2p(const int fix);
   Networks& net_Min_new_lkk(const int fix = 0);
-  Networks& net_extreme_lkk(const int extrMax, const unsigned countN = 3);
+  Networks& net_extremum_lkk(const int extrMax, const unsigned countN = 3);
   Networks& extremum_cal_lkk(std::string& s, std::istream& is);
 #endif
 
@@ -123,6 +123,12 @@ class Networks : public Network {
   Act_sis sis;
   Networks& act_sis(void);
   Networks& act_sis_tau(void);
+#endif
+
+#ifdef ACT_RECOMMEND
+  Act_recommend recommend;
+  Networks& act_recommend(void);
+  Networks& act_recommend_mass(void);
 #endif
 };
 

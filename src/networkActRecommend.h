@@ -9,7 +9,7 @@
 //**//****************************************************//*
 // 参数：   mass
 //          heat
-int net_act_recommend(Network& net, const string s = "");
+int net_act_recommend(Network& net, const std::string s = "");
 int net_act_recommend_mass(VDouble& o, VDouble& u2, VDouble& o2, VVNodeType& pu,
                            VVNodeType& po);
 

@@ -192,35 +192,35 @@ Networks& Networks::save_data(const char* name) {
 #endif
 
 #ifdef ACT_SIS
-  runStatus = sis.save_data((fn+ ".sis").c_str();
-      if (0 != runStatus) ERROR();
+  runStatus = sis.save_data((fn+ ".sis").c_str());
+  if (0 != runStatus) ERROR();
 #endif
 
-      return *this;
-      }
+  return *this;
+}
 
-      Networks& Networks::save(const char* name) {
-      if (0 != save_params(name).runStatus) ERROR();
-      if (0 != save_data(name).runStatus) ERROR();
-      return *this;
-      }
+Networks& Networks::save(const char* name) {
+  if (0 != save_params(name).runStatus) ERROR();
+  if (0 != save_data(name).runStatus) ERROR();
+  return *this;
+}
 
-      //**//****************************************************//*
-      std::istream& operator>>(std::istream& is, Networks& net) {
-      if (0 != net.runStatus || !is) {
-      ERROR();
-      return is;
-      }
-      for (string s; is >> s;) {
-      if (s.size() <= 0) continue;
-      if (0 != net.read_params_1(s, is).runStatus || s.size() > 0) {
-        net.runStatus = -1;
-        ERROR(s);
-        break;
-      }
-      }
-      return is;
-      }
+//**//****************************************************//*
+std::istream& operator>>(std::istream& is, Networks& net) {
+  if (0 != net.runStatus || !is) {
+    ERROR();
+    return is;
+  }
+  for (string s; is >> s;) {
+    if (s.size() <= 0) continue;
+    if (0 != net.read_params_1(s, is).runStatus || s.size() > 0) {
+      net.runStatus = -1;
+      ERROR(s);
+      break;
+    }
+  }
+  return is;
+}
 
 Networks& Networks::read_params_1(string& s, istream& is) {
   if (0 != runStatus) {
@@ -496,9 +496,9 @@ Networks& Networks::run(const string argv2) {
 
 #ifdef ACT_RECOMMEND
     if (s == "recommend") {
-      if (!(ss >> s) || 0 != act_recommend(net, s).runStatus) {
+      act_recommend();
+      if (0 != runStatus) {
         ERROR();
-        runStatus = -1;
         return *this;
       }
       continue;
@@ -713,13 +713,13 @@ Networks& Networks::cal_nodeDeg(const string& s) {
 #ifdef NET_DEGREE
 #ifdef DEG_POWER
   if (s == "power") {
-    if (0 != deg_power().runStatus) ERROR();
+    if (0 != degree_power().runStatus) ERROR();
     return *this;
   }
 #endif
 #ifdef DEG_POISSON
   if (s == "poisson") {
-    if (0 != deg_poisson().runStatus) ERROR();
+    if (0 != degree_poisson().runStatus) ERROR();
     return *this;
   }
 #endif

@@ -119,7 +119,7 @@ int Net_degree::read_params_1(string& s, istream& is) {
 // Poisson度分布参数
 //      poisson_p    连接概率p
 //      nodeSize    网络节点数目
-Networks& Networks::deg_poisson(void)  // 生成度序列 各点均按概率取任意度
+Networks& Networks::degree_poisson(void)  // 生成度序列 各点均按概率取任意度
 {
   if (0 != runStatus) {
     ERROR();
@@ -151,7 +151,7 @@ Networks& Networks::deg_poisson(void)  // 生成度序列 各点均按概率取�
 //      nodeSize    节点数目
 //      kMin        最小度
 //      kMax        最大度
-Networks& Networks::power_check_params(void) {
+Networks& Networks::degree_power_check_params(void) {
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -165,7 +165,7 @@ Networks& Networks::power_check_params(void) {
 }
 
 // 生成度分布
-Networks& Networks::deg_power(void) {
+Networks& Networks::degree_power(void) {
   if (0 != runStatus) {
     ERROR();
     return *this;

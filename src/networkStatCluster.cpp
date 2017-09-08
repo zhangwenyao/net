@@ -41,8 +41,7 @@ int Stat_cluster::save_params(const char* name) const {
   return 0;
 }
 
-int Stat_cluster::save_data(const char* name, const char priChar,
-                            const char priChar2 =) const {
+int Stat_cluster::save_data(const char* name, const char priChar, const char priChar2) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;

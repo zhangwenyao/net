@@ -72,7 +72,7 @@ Networks& Networks::net_Min_new_lkk(const int fix) {
   return *this;
 }
 
-Networks& Networks::net_extreme_lkk(const int extrMax, const unsigned countN) {
+Networks& Networks::net_extremum_lkk(const int extrMax, const unsigned countN) {
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -92,7 +92,7 @@ Networks& Networks::extremum_cal_lkk(string& s, istream& is) {
   }
   do {
     if (s == "lkk_max") {
-      if (0 != net_extreme_lkk(1).runStatus) {
+      if (0 != net_extremum_lkk(1).runStatus) {
         ERROR();
         runStatus = -1;
         return *this;
@@ -100,7 +100,7 @@ Networks& Networks::extremum_cal_lkk(string& s, istream& is) {
       break;
     }
     if (s == "lkk_min") {
-      if (0 != net_extreme_lkk(0).runStatus) {
+      if (0 != net_extremum_lkk(0).runStatus) {
         ERROR();
         runStatus = -1;
         return *this;
@@ -109,7 +109,7 @@ Networks& Networks::extremum_cal_lkk(string& s, istream& is) {
     }
     if (s == "lkk_maxN") {
       unsigned t;
-      if (!(is >> t) || 0 != net_extreme_lkk(1, t).runStatus) {
+      if (!(is >> t) || 0 != net_extremum_lkk(1, t).runStatus) {
         ERROR();
         runStatus = -1;
         return *this;
@@ -118,7 +118,7 @@ Networks& Networks::extremum_cal_lkk(string& s, istream& is) {
     }
     if (s == "lkk_minN") {
       unsigned t;
-      if (!(is >> t) || 0 != net_extreme_lkk(0, t).runStatus) {
+      if (!(is >> t) || 0 != net_extremum_lkk(0, t).runStatus) {
         ERROR();
         runStatus = -1;
         return *this;

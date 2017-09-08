@@ -1,10 +1,10 @@
-#include "net.h"
+#include "networkBA.h"
 #ifdef NET_BA
 
-#include "NetBA.h"
 #include "common.h"
 #include "networks.h"
 using namespace std;
+
 //**//****************************************************//*
 // 参数：   M0  全连通子网络节点数目
 //          M   新节点的度（M<=M0）

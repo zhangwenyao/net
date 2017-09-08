@@ -1,8 +1,7 @@
-#include "net.h"
+#include "networkDegree.h"
 #ifdef NET_DEGREE
 
 #include "common.h"
-#include "NetDegree.h"
 #include "networks.h"
 using namespace std;
 

@@ -1,8 +1,7 @@
-#include "net.h"
+#include "networkActSis.h"
 #ifdef ACT_SIS
 
 #include "common.h"
-#include "ActSis.h"
 #include "networks.h"
 using namespace std;
 

@@ -1,10 +1,10 @@
-#include "net.h"
+#include "networkStatPearson.h"
 #ifdef STAT_PEARSON
 
-#include "StatPearson.h"
 #include "common.h"
 #include "networks.h"
 using namespace std;
+
 //**//****************************************************//*
 Stat_pearson::Stat_pearson(void)
   : pearson(0),

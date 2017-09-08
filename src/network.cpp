@@ -5,41 +5,35 @@ using namespace std;
 
 //**//****************************************************//*
 Network::Network(void)
-    : argv("."),
-      saveName("data/test"),
-      readName("data/test"),
-      status(0),
-      seed(0),
-      dirFlag(0),
-      weightFlag(0),
-      distFlag(0),
-      nodeSize(0),
-      kMin(0),
-      kMax(0),
-      linkSize(0),
-      priChar('\n'),
-      priChar2('\t'),
-      runStatus(0),
+  : argv("."),
+  saveName("data/test"),
+  readName("data/test"),
+  status(0),
+  seed(0),
+  dirFlag(0),
+  weightFlag(0),
+  distFlag(0),
+  nodeSize(0),
+  kMin(0),
+  kMax(0),
+  linkSize(0),
+  priChar('\n'),
+  priChar2('\t'),
+  runStatus(0),
 
-      degMean(0),
-      degMeanOut(0),
-      degMeanIn(0),
-      linkRemain(0),
-      weight_m(2),
-      weight_n(2),
-      netWeight(0),
-      netWeightOut(0),
-      netWeightIn(0),
-      degWeightMean(0),
-      degWeightMeanOut(0),
-      degWeightMeanIn(0){
-
-
-#ifdef STAT_KENDALL
-  params_kendall.tau = 0;
-  params_kendall.OutIn = 0;
-#endif
-}
+  degMean(0),
+  degMeanOut(0),
+  degMeanIn(0),
+  linkRemain(0),
+  weight_m(2),
+  weight_n(2),
+  netWeight(0),
+  netWeightOut(0),
+  netWeightIn(0),
+  degWeightMean(0),
+  degWeightMeanOut(0),
+  degWeightMeanIn(0){
+  }
 
 //**//************************************************************//*
 istream& operator>>(istream& is, Network& net) {
@@ -187,40 +181,40 @@ ostream& operator<<(std::ostream& os, Network& net) {
     return os;
   }
   os << "--version\t" << NET_VERSION << "\n--saveName\t" << net.saveName
-     << "\n--readName\t" << net.readName << "\n--argv\t" << net.argv
-     << "\n--runStatus\t" << net.runStatus << "\n--status\t" << net.status
-     << "\n--seed\t" << net.seed << "\n--dirFlag\t" << net.dirFlag
-     << "\n--weightFlag\t" << net.weightFlag << "\n--nodeSize\t" << net.nodeSize
-     << "\n--kMin\t" << net.kMin << "\n--kMax\t" << net.kMax << "\n--degSize\t"
-     << net.degArrVal.size() << "\n--degMean\t" << net.degMean
-     << "\n--linkSize\t" << net.linkSize;
+    << "\n--readName\t" << net.readName << "\n--argv\t" << net.argv
+    << "\n--runStatus\t" << net.runStatus << "\n--status\t" << net.status
+    << "\n--seed\t" << net.seed << "\n--dirFlag\t" << net.dirFlag
+    << "\n--weightFlag\t" << net.weightFlag << "\n--nodeSize\t" << net.nodeSize
+    << "\n--kMin\t" << net.kMin << "\n--kMax\t" << net.kMax << "\n--degSize\t"
+    << net.degArrVal.size() << "\n--degMean\t" << net.degMean
+    << "\n--linkSize\t" << net.linkSize;
   if (net.weightFlag) {
     os << "\n--netWeight\t" << net.netWeight << "\n--degWeightMean\t"
-       << net.degWeightMean;
+      << net.degWeightMean;
   }
 
   if (!net.paramsInt.empty()) {
     os << "\n--paramsIntSize\t" << net.paramsInt.size() << "\n--paramsInts\t"
-       << net.paramsInt;
+      << net.paramsInt;
   }
   if (!net.paramsDouble.empty()) {
     os << "\n--paramsDoubleSize\t" << net.paramsDouble.size()
-       << "\n--paramsDoubles\t" << net.paramsDouble;
+      << "\n--paramsDoubles\t" << net.paramsDouble;
   }
 
   if (net.dirFlag && !net.degArrSumOut.empty()) {
     os << "\n--nodeSizeOut\t"
-       << (net.degArrSumOut.back() -
-           (net.degArrValOut.front() <= 0 ? net.degArrSizeOut.front() : 0))
-       << "\n--nodeSizeIn\t"
-       << (net.degArrSumIn.back() -
-           (net.degArrValIn.front() <= 0 ? net.degArrSizeIn.front() : 0))
-       << "\n--degMeanOut\t" << net.degMeanOut << "\n--degMeanIn\t"
-       << net.degMeanIn;
+      << (net.degArrSumOut.back() -
+          (net.degArrValOut.front() <= 0 ? net.degArrSizeOut.front() : 0))
+      << "\n--nodeSizeIn\t"
+      << (net.degArrSumIn.back() -
+          (net.degArrValIn.front() <= 0 ? net.degArrSizeIn.front() : 0))
+      << "\n--degMeanOut\t" << net.degMeanOut << "\n--degMeanIn\t"
+      << net.degMeanIn;
     if (net.weightFlag) {
       os << "\n--netWeightOut\t" << net.netWeightOut << "\n--netWeightIn\t"
-         << net.netWeightIn << "\n--degWeightMeanOut\t" << net.degWeightMeanOut
-         << "\n--degWeightMeanIn\t" << net.degWeightMeanIn;
+        << net.netWeightIn << "\n--degWeightMeanOut\t" << net.degWeightMeanOut
+        << "\n--degWeightMeanIn\t" << net.degWeightMeanIn;
     }
   }
   os << '\n';
@@ -368,13 +362,13 @@ Network& Network::save_deg(const char* name) {
   if (weightFlag) {
     if (!nodeWeight.empty() &&
         0 != common_save1((fn + ".nodeWeight.txt").c_str(), nodeWeight,
-                          priChar)) {
+          priChar)) {
       runStatus = -1;
       ERROR();
     }
     if (!degArrWeight.empty() &&
         0 != common_save1((fn + ".degArrWeight.txt").c_str(), degArrWeight,
-                          priChar)) {
+          priChar)) {
       runStatus = -1;
       ERROR();
     }
@@ -388,13 +382,13 @@ Network& Network::save_deg(const char* name) {
       }
     if (!degArrValOut.empty())
       if (0 != common_save1((fn + ".degArrValOut.txt").c_str(), degArrValOut,
-                            priChar)) {
+            priChar)) {
         runStatus = -1;
         ERROR();
       }
     if (!degArrSizeOut.empty())
       if (0 != common_save1((fn + ".degArrSizeOut.txt").c_str(), degArrSizeOut,
-                            priChar)) {
+            priChar)) {
         runStatus = -1;
         ERROR();
       }
@@ -412,13 +406,13 @@ Network& Network::save_deg(const char* name) {
       }
     if (!degArrValIn.empty())
       if (0 != common_save1((fn + ".degArrValIn.txt").c_str(), degArrValIn,
-                            priChar)) {
+            priChar)) {
         runStatus = -1;
         ERROR();
       }
     if (!degArrSizeIn.empty())
       if (0 != common_save1((fn + ".degArrSizeIn.txt").c_str(), degArrSizeIn,
-                            priChar)) {
+            priChar)) {
         runStatus = -1;
         ERROR();
       }
@@ -431,25 +425,25 @@ Network& Network::save_deg(const char* name) {
     if (weightFlag) {
       if (!nodeWeightOut.empty() &&
           0 != common_save1((fn + ".nodeWeightOut.txt").c_str(), nodeWeightOut,
-                            priChar)) {
+            priChar)) {
         runStatus = -1;
         ERROR();
       }
       if (!degArrWeightOut.empty() &&
           0 != common_save1((fn + ".degArrWeightOut.txt").c_str(),
-                            degArrWeightOut, priChar)) {
+            degArrWeightOut, priChar)) {
         runStatus = -1;
         ERROR();
       }
       if (!nodeWeightIn.empty() &&
           0 != common_save1((fn + ".nodeWeightIn.txt").c_str(), nodeWeightIn,
-                            priChar)) {
+            priChar)) {
         runStatus = -1;
         ERROR();
       }
       if (!degArrWeightIn.empty() &&
           0 != common_save1((fn + ".degArrWeightIn.txt").c_str(),
-                            degArrWeightIn, priChar)) {
+            degArrWeightIn, priChar)) {
         runStatus = -1;
         ERROR();
       }
@@ -506,7 +500,7 @@ Network& Network::save_p2p(const char* name) {
   // link
   if (!link.empty() &&
       0 != common_save2((fn + ".link.txt").c_str(), &link[0], linkSize, 2,
-                        priChar2)) {
+        priChar2)) {
     runStatus = -1;
     ERROR();
   }
@@ -532,20 +526,20 @@ Network& Network::save_p2p(const char* name) {
   if (weightFlag) {
     if (!weightMatr.empty() &&
         0 != common_save2((fn + ".weightMatr.txt").c_str(), weightMatr,
-                          priChar2)) {
+          priChar2)) {
       runStatus = -1;
       ERROR();
     }
     if (dirFlag) {
       if (!vvweight.empty() &&
           0 != common_save2((fn + ".vvweight.txt").c_str(), vvweight,
-                            priChar2)) {
+            priChar2)) {
         runStatus = -1;
         ERROR();
       }
       if (!vvweightIn.empty() &&
           0 != common_save2((fn + ".vvweightIn.txt").c_str(), vvweightIn,
-                            priChar2)) {
+            priChar2)) {
         runStatus = -1;
         ERROR();
       }
@@ -640,7 +634,7 @@ Network& Network::read_degArr(const char* name) {
       return *this;
     }
     cout << '\t' << fn << ".degArrSize.txt\tsize:\t" << degArrVal.size()
-         << '\n';
+      << '\n';
   }
   if (degArrSum.empty()) degArrSize_2_degArrSum(degArrSum, degArrSize);
 
@@ -763,7 +757,7 @@ Network& Network::read_weight_link(const char* name) {
     return *this;
   }
   if (0 != ::read_weight_link(vvweight, vvweightIn, linkSize, fn.c_str(),
-                              weight_m, weight_n, dirFlag)) {
+        weight_m, weight_n, dirFlag)) {
     runStatus = -1;
     ERROR();
     return *this;
@@ -789,7 +783,7 @@ Network& Network::read_link_weight(const char* name) {
     return *this;
   }
   if (0 != read_link_weight_0(link, linkSize, vvweight, vvweightIn, fn.c_str(),
-                              weight_m, weight_n, dirFlag)) {
+        weight_m, weight_n, dirFlag)) {
     runStatus = -1;
     ERROR();
     return *this;
@@ -903,8 +897,8 @@ Network& Network::lkk_2_degArr(void) {
   }
   if (linkSize > 0) {  // degMean
     degMean =
-        2. * linkSize /
-        (degArrSum.back() - (degArrVal.front() <= 0 ? degArrSize.front() : 0));
+      2. * linkSize /
+      (degArrSum.back() - (degArrVal.front() <= 0 ? degArrSize.front() : 0));
   }
 
   return *this;
@@ -937,7 +931,7 @@ Network& Network::p2p_2_degArr(void) {
     }
     if (degArrVal.empty() &&
         nodeDeg_2_degArr(nodeDeg, degArrVal, degArrSize,
-                         degArrSum) != 0) {  // degArr
+          degArrSum) != 0) {  // degArr
       runStatus = -1;
       ERROR();
       return *this;
@@ -956,7 +950,7 @@ Network& Network::p2p_2_degArr(void) {
     }
     if (lkk.empty() &&
         0 != p2p_2_lkk(lkk, p2p, degArrNo,
-                       degArrVal.size())) {  // lkkMatr
+          degArrVal.size())) {  // lkkMatr
       runStatus = -1;
       ERROR();
       return *this;
@@ -967,7 +961,7 @@ Network& Network::p2p_2_degArr(void) {
         vvweight_2_nodeWeight(nodeWeight, p2p, vvweight, netWeight);
       if (degArrWeight.empty() && !nodeWeight.empty())
         nodeWeight_2_degArrWeight(degArrWeight, nodeWeight, nodeDeg, degArrNo,
-                                  degArrVal.size());
+            degArrVal.size());
     }
 
   } else {  // dirFlag
@@ -986,7 +980,7 @@ Network& Network::p2p_2_degArr(void) {
     }
     if (degArrValOut.empty() &&
         nodeDeg_2_degArr(nodeDegOut, degArrValOut, degArrSizeOut,
-                         degArrSumOut) != 0) {
+          degArrSumOut) != 0) {
       runStatus = -1;
       ERROR();
       return *this;
@@ -1003,7 +997,7 @@ Network& Network::p2p_2_degArr(void) {
         vvweight_2_nodeWeight(nodeWeightOut, p2p, vvweight, netWeightOut);
       if (degArrWeightOut.empty() && !nodeWeightOut.empty())
         nodeWeight_2_degArrWeight(degArrWeightOut, nodeWeightOut, nodeDegOut,
-                                  degArrNoOut, degArrValOut.size());
+            degArrNoOut, degArrValOut.size());
     }
 
     // In
@@ -1026,7 +1020,7 @@ Network& Network::p2p_2_degArr(void) {
     }
     if (degArrValIn.empty() &&
         nodeDeg_2_degArr(nodeDegIn, degArrValIn, degArrSizeIn, degArrSumIn) !=
-            0) {
+        0) {
       runStatus = -1;
       ERROR();
       return *this;
@@ -1043,7 +1037,7 @@ Network& Network::p2p_2_degArr(void) {
         vvweight_2_nodeWeight(nodeWeightIn, p2pIn, vvweightIn, netWeightIn);
       if (degArrWeightIn.empty() && !nodeWeightIn.empty())
         nodeWeight_2_degArrWeight(degArrWeightIn, nodeWeightIn, nodeDegIn,
-                                  degArrNoIn, degArrValIn.size());
+            degArrNoIn, degArrValIn.size());
     }
 
     // All
@@ -1072,16 +1066,16 @@ Network& Network::p2p_2_degArr(void) {
     }
     if (lkk.empty() &&
         0 != p2p_2_lkk_dir(lkk, p2p, nodeDeg, nodeDeg, degArrNo, degArrNo,
-                           degArrVal.size(),
-                           degArrVal.size())) {  // lkk
+          degArrVal.size(),
+          degArrVal.size())) {  // lkk
       runStatus = -1;
       ERROR();
       return *this;
     }
     if (lkkOutIn.empty() &&
         0 != p2p_2_lkk_dir(lkkOutIn, p2p, nodeDegOut, nodeDegIn, degArrNoOut,
-                           degArrNoIn, degArrValOut.size(),
-                           degArrValIn.size())) {  // lkkOutIn
+          degArrNoIn, degArrValOut.size(),
+          degArrValIn.size())) {  // lkkOutIn
       runStatus = -1;
       ERROR();
       return *this;
@@ -1093,7 +1087,7 @@ Network& Network::p2p_2_degArr(void) {
       netWeight = netWeightOut + netWeightIn;
       if (degArrWeight.empty() && !nodeWeight.empty())
         nodeWeight_2_degArrWeight(degArrWeight, nodeWeight, nodeDeg, degArrNo,
-                                  degArrVal.size());
+            degArrVal.size());
     }
   }
 
@@ -1103,26 +1097,26 @@ Network& Network::p2p_2_degArr(void) {
   }
   if (linkSize > 0) {  // degMean degWeightMean
     degMean =
-        2. * linkSize /
-        (degArrSum.back() - (degArrVal.front() <= 0 ? degArrSize.front() : 0));
+      2. * linkSize /
+      (degArrSum.back() - (degArrVal.front() <= 0 ? degArrSize.front() : 0));
     if (weightFlag)
       degWeightMean = (double)netWeight /
-                      (degArrSum.back() -
-                       (degArrVal.front() <= 0 ? degArrSize.front() : 0));
+        (degArrSum.back() -
+         (degArrVal.front() <= 0 ? degArrSize.front() : 0));
     if (dirFlag) {
       degMeanOut = (double)linkSize /
-                   (degArrSumOut.back() -
-                    (degArrValOut.front() <= 0 ? degArrSizeOut.front() : 0));
+        (degArrSumOut.back() -
+         (degArrValOut.front() <= 0 ? degArrSizeOut.front() : 0));
       degMeanIn = (double)linkSize /
-                  (degArrSumIn.back() -
-                   (degArrValIn.front() <= 0 ? degArrSizeIn.front() : 0));
+        (degArrSumIn.back() -
+         (degArrValIn.front() <= 0 ? degArrSizeIn.front() : 0));
       if (weightFlag) {
         degWeightMeanOut = (double)netWeightOut /
-                           (degArrSum.back() -
-                            (degArrVal.front() <= 0 ? degArrSize.front() : 0));
+          (degArrSum.back() -
+           (degArrVal.front() <= 0 ? degArrSize.front() : 0));
         degWeightMeanIn = (double)netWeightIn /
-                          (degArrSum.back() -
-                           (degArrVal.front() <= 0 ? degArrSize.front() : 0));
+          (degArrSum.back() -
+           (degArrVal.front() <= 0 ? degArrSize.front() : 0));
       }
     }
   }

@@ -1,10 +1,10 @@
-#include "net.h"
+#include "StatModularity.h"
 #ifdef STAT_MODULARITY
 
-#include "StatModularity.h"
 #include "common.h"
 #include "networks.h"
 using namespace std;
+
 //**//****************************************************//*
 Stat_modularity::Stat_modularity(void) : coef(0) {}
 

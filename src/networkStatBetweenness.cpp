@@ -1,10 +1,10 @@
-#include "net.h"
+#include "StatBetweenness.h"
 #ifdef STAT_BETWEENNESS
 
 #include "common.h"
-#include "StatBetweenness.h"
 #include "networks.h"
 using namespace std;
+
 //**//****************************************************//*
 Stat_betweenness::Stat_betweenness(void) : meanNode(0), meanEdge(0) {}
 

@@ -1,8 +1,7 @@
-#include "net.h"
+#include "networkRandom.h"
 #ifdef NET_RANDOM
 
 #include "common.h"
-#include "NetRandom.h"
 #include "networks.h"
 using namespace std;
 

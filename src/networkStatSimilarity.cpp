@@ -1,10 +1,10 @@
-#include "net.h"
+#include "StatSimilarity.h"
 #ifdef STAT_SIMILARITY
 
-#include "StatSimilarity.h"
 #include "common.h"
 #include "networks.h"
 using namespace std;
+
 //**//****************************************************//*
 Stat_similarity::Stat_similarity(void) : nodeCoef(0), edgeCoef(0) {}
 

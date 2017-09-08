@@ -6,18 +6,18 @@
 #include "networks.h"
 using namespace std;
 //**//****************************************************//*
-Stat_cluster::Stat_cluster(void) : coef(0) {}
+Stat_kendall::Stat_kendall(void) : tau(0), OutIn(0) {}
 
-ostream& operator<<(ostream& os, const Stat_cluster& cluster) {
+ostream& operator<<(ostream& os, const Stat_kendall& kendall) {
   if (!os) {
     ERROR();
     return os;
   }
-  os << "--cluster.coef\t" << cluster.coef << '\n';
+  os << "--kendall.tau\t" << kendall.tau << '\n';
   return os;
 }
 
-int Stat_cluster::save_params(ostream& os) const {
+int Stat_kendall::save_params(ostream& os) const {
   if (!os) {
     ERROR();
     return -1;
@@ -26,7 +26,7 @@ int Stat_cluster::save_params(ostream& os) const {
   return 0;
 }
 
-int Stat_cluster::save_params(const char* name) const {
+int Stat_kendall::save_params(const char* name) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -41,7 +41,7 @@ int Stat_cluster::save_params(const char* name) const {
   return 0;
 }
 
-int Stat_cluster::save_data(const char* name, const char priChar, const char priChar2) const {
+int Stat_kendall::save_data(const char* name, const char priChar, const char priChar2) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -49,31 +49,31 @@ int Stat_cluster::save_data(const char* name, const char priChar, const char pri
   return 0;
 }
 
-int Stat_cluster::save(const char* name, const char priChar, const char priChar2) const {
+int Stat_kendall::save(const char* name, const char priChar, const char priChar2) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
   }
   string fn = name;
-  if (0 != save_params((fn + ".cluster.params.txt").c_str())) {
+  if (0 != save_params((fn + ".kendall.params.txt").c_str())) {
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + ".cluster").c_str()), priChar, priChar2) {
+  if (0 != save_data((fn + ".kendall").c_str()), priChar, priChar2) {
     ERROR();
     return -1;
   }
   return 0;
 }
 
-int Stat_cluster::read_params_1(string& s, istream& is) {
+int Stat_kendall::read_params_1(string& s, istream& is) {
   if (!is) {
     ERROR();
     return -1;
   }
   int flag = 1;
   do {
-    if (s == "--cluster.coef") {
+    if (s == "--kendall.coef") {
       is >> coef;
       cout << s << '\t' << coef << endl;
       break;
@@ -84,14 +84,14 @@ int Stat_cluster::read_params_1(string& s, istream& is) {
   return 0;
 }
 
-Stat_cluster& Stat_cluster::clear(void) {
+Stat_kendall& Stat_kendall::clear(void) {
   coef = 0;
   Node.clear();
   return *this;
 }
 
 //**//****************************************************//*
-Networks& Networks::stat_cluster(void) {
+Networks& Networks::stat_kendall(void) {
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -105,11 +105,11 @@ Networks& Networks::stat_cluster(void) {
     weightMatr_2_linkMatr(linkMatr, weightMatr);
   }
   if (weightFlag)
-    runStatus = cal_cluster_directed_weight(cluster.coef, cluster.Node,
-                                            weightMatr, linkMatr);
+    runStatus = cal_kendall_directed_weight(kendall.coef, kendall.Node,
+        weightMatr, linkMatr);
   else
     runStatus =
-        cal_cluster_directed_unweight(cluster.coef, cluster.Node, linkMatr);
+      cal_kendall_directed_unweight(kendall.coef, kendall.Node, linkMatr);
   if (0 != runStatus) ERROR();
   return *this;
 }
@@ -125,7 +125,7 @@ int net_cal_kendallTau(Network& net) {
     return -1;
   }
   cal_kendallTau_lkkSum(params_kendall.tau, lkk, lkkSum,
-                        dirFlag);
+      dirFlag);
   // al_kendallTau_lkk(params_kendall.tau, lkk, linkSize,
   // dirFlag);
   if (dirFlag) {
@@ -135,7 +135,7 @@ int net_cal_kendallTau(Network& net) {
       return -1;
     }
     cal_kendallTau_lkkSum(params_kendall.OutIn, lkkOutIn,
-                          lkkSumOutIn, dirFlag);
+        lkkSumOutIn, dirFlag);
   }
   return 0;
 }

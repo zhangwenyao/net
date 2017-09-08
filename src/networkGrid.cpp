@@ -1,10 +1,10 @@
-#include "net.h"
+#include "networkGrid.h"
 #ifdef NET_GRID
 
-#include "NetGrid.h"
 #include "common.h"
 #include "networks.h"
 using namespace std;
+
 //**//****************************************************//*
 // 参数：    params_grid.NX X方向格点数目
 //          params_grid.NY Y方向格点数目

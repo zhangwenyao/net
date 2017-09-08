@@ -1,8 +1,8 @@
-#include "net.h"
+#include "ActRecommend.h"
 #ifdef ACT_RECOMMEND
 
-#include "ActRecommend.h"
 #include "common.h"
+#include "networks.h"
 using namespace std;
 
 //**//****************************************************//*

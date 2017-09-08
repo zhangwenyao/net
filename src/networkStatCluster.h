@@ -1,30 +1,30 @@
-#ifndef NETWORK_STAT_KENDALL_H
-#define NETWORK_STAT_KENDALL_H
-#include "StatKendall.h"
-#ifdef STAT_KENDALL
+#ifndef NETWORK_STAT_CLUSTER_H
+#define NETWORK_STAT_CLUSTER_H
+#include "StatCluster.h"
+#ifdef STAT_CLUSTER
 
 #include <iostream>
 
 //**//****************************************************//*
-class Stat_kendall {
+class Stat_cluster {
   public:
-    double tau, OutIn;
+    double coef;
+    VDouble Node;  // clustering coefficient
 
-    Stat_kendall(void);
+    Stat_cluster(void);
     friend std::ostream& operator<<(std::ostream& os,
-        const Stat_kendall& kendall);
+        const Stat_cluster& cluster);
     int save_params(std::ostream& os) const;
     int save_params(const char* name = NULL) const;
     int save_data(const char* name = NULL, const char priChar = '\n',
-        const char priChar2 = '\t') const;
+        const char priChar2 = '\n') const;
     int save(const char* name = NULL, const char priChar = '\n',
         const char priChar2 = '\n') const;
     int read_params_1(std::string& s, std::istream& is);
-    Stat_kendall& clear(void);
+    Stat_cluster& clear(void);
 };
-std::ostream& operator<<(std::ostream& os, const Stat_kendall& kendall);
+std::ostream& operator<<(std::ostream& os, const Stat_cluster& cluster);
 
 //**//****************************************************//*
-#endif  // STAT_KENDALL
-#endif  // NETWORK_STAT_KENDALL_H
-
+#endif  // STAT_CLUSTER
+#endif  //NETWORK_STAT_CLUSTER_H

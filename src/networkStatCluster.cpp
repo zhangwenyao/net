@@ -1,10 +1,10 @@
-#include "net.h"
+#include "StatCluster.h"
 #ifdef STAT_CLUSTER
 
-#include "StatCluster.h"
 #include "common.h"
 #include "networks.h"
 using namespace std;
+
 //**//****************************************************//*
 Stat_cluster::Stat_cluster(void) : coef(0) {}
 

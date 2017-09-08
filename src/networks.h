@@ -70,26 +70,18 @@ class Networks : public Network {
 #endif
 
 #ifdef STAT_PEARSON
-  Stat_pearosn pearosn;
-  Networks& stat_pearosn(void);
+  Stat_pearson pearson;
+  Networks& stat_pearson(void);
 #endif
 
 #ifdef STAT_SPEARMAN
   Stat_spearman spearman;
   Networks& stat_spearman(void);
-  int net_clear_spearman(Network& net);
-  int net_cal_spearman(Network& net);
-  int net_degArr_2_deg2ArrVal_weight(Network& net);
-  int net_read_params_spearman(std::istream& is, Network& net);
-  int net_save_params_spearman(std::ostream& os, const Network& net);
-  int net_save_spearman(const Network& net, const char* name = NULL);
+  Networks& spearman_degArr_2_deg2ArrVal_weight(void);
 #ifdef MODEL_GAUSS
-  int net_read_SGaussS2(Network& net, const char* name = NULL);
-  int net_save_gauss(const Network& net, const char* name = NULL);
-  int net_cal_lkkProb_gauss(Network& net);
-  int net_gauss_new_ranLink(
-      Network&
-          net);  // 随机选点按度之差的相应高斯概率连边，重连时随机选点再选边
+  Networks& spearman_read_GaussS2(const char* name = NULL);
+  Networks& spearman_cal_lkkProb_gauss(void);
+  Networks& spearman_gauss_new_ranLink(void);  // 随机选点按度之差的相应高斯概率连边，重连时随机选点再选边
 #endif           // MODEL_GAUSS
 #endif
 

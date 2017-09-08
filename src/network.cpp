@@ -32,26 +32,8 @@ Network::Network(void)
       netWeightIn(0),
       degWeightMean(0),
       degWeightMeanOut(0),
-      degWeightMeanIn(0),
+      degWeightMeanIn(0){
 
-      deg2WeightMean(0),
-      deg2WeightMeanOut(0),
-      deg2WeightMeanIn(0) {
-#ifdef STAT_SPEARMAN
-  params_spearman.spearman = 0;
-  params_spearman.InIn = 0;
-  params_spearman.InOut = 0;
-  params_spearman.OutIn = 0;
-  params_spearman.OutOut = 0;
-  params_spearman.rho = 0;
-  params_spearman.rhoInIn = 0;
-  params_spearman.rhoInOut = 0;
-  params_spearman.rhoOutIn = 0;
-  params_spearman.rhoOutOut = 0;
-#ifdef MODEL_GAUSS
-  params_spearman.r0 = 0;
-#endif  // MODEL_GAUSS
-#endif
 
 #ifdef STAT_KENDALL
   params_kendall.tau = 0;

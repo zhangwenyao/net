@@ -6,9 +6,13 @@
 using namespace std;
 
 //**//****************************************************//*
-Net_random::Net_random(void) : p(0) {}
+Net_random::Net_random(void)
+    : p(0)
+{
+}
 
-std::ostream& operator<<(std::ostream& os, const Net_random& random) {
+std::ostream& operator<<(std::ostream& os, const Net_random& random)
+{
   if (!os) {
     ERROR();
     return os;
@@ -17,7 +21,8 @@ std::ostream& operator<<(std::ostream& os, const Net_random& random) {
   return os;
 }
 
-int Net_random::save_params(std::ostream& os) const {
+int Net_random::save_params(std::ostream& os) const
+{
   if (!os) {
     ERROR();
     return -1;
@@ -26,7 +31,8 @@ int Net_random::save_params(std::ostream& os) const {
   return 0;
 }
 
-int Net_random::save_params(const char* name) const {
+int Net_random::save_params(const char* name) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -41,7 +47,8 @@ int Net_random::save_params(const char* name) const {
   return 0;
 }
 
-int Net_random::save_data(const char* name) const {
+int Net_random::save_data(const char* name) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -49,7 +56,8 @@ int Net_random::save_data(const char* name) const {
   return 0;
 }
 
-int Net_random::save(const char* name) const {
+int Net_random::save(const char* name) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -66,7 +74,8 @@ int Net_random::save(const char* name) const {
   return 0;
 }
 
-int Net_random::read_params_1(string& s, istream& is) {
+int Net_random::read_params_1(string& s, istream& is)
+{
   if (!is) {
     ERROR();
     return -1;
@@ -80,18 +89,18 @@ int Net_random::read_params_1(string& s, istream& is) {
 }
 
 //**//****************************************************//*
-Networks& Networks::net_random_clear(void) {
+Networks& Networks::net_random_clear(void)
+{
   linkSize = 0;
   linkRemain = 0;
   status = 0;
   return *this;
 }
 
-Networks& Networks::net_random_init(void) {
+Networks& Networks::net_random_init(void)
+{
   net_random_clear();
-  if (kMin > kMax || kMax >= nodeSize ||
-      (kMin == kMax && nodeSize % 2 == 1 && kMin % 2 == 1) || random.p < 0. ||
-      random.p > 1.)
+  if (kMin > kMax || kMax >= nodeSize || (kMin == kMax && nodeSize % 2 == 1 && kMin % 2 == 1) || random.p < 0. || random.p > 1.)
     runStatus = status = -1;
   return *this;
 }
@@ -100,18 +109,18 @@ Networks& Networks::net_random_init(void) {
 // ER随机网络参数
 //      p           连边概率p
 //      nodeSize    节点数目
-Networks& Networks::net_ER(void) {
+Networks& Networks::net_ER(void)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
   }
   // 初始化连边信息
-  int p = random.p * RAND2_MAX;
   p2p.clear();
   p2p.resize(nodeSize);
   for (NodeType i = 0; i < nodeSize; i++)
     for (NodeType j = i + 1; j < nodeSize; j++) {
-      if (RAND2() <= p) {
+      if (rand_double(rand2) <= random.p) {
         p2p[i].push_back(j);
         p2p[j].push_back(i);
       }
@@ -145,7 +154,7 @@ Networks& Networks::net_ER(void) {
 */
 //**//****************************************************//*
 Networks& Networks::net_random_ranNode_link(
-    void)  // 随机选点连边，重连时所有边中随机选
+    void) // 随机选点连边，重连时所有边中随机选
 {
   if (0 != runStatus) {
     ERROR();
@@ -162,25 +171,25 @@ Networks& Networks::net_random_ranNode_link(
     p2p[i].reserve(nodeDeg[i]);
     remNodeNum[i] = i;
     for (NodeType j = nodeDeg[i]; j > 0; j--)
-      *p++ = i;  // 记录各点剩余度和网络所有连边情况
+      *p++ = i; // 记录各点剩余度和网络所有连边情况
   }
   linkRemain = linkSize;
   LinkType linkRemain0 = linkRemain;
   // 随机连边
   for (size_t count = 0, iDel = 1; linkRemain > 0 && remNodeNum.size() > 0;) {
-    if (0 ==
-        addLink_p2p_ranNode0(p2p, link, nodeDeg, remNodeNum, linkRemain, 1000))
-      break;  // 随机选点连边
+    if (0 == addLink_p2p_ranNode0(p2p, link, nodeDeg, remNodeNum, linkRemain, 1000))
+      break; // 随机选点连边
     if (linkRemain < linkRemain0) {
       count = 0;
       iDel = 1;
       linkRemain0 = linkRemain;
     } else if (++count >= 1000) {
       count = 0;
-      if (++iDel > 5) break;
+      if (++iDel > 5)
+        break;
     }
     delLink_p2p_ranLink(p2p, nodeDeg, remNodeNum, linkRemain, link,
-                        iDel);  // 随机删iDel条边
+        iDel); // 随机删iDel条边
   }
 
   if (linkRemain > 0) {
@@ -192,7 +201,7 @@ Networks& Networks::net_random_ranNode_link(
   return *this;
 }
 
-Networks& Networks::net_random_node_prob(void)  // 所有点按概率p连边
+Networks& Networks::net_random_node_prob(void) // 所有点按概率p连边
 {
   if (0 != runStatus) {
     ERROR();
@@ -204,7 +213,7 @@ Networks& Networks::net_random_node_prob(void)  // 所有点按概率p连边
 
   // 连边
   linkSize = 0;
-  addLink_linkMatr_proNode(linkMatr, linkSize, random.p, dirFlag);  // 连边
+  addLink_linkMatr_proNode(linkMatr, linkSize, random.p, dirFlag); // 连边
   linkRemain = 0;
   linkMatr_2_p2p(p2p, linkMatr);
 
@@ -212,7 +221,7 @@ Networks& Networks::net_random_node_prob(void)  // 所有点按概率p连边
   return *this;
 }
 
-Networks& Networks::net_random_remDeg(void)  // 随机抽取剩余度连边
+Networks& Networks::net_random_remDeg(void) // 随机抽取剩余度连边
 {
   if (0 != runStatus) {
     ERROR();
@@ -226,7 +235,7 @@ Networks& Networks::net_random_remDeg(void)  // 随机抽取剩余度连边
   for (NodeType i = 0, *p = &link[0]; i < nodeSize; i++) {
     remNodeNum[i] = i;
     for (NodeType j = 0; j < nodeDeg[i]; j++)
-      *p++ = i;  // 记录各点剩余度和网络所有连边情况
+      *p++ = i; // 记录各点剩余度和网络所有连边情况
   }
   linkRemain = linkSize;
   LinkType linkRemain0 = linkRemain;
@@ -235,12 +244,12 @@ Networks& Networks::net_random_remDeg(void)  // 随机抽取剩余度连边
        iDel <= 5 && linkRemain > 0 && remNodeNum.size() > 0;) {
     for (size_t count = 1000; count > 0; count--) {
       delLink_p2p_ranLink(p2p, nodeDeg, remNodeNum, linkRemain, link,
-                          iDel);  // 随机删iDel条边
-      if (0 ==
-          addLink_p2p_remDeg(p2p, nodeDeg, remNodeNum, linkRemain, link, 1000))
-        break;  // 随机抽取剩余度连边
+          iDel); // 随机删iDel条边
+      if (0 == addLink_p2p_remDeg(p2p, nodeDeg, remNodeNum, linkRemain, link, 1000))
+        break; // 随机抽取剩余度连边
     }
-    if (linkRemain <= 0) break;
+    if (linkRemain <= 0)
+      break;
     cout << "linkRemain:\t" << linkRemain << '\n';
     if (linkRemain < linkRemain0) {
       linkRemain0 = linkRemain;
@@ -262,7 +271,7 @@ Networks& Networks::net_random_remDeg(void)  // 随机抽取剩余度连边
 }
 
 //**//****************************************************//*
-Networks& Networks::net_random_ranNode(void)  // 每次直接随机抽取两个点连边
+Networks& Networks::net_random_ranNode(void) // 每次直接随机抽取两个点连边
 {
   if (0 != runStatus) {
     ERROR();
@@ -274,9 +283,10 @@ Networks& Networks::net_random_ranNode(void)  // 每次直接随机抽取两个�
   // 连边
   linkRemain = linkSize = random.p * (nodeSize - 1) * nodeSize / 2;
   addLink_linkMatrC_ranNode(linkMatrC,
-                            linkRemain);  // 每次直接随机抽取两个点连边
+      linkRemain); // 每次直接随机抽取两个点连边
   linkMatrC_2_p2p(p2p, linkMatrC);
-  for (NodeType i = 0; i < nodeSize; i++) nodeDeg[i] = p2p[i].size();
+  for (NodeType i = 0; i < nodeSize; i++)
+    nodeDeg[i] = p2p[i].size();
 
   // 统计实际度分布
   nodeDeg_2_degArr(nodeDeg, degArrVal, degArrSize, degArrSum);
@@ -287,4 +297,4 @@ Networks& Networks::net_random_ranNode(void)  // 每次直接随机抽取两个�
 }
 
 //**//****************************************************//*
-#endif  // NET_RANDOM
+#endif // NET_RANDOM

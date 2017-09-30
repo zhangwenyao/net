@@ -1,13 +1,14 @@
 #include "networkActSpread.h"
 #ifdef ACT_SPREAD
 
+#include "networks.h"
 #include <iostream>
 #include <string>
-#include "networks.h"
 using namespace std;
 
 //**//*****************************************************//*
-int net_clear_spread(Networks& net) {
+int net_clear_spread(Networks& net)
+{
   net.source.clear();
   net.nei.clear();
   net.num.clear();
@@ -21,7 +22,8 @@ int net_clear_spread(Networks& net) {
 }
 
 //**//*******************************************************
-int net_read_params_spread(istream& is, Networks& net) {
+int net_read_params_spread(istream& is, Networks& net)
+{
   for (string s; is >> s;) {
     // TODO
     continue;
@@ -29,8 +31,10 @@ int net_read_params_spread(istream& is, Networks& net) {
   return 0;
 }
 
-int net_save_params_spread(ostream& os, const Networks& net) {
-  if (!os) return -1;
+int net_save_params_spread(ostream& os, const Networks& net)
+{
+  if (!os)
+    return -1;
   os << "--SOURCE_HEAD\t" << net.SOURCE_HEAD << "\n--SOURCE_NULL\t"
      << net.SOURCE_NULL << "\n--spread_mode\t" << net.mode << "\n--head\t"
      << net.head << "\n--nei1\t" << net.nei1 << "\n--nei0\t" << net.nei0
@@ -42,7 +46,8 @@ int net_save_params_spread(ostream& os, const Networks& net) {
 
 //**//*******************************************************
 
-int Spread::init(const Networks& net) {
+int Spread::init(const Networks& net)
+{
   clear();
   const NodeType kMax = net.kMax;
   nodeSize = net.nodeSize;
@@ -50,18 +55,19 @@ int Spread::init(const Networks& net) {
   SOURCE_HEAD = nodeSize + 1;
   nei1 = nei0 = 0;
   neiCountSize = 0;
-  if (nodeSize <= 0 || head >= nodeSize) return -1;
-  if (0 > prob || prob > 1 || spreadSize > nodeSize) return -1;
-  if (mode != "same" && mode != "diff") return -1;
+  if (nodeSize <= 0 || head >= nodeSize)
+    return -1;
+  if (0 > prob || prob > 1 || spreadSize > nodeSize)
+    return -1;
+  if (mode != "same" && mode != "diff")
+    return -1;
   source.assign(nodeSize, SOURCE_NULL);
   nei.assign(nodeSize, 0);
   num.resize(nodeSize);
   stk.resize(nodeSize);
   time.assign(nodeSize, 0);
   prob_rand.resize(kMax + 1);
-  if (source.size() != nodeSize || num.size() != nodeSize ||
-      nei.size() != nodeSize || stk.size() != nodeSize ||
-      prob_rand.size() != kMax + 1) {
+  if (source.size() != nodeSize || num.size() != nodeSize || nei.size() != nodeSize || stk.size() != nodeSize || prob_rand.size() != kMax + 1) {
     return -1;
   }
   for (NodeType i = 0; i < nodeSize; i++) {
@@ -69,76 +75,88 @@ int Spread::init(const Networks& net) {
     stk[i] = i;
   }
   for (NodeType i = 0; i <= kMax; i++) {
-    prob_rand[i] = (1. - pow(1. - prob, i)) * RAND2_MAX;
+    prob_rand[i] = 1. - pow(1. - prob, i);
   }
   return 0;
 }
 
-int Spread::check(const Networks& net) {
+int Spread::check(const Networks& net)
+{
   const NodeType nodeSize = net.nodeSize;
-  if (head < nodeSize && (SOURCE_HEAD == SOURCE_NULL ||
-                          SOURCE_HEAD < nodeSize || SOURCE_NULL < nodeSize)) {
+  if (head < nodeSize && (SOURCE_HEAD == SOURCE_NULL || SOURCE_HEAD < nodeSize || SOURCE_NULL < nodeSize)) {
     return -1;
   }
   return 0;
 }
 
-int Spread::save(const Networks& net) {
+int Spread::save(const Networks& net)
+{
   saveParams(net);
   saveData(net);
 #ifndef NET_GRID_SAVE
   saveSpread(net);
 #else
-  const Grid *grid = static_cast<const Grid *>(&net);
+  const Grid* grid = static_cast<const Grid*>(&net);
   saveSpread(*grid);
 #endif
   return 0;
 }
 
-int Spread::cal(const Networks& net) {
+int Spread::cal(const Networks& net)
+{
   if (init(net) != 0) {
     ERROR("init");
     return -1;
   }
   if (mode == "same") {
-    if (spread_same(net) != 0) return -1;
+    if (spread_same(net) != 0)
+      return -1;
   } else if (mode == "diff") {
-    if (spread_diff(net) != 0) return -1;
+    if (spread_diff(net) != 0)
+      return -1;
   } else
     return -1;
-  if (calData() != 0) return -1;
+  if (calData() != 0)
+    return -1;
   return 0;
 }
 
 //**//*******************************************************
-int Spread::saveSpread(const Networks& net) {
+int Spread::saveSpread(const Networks& net)
+{
   stringstream fileName("");
   fileName.clear();
   fileName << net.outName << '_' << net.seed
-           << "_spread_stk.txt";  // fileName.str().c_str()
-  if (::save(fileName.str().c_str(), stk, net.priChar) != 0) return -1;
+           << "_spread_stk.txt"; // fileName.str().c_str()
+  if (::save(fileName.str().c_str(), stk, net.priChar) != 0)
+    return -1;
   fileName.str("");
   fileName.clear();
   fileName << net.outName << '_' << net.seed << "_spread_num.txt";
-  if (::save(fileName.str().c_str(), num, net.priChar) != 0) return -1;
+  if (::save(fileName.str().c_str(), num, net.priChar) != 0)
+    return -1;
   fileName.str("");
   fileName.clear();
   fileName << net.outName << '_' << net.seed << "_spread_source.txt";
-  if (::save(fileName.str().c_str(), source, net.priChar) != 0) return -1;
+  if (::save(fileName.str().c_str(), source, net.priChar) != 0)
+    return -1;
   fileName.str("");
   fileName.clear();
   fileName << net.outName << '_' << net.seed << "_spread_nei.txt";
-  if (::save(fileName.str().c_str(), nei, net.priChar) != 0) return -1;
+  if (::save(fileName.str().c_str(), nei, net.priChar) != 0)
+    return -1;
   return 0;
 }
 
 #ifdef NET_GRID_SAVE
-int Spread::saveSpread(const Grid& net) {
+int Spread::saveSpread(const Grid& net)
+{
   stringstream fileName("");
   fileName.clear();
   fileName << net.outName << '_' << net.seed
-           << "_spread_stk.txt";  // fileName.str().c_str()
-  if (::save(fileName.str().c_str(), stk, net.priChar) != 0) return -1;
+           << "_spread_stk.txt"; // fileName.str().c_str()
+  if (::save(fileName.str().c_str(), stk, net.priChar) != 0)
+    return -1;
   fileName.str("");
   fileName.clear();
   fileName << net.outName << '_' << net.seed << "_spread_num.txt";
@@ -147,8 +165,7 @@ int Spread::saveSpread(const Grid& net) {
   fileName.str("");
   fileName.clear();
   fileName << net.outName << '_' << net.seed << "_spread_source.txt";
-  if (::save(fileName.str().c_str(), &source[0], net.NX, net.NY, net.priChar) !=
-      0)
+  if (::save(fileName.str().c_str(), &source[0], net.NX, net.NY, net.priChar) != 0)
     return -1;
   fileName.str("");
   fileName.clear();
@@ -157,9 +174,10 @@ int Spread::saveSpread(const Grid& net) {
     return -1;
   return 0;
 }
-#endif  // NET_GRID_SAVE
+#endif // NET_GRID_SAVE
 
-int Spread::spread_same(const Networks& net) {
+int Spread::spread_same(const Networks& net)
+{
   nei1 = 0;
   nei0 = 1;
   source[head] = SOURCE_HEAD;
@@ -170,9 +188,9 @@ int Spread::spread_same(const Networks& net) {
     NodeType nei0_tmp = nei0;
     for (NodeType iNum = nei1; iNum < nei0_tmp; iNum++) {
       NodeType ni = stk[iNum], iNei = nei[ni];
-      int r = RAND2();
-      if (r <= prob_rand[iNei]) {  // spread to ni
-        r %= iNei;                 // source : No. r neighbour
+      double ra = rand_double();
+      if (ra <= prob_rand[iNei]) {     // spread to ni
+        int r = int(ra * iNei) % iNei; // source : No. r neighbour
         for (vector<NodeType>::const_iterator i = net.p2p[ni].begin();
              i != net.p2p[ni].end(); i++) {
           if (source[*i] != SOURCE_NULL && time[*i] != time0) {
@@ -184,27 +202,32 @@ int Spread::spread_same(const Networks& net) {
           }
         }
         time[ni] = time0;
-        if (++step >= spreadSize) break;
+        if (++step >= spreadSize)
+          break;
       }
     }
     for (NodeType iNum = nei1; iNum < nei0_tmp; iNum++) {
       NodeType ni = stk[iNum];
-      if (source[ni] != SOURCE_NULL) update_nei(net, ni);
+      if (source[ni] != SOURCE_NULL)
+        update_nei(net, ni);
     }
   }
   return 0;
 }
 
-int Spread::spread_diff(const Networks& net) {
+int Spread::spread_diff(const Networks& net)
+{
   nei1 = 0;
   nei0 = 1;
   source[head] = SOURCE_HEAD;
   time[head] = 0;
   update_nei(net, head);
   for (NodeType step = 1; step < spreadSize && nei1 < nei0;) {
-    NodeType iNum = RAND2() % (nei0 - nei1) + nei1, ni = stk[iNum],
-             iNei = nei[ni], r = RAND2() % net.kMax;
-    if (r < iNei) {  // spread to ni
+    std::uniform_int_distribution<NodeType> dis(nei1, nei0 - 1);
+    std::uniform_int_distribution<NodeType> dis2(0, net.kMax - 1);
+    NodeType iNum = dis(rand2), ni = stk[iNum],
+             iNei = nei[ni], r = dis2(rand2);
+    if (r < iNei) { // spread to ni
       for (vector<NodeType>::const_iterator i = net.p2p[ni].begin();
            i != net.p2p[ni].end(); i++) {
         if (source[*i] != SOURCE_NULL) {
@@ -222,9 +245,10 @@ int Spread::spread_diff(const Networks& net) {
   return 0;
 }
 
-inline void Spread::update_nei(const Networks& net, const NodeType ni) {
+inline void Spread::update_nei(const Networks& net, const NodeType ni)
+{
   NodeType inum = num[ni];
-  if (inum != nei1) {  //交换stk[nei1-inum]
+  if (inum != nei1) { //交换stk[nei1-inum]
     NodeType nj = stk[nei1];
     stk[inum] = nj;
     stk[nei1] = ni;
@@ -243,11 +267,12 @@ inline void Spread::update_nei(const Networks& net, const NodeType ni) {
   return;
 }
 
-inline void Spread::update_nei1(const NodeType nj) {
+inline void Spread::update_nei1(const NodeType nj)
+{
   neiCountSize++;
   if (nei[nj]++ == 0) {
     NodeType jNum = num[nj];
-    if (jNum != nei0) {  //交换stk[nei0-jnum]
+    if (jNum != nei0) { //交换stk[nei0-jnum]
       NodeType t = stk[nei0];
       stk[nei0] = nj;
       stk[jNum] = t;
@@ -260,11 +285,14 @@ inline void Spread::update_nei1(const NodeType nj) {
 }
 
 //**//*******************************************************
-int Spread::calData() {
-  if (dataSize > spreadSize) return -1;
+int Spread::calData()
+{
+  if (dataSize > spreadSize)
+    return -1;
   vector<NodeType> stk_tmp(stk.begin(), stk.begin() + spreadSize);
   vector<NodeType> t(spreadSize);
-  for (NodeType i = 0; i < spreadSize; i++) t[i] = i;
+  for (NodeType i = 0; i < spreadSize; i++)
+    t[i] = i;
   new_randArr(&t[0], spreadSize, dataSize);
   sort(t.begin(), t.begin() + dataSize);
   data_node.resize(dataSize);
@@ -277,18 +305,21 @@ int Spread::calData() {
   return 0;
 }
 
-int Spread::saveData(const Networks& net) {
+int Spread::saveData(const Networks& net)
+{
   stringstream fileName("");
   fileName.clear();
   fileName << net.outName << '_' << net.seed << "_spread_dataNode.txt";
-  if (::save(fileName.str().c_str(), data_node, net.priChar) != 0) return -1;
+  if (::save(fileName.str().c_str(), data_node, net.priChar) != 0)
+    return -1;
   fileName.str("");
   fileName.clear();
   fileName << net.outName << '_' << net.seed
-           << "_spread_dataTime.txt";  // fileName.str().c_str()
-  if (::save(fileName.str().c_str(), data_time, net.priChar) != 0) return -1;
+           << "_spread_dataTime.txt"; // fileName.str().c_str()
+  if (::save(fileName.str().c_str(), data_time, net.priChar) != 0)
+    return -1;
   return 0;
 }
 
 //**//*****************************************************//*
-#endif  // NET_GRID
+#endif // NET_GRID

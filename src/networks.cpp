@@ -4,11 +4,15 @@
 using namespace std;
 
 //**//****************************************************//*
-Networks::Networks(void) : net2(NULL) {}
+Networks::Networks(void)
+    : net2(NULL)
+{
+}
 
 // Networks::~Networks(void) {}
 
-Networks& Networks::clear(void) {
+Networks& Networks::clear(void)
+{
   Network::clear();
 
 #ifdef STAT_PEARSON
@@ -43,7 +47,8 @@ Networks& Networks::clear(void) {
 }
 
 //**//****************************************************//*
-ostream& operator<<(ostream& os, Networks& net) {
+ostream& operator<<(ostream& os, Networks& net)
+{
   if (!os) {
     net.runStatus = -1;
     ERROR();
@@ -99,7 +104,8 @@ ostream& operator<<(ostream& os, Networks& net) {
   return os;
 }
 
-Networks& Networks::save_params(std::ostream& os) {
+Networks& Networks::save_params(std::ostream& os)
+{
   if (!os) {
     runStatus = 1;
     ERROR();
@@ -108,7 +114,8 @@ Networks& Networks::save_params(std::ostream& os) {
   return *this;
 }
 
-Networks& Networks::save_params(const char* name) {
+Networks& Networks::save_params(const char* name)
+{
   string fn;
   if (name != NULL && name[0] != '\0')
     fn = name;
@@ -127,7 +134,8 @@ Networks& Networks::save_params(const char* name) {
   return *this;
 }
 
-Networks& Networks::save_data(const char* name) {
+Networks& Networks::save_data(const char* name)
+{
   string fn;
   stringstream ss;
   if (name != NULL && name[0] != '\0')
@@ -139,80 +147,96 @@ Networks& Networks::save_data(const char* name) {
   }
 
   Network::save_data(fn.c_str());
-  if (0 != runStatus) ERROR();
+  if (0 != runStatus)
+    ERROR();
 
 #ifdef NET_DEGREE
   runStatus = degree.save_data((fn + ".degree").c_str());
-  if (0 != runStatus) ERROR();
+  if (0 != runStatus)
+    ERROR();
 #endif
 
 #ifdef NET_BA
   runStatus = ba.save_data((fn + ".ba").c_str());
-  if (0 != runStatus) ERROR();
+  if (0 != runStatus)
+    ERROR();
 #endif
 
 #ifdef STAT_PEARSON
-  runStatus =
-    pearson.save_data((fn + ".pearson").c_str(), dirFlag, priChar, priChar2);
-  if (0 != runStatus) ERROR();
+  runStatus = pearson.save_data(
+      (fn + ".pearson").c_str(), dirFlag, priChar, priChar2);
+  if (0 != runStatus)
+    ERROR();
 #endif
 
 #ifdef STAT_SPEARMAN
-  runStatus =
-    spearman.save_data((fn+".spearman").c_str(), dirFlag, priChar, priChar2);
-  if (0 != runStatus) ERROR();
+  runStatus = spearman.save_data(
+      (fn + ".spearman").c_str(), dirFlag, priChar, priChar2);
+  if (0 != runStatus)
+    ERROR();
 #endif
 
 #ifdef STAT_KENDALL
   runStatus = kendall.save_data((fn + ".kendall").c_str(), priChar, priChar2);
-  if (0 != runStatus) ERROR();
+  if (0 != runStatus)
+    ERROR();
 #endif
 
 #ifdef STAT_BETWEENNESS
-  runStatus =
-    betweenness.save_data((fn + ".betweenness").c_str(), priChar, priChar2);
-  if (0 != runStatus) ERROR();
+  runStatus = betweenness.save_data(
+      (fn + ".betweenness").c_str(), priChar, priChar2);
+  if (0 != runStatus)
+    ERROR();
 #endif
 
 #ifdef STAT_MODULARITY
-  runStatus =
-    modularity.save_data((fn + ".modularity").c_str(), priChar, priChar2);
-  if (0 != runStatus) ERROR();
+  runStatus
+      = modularity.save_data((fn + ".modularity").c_str(), priChar, priChar2);
+  if (0 != runStatus)
+    ERROR();
 #endif
 
 #ifdef STAT_SIMILARITY
-  runStatus =
-    similarity.save_data((fn + ".similarity").c_str(), priChar, priChar2);
-  if (0 != runStatus) ERROR();
+  runStatus
+      = similarity.save_data((fn + ".similarity").c_str(), priChar, priChar2);
+  if (0 != runStatus)
+    ERROR();
 #endif
 
 #ifdef STAT_CLUSTER
   runStatus = cluster.save_data((fn + ".cluster").c_str(), priChar, priChar2);
-  if (0 != runStatus) ERROR();
+  if (0 != runStatus)
+    ERROR();
 #endif
 
 #ifdef ACT_SIS
-  runStatus = sis.save_data((fn+ ".sis").c_str());
-  if (0 != runStatus) ERROR();
+  runStatus = sis.save_data((fn + ".sis").c_str());
+  if (0 != runStatus)
+    ERROR();
 #endif
 
   return *this;
 }
 
-Networks& Networks::save(const char* name) {
-  if (0 != save_params(name).runStatus) ERROR();
-  if (0 != save_data(name).runStatus) ERROR();
+Networks& Networks::save(const char* name)
+{
+  if (0 != save_params(name).runStatus)
+    ERROR();
+  if (0 != save_data(name).runStatus)
+    ERROR();
   return *this;
 }
 
 //**//****************************************************//*
-std::istream& operator>>(std::istream& is, Networks& net) {
+std::istream& operator>>(std::istream& is, Networks& net)
+{
   if (0 != net.runStatus || !is) {
     ERROR();
     return is;
   }
   for (string s; is >> s;) {
-    if (s.size() <= 0) continue;
+    if (s.size() <= 0)
+      continue;
     if (0 != net.read_params_1(s, is).runStatus || s.size() > 0) {
       net.runStatus = -1;
       ERROR(s);
@@ -222,12 +246,14 @@ std::istream& operator>>(std::istream& is, Networks& net) {
   return is;
 }
 
-Networks& Networks::read_params_1(string& s, istream& is) {
+Networks& Networks::read_params_1(string& s, istream& is)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
   }
-  if (s.size() <= 0) return *this;
+  if (s.size() <= 0)
+    return *this;
   do {
     if (s == "--file") {
       cout << s << '\t';
@@ -253,7 +279,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       runStatus = -1;
       return *this;
     }
-    if (s.size() <= 0) break;
+    if (s.size() <= 0)
+      break;
 
 #ifdef NET_DEGREE
     if (0 != degree.read_params_1(s, is)) {
@@ -261,7 +288,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       runStatus = -1;
       return *this;
     }
-    if (s.size() <= 0) break;
+    if (s.size() <= 0)
+      break;
 #endif
 
 #ifdef NET_RANDOM
@@ -270,7 +298,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       runStatus = -1;
       return *this;
     }
-    if (s.size() <= 0) break;
+    if (s.size() <= 0)
+      break;
 #endif
 
 #ifdef NET_BA
@@ -279,7 +308,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       runStatus = -1;
       return *this;
     }
-    if (s.size() <= 0) break;
+    if (s.size() <= 0)
+      break;
 #endif
 
 #ifdef NET_GRID
@@ -288,8 +318,9 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       runStatus = -1;
       return *this;
     }
-    if (s.size() <= 0) break;
-#endif  // NET_GRID
+    if (s.size() <= 0)
+      break;
+#endif // NET_GRID
 
 #ifdef STAT_PEARSON
     if (0 != pearson.read_params_1(s, is)) {
@@ -297,7 +328,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       runStatus = -1;
       return *this;
     }
-    if (s.size() <= 0) break;
+    if (s.size() <= 0)
+      break;
 #endif
 
 #ifdef STAT_SPEARMAN
@@ -306,7 +338,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       runStatus = -1;
       return *this;
     }
-    if (s.size() <= 0) break;
+    if (s.size() <= 0)
+      break;
 #endif
 
 #ifdef STAT_KENDALL
@@ -315,7 +348,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       runStatus = -1;
       return *this;
     }
-    if (s.size() <= 0) break;
+    if (s.size() <= 0)
+      break;
 #endif
 
 #ifdef STAT_BETWEENNESS
@@ -324,8 +358,9 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       runStatus = -1;
       return *this;
     }
-    if (s.size() <= 0) break;
-#endif  // STAT_BETWEENNESS
+    if (s.size() <= 0)
+      break;
+#endif // STAT_BETWEENNESS
 
 #ifdef STAT_MODULARITY
     if (0 != modularity.read_params_1(s, is)) {
@@ -333,7 +368,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       runStatus = -1;
       return *this;
     }
-    if (s.size() <= 0) break;
+    if (s.size() <= 0)
+      break;
 #endif
 
 #ifdef STAT_CLUSTER
@@ -342,7 +378,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       runStatus = -1;
       return *this;
     }
-    if (s.size() <= 0) break;
+    if (s.size() <= 0)
+      break;
 #endif
 
 #ifdef ACT_SIS
@@ -351,7 +388,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
       ERROR();
       return *this;
     }
-    if (s.size() <= 0) break;
+    if (s.size() <= 0)
+      break;
 #endif
 
     ERROR(s);
@@ -361,7 +399,8 @@ Networks& Networks::read_params_1(string& s, istream& is) {
   return *this;
 }
 
-Networks& Networks::read_params(const char* name) {
+Networks& Networks::read_params(const char* name)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -370,14 +409,14 @@ Networks& Networks::read_params(const char* name) {
   if (name != NULL && name[0] != '\0')
     fn = name;
   else
-    fn = readName;
+    fn = readName + ".params.txt";
   if (fn.size() <= 0) {
     runStatus = -1;
     ERROR();
     return *this;
   }
 
-  ifstream is((fn + ".params.txt").c_str());
+  ifstream is(fn.c_str());
   if (!is) {
     runStatus = -1;
     ERROR();
@@ -389,16 +428,19 @@ Networks& Networks::read_params(const char* name) {
   return *this;
 }
 
-Networks& Networks::read_params(int argc, char** argv) {
+Networks& Networks::read_params(int argc, char** argv)
+{
   string s;
-  for (int i = 0; i < argc; i++) (s += '\t') += argv[i];
+  for (int i = 0; i < argc; i++)
+    (s += '\t') += argv[i];
   stringstream ss(s);
   ss >> *this;
   return *this;
 }
 
 //**//****************************************************//*
-Networks& Networks::run(const string argv2) {
+Networks& Networks::run(const string argv2)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -413,9 +455,10 @@ Networks& Networks::run(const string argv2) {
 
   while (ss >> s) {
     cout << s << '\n';
-    if (s.size() <= 0 || s == ".") continue;
+    if (s.size() <= 0 || s == ".")
+      continue;
 
-    if (s == "cal_params") {
+    if (s == "--cal_params") {
       common_get_string(ss, s);
       if (0 != cal_params(s).runStatus) {
         ERROR();
@@ -425,20 +468,19 @@ Networks& Networks::run(const string argv2) {
       continue;
     }
 
-    if (s == "init_seed0") {
-      if (seed <= 0)
-        while (0 == (seed = RAND2_INIT(seed))) continue;
+    if (s == "--init_seed0") {
+      init_seed0(seed);
       cout << "\tseed\t" << seed << '\n';
       continue;
     }
 
-    if (s == "init_seed") {
-      while (0 == (seed = RAND2_INIT(seed))) continue;
+    if (s == "--init_seed") {
+      init_seed(seed);
       cout << "\tseed\t" << seed << '\n';
       continue;
     }
 
-    if (s == "cal_deg") {
+    if (s == "--cal_deg") {
       if (!(ss >> s) || 0 != cal_nodeDeg(s).runStatus) {
         ERROR();
         runStatus = -1;
@@ -447,7 +489,7 @@ Networks& Networks::run(const string argv2) {
       continue;
     }
 
-    if (s == "cal_p2p") {
+    if (s == "--cal_p2p") {
       if (!(ss >> s) || 0 != cal_p2p(s).runStatus) {
         ERROR();
         runStatus = -1;
@@ -456,7 +498,7 @@ Networks& Networks::run(const string argv2) {
       continue;
     }
 
-    if (s == "fix_p2p") {
+    if (s == "--fix_p2p") {
       if (0 != ::fix_p2p(p2p, dirFlag)) {
         ERROR();
         runStatus = -1;
@@ -465,7 +507,7 @@ Networks& Networks::run(const string argv2) {
       continue;
     }
 
-    if (s == "fix_p2p_nodeDeg0") {
+    if (s == "--fix_p2p_nodeDeg0") {
       if (0 != fix_p2p_nodeDeg0().runStatus) {
         ERROR();
         runStatus = -1;
@@ -475,7 +517,7 @@ Networks& Networks::run(const string argv2) {
     }
 
 #ifdef NET_EXTREMUM
-    if (s == "cal_extrLKK") {
+    if (s == "--cal_extrLKK") {
       if (!(ss >> s) || 0 != extremum_cal_lkk(s, ss).runStatus) {
         ERROR();
         runStatus = -1;
@@ -485,7 +527,7 @@ Networks& Networks::run(const string argv2) {
     }
 #endif
 
-    if (s == "stat") {
+    if (s == "--stat") {
       if (0 != stat().runStatus) {
         ERROR();
         runStatus = -1;
@@ -495,7 +537,7 @@ Networks& Networks::run(const string argv2) {
     }
 
 #ifdef ACT_RECOMMEND
-    if (s == "recommend") {
+    if (s == "--recommend") {
       act_recommend();
       if (0 != runStatus) {
         ERROR();
@@ -506,7 +548,7 @@ Networks& Networks::run(const string argv2) {
 #endif
 
 #ifdef ACT_SIS
-    if (s == "sis") {
+    if (s == "--sis") {
       act_sis();
       if (0 != runStatus) {
         ERROR();
@@ -516,7 +558,7 @@ Networks& Networks::run(const string argv2) {
     }
 #endif
 
-    if (s == "print") {
+    if (s == "--print") {
       cout << *this;
       if (0 != runStatus) {
         ERROR();
@@ -526,7 +568,7 @@ Networks& Networks::run(const string argv2) {
       continue;
     }
 
-    if (s == "save") {
+    if (s == "--save") {
       if (0 != save().runStatus) {
         ERROR();
         runStatus = -1;
@@ -534,7 +576,7 @@ Networks& Networks::run(const string argv2) {
       }
       continue;
     }
-    if (s == "save0") {
+    if (s == "--save0") {
       if (0 != save(saveName.c_str()).runStatus) {
         ERROR();
         runStatus = -1;
@@ -543,12 +585,13 @@ Networks& Networks::run(const string argv2) {
       continue;
     }
 
-    if (s == "clear") {
+    if (s == "--clear") {
       clear();
       continue;
     }
 
-    if (s == "exit") return *this;
+    if (s == "exit")
+      return *this;
 
     ERROR(s);
     runStatus = -1;
@@ -559,7 +602,8 @@ Networks& Networks::run(const string argv2) {
 }
 
 //**//************************************************************//*
-Networks& Networks::stat(void) {
+Networks& Networks::stat(void)
+{
   if (runStatus != 0) {
     ERROR();
     return *this;
@@ -593,8 +637,8 @@ Networks& Networks::stat(void) {
 
 #ifdef STAT_SPEARMAN
   cout << "\tspearman\n";
-  if (0 != spearman_degArr_2_deg2ArrVal_weight().runStatus ||
-      0 != stat_spearman().runStatus) {
+  if (0 != spearman_degArr_2_deg2ArrVal_weight().runStatus
+      || 0 != stat_spearman().runStatus) {
     ERROR();
     return *this;
   }
@@ -640,7 +684,8 @@ Networks& Networks::stat(void) {
 }
 
 //**//****************************************************//*
-Networks& Networks::cal_params(const string& s) {
+Networks& Networks::cal_params(const string& s)
+{
   if (runStatus != 0) {
     ERROR();
     return *this;
@@ -648,7 +693,8 @@ Networks& Networks::cal_params(const string& s) {
   string t;
   istringstream ss(s);
   while (ss >> t) {
-    if (t.size() <= 0) continue;
+    if (t.size() <= 0)
+      continue;
     if (t == "dirFlag") {
       dirFlag = 1;
       continue;
@@ -673,7 +719,8 @@ Networks& Networks::cal_params(const string& s) {
 }
 
 //**//****************************************************//*
-Networks& Networks::cal_nodeDeg(const string& s) {
+Networks& Networks::cal_nodeDeg(const string& s)
+{
   if (runStatus != 0) {
     ERROR();
     return *this;
@@ -696,34 +743,44 @@ Networks& Networks::cal_nodeDeg(const string& s) {
   }
 
   if (s == "read_deg") {
-    if (0 != read_nodeDeg().runStatus) ERROR();
+    if (0 != read_nodeDeg().runStatus)
+      ERROR();
     return *this;
   }
 
   if (s == "read_degArr") {
-    if (0 != read_degArr().runStatus) ERROR();
+    if (0 != read_degArr().runStatus)
+      ERROR();
     return *this;
   }
 
   if (s == "read_lkk") {
-    if (0 != read_lkk().runStatus) ERROR();
+    if (0 != read_lkk().runStatus)
+      ERROR();
     return *this;
   }
 
 #ifdef NET_DEGREE
 #ifdef DEG_POWER
+  if (s == "power_arr") {
+    if (0 != degree_power_arr().runStatus)
+      ERROR();
+    return *this;
+  }
   if (s == "power") {
-    if (0 != degree_power().runStatus) ERROR();
+    if (0 != degree_power().runStatus)
+      ERROR();
     return *this;
   }
 #endif
 #ifdef DEG_POISSON
   if (s == "poisson") {
-    if (0 != degree_poisson().runStatus) ERROR();
+    if (0 != degree_poisson().runStatus)
+      ERROR();
     return *this;
   }
 #endif
-#endif  // NET_DEG
+#endif // NET_DEG
 
   ERROR(s);
   runStatus = -1;
@@ -731,7 +788,8 @@ Networks& Networks::cal_nodeDeg(const string& s) {
 }
 
 //**//****************************************************//*
-Networks& Networks::cal_p2p(const string& s) {
+Networks& Networks::cal_p2p(const string& s)
+{
   cout << "\t" << s << '\n';
   if (runStatus != 0) {
     ERROR();
@@ -788,16 +846,16 @@ Networks& Networks::cal_p2p(const string& s) {
         }
       }
       if (s == "read_weight_link") {
-        if (!weightFlag || link.empty() || !vvweight.empty() ||
-            0 != read_weight_link().runStatus) {
+        if (!weightFlag || link.empty() || !vvweight.empty()
+            || 0 != read_weight_link().runStatus) {
           ERROR();
           runStatus = -1;
           return *this;
         }
       }
       if (s == "read_link_weight_0") {
-        if (!weightFlag || !link.empty() || !vvweight.empty() ||
-            0 != read_link_weight().runStatus) {
+        if (!weightFlag || !link.empty() || !vvweight.empty()
+            || 0 != read_link_weight().runStatus) {
           ERROR();
           runStatus = -1;
           return *this;
@@ -814,11 +872,13 @@ Networks& Networks::cal_p2p(const string& s) {
           // break;
         }
         if (!linkMatr.empty()) {
-          if (0 != ::linkMatr_2_p2p(p2p, linkMatr)) ERROR();
+          if (0 != ::linkMatr_2_p2p(p2p, linkMatr))
+            ERROR();
           break;
         }
         if (!linkMatrC.empty()) {
-          if (0 != ::linkMatrC_2_p2p(p2p, linkMatrC)) ERROR();
+          if (0 != ::linkMatrC_2_p2p(p2p, linkMatrC))
+            ERROR();
           break;
         }
         if (!link.empty()) {
@@ -843,6 +903,16 @@ Networks& Networks::cal_p2p(const string& s) {
         }
         break;
       }
+      if (s == "Max_lkk") {
+        net_Max_new_lkk();
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
+        status = 2;
+        return *this;
+      }
+
       if (s == "Min") {
         net_Min();
         if (0 != runStatus || 0 > status) {
@@ -850,6 +920,15 @@ Networks& Networks::cal_p2p(const string& s) {
           return *this;
         }
         break;
+      }
+      if (s == "Min_lkk") {
+        net_Min_new_lkk();
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
+        status = 2;
+        return *this;
       }
       if (s == "MinLkkP2p") {
         net_Min_new_lkk_p2p(0);
@@ -869,7 +948,7 @@ Networks& Networks::cal_p2p(const string& s) {
       }
 #endif
 
-      // TODO: lkk_2_p2p // lkk生成p2p
+// TODO: lkk_2_p2p // lkk生成p2p
 
 #ifdef NET_RANDOM
       if (s == "ER") {
@@ -933,7 +1012,8 @@ Networks& Networks::cal_p2p(const string& s) {
     } while (0);
   } else {
     // !p2p.empty()
-    if (status == 0) status = -1;
+    if (status == 0)
+      status = -1;
   }
 
   if (status < 0 || p2p.empty()) {
@@ -969,23 +1049,25 @@ Networks& Networks::cal_p2p(const string& s) {
 
 //**//****************************************************//*
 // 节点按度排序 net->net2 剔除度为0的点
-Networks& Networks::fix_p2p_nodeDeg0(void) {
-  if (status < 0 || p2p.empty() ||
-      (degArrVal.empty() && 0 != p2p_2_degArr().runStatus)) {
+Networks& Networks::fix_p2p_nodeDeg0(void)
+{
+  if (status < 0 || p2p.empty()
+      || (degArrVal.empty() && 0 != p2p_2_degArr().runStatus)) {
     ERROR();
     runStatus = -1;
     return *this;
   }
   int flag = check_nodeDeg0(nodeDeg);
   cout << "check_nodeDeg0\t" << flag << endl;
-  if (flag == 0) return *this;
+  if (flag == 0)
+    return *this;
   if (flag < 0 || (flag > 0 && net2 == NULL)) {
     ERROR();
     runStatus = flag;
     return *this;
   }
   Networks& net2 = *this->net2;
-  if (degArrVal.back() <= 0) {  // net2.nodeSize = 0
+  if (degArrVal.back() <= 0) { // net2.nodeSize = 0
     ERROR();
     runStatus = -1;
     return *this;
@@ -996,14 +1078,15 @@ Networks& Networks::fix_p2p_nodeDeg0(void) {
   nodeSize = p2p.size();
   net2.nodeSize = nodeSize - degArrSize.front();
   net2.nodesName.resize(nodeSize);
-  for (NodeType i = 0; i < nodeSize; i++) net2.nodesName[i] = i;
+  for (NodeType i = 0; i < nodeSize; i++)
+    net2.nodesName[i] = i;
   net2.nodesName2 = net2.nodesName;
   common_sort_p_val(net2.nodesName.rbegin(), net2.nodesName.rend(),
-      &nodeDeg.front());  // 按度从大到小排
+      &nodeDeg.front()); // 按度从大到小排
 
   // i -> net2.nodesName2[i]
-  common_sort_p_val(net2.nodesName2.begin(), net2.nodesName2.end(),
-      &net2.nodesName.front());
+  common_sort_p_val(
+      net2.nodesName2.begin(), net2.nodesName2.end(), &net2.nodesName.front());
 
   // 更新net2的连边信息net2.p2p
   net2.p2p.resize(net2.nodeSize);
@@ -1016,7 +1099,7 @@ Networks& Networks::fix_p2p_nodeDeg0(void) {
     }
   }
   for (VVNodeTypeItr i = net2.p2p.begin(); i != net2.p2p.end(); i++)
-    sort(i->begin(), i->end());  // net2.p2p从小到大排序
+    sort(i->begin(), i->end()); // net2.p2p从小到大排序
 
   // 更新net2的度信息
   if (0 != net2.p2p_2_degArr().runStatus) {

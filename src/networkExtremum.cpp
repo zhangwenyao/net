@@ -1,8 +1,8 @@
 #include "net.h"
 #ifdef NET_EXTREMUM
 
-#include "common.h"
 #include "NetExtremum.h"
+#include "common.h"
 #include "networks.h"
 using namespace std;
 
@@ -14,7 +14,23 @@ using namespace std;
 // Min: 极小同配网络（极大异配网络）
 
 // 最大相关网络
-Networks& Networks::net_Max(void) {
+Networks& Networks::net_Max_new_lkk(const int fix)
+{
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (0 != ::Max_new_lkk(lkk, degArrVal, degArrSize, linkSum, fix)) {
+    ERROR();
+    runStatus = -1;
+    status = -1;
+  } else
+    status = 1;
+  return *this;
+}
+
+Networks& Networks::net_Max(void)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -29,7 +45,8 @@ Networks& Networks::net_Max(void) {
 }
 
 // 最小相关网络
-Networks& Networks::net_Min(void) {
+Networks& Networks::net_Min(void)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -43,13 +60,14 @@ Networks& Networks::net_Min(void) {
   return *this;
 }
 
-Networks& Networks::net_Min_new_lkk_p2p(const int fix) {
+Networks& Networks::net_Min_new_lkk_p2p(const int fix)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
   }
   if (0 != ::Min_new_lkk_p2p(p2p, lkk, nodeDeg, degArrVal, degArrSize,
-                             degArrSum, linkSum, fix)) {
+               degArrSum, linkSum, fix)) {
     ERROR();
     runStatus = -1;
     status = -1;
@@ -58,7 +76,8 @@ Networks& Networks::net_Min_new_lkk_p2p(const int fix) {
   return *this;
 }
 
-Networks& Networks::net_Min_new_lkk(const int fix) {
+Networks& Networks::net_Min_new_lkk(const int fix)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -72,12 +91,14 @@ Networks& Networks::net_Min_new_lkk(const int fix) {
   return *this;
 }
 
-Networks& Networks::net_extremum_lkk(const int extrMax, const unsigned countN) {
+Networks& Networks::net_extremum_lkk(const int extrMax, const unsigned countN)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
   }
-  if (0 != ::lkk_extreme_pearson(lkk, degArrVal, degArrSize, extrMax, countN)) {
+  if (0
+      != ::lkk_extreme_pearson(lkk, degArrVal, degArrSize, extrMax, countN)) {
     ERROR();
     runStatus = -1;
   }
@@ -85,7 +106,8 @@ Networks& Networks::net_extremum_lkk(const int extrMax, const unsigned countN) {
 }
 
 //**//****************************************************//*
-Networks& Networks::extremum_cal_lkk(string& s, istream& is) {
+Networks& Networks::extremum_cal_lkk(string& s, istream& is)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;

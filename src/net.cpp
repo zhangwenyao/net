@@ -1,88 +1,110 @@
 #include "net.h"
 #include "common.h"
+//#include <cmath>
 
 using namespace std;
 
 //**//****************************************************//*
-ostream& operator<<(ostream& os, const RNodeType& r) {
+ostream& operator<<(ostream& os, const RNodeType& r)
+{
   os << r.start << '\t' << r.end;
   return os;
 }
 
-istream& operator>>(istream& is, RNodeType& r) {
+istream& operator>>(istream& is, RNodeType& r)
+{
   is >> r.start >> r.end;
   return is;
 }
 
-int save_VRNodeType_start(ostream& os, const VRNodeType& v, const char c) {
-  if (!os) return -1;
+int save_VRNodeType_start(ostream& os, const VRNodeType& v, const char c)
+{
+  if (!os)
+    return -1;
   if (!v.empty()) {
     VRNodeTypeCItr i = v.begin();
     os << (i++)->start;
-    while (i != v.end()) os << c << (i++)->start;
+    while (i != v.end())
+      os << c << (i++)->start;
   }
   return 0;
 }
 
-int save_VRNodeType_start(const char* name, const VRNodeType& v, const char c) {
-  if (name == NULL || name[0] == '\0') return -1;
+int save_VRNodeType_start(const char* name, const VRNodeType& v, const char c)
+{
+  if (name == NULL || name[0] == '\0')
+    return -1;
   ofstream os(name);
-  if (!os) return -1;
+  if (!os)
+    return -1;
   save_VRNodeType_start(os, v, c);
   os.close();
   return 0;
 }
 
-int save_VRNodeType_end(ostream& os, const VRNodeType& v, const char c) {
-  if (!os) return -1;
+int save_VRNodeType_end(ostream& os, const VRNodeType& v, const char c)
+{
+  if (!os)
+    return -1;
   if (!v.empty()) {
     VRNodeTypeCItr i = v.begin();
     os << (i++)->end;
-    while (i != v.end()) os << c << (i++)->end;
+    while (i != v.end())
+      os << c << (i++)->end;
   }
   return 0;
 }
 
-int save_VRNodeType_end(const char* name, const VRNodeType& v, const char c) {
-  if (name == NULL || name[0] == '\0') return -1;
+int save_VRNodeType_end(const char* name, const VRNodeType& v, const char c)
+{
+  if (name == NULL || name[0] == '\0')
+    return -1;
   ofstream os(name);
-  if (!os) return -1;
+  if (!os)
+    return -1;
   save_VRNodeType_end(os, v, c);
   os.close();
   return 0;
 }
 
 //**//****************************************************//*
-int init_linkMatrC(VVChar& linkMatrC, const NodeType nodeSize) {
+int init_linkMatrC(VVChar& linkMatrC, const NodeType nodeSize)
+{
   const NodeType len = nodeSize / 8 + 1;
   linkMatrC.resize(nodeSize);
   linkMatrC[0].assign(len, 0);
-  for (NodeType i = 1; i < nodeSize; i++) linkMatrC[i] = linkMatrC[0];
+  for (NodeType i = 1; i < nodeSize; i++)
+    linkMatrC[i] = linkMatrC[0];
   return 0;
 }
 
 //**//****************************************************//*
-int linkMatr_fix_0(VVDistType& linkMatr, const DistType MaxDist) {
+int linkMatr_fix_0(VVDistType& linkMatr, const DistType MaxDist)
+{
   const NodeType nodeSize = linkMatr.size();
   for (NodeType i = 0; i < nodeSize; i++) {
     for (NodeType j = 0; j < nodeSize; j++) {
-      if (i != j && linkMatr[i][j] >= MaxDist) linkMatr[i][j] = 0;
+      if (i != j && linkMatr[i][j] >= MaxDist)
+        linkMatr[i][j] = 0;
     }
   }
   return 0;
 }
 
-int linkMatr_fix_max(VVDistType& linkMatr, const DistType MaxDist) {
+int linkMatr_fix_max(VVDistType& linkMatr, const DistType MaxDist)
+{
   const NodeType nodeSize = linkMatr.size();
   for (NodeType i = 0; i < nodeSize; i++) {
     for (NodeType j = 0; j < nodeSize; j++) {
-      if (i != j && linkMatr[i][j] == 0) linkMatr[i][j] = MaxDist;
+      if (i != j && linkMatr[i][j] == 0)
+        linkMatr[i][j] = MaxDist;
     }
   }
   return 0;
 }
 
-int linkMatr_2_p2p(VVNodeType& p2p, const VVDistType& linkMatr) {
+int linkMatr_2_p2p(VVNodeType& p2p, const VVDistType& linkMatr)
+{
   const NodeType nodeSize = linkMatr.size();
   p2p.clear();
   p2p.resize(nodeSize);
@@ -96,7 +118,8 @@ int linkMatr_2_p2p(VVNodeType& p2p, const VVDistType& linkMatr) {
   return 0;
 }
 
-int linkMatrC_2_p2p(VVNodeType& p2p, const VVChar& linkMatrC) {
+int linkMatrC_2_p2p(VVNodeType& p2p, const VVChar& linkMatrC)
+{
   const NodeType nodeSize = linkMatrC.size();
   p2p.resize(nodeSize);
   for (NodeType i = 0; i < nodeSize; i++) {
@@ -112,7 +135,8 @@ int linkMatrC_2_p2p(VVNodeType& p2p, const VVChar& linkMatrC) {
   return 0;
 }
 
-int p2p_2_linkMatr(VVDistType& linkMatr, const VVNodeType& p2p) {
+int p2p_2_linkMatr(VVDistType& linkMatr, const VVNodeType& p2p)
+{
   const NodeType nodeSize = p2p.size();
   linkMatr.clear();
   linkMatr.resize(nodeSize);
@@ -125,25 +149,29 @@ int p2p_2_linkMatr(VVDistType& linkMatr, const VVNodeType& p2p) {
   return 0;
 }
 
-int p2p_2_p2pIn(VVNodeType& p2pIn, const VVNodeType& p2p) {
+int p2p_2_p2pIn(VVNodeType& p2pIn, const VVNodeType& p2p)
+{
   p2pIn.clear();
   for (NodeType i = 0; i < p2p.size(); i++) {
     for (VNodeTypeCItr j = p2p[i].begin(); j != p2p[i].end(); j++) {
       const NodeType t = *j;
-      if (p2pIn.size() <= t) p2pIn.resize(t + 1);
+      if (p2pIn.size() <= t)
+        p2pIn.resize(t + 1);
       p2pIn[t].push_back(i);
     }
   }
   return 0;
 }
 
-int p2p_2_vvweight_sort(VVWeightType& vvweight, const VVNodeType& p2p) {
+int p2p_2_vvweight_sort(VVWeightType& vvweight, const VVNodeType& p2p)
+{
   const NodeType nodeSize = p2p.size();
   vvweight.clear();
   vvweight.resize(nodeSize);
   VVWeightTypeItr wi = vvweight.begin();
   for (NodeType i = 0; i < nodeSize; wi++, i++) {
-    for (VNodeTypeCItr jt = p2p[i].begin(), je = p2p[i].end(); jt != je; jt++) {
+    for (VNodeTypeCItr jt = p2p[i].begin(), je = p2p[i].end(); jt != je;
+         jt++) {
       wi->push_back(1);
       while (jt + 1 != je && *jt == *(jt + 1)) {
         wi->back()++;
@@ -155,7 +183,8 @@ int p2p_2_vvweight_sort(VVWeightType& vvweight, const VVNodeType& p2p) {
 }
 
 int vvweight_2_vvweightIn(VVWeightType& vvweightIn,
-                          const VVWeightType& vvweight, const VVNodeType& p2p) {
+    const VVWeightType& vvweight, const VVNodeType& p2p)
+{
   if (!vvweightIn.empty()) {
     ERROR();
     return -1;
@@ -163,37 +192,45 @@ int vvweight_2_vvweightIn(VVWeightType& vvweightIn,
   for (NodeType i = 0; i < vvweight.size(); i++) {
     for (VNodeTypeCItr j = p2p[i].begin(); j != p2p[i].end(); j++) {
       const NodeType t = *j;
-      if (vvweightIn.size() <= t) vvweightIn.resize(t + 1);
+      if (vvweightIn.size() <= t)
+        vvweightIn.resize(t + 1);
       vvweightIn[t].push_back(vvweight[i][t]);
     }
   }
   return 0;
 }
 
-int p2p_2_nodeSize(NodeType& nodeSize, const VVNodeType& p2p) {
+int p2p_2_nodeSize(NodeType& nodeSize, const VVNodeType& p2p)
+{
   nodeSize = p2p.size();
   for (VVNodeTypeCItr i = p2p.begin(); i != p2p.end(); i++)
     for (VNodeTypeCItr j = i->begin(); j != i->end(); j++)
-      if (nodeSize <= *j) nodeSize = *j + 1;
+      if (nodeSize <= *j)
+        nodeSize = *j + 1;
   return 0;
 }
 
-int p2p_2_nodeDeg(VNodeType& nodeDeg, const VVNodeType& p2p) {
+int p2p_2_nodeDeg(VNodeType& nodeDeg, const VVNodeType& p2p)
+{
   const NodeType nodeSize = p2p.size();
   nodeDeg.resize(nodeSize);
-  for (NodeType i = 0; i < nodeSize; i++) nodeDeg[i] = p2p[i].size();
+  for (NodeType i = 0; i < nodeSize; i++)
+    nodeDeg[i] = p2p[i].size();
   return 0;
 }
 
 int nodeDeg_2_degArr(const VNodeType& nodeDeg, VNodeType& degArrVal,
-                     VNodeType& degArrSize, VNodeType& degArrSum) {
+    VNodeType& degArrSize, VNodeType& degArrSum)
+{
   const NodeType nodeSize = nodeDeg.size();
   degArrVal.clear();
   degArrSize.clear();
   degArrSum.clear();
   MNodeType degArr;
-  if (nodeSize <= 0) return 0;
-  for (VNodeTypeCItr i = nodeDeg.begin(); i != nodeDeg.end(); i++) degArr[*i]++;
+  if (nodeSize <= 0)
+    return 0;
+  for (VNodeTypeCItr i = nodeDeg.begin(); i != nodeDeg.end(); i++)
+    degArr[*i]++;
   NodeType degSize = degArr.size(), t = 0;
   degArrVal.assign(degSize, 0);
   degArrSize.assign(degSize, 0);
@@ -206,12 +243,14 @@ int nodeDeg_2_degArr(const VNodeType& nodeDeg, VNodeType& degArrVal,
 }
 
 int nodeDeg_2_degArr_Sort(const VNodeType& nodeDeg, VNodeType& degArrVal,
-                          VNodeType& degArrSize, VNodeType& degArrSum) {
+    VNodeType& degArrSize, VNodeType& degArrSum)
+{
   const NodeType nodeSize = nodeDeg.size();
   degArrVal.clear();
   degArrSize.clear();
   degArrSum.clear();
-  if (nodeSize <= 0) return 0;
+  if (nodeSize <= 0)
+    return 0;
   degArrVal.push_back(nodeDeg[0]);
   degArrSize.push_back(1);
   for (NodeType i = 1, di = nodeDeg[0]; i < nodeSize; i++) {
@@ -226,7 +265,8 @@ int nodeDeg_2_degArr_Sort(const VNodeType& nodeDeg, VNodeType& degArrVal,
   return 0;
 }
 
-int degArr_2_nodeSize(NodeType& nodeSize, const VNodeType& degArrSize) {
+int degArr_2_nodeSize(NodeType& nodeSize, const VNodeType& degArrSize)
+{
   if (nodeSize != 0 || degArrSize.empty()) {
     ERROR();
     return -1;
@@ -237,9 +277,10 @@ int degArr_2_nodeSize(NodeType& nodeSize, const VNodeType& degArrSize) {
 }
 
 int degArr_2_nodeDeg(VNodeType& nodeDeg, const VNodeType& degArrVal,
-                     const VNodeType& degArrSize) {
-  if (!nodeDeg.empty() || degArrVal.empty() ||
-      degArrVal.size() != degArrSize.size()) {
+    const VNodeType& degArrSize)
+{
+  if (!nodeDeg.empty() || degArrVal.empty()
+      || degArrVal.size() != degArrSize.size()) {
     ERROR();
     return -1;
   }
@@ -250,13 +291,17 @@ int degArr_2_nodeDeg(VNodeType& nodeDeg, const VNodeType& degArrVal,
   return 0;
 }
 
-int degArrVal_2_degArrNo(MNodeType& degArrNo, const VNodeType& degArrVal) {
-  if (!degArrNo.empty()) return -1;
-  for (NodeType i = 0; i < degArrVal.size(); i++) degArrNo[degArrVal[i]] = i;
+int degArrVal_2_degArrNo(MNodeType& degArrNo, const VNodeType& degArrVal)
+{
+  if (!degArrNo.empty())
+    return -1;
+  for (NodeType i = 0; i < degArrVal.size(); i++)
+    degArrNo[degArrVal[i]] = i;
   return 0;
 }
 
-int degArrSize_2_degArrSum(VNodeType& degArrSum, const VNodeType& degArrSize) {
+int degArrSize_2_degArrSum(VNodeType& degArrSum, const VNodeType& degArrSize)
+{
   const NodeType degSize = degArrSize.size();
   degArrSum.resize(degSize);
   for (NodeType i = 0, sum = 0; i < degSize; i++)
@@ -265,7 +310,8 @@ int degArrSize_2_degArrSum(VNodeType& degArrSum, const VNodeType& degArrSize) {
 }
 
 int degArr_2_linkSize(LinkType& linkSize, const VNodeType& degArrVal,
-                      const VNodeType& degArrSize, const int dirFlag) {
+    const VNodeType& degArrSize, const int dirFlag)
+{
   linkSize = 0;
   const NodeType degSize = degArrVal.size();
   for (NodeType i = 0; i < degSize; i++)
@@ -280,7 +326,8 @@ int degArr_2_linkSize(LinkType& linkSize, const VNodeType& degArrVal,
 }
 
 int degArr_2_linkSum(VLinkType& linkSum, const VNodeType& degArrVal,
-                     const VNodeType& degArrSize) {
+    const VNodeType& degArrSize)
+{
   const NodeType degSize = degArrVal.size();
   linkSum.resize(degSize);
   LinkType sum = 0;
@@ -289,8 +336,9 @@ int degArr_2_linkSum(VLinkType& linkSum, const VNodeType& degArrVal,
   return 0;
 }
 
-int nodeDeg_2_linkSize(LinkType& linkSize, const VNodeType& nodeDeg,
-                       const int dirFlag) {
+int nodeDeg_2_linkSize(
+    LinkType& linkSize, const VNodeType& nodeDeg, const int dirFlag)
+{
   linkSize = 0;
   for (VNodeTypeCItr i = nodeDeg.begin(); i != nodeDeg.end(); i++)
     linkSize += *i;
@@ -303,21 +351,66 @@ int nodeDeg_2_linkSize(LinkType& linkSize, const VNodeType& nodeDeg,
   return 0;
 }
 
-int check_nodeDeg0(const VNodeType& nodeDeg) {
-  if (nodeDeg.empty()) return -1;
+int check_nodeDeg0(const VNodeType& nodeDeg)
+{
+  if (nodeDeg.empty())
+    return -1;
   for (VNodeTypeCItr i = nodeDeg.begin(); i != nodeDeg.end(); i++)
-    if (*i <= 0) return 1;
+    if (*i <= 0)
+      return 1;
+  return 0;
+}
+
+int fix_degArr(VNodeType& degArrSize, const VDouble& degArrProb,
+    const VNodeType& degArrVal, LinkType& linkSize, const NodeType nodeSize)
+{
+  const NodeType degSize = degArrVal.size();
+  if (degSize < 2 || nodeSize < 2)
+    return 0;
+  for (NodeType k1, k2; degArrSize[0] <= 0 || degArrSize[degSize - 1] <= 0
+       || linkSize % 2 != 0;) {
+    while (1) {
+      k1 = std::uniform_int_distribution<NodeType>(0, degSize - 1)(rand2);
+      if (rand_double() < degArrProb[k1] && degArrSize[k1] > 0
+          && (k1 != 0 || degArrSize[0] > 1)
+          && (k1 != degSize - 1 || degArrSize[degSize - 1] > 1))
+        break;
+    }
+    while (1) {
+      if (degArrSize[0] <= 0) {
+        k2 = 0;
+        break;
+      }
+      if (degArrSize[degSize - 1] <= 0) {
+        k2 = degSize - 1;
+        break;
+      }
+      k2 = std::uniform_int_distribution<NodeType>(0, degSize - 2)(rand2);
+      if (k2 <= k1)
+        ++k2;
+      if (rand_double() < degArrProb[k2])
+        break;
+    }
+    if ((degArrSize[k2] <= 0 && (k2 == 0 || k2 == degSize - 1))
+        || (degArrSize[0] > 0 && degArrSize[degSize - 1] > 0
+               && degArrSize[k1] % 2 != degArrSize[k2] % 2)) {
+      linkSize = linkSize - degArrVal[k1] + degArrVal[k2];
+      --degArrSize[k1];
+      ++degArrSize[k2];
+    }
+  }
   return 0;
 }
 
 int fix_nodeDeg(VNodeType& nodeDeg, const VDouble& degArrProb,
-                const VNodeType& degArrVal, LinkType& linkSize) {
+    const VNodeType& degArrVal, LinkType& linkSize)
+{
   const NodeType nodeSize = nodeDeg.size(), degSize = degArrVal.size();
   for (NodeType num, k; 1;) {
-    num = RAND2() % nodeSize;
-    k = RAND2() % degSize;
+    num = std::uniform_int_distribution<NodeType>(0, nodeSize - 1)(rand2);
+    k = std::uniform_int_distribution<NodeType>(0, degSize - 1)(rand2);
     if (nodeDeg[num] % 2 != degArrVal[k] % 2)
-      if (RAND2() < degArrProb[k] * RAND2_MAX) {
+      if (rand_double() < degArrProb[k]) {
         linkSize = linkSize - nodeDeg[num] + degArrVal[k];
         nodeDeg[num] = degArrVal[k];
         break;
@@ -327,9 +420,11 @@ int fix_nodeDeg(VNodeType& nodeDeg, const VDouble& degArrProb,
 }
 
 int p2p_2_lkk(VVLinkType& lkk, const VVNodeType& p2p, const VNodeType& degNum,
-              const NodeType degSize) {
+    const NodeType degSize)
+{
   lkk.clear();
-  if (degSize <= 0) return 0;
+  if (degSize <= 0)
+    return 0;
   lkk.assign(degSize, VLinkType(degSize, 0));
   NodeType ti = 0;
   for (VVNodeTypeCItr i = p2p.begin(); i != p2p.end(); ti++, i++) {
@@ -349,11 +444,13 @@ int p2p_2_lkk(VVLinkType& lkk, const VVNodeType& p2p, const VNodeType& degNum,
 }
 
 int p2p_2_lkk_dir(VVLinkType& lkkOutIn, const VVNodeType& p2p,
-                  const VNodeType& nodeDegOut, const VNodeType& nodeDegIn,
-                  MNodeType& degArrNoOut, MNodeType& degArrNoIn,
-                  const NodeType degOutSize, const NodeType degInSize) {
+    const VNodeType& nodeDegOut, const VNodeType& nodeDegIn,
+    MNodeType& degArrNoOut, MNodeType& degArrNoIn, const NodeType degOutSize,
+    const NodeType degInSize)
+{
   lkkOutIn.assign(degOutSize, VLinkType(degInSize, 0));
-  if (degOutSize <= 0 || degInSize <= 0) return 0;
+  if (degOutSize <= 0 || degInSize <= 0)
+    return 0;
   VNodeTypeCItr nodeDegOutI = nodeDegOut.begin();
   for (VVNodeTypeCItr i = p2p.begin(); i != p2p.end(); i++) {
     LinkType* li = &lkkOutIn[degArrNoOut[*nodeDegOutI++]][0];
@@ -365,11 +462,14 @@ int p2p_2_lkk_dir(VVLinkType& lkkOutIn, const VVNodeType& p2p,
 }
 
 int p2p_2_lkk(VVLinkType& lkk, const VVNodeType& p2p, MNodeType& degArrNo,
-              const NodeType degSize) {
+    const NodeType degSize)
+{
   lkk.clear();
-  if (degSize <= 0) return 0;
+  if (degSize <= 0)
+    return 0;
   lkk.resize(degSize);
-  for (NodeType i = 0; i < degSize; i++) lkk[i].assign(i + 1, 0);
+  for (NodeType i = 0; i < degSize; i++)
+    lkk[i].assign(i + 1, 0);
   NodeType ti = 0;
   for (VVNodeTypeCItr i = p2p.begin(); i != p2p.end(); ti++, i++) {
     const NodeType ni = degArrNo[i->size()];
@@ -387,12 +487,15 @@ int p2p_2_lkk(VVLinkType& lkk, const VVNodeType& p2p, MNodeType& degArrNo,
   return 0;
 }
 
-int p2p_2_lkk_noDir(VVLinkType& lkk, const VVNodeType& p2p, MNodeType& degArrNo,
-                    const VNodeType& nodeDeg, const NodeType degSize) {
+int p2p_2_lkk_noDir(VVLinkType& lkk, const VVNodeType& p2p,
+    MNodeType& degArrNo, const VNodeType& nodeDeg, const NodeType degSize)
+{
   lkk.clear();
-  if (degSize <= 0) return 0;
+  if (degSize <= 0)
+    return 0;
   lkk.resize(degSize);
-  for (NodeType i = 0; i < degSize; i++) lkk[i].assign(i + 1, 0);
+  for (NodeType i = 0; i < degSize; i++)
+    lkk[i].assign(i + 1, 0);
   NodeType ti = 0;
   for (VVNodeTypeCItr i = p2p.begin(); i != p2p.end(); ti++, i++) {
     const NodeType ni = degArrNo[nodeDeg[ti]];
@@ -408,29 +511,35 @@ int p2p_2_lkk_noDir(VVLinkType& lkk, const VVNodeType& p2p, MNodeType& degArrNo,
   return 0;
 }
 
-int lkk_dir_2_nDir(VVLinkType& lkk) {
-  if (lkk.empty()) return 0;
+int lkk_dir_2_nDir(VVLinkType& lkk)
+{
+  if (lkk.empty())
+    return 0;
   const NodeType degSize = lkk.size();
   for (NodeType i = 0; i < degSize; i++) {
     if (lkk[i].size() != degSize) {
       ERROR();
       return -1;
     }
-    for (NodeType j = i + 1; j < degSize; j++) lkk[j][i] += lkk[i][j];
+    for (NodeType j = i + 1; j < degSize; j++)
+      lkk[j][i] += lkk[i][j];
     lkk[i].resize(i);
   }
   return 0;
 }
 
-int lkk_nDir_2_dir(VVLinkType& lkk) {
-  if (lkk.empty()) return 0;
+int lkk_nDir_2_dir(VVLinkType& lkk)
+{
+  if (lkk.empty())
+    return 0;
   const NodeType degSize = lkk.size();
   for (NodeType i = 0; i < degSize; i++) {
     if (lkk[i].size() > degSize || lkk[i].size() < i) {
       ERROR();
       return -1;
     }
-    if (lkk[i].size() < degSize) lkk[i].resize(degSize, 0);
+    if (lkk[i].size() < degSize)
+      lkk[i].resize(degSize, 0);
     for (NodeType j = i + 1; j < degSize; j++) {
       if (lkk[i][j] != 0 || lkk[j][i] % 2 != 0) {
         ERROR();
@@ -442,9 +551,11 @@ int lkk_nDir_2_dir(VVLinkType& lkk) {
   return 0;
 }
 
-int lkk_2_lkkSum(VVLinkType& lkkSum, const VVLinkType& lkk, const int dir) {
+int lkk_2_lkkSum(VVLinkType& lkkSum, const VVLinkType& lkk, const int dir)
+{
   lkkSum = lkk;
-  if (lkk.empty() || lkk[0].empty()) return 0;
+  if (lkk.empty() || lkk[0].empty())
+    return 0;
   for (VVLinkTypeItr i = lkkSum.begin(); i != lkkSum.end(); i++) {
     LinkType sum = 0;
     for (VLinkTypeItr j = i->begin(); j != i->end(); j++) {
@@ -459,7 +570,7 @@ int lkk_2_lkkSum(VVLinkType& lkkSum, const VVLinkType& lkk, const int dir) {
       }
       lkkSum[i][i] += lkkSum[i - 1][i - 1];
     }
-  } else {  // dir
+  } else { // dir
     const NodeType degSize2 = lkkSum[0].size();
     for (NodeType i = 1; i < degSize; i++) {
       for (NodeType j = 0; j < degSize2; j++) {
@@ -470,15 +581,18 @@ int lkk_2_lkkSum(VVLinkType& lkkSum, const VVLinkType& lkk, const int dir) {
   return 0;
 }
 
-int link_2_nodeSize(NodeType& nodeSize, const VNodeType& link) {
+int link_2_nodeSize(NodeType& nodeSize, const VNodeType& link)
+{
   nodeSize = 0;
   for (LinkType i = 0; i < link.size(); i++)
-    if (link[i] >= nodeSize) nodeSize = link[i] + 1;
+    if (link[i] >= nodeSize)
+      nodeSize = link[i] + 1;
   return 0;
 }
 
 int link_2_p2p(VVNodeType& p2p, const VNodeType& link, VVNodeType& p2pIn,
-               NodeType& nodeSize, const int dirFlag) {
+    NodeType& nodeSize, const int dirFlag)
+{
   link_2_nodeSize(nodeSize, link);
   p2p.clear();
   p2p.resize(nodeSize);
@@ -498,28 +612,34 @@ int link_2_p2p(VVNodeType& p2p, const VNodeType& link, VVNodeType& p2pIn,
 }
 
 int link_2_p2p_out(VVNodeType& p2p, const VNodeType& link, NodeType& nodeSize,
-                   const int dirFlag) {
-  return link_2_p2p_out_linkSize(p2p, link, nodeSize, link.size() / 2, dirFlag);
+    const int dirFlag)
+{
+  return link_2_p2p_out_linkSize(
+      p2p, link, nodeSize, link.size() / 2, dirFlag);
 }
 
 int link_2_p2p_out_linkSize(VVNodeType& p2p, const VNodeType& link,
-                            NodeType& nodeSize, LinkType linkSize,
-                            const int dirFlag) {
+    NodeType& nodeSize, LinkType linkSize, const int dirFlag)
+{
   p2p.clear();
   link_2_nodeSize(nodeSize, link);
   p2p.resize(nodeSize);
-  if (linkSize > link.size()) linkSize = link.size();
+  if (linkSize > link.size())
+    linkSize = link.size();
   for (LinkType n = 0; n < linkSize; ++n) {
     NodeType i = link[n * 2], j = link[n * 2 + 1];
     p2p[i].push_back(j);
-    if (!dirFlag) p2p[j].push_back(i);
+    if (!dirFlag)
+      p2p[j].push_back(i);
   }
   return 0;
 }
 
 int link_2_p2p_in(VVNodeType& p2pIn, const VNodeType& link, NodeType& nodeSize,
-                  const int dirFlag) {
-  if (!dirFlag) return -1;
+    const int dirFlag)
+{
+  if (!dirFlag)
+    return -1;
   link_2_nodeSize(nodeSize, link);
   p2pIn.clear();
   p2pIn.resize(nodeSize);
@@ -530,7 +650,8 @@ int link_2_p2p_in(VVNodeType& p2pIn, const VNodeType& link, NodeType& nodeSize,
   return 0;
 }
 
-int p2p_2_link(VNodeType& link, const VVNodeType& p2p, const int dirFlag) {
+int p2p_2_link(VNodeType& link, const VVNodeType& p2p, const int dirFlag)
+{
   link.clear();
   for (NodeType i = 0; i < p2p.size(); i++) {
     for (NodeType j = 0; j < p2p[i].size(); j++) {
@@ -543,12 +664,14 @@ int p2p_2_link(VNodeType& link, const VVNodeType& p2p, const int dirFlag) {
   return 0;
 }
 
-int link_2_lkk(VVLinkType& lkk, const VNodeType& link, const VNodeType& nodeDeg,
-               MNodeType& degArrNo, const LinkType linkSize,
-               const NodeType degSize) {
+int link_2_lkk(VVLinkType& lkk, const VNodeType& link,
+    const VNodeType& nodeDeg, MNodeType& degArrNo, const LinkType linkSize,
+    const NodeType degSize)
+{
   lkk.resize(degSize);
   lkk[0].assign(degSize, 0);
-  for (NodeType i = 1; i < degSize; i++) lkk[i] = lkk[0];
+  for (NodeType i = 1; i < degSize; i++)
+    lkk[i] = lkk[0];
   for (LinkType i = 0; i < linkSize; i++) {
     const NodeType x = degArrNo[nodeDeg[link[i * 2]]],
                    y = degArrNo[nodeDeg[link[i * 2 + 1]]];
@@ -559,21 +682,23 @@ int link_2_lkk(VVLinkType& lkk, const VNodeType& link, const VNodeType& nodeDeg,
 }
 
 int vvweight_2_nodeWeight(VWeightType& nodeWeight, const VVNodeType& p2p,
-                          const VVWeightType& vvweight,
-                          WeightSumType& netWeight) {
+    const VVWeightType& vvweight, WeightSumType& netWeight)
+{
   nodeWeight.assign(p2p.size(), 0);
   netWeight = 0;
   for (NodeType i = 0; i < p2p.size(); i++) {
-    if (p2p[i].size() <= 0) continue;
+    if (p2p[i].size() <= 0)
+      continue;
     WeightType t = 0;
-    for (NodeType j = 0; j < p2p[i].size(); j++) t += vvweight[i][j];
+    for (NodeType j = 0; j < p2p[i].size(); j++)
+      t += vvweight[i][j];
     netWeight += nodeWeight[i] = t;
   }
   return 0;
 }
 
-int weightMatr_2_linkMatr(VVDistType& linkMatr,
-                          const VVWeightType& weightMatr) {
+int weightMatr_2_linkMatr(VVDistType& linkMatr, const VVWeightType& weightMatr)
+{
   if (weightMatr.empty() || !linkMatr.empty()) {
     ERROR();
     return -1;
@@ -593,14 +718,16 @@ int weightMatr_2_linkMatr(VVDistType& linkMatr,
 }
 
 int nodeDegIO_2_nodeDeg(VNodeType& nodeDeg, const VNodeType& nodeDegOut,
-                        const VNodeType& nodeDegIn) {
+    const VNodeType& nodeDegIn)
+{
   if (!nodeDeg.empty() || nodeDegOut.empty() || nodeDegIn.empty()) {
     ERROR();
     return -1;
   }
   if (nodeDegOut.size() >= nodeDegIn.size()) {
     nodeDeg = nodeDegOut;
-    for (NodeType i = 0; i < nodeDegIn.size(); i++) nodeDeg[i] += nodeDegIn[i];
+    for (NodeType i = 0; i < nodeDegIn.size(); i++)
+      nodeDeg[i] += nodeDegIn[i];
   } else {
     nodeDeg = nodeDegIn;
     for (NodeType i = 0; i < nodeDegOut.size(); i++)
@@ -610,8 +737,8 @@ int nodeDegIO_2_nodeDeg(VNodeType& nodeDeg, const VNodeType& nodeDegOut,
 }
 
 int nodeWeightIO_2_nodeWeight(VWeightType& nodeWeight,
-                              const VWeightType& nodeWeightOut,
-                              const VWeightType& nodeWeightIn) {
+    const VWeightType& nodeWeightOut, const VWeightType& nodeWeightIn)
+{
   if (nodeWeightOut.size() >= nodeWeightIn.size()) {
     nodeWeight = nodeWeightOut;
     for (NodeType i = 0; i < nodeWeightIn.size(); i++)
@@ -625,9 +752,9 @@ int nodeWeightIO_2_nodeWeight(VWeightType& nodeWeight,
 }
 
 int nodeWeight_2_degArrWeight(VWeightSumType& degArrWeight,
-                              const VWeightSumType& nodeWeight,
-                              const VNodeType& nodeDeg, MNodeType& degArrNo,
-                              const NodeType degSize) {
+    const VWeightSumType& nodeWeight, const VNodeType& nodeDeg,
+    MNodeType& degArrNo, const NodeType degSize)
+{
   degArrWeight.assign(degSize, 0);
   for (NodeType i = 0; i < nodeWeight.size(); i++) {
     degArrWeight[degArrNo[nodeDeg[i]]] += nodeWeight[i];
@@ -635,8 +762,9 @@ int nodeWeight_2_degArrWeight(VWeightSumType& degArrWeight,
   return 0;
 }
 
-int degArrWeight_2_degArrWeightSum(VWeightSumType& degArrWeightSum,
-                                   const VWeightSumType& degArrWeight) {
+int degArrWeight_2_degArrWeightSum(
+    VWeightSumType& degArrWeightSum, const VWeightSumType& degArrWeight)
+{
   const NodeType degSize = degArrWeight.size();
   degArrWeightSum.resize(degSize + 1);
   degArrWeightSum[0] = 0;
@@ -647,17 +775,21 @@ int degArrWeight_2_degArrWeightSum(VWeightSumType& degArrWeightSum,
 }
 
 //**//****************************************************//*
-int sort_p2p(VVNodeType& p2p) {
+int sort_p2p(VVNodeType& p2p)
+{
   for (VVNodeTypeItr i = p2p.begin(); i != p2p.end(); i++)
-    if (!i->empty()) sort(i->begin(), i->end());
+    if (!i->empty())
+      sort(i->begin(), i->end());
   return 0;
 }
 
-int fix_p2p(VVNodeType& p2p, const int dirFlag) {
+int fix_p2p(VVNodeType& p2p, const int dirFlag)
+{
   LinkType self = 0, multi = 0, lack = 0;
   for (NodeType i = 0; i < p2p.size(); i++) {
     // 自环
-    if (p2p[i].empty()) continue;
+    if (p2p[i].empty())
+      continue;
     for (NodeType j = 0; j < p2p[i].size();) {
       if (p2p[i][j] == i) {
         self++;
@@ -666,17 +798,22 @@ int fix_p2p(VVNodeType& p2p, const int dirFlag) {
       } else
         j++;
     }
-    if (p2p[i].empty()) continue;
-    sort(p2p[i].begin(), p2p[i].end());  // 从小到大排序
-    if (p2p.size() <= p2p[i].back() + 1) p2p.resize(p2p[i].back() + 1);
+    if (p2p[i].empty())
+      continue;
+    sort(p2p[i].begin(), p2p[i].end()); // 从小到大排序
+    if (p2p.size() <= p2p[i].back() + 1)
+      p2p.resize(p2p[i].back() + 1);
     // 重边
-    if (p2p[i].size() <= 1) continue;
+    if (p2p[i].size() <= 1)
+      continue;
     VNodeTypeCItr e = p2p[i].end();
     VNodeTypeItr j = p2p[i].begin();
-    while (j + 1 != e && *j != *(j + 1)) j++;
+    while (j + 1 != e && *j != *(j + 1))
+      j++;
     if (j + 1 != e) {
       for (VNodeTypeCItr k = j + 1; k != e; k++) {
-        if (*j != *k) *++j = *k;
+        if (*j != *k)
+          *++j = *k;
       }
     }
     NodeType t = j + 1 - p2p[i].begin();
@@ -685,13 +822,14 @@ int fix_p2p(VVNodeType& p2p, const int dirFlag) {
       p2p[i].resize(t);
     }
   }
-  if (!dirFlag) {  // 无向网络相互连接
+  if (!dirFlag) { // 无向网络相互连接
     for (NodeType i = 0; i < p2p.size(); i++) {
       for (VNodeTypeCItr iItr = p2p[i].begin(), jItr; iItr != p2p[i].end();
            iItr++) {
         VVNodeTypeItr j = p2p.begin() + *iItr;
         for (jItr = j->begin(); jItr < j->end(); jItr++)
-          if (*jItr == i) break;
+          if (*jItr == i)
+            break;
         if (jItr >= j->end()) {
           lack++;
           j->push_back(i);
@@ -699,14 +837,15 @@ int fix_p2p(VVNodeType& p2p, const int dirFlag) {
       }
     }
     for (VVNodeTypeItr i = p2p.begin(); i != p2p.end(); i++)
-      sort(i->begin(), i->end());  // 从小到大排序
+      sort(i->begin(), i->end()); // 从小到大排序
   }
   cout << "fix_p2p\tself\t" << self << "\n\tmulti\t" << multi << "\n\tlack\t"
        << lack << '\n';
   return 0;
 }
 
-int qsort_p2p(VVNodeType& p2p, const VVDistType& linkMatr) {
+int qsort_p2p(VVNodeType& p2p, const VVDistType& linkMatr)
+{
   for (NodeType i = 0; i < p2p.size(); i++) {
     if (p2p[i].size() >= 2)
       common_sort_p_val(p2p[i].begin(), p2p[i].end(), &linkMatr[i].front());
@@ -715,7 +854,8 @@ int qsort_p2p(VVNodeType& p2p, const VVDistType& linkMatr) {
 }
 
 int del_pij(const NodeType i, const NodeType j, VVNodeType& p2p,
-            VVNodeType& p2pIn, const int dirFlag) {
+    VVNodeType& p2pIn, const int dirFlag)
+{
   for (NodeType n = 0; n < p2p[i].size(); n++)
     if (p2p[i][n] == j) {
       p2p[i][n] = p2p[i].back();
@@ -741,14 +881,16 @@ int del_pij(const NodeType i, const NodeType j, VVNodeType& p2p,
 }
 
 int add_pij(const NodeType i, const NodeType j, VVNodeType& p2p,
-            VVNodeType& p2pIn, const int dirFlag) {
+    VVNodeType& p2pIn, const int dirFlag)
+{
   int flag = 1;
   for (NodeType n = 0; n < p2p[i].size(); n++)
     if (p2p[i][n] == j) {
       flag = 0;
       break;
     }
-  if (flag) p2p[i].push_back(j);
+  if (flag)
+    p2p[i].push_back(j);
   if (!dirFlag) {
     flag = 1;
     for (NodeType n = 0; n < p2p[j].size(); n++)
@@ -767,18 +909,22 @@ int add_pij(const NodeType i, const NodeType j, VVNodeType& p2p,
         flag = 0;
         break;
       }
-    if (flag) p2pIn[j].push_back(i);
+    if (flag)
+      p2pIn[j].push_back(i);
   }
   return 0;
 }
 
-int sort_link_betwEdge(VNodeType& link, VVDouble& betwEdge, LinkType linkSize) {
-  if (linkSize == 1 || link.size() < 4) return 0;
-  if (linkSize < 1) linkSize = link.size() / 2;
+int sort_link_betwEdge(VNodeType& link, VVDouble& betwEdge, LinkType linkSize)
+{
+  if (linkSize == 1 || link.size() < 4)
+    return 0;
+  if (linkSize < 1)
+    linkSize = link.size() / 2;
 
-  stack<Common_RangeP<PNodeType>> st;
-  st.push(Common_RangeP<PNodeType>(&link.front(),
-                                   &link.front() + (linkSize - 1) * 2));
+  stack<Common_RangeP<PNodeType> > st;
+  st.push(Common_RangeP<PNodeType>(
+      &link.front(), &link.front() + (linkSize - 1) * 2));
   while (!st.empty()) {
     Common_RangeP<PNodeType> range = st.top();
     st.pop();
@@ -787,7 +933,8 @@ int sort_link_betwEdge(VNodeType& link, VVDouble& betwEdge, LinkType linkSize) {
       swap(*start, *end);
       swap(start[1], end[1]);
     }
-    if (start + 2 >= end) continue;
+    if (start + 2 >= end)
+      continue;
     double pivot = betwEdge[*(start + (end - start) / 2)]
                            [*(start + (end - start) / 2 + 1)];
     if (betwEdge[*start][start[1]] > pivot)
@@ -795,8 +942,10 @@ int sort_link_betwEdge(VNodeType& link, VVDouble& betwEdge, LinkType linkSize) {
     else if (betwEdge[*end][end[1]] < pivot)
       pivot = betwEdge[*end][end[1]];
     while (start < end) {
-      while (start < end && betwEdge[*start][start[1]] <= pivot) start += 2;
-      while (start < end && betwEdge[*end][end[1]] >= pivot) end -= 2;
+      while (start < end && betwEdge[*start][start[1]] <= pivot)
+        start += 2;
+      while (start < end && betwEdge[*end][end[1]] >= pivot)
+        end -= 2;
       if (start < end) {
         swap(*start, *end);
         swap(start[1], end[1]);
@@ -806,10 +955,12 @@ int sort_link_betwEdge(VNodeType& link, VVDouble& betwEdge, LinkType linkSize) {
     }
     while (start > range.start && betwEdge[*start][start[1]] >= pivot)
       start -= 2;
-    while (end < range.end && betwEdge[*end][end[1]] <= pivot) end += 2;
+    while (end < range.end && betwEdge[*end][end[1]] <= pivot)
+      end += 2;
     if (range.start < start)
       st.push(Common_RangeP<PNodeType>(range.start, start));
-    if (end < range.end) st.push(Common_RangeP<PNodeType>(end, range.end));
+    if (end < range.end)
+      st.push(Common_RangeP<PNodeType>(end, range.end));
   }
 
   return 0;
@@ -817,100 +968,109 @@ int sort_link_betwEdge(VNodeType& link, VVDouble& betwEdge, LinkType linkSize) {
 
 //**//****************************************************//*
 int addLink_linkMatrC_ranNode(
-    VVChar& linkMatrC, LinkType& linkRemain)  // 每次直接随机抽取两个点连边
+    VVChar& linkMatrC, LinkType& linkRemain) // 每次直接随机抽取两个点连边
 {
   const NodeType nodeSize = linkMatrC.size();
   while (linkRemain > 0) {
-    NodeType i = RAND2() % nodeSize, j = RAND2() % (nodeSize - 1);
-    if (j >= i) j++;
-    if (linkMatrC[i][j >> 3] & (1 << (j & 7))) continue;  // linkMatrC[i][j]
-    linkMatrC[i][j >> 3] |= (1 << (j & 7));  // linkMatrC[i][j] = 1;
-    linkMatrC[j][i >> 3] |= (1 << (i & 7));  // linkMatrC[j][i] = 1;
+    NodeType i
+        = std::uniform_int_distribution<NodeType>(0, nodeSize - 1)(rand2),
+        j = std::uniform_int_distribution<NodeType>(0, nodeSize - 2)(rand2);
+    if (j >= i)
+      j++;
+    if (linkMatrC[i][j >> 3] & (1 << (j & 7)))
+      continue;                             // linkMatrC[i][j]
+    linkMatrC[i][j >> 3] |= (1 << (j & 7)); // linkMatrC[i][j] = 1;
+    linkMatrC[j][i >> 3] |= (1 << (i & 7)); // linkMatrC[j][i] = 1;
     linkRemain--;
   }
   return 0;
 }
 
 int addLink_linkMatrC_proNode(VVChar& linkMatrC, LinkType& linkSize,
-                              const double p)  // 所有点按概率p连边
+    const double p) // 所有点按概率p连边
 {
   const NodeType nodeSize = linkMatrC.size();
   const NodeType size = nodeSize / 8 + 1;
   linkMatrC.resize(nodeSize);
   linkMatrC[0].assign(size, 0);
-  const int x = p * RAND2_MAX;
   for (NodeType i = 1; i < nodeSize; i++)
     for (NodeType j = 0; j < i; j++)
-      if (RAND2() < x) {
-        linkMatrC[i][j >> 3] |= (1 << (j & 7));  // linkMatrC[i][j] = 1;
-        linkMatrC[j][i >> 3] |= (1 << (i & 7));  // linkMatrC[j][i] = 1;
+      if (rand_double() < p) {
+        linkMatrC[i][j >> 3] |= (1 << (j & 7)); // linkMatrC[i][j] = 1;
+        linkMatrC[j][i >> 3] |= (1 << (i & 7)); // linkMatrC[j][i] = 1;
         linkSize++;
       }
   return 0;
 }
 
 int addLink_linkMatr_ranNode(
-    VVDistType& linkMatr, LinkType& linkRemain)  // 每次直接随机抽取两个点连边
+    VVDistType& linkMatr, LinkType& linkRemain) // 每次直接随机抽取两个点连边
 {
   const NodeType nodeSize = linkMatr.size();
   while (linkRemain > 0) {
-    NodeType i = RAND2() % nodeSize, j = RAND2() % (nodeSize - 1);
-    if (j >= i) j++;
-    if (linkMatr[i][j]) continue;  // linkMatr[i][j]
-    linkMatr[i][j] = 1;            // linkMatr[i][j] = 1;
-    linkMatr[j][i] = 1;            // linkMatr[j][i] = 1;
+    NodeType i
+        = std::uniform_int_distribution<NodeType>(0, nodeSize - 1)(rand2),
+        j = std::uniform_int_distribution<NodeType>(0, nodeSize - 2)(rand2);
+    if (j >= i)
+      j++;
+    if (linkMatr[i][j])
+      continue;         // linkMatr[i][j]
+    linkMatr[i][j] = 1; // linkMatr[i][j] = 1;
+    linkMatr[j][i] = 1; // linkMatr[j][i] = 1;
     linkRemain--;
   }
   return 0;
 }
 
 int addLink_linkMatr_proNode(VVDistType& linkMatr, LinkType& linkSize,
-                             const double p)  // 所有点按概率p连边
+    const double p) // 所有点按概率p连边
 {
   const NodeType nodeSize = linkMatr.size();
   linkMatr.resize(nodeSize);
   linkMatr[0].assign(nodeSize, 0);
-  for (NodeType i = 1; i < nodeSize; i++) linkMatr[i] = linkMatr[0];
-  const int x = p * RAND2_MAX;
+  for (NodeType i = 1; i < nodeSize; i++)
+    linkMatr[i] = linkMatr[0];
   for (NodeType i = 1; i < nodeSize; i++)
     for (NodeType j = 0; j < i; j++)
-      if (RAND2() < x) {
-        linkMatr[i][j] = 1;  // linkMatr[i][j] = 1;
-        linkMatr[j][i] = 1;  // linkMatr[j][i] = 1;
+      if (rand_double() < p) {
+        linkMatr[i][j] = 1; // linkMatr[i][j] = 1;
+        linkMatr[j][i] = 1; // linkMatr[j][i] = 1;
         linkSize++;
       }
   return 0;
 }
 
-int addLink_linkMatrC_ranNode2(
-    VVChar& linkMatrC, VNodeType& nodeDeg, VNodeType& p2pSize,
-    VNodeType& remPoiNum, LinkType& linkRemain,
-    const LinkType tryCount)  // 每次直接随机抽取两个点连边
+int addLink_linkMatrC_ranNode2(VVChar& linkMatrC, VNodeType& nodeDeg,
+    VNodeType& p2pSize, VNodeType& remPoiNum, LinkType& linkRemain,
+    const LinkType tryCount) // 每次直接随机抽取两个点连边
 {
   for (LinkType try0 = 0; linkRemain > 0 && remPoiNum.size() > 1;) {
-    NodeType ik = RAND2() % remPoiNum.size();
+    NodeType ik = std::uniform_int_distribution<NodeType>(
+        0, remPoiNum.size() - 1)(rand2);
     NodeType i = remPoiNum[ik];
     if (p2pSize[i] >= nodeDeg[i]) {
       remPoiNum[ik] = remPoiNum.back();
       remPoiNum.pop_back();
       continue;
     }
-    NodeType jk = RAND2() % (remPoiNum.size() - 1);
-    if (jk >= ik) jk++;
+    NodeType jk = std::uniform_int_distribution<NodeType>(
+        0, remPoiNum.size() - 2)(rand2);
+    if (jk >= ik)
+      jk++;
     NodeType j = remPoiNum[jk];
     if (p2pSize[j] >= nodeDeg[j]) {
       remPoiNum[jk] = remPoiNum.back();
       remPoiNum.pop_back();
       continue;
     }
-    if (linkMatrC[i][j >> 3] & (1 << (j & 7))) {  // linkMatrC[i][j] == 1
+    if (linkMatrC[i][j >> 3] & (1 << (j & 7))) { // linkMatrC[i][j] == 1
       if (++try0 >= tryCount)
         break;
       else
         continue;
     }
-    linkMatrC[i][j >> 3] ^= (1 << (j & 7));  // linkMatrC[i][j] = 1;
-    linkMatrC[j][i >> 3] ^= (1 << (i & 7));  // linkMatrC[j][i] = 1;
+    linkMatrC[i][j >> 3] ^= (1 << (j & 7)); // linkMatrC[i][j] = 1;
+    linkMatrC[j][i >> 3] ^= (1 << (i & 7)); // linkMatrC[j][i] = 1;
     p2pSize[i]++;
     p2pSize[j]++;
     linkRemain--;
@@ -938,35 +1098,37 @@ int addLink_linkMatrC_ranNode2(
   return (linkRemain <= 0 ? 0 : -1);
 }
 
-int addLink_linkMatr_ranNode2(
-    VVDistType& linkMatr, VNodeType& nodeDeg, VNodeType& p2pSize,
-    VNodeType& remPoiNum, LinkType& linkRemain,
-    const LinkType tryCount)  // 每次直接随机抽取两个点连边
+int addLink_linkMatr_ranNode2(VVDistType& linkMatr, VNodeType& nodeDeg,
+    VNodeType& p2pSize, VNodeType& remPoiNum, LinkType& linkRemain,
+    const LinkType tryCount) // 每次直接随机抽取两个点连边
 {
   for (LinkType try0 = 0; linkRemain > 0 && remPoiNum.size() > 1;) {
-    NodeType ik = RAND2() % remPoiNum.size();
+    NodeType ik = std::uniform_int_distribution<NodeType>(
+        0, remPoiNum.size() - 1)(rand2);
     NodeType i = remPoiNum[ik];
     if (p2pSize[i] >= nodeDeg[i]) {
       remPoiNum[ik] = remPoiNum.back();
       remPoiNum.pop_back();
       continue;
     }
-    NodeType jk = RAND2() % (remPoiNum.size() - 1);
-    if (jk >= ik) jk++;
+    NodeType jk = std::uniform_int_distribution<NodeType>(
+        0, remPoiNum.size() - 2)(rand2);
+    if (jk >= ik)
+      jk++;
     NodeType j = remPoiNum[jk];
     if (p2pSize[j] >= nodeDeg[j]) {
       remPoiNum[jk] = remPoiNum.back();
       remPoiNum.pop_back();
       continue;
     }
-    if (linkMatr[i][j] != 0) {  // linkMatr[i][j] == 1
+    if (linkMatr[i][j] != 0) { // linkMatr[i][j] == 1
       if (++try0 >= tryCount)
         break;
       else
         continue;
     }
-    linkMatr[i][j] = 1;  // linkMatr[i][j] = 1;
-    linkMatr[j][i] = 1;  // linkMatr[j][i] = 1;
+    linkMatr[i][j] = 1; // linkMatr[i][j] = 1;
+    linkMatr[j][i] = 1; // linkMatr[j][i] = 1;
     p2pSize[i]++;
     p2pSize[j]++;
     linkRemain--;
@@ -995,18 +1157,23 @@ int addLink_linkMatr_ranNode2(
 }
 
 int addLink_p2p_ranNode0(VVNodeType& p2p, VNodeType& link, VNodeType& nodeDeg,
-                         VNodeType& remPoiNum, LinkType& linkRemain,
-                         const LinkType tryCount) {
+    VNodeType& remPoiNum, LinkType& linkRemain, const LinkType tryCount)
+{
   for (LinkType try0 = 0; linkRemain > 0 && remPoiNum.size() > 1;) {
-    NodeType ik = RAND2() % remPoiNum.size(), i;
+    NodeType ik = std::uniform_int_distribution<NodeType>(
+                 0, remPoiNum.size() - 1)(rand2),
+             i;
     i = remPoiNum[ik];
     if (p2p[i].size() >= nodeDeg[i]) {
       remPoiNum[ik] = remPoiNum.back();
       remPoiNum.pop_back();
       continue;
     }
-    NodeType jk = RAND2() % (remPoiNum.size() - 1), j;
-    if (jk >= ik) jk++;
+    NodeType jk = std::uniform_int_distribution<NodeType>(
+                 0, remPoiNum.size() - 2)(rand2),
+             j;
+    if (jk >= ik)
+      jk++;
     j = remPoiNum[jk];
     if (p2p[j].size() >= nodeDeg[j]) {
       remPoiNum[jk] = remPoiNum.back();
@@ -1022,7 +1189,8 @@ int addLink_p2p_ranNode0(VVNodeType& p2p, VNodeType& link, VNodeType& nodeDeg,
       j = remPoiNum[jk];
     }
     for (t = 0; t < p2p[i].size(); t++)
-      if (p2p[i][t] == j) break;
+      if (p2p[i][t] == j)
+        break;
     if (t < p2p[i].size()) {
       if (++try0 >= tryCount)
         break;
@@ -1059,28 +1227,34 @@ int addLink_p2p_ranNode0(VVNodeType& p2p, VNodeType& link, VNodeType& nodeDeg,
 }
 
 int addLink_p2p_proDeg(VVNodeType& p2p, VNodeType& link,
-                       const VNodeType& nodeDeg, const NodeType kMax,
-                       VNodeType& remPoiNum, LinkType& linkRemain,
-                       const LinkType tryCount) {
-  const double r_degMax = (double)RAND2_MAX / kMax;
+    const VNodeType& nodeDeg, const NodeType kMax, VNodeType& remPoiNum,
+    LinkType& linkRemain, const LinkType tryCount)
+{
   for (LinkType try0 = 0; linkRemain > 0 && remPoiNum.size() > 1;) {
-    NodeType ik = RAND2() % remPoiNum.size(), i;
+    NodeType ik = std::uniform_int_distribution<NodeType>(
+                 0, remPoiNum.size() - 1)(rand2),
+             i;
     i = remPoiNum[ik];
     if (p2p[i].size() >= nodeDeg[i]) {
       remPoiNum[ik] = remPoiNum.back();
       remPoiNum.pop_back();
       continue;
     }
-    if (RAND2() > r_degMax * nodeDeg[i]) continue;
-    NodeType jk = RAND2() % (remPoiNum.size() - 1), j;
-    if (jk >= ik) jk++;
+    if (rand_double() * kMax > nodeDeg[i])
+      continue;
+    NodeType jk = std::uniform_int_distribution<NodeType>(
+                 0, remPoiNum.size() - 2)(rand2),
+             j;
+    if (jk >= ik)
+      jk++;
     j = remPoiNum[jk];
     if (p2p[j].size() >= nodeDeg[j]) {
       remPoiNum[jk] = remPoiNum.back();
       remPoiNum.pop_back();
       continue;
     }
-    if (RAND2() > r_degMax * nodeDeg[j]) continue;
+    if (rand_double() * kMax > nodeDeg[j])
+      continue;
     NodeType t;
     if (p2p[i].size() > p2p[j].size()) {
       t = ik;
@@ -1090,7 +1264,8 @@ int addLink_p2p_proDeg(VVNodeType& p2p, VNodeType& link,
       j = remPoiNum[jk];
     }
     for (t = 0; t < p2p[i].size(); t++)
-      if (p2p[i][t] == j) break;
+      if (p2p[i][t] == j)
+        break;
     if (t < p2p[i].size()) {
       if (++try0 >= tryCount)
         break;
@@ -1127,18 +1302,23 @@ int addLink_p2p_proDeg(VVNodeType& p2p, VNodeType& link,
 }
 
 int addLink_p2p_ranNode(VVNodeType& p2p, VNodeType& nodeDeg,
-                        VNodeType& remPoiNum, LinkType& linkRemain,
-                        const LinkType tryCount) {
+    VNodeType& remPoiNum, LinkType& linkRemain, const LinkType tryCount)
+{
   for (LinkType try0 = 0; linkRemain > 0 && remPoiNum.size() > 1;) {
-    NodeType ik = RAND2() % remPoiNum.size(), i;
+    NodeType ik = std::uniform_int_distribution<NodeType>(
+                 0, remPoiNum.size() - 1)(rand2),
+             i;
     i = remPoiNum[ik];
     if (p2p[i].size() >= nodeDeg[i]) {
       remPoiNum[ik] = remPoiNum.back();
       remPoiNum.pop_back();
       continue;
     }
-    NodeType jk = RAND2() % (remPoiNum.size() - 1), j;
-    if (jk >= ik) jk++;
+    NodeType jk = std::uniform_int_distribution<NodeType>(
+                 0, remPoiNum.size() - 2)(rand2),
+             j;
+    if (jk >= ik)
+      jk++;
     j = remPoiNum[jk];
     if (p2p[j].size() >= nodeDeg[j]) {
       remPoiNum[jk] = remPoiNum.back();
@@ -1154,7 +1334,8 @@ int addLink_p2p_ranNode(VVNodeType& p2p, VNodeType& nodeDeg,
       j = remPoiNum[jk];
     }
     for (t = 0; t < p2p[i].size(); t++)
-      if (p2p[i][t] == j) break;
+      if (p2p[i][t] == j)
+        break;
     if (t < p2p[i].size()) {
       if (++try0 >= tryCount)
         break;
@@ -1189,14 +1370,19 @@ int addLink_p2p_ranNode(VVNodeType& p2p, VNodeType& nodeDeg,
 }
 
 int addLink_p2p_ranLink(VVNodeType& p2p, VNodeType& nodeDeg,
-                        NodeType& remPoiSize, LinkType& linkRemain,
-                        VNodeType& link, const LinkType tryCount) {
+    NodeType& remPoiSize, LinkType& linkRemain, VNodeType& link,
+    const LinkType tryCount)
+{
   for (LinkType try0 = 0; linkRemain > 0 && remPoiSize > 1;) {
-    LinkType ik = RAND2L() % (linkRemain * 2), jk;
+    LinkType ik = std::uniform_int_distribution<LinkType>(
+                 0, linkRemain * 2 - 1)(rand2),
+             jk;
     NodeType i = link[ik], j;
     do {
-      jk = RAND2L() % (linkRemain * 2 - 1);
-      if (jk >= ik) jk++;
+      jk = std::uniform_int_distribution<LinkType>(0, linkRemain * 2 - 2)(
+          rand2);
+      if (jk >= ik)
+        jk++;
       j = link[jk];
     } while (i == j);
     if (p2p[i].size() > p2p[j].size()) {
@@ -1208,7 +1394,8 @@ int addLink_p2p_ranLink(VVNodeType& p2p, VNodeType& nodeDeg,
     }
     NodeType k = 0;
     for (; k < p2p[i].size(); k++)
-      if (p2p[i][k] == j) break;
+      if (p2p[i][k] == j)
+        break;
     if (k < p2p[i].size()) {
       if (++try0 >= tryCount)
         break;
@@ -1217,8 +1404,10 @@ int addLink_p2p_ranLink(VVNodeType& p2p, VNodeType& nodeDeg,
     }
     p2p[i].push_back(j);
     p2p[j].push_back(i);
-    if (p2p[i].size() == nodeDeg[i]) remPoiSize--;
-    if (p2p[j].size() == nodeDeg[j]) remPoiSize--;
+    if (p2p[i].size() == nodeDeg[i])
+      remPoiSize--;
+    if (p2p[j].size() == nodeDeg[j])
+      remPoiSize--;
     --linkRemain;
     try0 = 0;
     if (ik > jk) {
@@ -1245,21 +1434,24 @@ int addLink_p2p_ranLink(VVNodeType& p2p, VNodeType& nodeDeg,
 }
 
 int addLink_p2p_ranLink_lkkProb(VVNodeType& p2p, const VNodeType& nodeDeg,
-                                VVDouble& lkkProb, MNodeType& degArrNo,
-                                NodeType& remPoiSize, LinkType& linkRemain,
-                                VNodeType& link, const LinkType tryCount) {
+    VVDouble& lkkProb, MNodeType& degArrNo, NodeType& remPoiSize,
+    LinkType& linkRemain, VNodeType& link, const LinkType tryCount)
+{
   for (LinkType try0 = 0; linkRemain > 0 && remPoiSize > 1;) {
     LinkType ik, jk;
     NodeType i, j;
     while (1) {
-      ik = RAND2() % (linkRemain * 2);
+      ik = std::uniform_int_distribution<LinkType>(0, linkRemain * 2 - 1)(
+          rand2);
       i = link[ik];
-      jk = RAND2() % (linkRemain * 2 - 1);
-      if (jk >= ik) jk++;
+      jk = std::uniform_int_distribution<LinkType>(0, linkRemain * 2 - 2)(
+          rand2);
+      if (jk >= ik)
+        jk++;
       j = link[jk];
-      if (i != j &&
-          RAND2() <=
-              lkkProb[degArrNo[nodeDeg[i]]][degArrNo[nodeDeg[j]]] * RAND2_MAX)
+      if (i != j
+          && rand_double()
+              <= lkkProb[degArrNo[nodeDeg[i]]][degArrNo[nodeDeg[j]]])
         break;
     }
     if (p2p[i].size() > p2p[j].size()) {
@@ -1271,7 +1463,8 @@ int addLink_p2p_ranLink_lkkProb(VVNodeType& p2p, const VNodeType& nodeDeg,
     }
     NodeType k = 0;
     for (; k < p2p[i].size(); k++)
-      if (p2p[i][k] == j) break;
+      if (p2p[i][k] == j)
+        break;
     if (k < p2p[i].size()) {
       if (++try0 >= tryCount)
         break;
@@ -1280,8 +1473,10 @@ int addLink_p2p_ranLink_lkkProb(VVNodeType& p2p, const VNodeType& nodeDeg,
     }
     p2p[i].push_back(j);
     p2p[j].push_back(i);
-    if (p2p[i].size() == nodeDeg[i]) remPoiSize--;
-    if (p2p[j].size() == nodeDeg[j]) remPoiSize--;
+    if (p2p[i].size() == nodeDeg[i])
+      remPoiSize--;
+    if (p2p[j].size() == nodeDeg[j])
+      remPoiSize--;
     --linkRemain;
     try0 = 0;
     if (ik > jk) {
@@ -1308,15 +1503,17 @@ int addLink_p2p_ranLink_lkkProb(VVNodeType& p2p, const VNodeType& nodeDeg,
 }
 
 int delLink_p2p_ranLink(VVNodeType& p2p, VNodeType& nodeDeg,
-                        VNodeType& remPoiNum, LinkType& linkRemain,
-                        const LinkType linkSize, VNodeType& link,
-                        LinkType delCount) {
+    VNodeType& remPoiNum, LinkType& linkRemain, const LinkType linkSize,
+    VNodeType& link, LinkType delCount)
+{
   while (delCount > 0 && linkRemain < linkSize) {
     NodeType i, j;
-    LinkType l = RAND2L() % (linkSize - linkRemain) + linkRemain;
+    LinkType l = std::uniform_int_distribution<LinkType>(
+        linkRemain, linkSize - 1)(rand2);
     i = link[l * 2];
     j = link[l * 2 + 1];
-    if (p2p[i].size() == nodeDeg[i]) remPoiNum.push_back(i);
+    if (p2p[i].size() == nodeDeg[i])
+      remPoiNum.push_back(i);
     for (NodeType k = p2p[i].size(), *p = &p2p[i][0]; k > 0; p++, k--) {
       if (*p == j) {
         *p = p2p[i].back();
@@ -1324,7 +1521,8 @@ int delLink_p2p_ranLink(VVNodeType& p2p, VNodeType& nodeDeg,
         break;
       }
     }
-    if (p2p[j].size() == nodeDeg[j]) remPoiNum.push_back(j);
+    if (p2p[j].size() == nodeDeg[j])
+      remPoiNum.push_back(j);
     for (NodeType k = p2p[j].size(), *p = &p2p[j][0]; k > 0; p++, k--) {
       if (*p == i) {
         *p = p2p[j].back();
@@ -1343,26 +1541,28 @@ int delLink_p2p_ranLink(VVNodeType& p2p, VNodeType& nodeDeg,
 }
 
 int delLink_linkMatrC_ranNode(VVChar& linkMatrC, const NodeType nodeSize,
-                              VNodeType& nodeDeg, VNodeType& p2pSize,
-                              VNodeType& remPoiNum, LinkType& linkRemain,
-                              const LinkType linkSize,
-                              LinkType delCount)  // 随机选点删边
+    VNodeType& nodeDeg, VNodeType& p2pSize, VNodeType& remPoiNum,
+    LinkType& linkRemain, const LinkType linkSize,
+    LinkType delCount) // 随机选点删边
 {
   while (delCount > 0 && linkRemain < linkSize) {
     NodeType i;
     do {
-      i = RAND2() % nodeSize;
+      i = std::uniform_int_distribution<NodeType>(0, nodeSize - 1)(rand2);
     } while (p2pSize[i] <= 0);
     NodeType j;
     do {
-      j = RAND2() % (nodeSize - 1);
-      if (j >= i) j++;
+      j = std::uniform_int_distribution<NodeType>(0, nodeSize - 2)(rand2);
+      if (j >= i)
+        j++;
     } while (p2pSize[j] <= 0);
-    if (linkMatrC[i][j >> 3] & (1 << (j & 7))) {  // linkMatr[i][j] == 1
-      linkMatrC[i][j >> 3] ^= (1 << (j & 7));     // linkMatr[i][j] = 0
-      linkMatrC[j][i >> 3] ^= (1 << (i & 7));     // linkMatr[j][i] = 0
-      if (p2pSize[i]-- == nodeDeg[i]) remPoiNum.push_back(i);
-      if (p2pSize[j]-- == nodeDeg[j]) remPoiNum.push_back(j);
+    if (linkMatrC[i][j >> 3] & (1 << (j & 7))) { // linkMatr[i][j] == 1
+      linkMatrC[i][j >> 3] ^= (1 << (j & 7));    // linkMatr[i][j] = 0
+      linkMatrC[j][i >> 3] ^= (1 << (i & 7));    // linkMatr[j][i] = 0
+      if (p2pSize[i]-- == nodeDeg[i])
+        remPoiNum.push_back(i);
+      if (p2pSize[j]-- == nodeDeg[j])
+        remPoiNum.push_back(j);
       linkRemain++;
       delCount--;
     }
@@ -1371,20 +1571,20 @@ int delLink_linkMatrC_ranNode(VVChar& linkMatrC, const NodeType nodeSize,
 }
 
 int delLink_p2p_ranNode(VVNodeType& p2p, const NodeType nodeSize,
-                        const VNodeType& nodeDeg, VNodeType& remPoiNum,
-                        NodeType& remPoiSize, LinkType& linkRemain,
-                        const LinkType linkSize,
-                        LinkType delCount)  // 随机选点删边
+    const VNodeType& nodeDeg, VNodeType& remPoiNum, NodeType& remPoiSize,
+    LinkType& linkRemain, const LinkType linkSize,
+    LinkType delCount) // 随机选点删边
 {
   while (delCount > 0 && linkRemain < linkSize) {
     NodeType i;
     do {
-      i = RAND2() % nodeSize;
+      i = std::uniform_int_distribution<NodeType>(0, nodeSize - 1)(rand2);
     } while (p2p[i].size() <= 0);
     NodeType j;
     do {
-      j = RAND2() % (nodeSize - 1);
-      if (j >= i) j++;
+      j = std::uniform_int_distribution<NodeType>(0, nodeSize - 2)(rand2);
+      if (j >= i)
+        j++;
     } while (p2p[j].size() <= 0);
     NodeType k;
     if (p2p[i].size() > p2p[j].size()) {
@@ -1393,10 +1593,14 @@ int delLink_p2p_ranNode(VVNodeType& p2p, const NodeType nodeSize,
       j = k;
     }
     for (k = 0; k < p2p[i].size(); k++)
-      if (p2p[i][k] == j) break;
-    if (k >= p2p[i].size()) continue;
-    if (p2p[i].size() == nodeDeg[i]) remPoiNum.push_back(i);
-    if (p2p[j].size() == nodeDeg[j]) remPoiNum.push_back(j);
+      if (p2p[i][k] == j)
+        break;
+    if (k >= p2p[i].size())
+      continue;
+    if (p2p[i].size() == nodeDeg[i])
+      remPoiNum.push_back(i);
+    if (p2p[j].size() == nodeDeg[j])
+      remPoiNum.push_back(j);
     p2p[i][k] = p2p[i].back();
     p2p[i].pop_back();
     for (NodeType k = 0; k < p2p[j].size(); k++)
@@ -1412,20 +1616,23 @@ int delLink_p2p_ranNode(VVNodeType& p2p, const NodeType nodeSize,
 }
 
 int delLink_p2p_ranNode1(VVNodeType& p2p, const NodeType nodeSize,
-                         VNodeType& nodeDeg, VNodeType& remPoiNum,
-                         NodeType& remPoiSize, LinkType& linkRemain,
-                         const LinkType linkSize,
-                         LinkType delCount)  // 随机选点再选边删除
+    VNodeType& nodeDeg, VNodeType& remPoiNum, NodeType& remPoiSize,
+    LinkType& linkRemain, const LinkType linkSize,
+    LinkType delCount) // 随机选点再选边删除
 {
   while (delCount > 0 && linkRemain < linkSize) {
     NodeType i;
     do {
-      i = RAND2() % nodeSize;
+      i = std::uniform_int_distribution<NodeType>(0, nodeSize - 1)(rand2);
     } while (p2p[i].size() <= 0);
-    NodeType k = RAND2() % p2p[i].size(), j;
+    NodeType k
+        = std::uniform_int_distribution<NodeType>(0, p2p[i].size() - 1)(rand2),
+        j;
     j = p2p[i][k];
-    if (p2p[i].size() == nodeDeg[i]) remPoiNum.push_back(i);
-    if (p2p[j].size() == nodeDeg[j]) remPoiNum.push_back(j);
+    if (p2p[i].size() == nodeDeg[i])
+      remPoiNum.push_back(i);
+    if (p2p[j].size() == nodeDeg[j])
+      remPoiNum.push_back(j);
     p2p[i][k] = p2p[i].back();
     p2p[i].pop_back();
     for (NodeType k = 0; k < p2p[j].size(); k++)
@@ -1441,28 +1648,37 @@ int delLink_p2p_ranNode1(VVNodeType& p2p, const NodeType nodeSize,
 }
 
 //**//*******************************************************************//*
-int check_p2pSize_linkSize(const VVNodeType& p2p, const LinkType linkSize) {
+int check_p2pSize_linkSize(const VVNodeType& p2p, const LinkType linkSize)
+{
   LinkType t = 0;
-  for (NodeType i = 0; i < p2p.size(); i++) t += p2p[i].size();
-  if (t != linkSize * 2) return -1;
+  for (NodeType i = 0; i < p2p.size(); i++)
+    t += p2p[i].size();
+  if (t != linkSize * 2)
+    return -1;
   return 0;
 }
 
-int check_p2p(const VVNodeType& p2p) {
+int check_p2p(const VVNodeType& p2p)
+{
   for (NodeType i = 0, nodeSize = p2p.size(); i < nodeSize; i++) {
-    if (p2p[i].size() >= nodeSize) return -1;
+    if (p2p[i].size() >= nodeSize)
+      return -1;
     for (NodeType j = 0; j < p2p[i].size(); j++) {
       NodeType k = p2p[i][j], t;
-      if (k == i || k >= nodeSize || p2p[k].size() >= nodeSize) return -1;
+      if (k == i || k >= nodeSize || p2p[k].size() >= nodeSize)
+        return -1;
       for (t = 0; t < p2p[k].size(); t++)
-        if (p2p[k][t] == i) break;
-      if (t >= p2p[k].size()) return -1;
+        if (p2p[k][t] == i)
+          break;
+      if (t >= p2p[k].size())
+        return -1;
     }
   }
   return 0;
 }
 
-int check_p2p_nodeDeg(const VVNodeType& p2p, const VNodeType& nodeDeg) {
+int check_p2p_nodeDeg(const VVNodeType& p2p, const VNodeType& nodeDeg)
+{
   if (p2p.size() != nodeDeg.size()) {
     ERROR();
     return -1;
@@ -1476,8 +1692,10 @@ int check_p2p_nodeDeg(const VVNodeType& p2p, const VNodeType& nodeDeg) {
   return 0;
 }
 
-int check_link(VNodeType& link) {
-  if (link.size() % 2 != 0) return -1;
+int check_link(VNodeType& link)
+{
+  if (link.size() % 2 != 0)
+    return -1;
   const LinkType linkSize = link.size() / 2;
   sort_link_num_greater_1(link);
   sort_link_num_greater_all(link);
@@ -1492,14 +1710,15 @@ int check_link(VNodeType& link) {
   for (LinkType i = 1; i < linkSize; i++)
     if (*p == p[2] && p[1] == p[3]) {
       ERROR("\n\tlink[", i - 1, "]:\t", p[0], "\t", p[1], "\n\tlink[", i,
-            "]:\t", p[2], "\t", p[3]);
+          "]:\t", p[2], "\t", p[3]);
       return -1;
     } else
       p += 2;
   return 0;
 }
 
-int sort_link_greater_1(VNodeType& link, const VNodeType& nodeDeg) {
+int sort_link_greater_1(VNodeType& link, const VNodeType& nodeDeg)
+{
   const LinkType linkSize = link.size() / 2;
   NodeType* p = &link[0];
   for (LinkType i = 0; i < linkSize; i++, p += 2) {
@@ -1512,7 +1731,8 @@ int sort_link_greater_1(VNodeType& link, const VNodeType& nodeDeg) {
   return 0;
 }
 
-int sort_link_smaller_1(VNodeType& link, const VNodeType& nodeDeg) {
+int sort_link_smaller_1(VNodeType& link, const VNodeType& nodeDeg)
+{
   const LinkType linkSize = link.size() / 2;
   NodeType* p = &link[0];
   for (LinkType i = 0; i < linkSize; i++, p += 2) {
@@ -1525,7 +1745,8 @@ int sort_link_smaller_1(VNodeType& link, const VNodeType& nodeDeg) {
   return 0;
 }
 
-int sort_link_num_greater_1(VNodeType& link) {
+int sort_link_num_greater_1(VNodeType& link)
+{
   const LinkType linkSize = link.size() / 2;
   NodeType* p = &link[0];
   for (LinkType i = 0; i < linkSize; i++, p += 2) {
@@ -1538,7 +1759,8 @@ int sort_link_num_greater_1(VNodeType& link) {
   return 0;
 }
 
-int sort_link_num_smaller_1(VNodeType& link) {
+int sort_link_num_smaller_1(VNodeType& link)
+{
   const LinkType linkSize = link.size() / 2;
   NodeType* p = &link[0];
   for (LinkType i = 0; i < linkSize; i++, p += 2) {
@@ -1551,15 +1773,17 @@ int sort_link_num_smaller_1(VNodeType& link) {
   return 0;
 }
 
-int sort_link_greater_all(VNodeType& link, const VNodeType& p2pSize) {
+int sort_link_greater_all(VNodeType& link, const VNodeType& p2pSize)
+{
   const LinkType linkSize = link.size() / 2;
-  if (linkSize < 2) return 0;
+  if (linkSize < 2)
+    return 0;
   NodeType* p0 = &link[linkSize * 2 - 2];
   for (char flag = 1; flag; p0 -= 2) {
     flag = 0;
     for (NodeType* p = &link[0]; p < p0; p += 2) {
-      if (p2pSize[*p] > p2pSize[p[2]] ||
-          (p2pSize[*p] == p2pSize[p[2]] && p2pSize[p[1]] > p2pSize[p[3]])) {
+      if (p2pSize[*p] > p2pSize[p[2]]
+          || (p2pSize[*p] == p2pSize[p[2]] && p2pSize[p[1]] > p2pSize[p[3]])) {
         NodeType t = *p;
         *p = p[1];
         p[1] = t;
@@ -1573,9 +1797,11 @@ int sort_link_greater_all(VNodeType& link, const VNodeType& p2pSize) {
   return 0;
 }
 
-int sort_link_num_greater_all(VNodeType& link) {
+int sort_link_num_greater_all(VNodeType& link)
+{
   const LinkType linkSize = link.size() / 2;
-  if (linkSize < 2) return 0;
+  if (linkSize < 2)
+    return 0;
   char flag = 1;
   for (NodeType* p0 = &link[(linkSize - 1) * 2]; flag; p0 -= 2) {
     flag = 0;
@@ -1594,15 +1820,17 @@ int sort_link_num_greater_all(VNodeType& link) {
   return 0;
 }
 
-int sort_link_smaller_all(VNodeType& link, const VNodeType& p2pSize) {
+int sort_link_smaller_all(VNodeType& link, const VNodeType& p2pSize)
+{
   const LinkType linkSize = link.size() / 2;
-  if (linkSize < 2) return 0;
+  if (linkSize < 2)
+    return 0;
   NodeType* p0 = &link[linkSize * 2 - 2];
   for (char flag = 1; flag; p0 -= 2) {
     flag = 0;
     for (NodeType* p = &link[0]; p < p0; p += 2) {
-      if (p2pSize[*p] < p2pSize[p[2]] ||
-          (p2pSize[*p] == p2pSize[p[2]] && p2pSize[p[1]] < p2pSize[p[3]])) {
+      if (p2pSize[*p] < p2pSize[p[2]]
+          || (p2pSize[*p] == p2pSize[p[2]] && p2pSize[p[1]] < p2pSize[p[3]])) {
         NodeType t = *p;
         *p = p[1];
         p[1] = t;
@@ -1616,9 +1844,11 @@ int sort_link_smaller_all(VNodeType& link, const VNodeType& p2pSize) {
   return 0;
 }
 
-int sort_link_num_smaller_all(VNodeType& link) {
+int sort_link_num_smaller_all(VNodeType& link)
+{
   const LinkType linkSize = link.size() / 2;
-  if (linkSize < 2) return 0;
+  if (linkSize < 2)
+    return 0;
   char flag = 1;
   for (NodeType* p0 = &link[(linkSize - 1) * 2]; flag; p0 -= 2) {
     flag = 0;
@@ -1638,22 +1868,29 @@ int sort_link_num_smaller_all(VNodeType& link) {
 }
 
 int exchange_linkC_deg_same(VVChar& linkMatrC, VNodeType& link,
-                            const VNodeType& p2pSize, LinkType count) {
+    const VNodeType& p2pSize, LinkType count)
+{
   const LinkType linkSize = link.size() / 2;
-  if (linkSize < 2) return -1;
+  if (linkSize < 2)
+    return -1;
   while (count > 0) {
-    LinkType ik = RAND2_LONG() % linkSize, jk = RAND2_LONG() % (linkSize - 1);
-    if (jk >= ik) jk++;
+    LinkType ik
+        = std::uniform_int_distribution<LinkType>(0, linkSize - 1)(rand2),
+        jk = std::uniform_int_distribution<LinkType>(0, linkSize - 2)(rand2);
+    if (jk >= ik)
+      jk++;
     ik <<= 1;
     jk <<= 1;
-    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk], j2 = link[jk | 1];
+    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk],
+             j2 = link[jk | 1];
     NodeType pi1 = p2pSize[i1], pi2 = p2pSize[i2], pj1 = p2pSize[j1],
              pj2 = p2pSize[j2];
-    if (pi1 >= pj2 || pj1 >= pi2 || i1 == j1 || i2 == j2) continue;
-    if (pi1 != pj1 && pi2 != pj2 &&
-        ((pj1 < pi1 && pi2 < pj2) || (pi1 < pj1 && pj2 < pi2)) &&
-        (linkMatrC[i1][j2 >> 3] & (1 << (j2 & 7))) == 0 &&
-        (linkMatrC[i2][j1 >> 3] & (1 << (j1 & 7))) == 0) {
+    if (pi1 >= pj2 || pj1 >= pi2 || i1 == j1 || i2 == j2)
+      continue;
+    if (pi1 != pj1 && pi2 != pj2
+        && ((pj1 < pi1 && pi2 < pj2) || (pi1 < pj1 && pj2 < pi2))
+        && (linkMatrC[i1][j2 >> 3] & (1 << (j2 & 7))) == 0
+        && (linkMatrC[i2][j1 >> 3] & (1 << (j1 & 7))) == 0) {
       // i1-i2
       linkMatrC[i1][i2 >> 3] ^= 1 << (i2 & 7);
       linkMatrC[i2][i1 >> 3] ^= 1 << (i1 & 7);
@@ -1671,8 +1908,8 @@ int exchange_linkC_deg_same(VVChar& linkMatrC, VNodeType& link,
       count--;
       continue;
     }
-    if ((linkMatrC[i1][j1 >> 3] & (1 << (j1 & 7))) ||
-        (linkMatrC[i2][j2 >> 3] & (1 << (j2 & 7))))
+    if ((linkMatrC[i1][j1 >> 3] & (1 << (j1 & 7)))
+        || (linkMatrC[i2][j2 >> 3] & (1 << (j2 & 7))))
       continue;
     // i1-i2
     linkMatrC[i1][i2 >> 3] ^= 1 << (i2 & 7);
@@ -1706,23 +1943,29 @@ int exchange_linkC_deg_same(VVChar& linkMatrC, VNodeType& link,
 }
 
 int exchange_linkC_degDiff(VVChar& linkMatrC, VNodeType& link,
-                           const VNodeType& p2pSize, LinkType count) {
+    const VNodeType& p2pSize, LinkType count)
+{
   const LinkType linkSize = link.size() / 2;
-  if (linkSize < 2) return -1;
+  if (linkSize < 2)
+    return -1;
   while (count > 0) {
-    LinkType ik = RAND2_LONG() % linkSize, jk = RAND2_LONG() % (linkSize - 1);
-    if (jk >= ik) jk++;
+    LinkType ik
+        = std::uniform_int_distribution<LinkType>(0, linkSize - 1)(rand2),
+        jk = std::uniform_int_distribution<LinkType>(0, linkSize - 2)(rand2);
+    if (jk >= ik)
+      jk++;
     ik <<= 1;
     jk <<= 1;
-    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk], j2 = link[jk | 1];
+    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk],
+             j2 = link[jk | 1];
     NodeType pi1 = p2pSize[i1], pi2 = p2pSize[i2], pj1 = p2pSize[j1],
              pj2 = p2pSize[j2];
-    if (i1 == j2 || i2 == j1 || (pi1 <= pj1 && pj2 <= pi2) ||
-        (pj1 <= pi1 && pi2 <= pj2))
+    if (i1 == j2 || i2 == j1 || (pi1 <= pj1 && pj2 <= pi2)
+        || (pj1 <= pi1 && pi2 <= pj2))
       continue;
-    if ((pi2 <= pj1 || pj2 <= pi1) &&
-        (linkMatrC[i1][j1 >> 3] & (1 << (j1 & 7))) == 0 &&
-        (linkMatrC[i2][j2 >> 3] & (1 << (j2 & 7))) == 0) {
+    if ((pi2 <= pj1 || pj2 <= pi1)
+        && (linkMatrC[i1][j1 >> 3] & (1 << (j1 & 7))) == 0
+        && (linkMatrC[i2][j2 >> 3] & (1 << (j2 & 7))) == 0) {
       // i1-i2
       linkMatrC[i1][i2 >> 3] ^= 1 << (i2 & 7);
       linkMatrC[i2][i1 >> 3] ^= 1 << (i1 & 7);
@@ -1752,8 +1995,8 @@ int exchange_linkC_degDiff(VVChar& linkMatrC, VNodeType& link,
       count--;
       continue;
     }
-    if ((linkMatrC[i1][j2 >> 3] & (1 << (j2 & 7))) == 0 &&
-        (linkMatrC[i2][j1 >> 3] & (1 << (j1 & 7))) == 0) {
+    if ((linkMatrC[i1][j2 >> 3] & (1 << (j2 & 7))) == 0
+        && (linkMatrC[i2][j1 >> 3] & (1 << (j1 & 7))) == 0) {
       // i1-i2
       linkMatrC[i1][i2] = 0;
       linkMatrC[i2][i1] = 0;
@@ -1775,21 +2018,28 @@ int exchange_linkC_degDiff(VVChar& linkMatrC, VNodeType& link,
 }
 
 int exchange_link_deg_same(VVDistType& linkMatr, VNodeType& link,
-                           const VNodeType& p2pSize, LinkType count) {
+    const VNodeType& p2pSize, LinkType count)
+{
   const LinkType linkSize = link.size() / 2;
-  if (linkSize < 2) return -1;
+  if (linkSize < 2)
+    return -1;
   while (count > 0) {
-    LinkType ik = RAND2_LONG() % linkSize, jk = RAND2_LONG() % (linkSize - 1);
-    if (jk >= ik) jk++;
+    LinkType ik
+        = std::uniform_int_distribution<LinkType>(0, linkSize - 1)(rand2),
+        jk = std::uniform_int_distribution<LinkType>(0, linkSize - 2)(rand2);
+    if (jk >= ik)
+      jk++;
     ik <<= 1;
     jk <<= 1;
-    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk], j2 = link[jk | 1];
+    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk],
+             j2 = link[jk | 1];
     NodeType pi1 = p2pSize[i1], pi2 = p2pSize[i2], pj1 = p2pSize[j1],
              pj2 = p2pSize[j2];
-    if (pi1 >= pj2 || pj1 >= pi2 || i1 == j1 || i2 == j2) continue;
-    if (pi1 != pj1 && pi2 != pj2 &&
-        ((pj1 < pi1 && pi2 < pj2) || (pi1 < pj1 && pj2 < pi2)) &&
-        linkMatr[i1][j2] == 0 && linkMatr[i2][j1] == 0) {
+    if (pi1 >= pj2 || pj1 >= pi2 || i1 == j1 || i2 == j2)
+      continue;
+    if (pi1 != pj1 && pi2 != pj2
+        && ((pj1 < pi1 && pi2 < pj2) || (pi1 < pj1 && pj2 < pi2))
+        && linkMatr[i1][j2] == 0 && linkMatr[i2][j1] == 0) {
       // i1-i2
       linkMatr[i1][i2] = 0;
       linkMatr[i2][i1] = 0;
@@ -1807,7 +2057,8 @@ int exchange_link_deg_same(VVDistType& linkMatr, VNodeType& link,
       count--;
       continue;
     }
-    if (linkMatr[i1][j1] || linkMatr[i2][j2]) continue;
+    if (linkMatr[i1][j1] || linkMatr[i2][j2])
+      continue;
     // i1-i2
     linkMatr[i1][i2] = 0;
     linkMatr[i2][i1] = 0;
@@ -1840,22 +2091,28 @@ int exchange_link_deg_same(VVDistType& linkMatr, VNodeType& link,
 }
 
 int exchange_link_deg_diff(VVDistType& linkMatr, VNodeType& link,
-                           const VNodeType& p2pSize, LinkType count) {
+    const VNodeType& p2pSize, LinkType count)
+{
   const LinkType linkSize = link.size() / 2;
-  if (linkSize < 2) return -1;
+  if (linkSize < 2)
+    return -1;
   while (count > 0) {
-    LinkType ik = RAND2_LONG() % linkSize, jk = RAND2_LONG() % (linkSize - 1);
-    if (jk >= ik) jk++;
+    LinkType ik
+        = std::uniform_int_distribution<LinkType>(0, linkSize - 1)(rand2),
+        jk = std::uniform_int_distribution<LinkType>(0, linkSize - 2)(rand2);
+    if (jk >= ik)
+      jk++;
     ik <<= 1;
     jk <<= 1;
-    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk], j2 = link[jk | 1];
+    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk],
+             j2 = link[jk | 1];
     NodeType pi1 = p2pSize[i1], pi2 = p2pSize[i2], pj1 = p2pSize[j1],
              pj2 = p2pSize[j2];
-    if (i1 == j2 || j1 == i2 || (pi1 <= pj1 && pj2 <= pi2) ||
-        (pj1 <= pi1 && pi2 <= pj2))
+    if (i1 == j2 || j1 == i2 || (pi1 <= pj1 && pj2 <= pi2)
+        || (pj1 <= pi1 && pi2 <= pj2))
       continue;
-    if ((pi2 <= pj1 || pj2 <= pi1) && linkMatr[i1][j1] == 0 &&
-        linkMatr[i2][j2] == 0) {
+    if ((pi2 <= pj1 || pj2 <= pi1) && linkMatr[i1][j1] == 0
+        && linkMatr[i2][j2] == 0) {
       // i1-i2
       linkMatr[i1][i2] = 0;
       linkMatr[i2][i1] = 0;
@@ -1906,20 +2163,26 @@ int exchange_link_deg_diff(VVDistType& linkMatr, VNodeType& link,
   return 0;
 }
 
-int exchange_linkC_num_same(VVChar& linkMatrC, VNodeType& link,
-                            LinkType count) {
+int exchange_linkC_num_same(VVChar& linkMatrC, VNodeType& link, LinkType count)
+{
   const LinkType linkSize = link.size();
-  if (linkSize < 2) return -1;
+  if (linkSize < 2)
+    return -1;
   while (count > 0) {
-    LinkType ik = RAND2_LONG() % linkSize, jk = RAND2_LONG() % (linkSize - 1);
-    if (jk >= ik) jk++;
+    LinkType ik
+        = std::uniform_int_distribution<LinkType>(0, linkSize - 1)(rand2),
+        jk = std::uniform_int_distribution<LinkType>(0, linkSize - 2)(rand2);
+    if (jk >= ik)
+      jk++;
     ik <<= 1;
     jk <<= 1;
-    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk], j2 = link[jk | 1];
-    if (i1 >= j2 || j1 >= i2 || i1 == j1 || i2 == j2) continue;
-    if (((j1 < i1 && i2 < j2) || (i1 < j1 && j2 < i2)) &&
-        (linkMatrC[i1][j2 >> 3] & (1 << (j2 & 7))) == 0 &&
-        (linkMatrC[i2][j1 >> 3] & (1 << (j1 & 7))) == 0) {
+    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk],
+             j2 = link[jk | 1];
+    if (i1 >= j2 || j1 >= i2 || i1 == j1 || i2 == j2)
+      continue;
+    if (((j1 < i1 && i2 < j2) || (i1 < j1 && j2 < i2))
+        && (linkMatrC[i1][j2 >> 3] & (1 << (j2 & 7))) == 0
+        && (linkMatrC[i2][j1 >> 3] & (1 << (j1 & 7))) == 0) {
       // i1-i2
       linkMatrC[i1][i2 >> 3] ^= 1 << (i2 & 7);
       linkMatrC[i2][i1 >> 3] ^= 1 << (i1 & 7);
@@ -1937,8 +2200,8 @@ int exchange_linkC_num_same(VVChar& linkMatrC, VNodeType& link,
       count--;
       continue;
     }
-    if ((linkMatrC[i1][j1 >> 3] & (1 << (j1 & 7))) ||
-        (linkMatrC[i2][j2 >> 3] & (1 << (j2 & 7))))
+    if ((linkMatrC[i1][j1 >> 3] & (1 << (j1 & 7)))
+        || (linkMatrC[i2][j2 >> 3] & (1 << (j2 & 7))))
       continue;
     // i1-i2
     linkMatrC[i1][i2 >> 3] ^= 1 << (i2 & 7);
@@ -1971,22 +2234,26 @@ int exchange_linkC_num_same(VVChar& linkMatrC, VNodeType& link,
   return 0;
 }
 
-int exchange_linkC_num_diff(VVChar& linkMatrC, VNodeType& link,
-                            LinkType count) {
+int exchange_linkC_num_diff(VVChar& linkMatrC, VNodeType& link, LinkType count)
+{
   const LinkType linkSize = link.size();
-  if (linkSize < 2) return -1;
+  if (linkSize < 2)
+    return -1;
   while (count > 0) {
-    LinkType ik = RAND2_LONG() % linkSize, jk = RAND2_LONG() % (linkSize - 1);
-    if (jk >= ik) jk++;
+    LinkType ik
+        = std::uniform_int_distribution<LinkType>(0, linkSize - 1)(rand2),
+        jk = std::uniform_int_distribution<LinkType>(0, linkSize - 2)(rand2);
+    if (jk >= ik)
+      jk++;
     ik <<= 1;
     jk <<= 1;
-    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk], j2 = link[jk | 1];
-    if (i1 == j2 || j1 == i2 || (i1 <= j1 && j2 <= i2) ||
-        (j1 <= i1 && i2 <= j2))
+    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk],
+             j2 = link[jk | 1];
+    if (i1 == j2 || j1 == i2 || (i1 <= j1 && j2 <= i2)
+        || (j1 <= i1 && i2 <= j2))
       continue;
-    if ((i1 > j2 || j1 > i2) &&
-        (linkMatrC[i1][j1 >> 3] & (1 << (j1 & 7))) == 0 &&
-        (linkMatrC[i2][j2 >> 3] & (1 << (j2 & 7))) == 0) {
+    if ((i1 > j2 || j1 > i2) && (linkMatrC[i1][j1 >> 3] & (1 << (j1 & 7))) == 0
+        && (linkMatrC[i2][j2 >> 3] & (1 << (j2 & 7))) == 0) {
       // i1-i2
       linkMatrC[i1][i2 >> 3] ^= 1 << (i2 & 7);
       linkMatrC[i2][i1 >> 3] ^= 1 << (i1 & 7);
@@ -2016,8 +2283,8 @@ int exchange_linkC_num_diff(VVChar& linkMatrC, VNodeType& link,
       count--;
       continue;
     }
-    if ((linkMatrC[i1][j2 >> 3] & (1 << (j2 & 7))) == 0 &&
-        (linkMatrC[i2][j1 >> 3] & (1 << (j1 & 7))) == 0) {
+    if ((linkMatrC[i1][j2 >> 3] & (1 << (j2 & 7))) == 0
+        && (linkMatrC[i2][j1 >> 3] & (1 << (j1 & 7))) == 0) {
       // i1-i2
       linkMatrC[i1][i2] = 0;
       linkMatrC[i2][i1] = 0;
@@ -2038,19 +2305,26 @@ int exchange_linkC_num_diff(VVChar& linkMatrC, VNodeType& link,
   return 0;
 }
 
-int exchange_link_num_same(VVDistType& linkMatr, VNodeType& link,
-                           LinkType count) {
+int exchange_link_num_same(
+    VVDistType& linkMatr, VNodeType& link, LinkType count)
+{
   const LinkType linkSize = link.size();
-  if (linkSize < 2) return -1;
+  if (linkSize < 2)
+    return -1;
   while (count > 0) {
-    LinkType ik = RAND2_LONG() % linkSize, jk = RAND2_LONG() % (linkSize - 1);
-    if (jk >= ik) jk++;
+    LinkType ik
+        = std::uniform_int_distribution<LinkType>(0, linkSize - 1)(rand2),
+        jk = std::uniform_int_distribution<LinkType>(0, linkSize - 2)(rand2);
+    if (jk >= ik)
+      jk++;
     ik <<= 1;
     jk <<= 1;
-    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk], j2 = link[jk | 1];
-    if (i1 >= j2 || j1 >= i2 || i1 == j1 || i2 == j2) continue;
-    if (((j1 < i1 && i2 < j2) || (i1 < j1 && j2 < i2)) &&
-        linkMatr[i1][j2] == 0 && linkMatr[i2][j1] == 0) {
+    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk],
+             j2 = link[jk | 1];
+    if (i1 >= j2 || j1 >= i2 || i1 == j1 || i2 == j2)
+      continue;
+    if (((j1 < i1 && i2 < j2) || (i1 < j1 && j2 < i2)) && linkMatr[i1][j2] == 0
+        && linkMatr[i2][j1] == 0) {
       // i1-i2
       linkMatr[i1][i2] = 0;
       linkMatr[i2][i1] = 0;
@@ -2068,7 +2342,8 @@ int exchange_link_num_same(VVDistType& linkMatr, VNodeType& link,
       count--;
       continue;
     }
-    if (linkMatr[i1][j1] || linkMatr[i2][j2]) continue;
+    if (linkMatr[i1][j1] || linkMatr[i2][j2])
+      continue;
     // i1-i2
     linkMatr[i1][i2] = 0;
     linkMatr[i2][i1] = 0;
@@ -2100,21 +2375,27 @@ int exchange_link_num_same(VVDistType& linkMatr, VNodeType& link,
   return 0;
 }
 
-int exchange_link_num_diff(VVDistType& linkMatr, VNodeType& link,
-                           LinkType count) {
+int exchange_link_num_diff(
+    VVDistType& linkMatr, VNodeType& link, LinkType count)
+{
   const LinkType linkSize = link.size();
-  if (linkSize < 2) return -1;
+  if (linkSize < 2)
+    return -1;
   while (count > 0) {
-    LinkType ik = RAND2_LONG() % linkSize, jk = RAND2_LONG() % (linkSize - 1);
-    if (jk >= ik) jk++;
+    LinkType ik
+        = std::uniform_int_distribution<LinkType>(0, linkSize - 1)(rand2),
+        jk = std::uniform_int_distribution<LinkType>(0, linkSize - 2)(rand2);
+    if (jk >= ik)
+      jk++;
     ik <<= 1;
     jk <<= 1;
-    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk], j2 = link[jk | 1];
-    if ((i1 <= j1 && j2 <= i2) || (j1 <= i1 && i2 <= j2) || i1 == j2 ||
-        i2 == j1)
+    NodeType i1 = link[ik], i2 = link[ik | 1], j1 = link[jk],
+             j2 = link[jk | 1];
+    if ((i1 <= j1 && j2 <= i2) || (j1 <= i1 && i2 <= j2) || i1 == j2
+        || i2 == j1)
       continue;
-    if ((i2 < j1 || j2 < i1) && linkMatr[i1][j1] == 0 &&
-        linkMatr[i2][j2] == 0) {
+    if ((i2 < j1 || j2 < i1) && linkMatr[i1][j1] == 0
+        && linkMatr[i2][j2] == 0) {
       // i1-i2
       linkMatr[i1][i2] = 0;
       linkMatr[i2][i1] = 0;
@@ -2166,7 +2447,8 @@ int exchange_link_num_diff(VVDistType& linkMatr, VNodeType& link,
 }
 
 int count_sameAdiff(LinkType& sum, LinkType& sum1, LinkType& sum3,
-                    LinkType& sum4, VLinkType& link, VNodeType& nodeDeg) {
+    LinkType& sum4, VLinkType& link, VNodeType& nodeDeg)
+{
   const LinkType linkSize = link.size() / 2;
   sum = 0 /*同配*/;
   sum1 = 0 /*异配*/;
@@ -2176,25 +2458,26 @@ int count_sameAdiff(LinkType& sum, LinkType& sum1, LinkType& sum3,
     NodeType i1 = link[l * 2], i2 = link[2 * l + 1];
     for (LinkType ll = 0; ll < l; ll++) {
       NodeType j1 = link[ll * 2], j2 = link[ll * 2 + 1];
-      if (i1 == j1 || i1 == j2 || i2 == j1 || i2 == j2) continue;
+      if (i1 == j1 || i1 == j2 || i2 == j1 || i2 == j2)
+        continue;
       NodeType di1 = nodeDeg[i1], di2 = nodeDeg[i2], dj1 = nodeDeg[j1],
                dj2 = nodeDeg[j2];
-      if (di1 == di2 || dj1 == dj2) {  //有某边两端点度相同 i-i j-k
-        if (di1 == di2 && dj1 == dj2) {  //两边的两端点度分别相同 i-i j-j
+      if (di1 == di2 || dj1 == dj2) { //有某边两端点度相同 i-i j-k
+        if (di1 == di2 && dj1 == dj2) { //两边的两端点度分别相同 i-i j-j
           if (di1 == dj1)
-            sum4++;  //度全相同 i==j
+            sum4++; //度全相同 i==j
           else
-            sum++;  // i!=j  同配
+            sum++; // i!=j  同配
           continue;
         }
-        if (di1 == dj1 || di2 == dj2) {  //有3点度相同 i-i i-j
+        if (di1 == dj1 || di2 == dj2) { //有3点度相同 i-i i-j
           sum3++;
           continue;
         }
         if (di1 > dj2 || dj1 > di2)
-          sum++;  // i-i,j-k : i<j<k || j<k<i
+          sum++; // i-i,j-k : i<j<k || j<k<i
         else
-          sum1++;  // i-i,j-k: j<i<k
+          sum1++; // i-i,j-k: j<i<k
         continue;
       }
       // i-j k-l
@@ -2211,16 +2494,20 @@ int count_sameAdiff(LinkType& sum, LinkType& sum1, LinkType& sum3,
 }
 
 //**//***********************************************************//*
-bool cmp_RNodeType_start(const RNodeType& a, const RNodeType& b) {
+bool cmp_RNodeType_start(const RNodeType& a, const RNodeType& b)
+{
   return a.start < b.start;
 }
 
-bool cmp_RNodeType_end(const RNodeType& a, const RNodeType& b) {
+bool cmp_RNodeType_end(const RNodeType& a, const RNodeType& b)
+{
   return a.end < b.end;
 }
 
-int nodeDeg_update_nodeMap(VNodeType& nodeDeg, const VRNodeType& nodeMap) {
-  if (nodeDeg.size() != nodeMap.size()) return -1;
+int nodeDeg_update_nodeMap(VNodeType& nodeDeg, const VRNodeType& nodeMap)
+{
+  if (nodeDeg.size() != nodeMap.size())
+    return -1;
   VNodeType t(nodeDeg.size());
   for (VRNodeTypeCItr i = nodeMap.begin(); i != nodeMap.end(); i++)
     t[i->end] = nodeDeg[i->start];
@@ -2229,7 +2516,8 @@ int nodeDeg_update_nodeMap(VNodeType& nodeDeg, const VRNodeType& nodeMap) {
 }
 
 //**//***********************************************************//*
-int read0_link(VNodeType& link, const char* name, const unsigned n) {
+int read0_link(VNodeType& link, const char* name, const unsigned n)
+{
   if (n < 2 || name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -2257,7 +2545,8 @@ int read0_link(VNodeType& link, const char* name, const unsigned n) {
   return 0;
 }
 
-int read_link(VNodeType& link, const char* name) {
+int read_link(VNodeType& link, const char* name)
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -2278,10 +2567,11 @@ int read_link(VNodeType& link, const char* name) {
 }
 
 int read_weight_link(VVWeightType& vvweight, VVWeightType& vvweightIn,
-                     const LinkType linkSize, const char* name,
-                     const unsigned weight_m, const unsigned weight_n,
-                     const int dirFlag) {
-  if (weight_m < 2 || weight_m >= weight_n || name == NULL || name[0] == '\0') {
+    const LinkType linkSize, const char* name, const unsigned weight_m,
+    const unsigned weight_n, const int dirFlag)
+{
+  if (weight_m < 2 || weight_m >= weight_n || name == NULL
+      || name[0] == '\0') {
     ERROR();
     return -1;
   }
@@ -2308,13 +2598,16 @@ int read_weight_link(VVWeightType& vvweight, VVWeightType& vvweightIn,
     }
     if (!dirFlag) {
       NodeType m = i >= j ? i : j;
-      if (vvweight.size() <= m) vvweight.resize(m + 1);
+      if (vvweight.size() <= m)
+        vvweight.resize(m + 1);
       vvweight[i].push_back(w);
       vvweight[j].push_back(w);
     } else {
-      if (vvweight.size() <= i + 1) vvweight.resize(i + 1);
+      if (vvweight.size() <= i + 1)
+        vvweight.resize(i + 1);
       vvweight[i].push_back(w);
-      if (vvweightIn.size() <= j) vvweightIn.resize(j + 1);
+      if (vvweightIn.size() <= j)
+        vvweightIn.resize(j + 1);
       vvweightIn[j].push_back(w);
     }
     c++;
@@ -2337,11 +2630,11 @@ int read_weight_link(VVWeightType& vvweight, VVWeightType& vvweightIn,
 }
 
 int read_link_weight_0(VNodeType& link, LinkType& linkSize,
-                       VVWeightType& vvweight, VVWeightType& vvweightIn,
-                       const char* name, const unsigned weight_m,
-                       const unsigned weight_n, const int dirFlag) {
-  if (weight_m < 2 || weight_m >= weight_n || name == NULL || name[0] == '\0' ||
-      !link.empty() || !vvweight.empty()) {
+    VVWeightType& vvweight, VVWeightType& vvweightIn, const char* name,
+    const unsigned weight_m, const unsigned weight_n, const int dirFlag)
+{
+  if (weight_m < 2 || weight_m >= weight_n || name == NULL || name[0] == '\0'
+      || !link.empty() || !vvweight.empty()) {
     ERROR();
     return -1;
   }
@@ -2372,13 +2665,16 @@ int read_link_weight_0(VNodeType& link, LinkType& linkSize,
 
     if (!dirFlag) {
       NodeType m = i >= j ? i : j;
-      if (vvweight.size() <= m) vvweight.resize(m + 1);
+      if (vvweight.size() <= m)
+        vvweight.resize(m + 1);
       vvweight[i].push_back(w);
       vvweight[j].push_back(w);
     } else {
-      if (vvweight.size() <= i) vvweight.resize(i + 1);
+      if (vvweight.size() <= i)
+        vvweight.resize(i + 1);
       vvweight[i].push_back(w);
-      if (vvweightIn.size() <= j) vvweightIn.resize(j + 1);
+      if (vvweightIn.size() <= j)
+        vvweightIn.resize(j + 1);
       vvweightIn[j].push_back(w);
     }
     for (string s; c < weight_n && is >> s; c++)
@@ -2395,8 +2691,70 @@ int read_link_weight_0(VNodeType& link, LinkType& linkSize,
 }
 
 //**//***********************************************************//*
+int read_lkk_3(istream& is, VVLinkType& lkk)
+{
+  LinkType n;
+  for (NodeType i, j; is >> i >> j >> n;) {
+    if (i >= lkk.size())
+      lkk.resize(i + 1);
+    if (j >= lkk[i].size())
+      lkk[i].resize(j + 1, 0);
+    lkk[i][j] = n;
+  }
+  return 0;
+}
+
+int read_lkk_3(const char* name, VVLinkType& lkk)
+{
+  if (!name || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ifstream is(name);
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  int flag = read_lkk_3(is, lkk);
+  is.close();
+  return flag;
+}
+
+int save_lkk_3(
+    ostream& os, const VVLinkType& lkk, const char pri2, const char pri)
+{
+  if (!os) {
+    ERROR();
+    return 0;
+  }
+  for (size_t i = 0; i < lkk.size(); ++i)
+    for (size_t j = 0; j < lkk[i].size(); ++j)
+      if (lkk[i][j] > 0)
+        os << i << pri2 << j << pri2 << lkk[i][j] << pri;
+  return 0;
+}
+
+int save_lkk_3(
+    const char* name, const VVLinkType& lkk, const char pri2, const char pri)
+{
+  if (!name || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  int flag = save_lkk_3(os, lkk, pri2, pri);
+  os.close();
+  return flag;
+}
+
+//**//**************************************************//**//*
 int cal_kMax_PowerLaw_NatureCutoff(NodeType& kMax, const NodeType nodeSize,
-                                   const NodeType kMin, const double gamma) {
+    const NodeType kMin, const double gamma)
+{
   if (kMin < 1 || nodeSize < kMin) {
     ERROR();
     return -1;
@@ -2407,11 +2765,15 @@ int cal_kMax_PowerLaw_NatureCutoff(NodeType& kMax, const NodeType nodeSize,
   else
     r = 1 / (gamma - 1);
   kMax = pow(nodeSize, r);
-  if (kMax < kMin) return -1;
-  for (NodeType i = kMin; i <= kMax; ++i) c += pow(i, r);
+  if (kMax < kMin)
+    return -1;
+  for (NodeType i = kMin; i <= kMax; ++i)
+    c += pow(i, r);
   km = pow(c / nodeSize, -1. / r);
-  if (kMax > km) kMax = km;
-  if (kMax < kMin) return -1;
+  if (kMax > km)
+    kMax = km;
+  if (kMax < kMin)
+    return -1;
   return 0;
 }
 

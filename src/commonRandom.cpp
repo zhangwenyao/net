@@ -1,27 +1,28 @@
-#include <cstdlib>
-#include <ctime>
-#include <sys/time.h>
 #include "commonRandom.h"
+#include <chrono>
+#include <climits>
+#include <iostream>
+#include <random>
 
-unsigned srand_init(const int seed) {
+using namespace std;
+
+default_random_engine rand2;
+// uniform_real_distribution<double> dis_real(0, std::nextafter(1, DBL_MAX));
+// // [0,1]
+uniform_real_distribution<double> dis_real(0, 1); // [0,1)
+auto rand_double = bind(dis_real, rand2);
+
+long rand_seed(long seed)
+{
   if (seed <= 0) {
-    unsigned t = -seed;
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    srand(t);
-    srand(t += rand() + tv.tv_usec);
-    srand(t += rand() + time(NULL));
-    srand(t += rand() + clock());
-    return t;
+    uniform_int_distribution<long> ra(0, LONG_MAX);
+    seed = -seed;
+    rand2.seed(seed);
+    seed = ra(rand2) ^ random_device {}();
+    rand2.seed(seed);
+    seed = ra(rand2)
+        ^ chrono::high_resolution_clock::now().time_since_epoch().count();
   }
-  srand(seed);
+  rand2.seed(seed);
   return seed;
 }
-
-#ifdef RAND16807
-unsigned rand16807_val = 1;
-unsigned rand16807_init(const int seed) {
-  srand_init(seed);
-  return rand16807_val = rand() % RAND16807_MAX + 1;
-}
-#endif

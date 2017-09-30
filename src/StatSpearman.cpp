@@ -6,13 +6,16 @@ using namespace std;
 
 //**//****************************************************//*
 int cal_lkkProb_gauss_sum(double& sum, VDouble& deg2ArrVal,
-                          VNodeType& degArrVal, VNodeType& degArrSize,
-                          const double s2, const NodeType xi, const double r) {
+    VNodeType& degArrVal, VNodeType& degArrSize, const double s2,
+    const NodeType xi, const double r)
+{
   const NodeType degSize = degArrVal.size();
   sum = 0.;
-  if (degArrSize[xi] <= 0) return 0;
+  if (degArrSize[xi] <= 0)
+    return 0;
   double xi0 = deg2ArrVal[xi], temp = -0.5 / s2;
-  if (r < 0) xi0 = 1 - xi0;
+  if (r < 0)
+    xi0 = 1 - xi0;
   degArrSize[xi]--;
   for (NodeType i = 0; i < degSize; i++) {
     double t = xi0 - deg2ArrVal[i];
@@ -23,27 +26,30 @@ int cal_lkkProb_gauss_sum(double& sum, VDouble& deg2ArrVal,
 }
 
 int cal_lkkProb_gaussS2(double& s2, VDouble& deg2ArrVal, VNodeType& degArrVal,
-                        VNodeType& degArrSize, const NodeType xi,
-                        const double r) {
+    VNodeType& degArrSize, const NodeType xi, const double r)
+{
   const NodeType degSize = degArrVal.size();
-  if (degArrSize[xi] <= 0) return 0;
+  if (degArrSize[xi] <= 0)
+    return 0;
   double ds, sum, sum2, xi0 = deg2ArrVal[xi], *pd, temp;
   const double exi = r * (xi0 - 0.5) + 0.5;
-  if (r < 0) xi0 = 1 - xi0;
+  if (r < 0)
+    xi0 = 1 - xi0;
   ds = s2 = 0.01;
   degArrSize[xi]--;
   while (ds < 1.E9) {
     sum = sum2 = 0.;
     pd = &deg2ArrVal[0];
     temp = -0.5 / s2;
-    for (NodeType i = 0, *ps = &degArrSize[0], *pk = &degArrVal[0]; i < degSize;
-         i++) {
+    for (NodeType i = 0, *ps = &degArrSize[0], *pk = &degArrVal[0];
+         i < degSize; i++) {
       double t = xi0 - *pd;
       sum += t = exp(t * t * temp) * *ps++ * *pk++;
       sum2 += t * *pd++;
     }
     sum2 = sum2 / sum - exi;
-    if ((exi <= 0.5 && sum2 >= 1.E-9) || (exi >= 0.5 && sum2 <= -1.E-9)) break;
+    if ((exi <= 0.5 && sum2 >= 1.E-9) || (exi >= 0.5 && sum2 <= -1.E-9))
+      break;
     ds *= 2;
     s2 += ds;
   }
@@ -58,8 +64,8 @@ int cal_lkkProb_gaussS2(double& s2, VDouble& deg2ArrVal, VNodeType& degArrVal,
     sum = sum2 = 0.;
     pd = &deg2ArrVal[0];
     temp = -0.5 / s2;
-    for (NodeType i = 0, *ps = &degArrSize[0], *pk = &degArrVal[0]; i < degSize;
-         i++) {
+    for (NodeType i = 0, *ps = &degArrSize[0], *pk = &degArrVal[0];
+         i < degSize; i++) {
       double t = xi0 - *pd;
       sum += t = exp(t * t * temp) * *ps++ * *pk++;
       sum2 += t * *pd++;
@@ -71,11 +77,13 @@ int cal_lkkProb_gaussS2(double& s2, VDouble& deg2ArrVal, VNodeType& degArrVal,
 }
 
 int cal_lkkProb_gauss(VVDouble& lkkProb, const VDouble& s2,
-                      const VDouble& deg2ArrVal, const double r) {
+    const VDouble& deg2ArrVal, const double r)
+{
   const NodeType degSize = deg2ArrVal.size();
   for (NodeType i = 0; i < degSize; i++) {
     double xi = deg2ArrVal[i], temp = -0.5 / s2[i];
-    if (r < 0) xi = 1 - xi;
+    if (r < 0)
+      xi = 1 - xi;
     for (NodeType j = 0; j < degSize; j++) {
       double t = xi - deg2ArrVal[j];
       lkkProb[i][j] = exp(t * t * temp);
@@ -85,14 +93,17 @@ int cal_lkkProb_gauss(VVDouble& lkkProb, const VDouble& s2,
 }
 
 int cal_lkkProb_expS2(double& s2, VDouble& deg2ArrVal, VNodeType& degArrVal,
-                      VNodeType& degArrSize, const LinkType linkSize,
-                      const NodeType xi, const double r) {
+    VNodeType& degArrSize, const LinkType linkSize, const NodeType xi,
+    const double r)
+{
   const NodeType degSize = degArrVal.size();
   s2 = 10.;
-  if (degArrSize[xi] <= 0) return 0;
+  if (degArrSize[xi] <= 0)
+    return 0;
   double ds = s2, sum, sum2 = 0., xi0 = deg2ArrVal[xi], *pxj, t2;
   const double exi = r * (xi0 - 0.5) + 0.5;
-  if (r < 0) xi0 = 1 - xi0;
+  if (r < 0)
+    xi0 = 1 - xi0;
   degArrSize[xi]--;
   while (ds < 1.E9) {
     sum = sum2 = 0.;
@@ -101,12 +112,14 @@ int cal_lkkProb_expS2(double& s2, VDouble& deg2ArrVal, VNodeType& degArrVal,
     for (NodeType j = 0, *pj = &degArrVal[0], *psj = &degArrSize[0];
          j < degSize; j++) {
       double t = (xi0 - *pxj) * s2;
-      if (t > 0) t = -t;
+      if (t > 0)
+        t = -t;
       sum += t = exp(t) * *pj++ * t2 * *psj++;
       sum2 += t * *pxj++;
     }
     sum2 = sum2 / sum - exi;
-    if ((exi <= 0.5 && sum2 <= 1.E-9) || (exi >= 0.5 && sum2 >= -1.E-9)) break;
+    if ((exi <= 0.5 && sum2 <= 1.E-9) || (exi >= 0.5 && sum2 >= -1.E-9))
+      break;
     ds *= 2;
     s2 += ds;
   }
@@ -129,7 +142,8 @@ int cal_lkkProb_expS2(double& s2, VDouble& deg2ArrVal, VNodeType& degArrVal,
     for (NodeType j = 0, *pj = &degArrVal[0], *psj = &degArrSize[0];
          j < degSize; j++) {
       double t = (xi0 - *pxj) * s2;
-      if (t > 0) t = -t;
+      if (t > 0)
+        t = -t;
       sum += t = exp(t) * *pj++ * t2 * *psj++;
       sum2 += t * *pxj++;
     }
@@ -144,16 +158,18 @@ int cal_lkkProb_expS2(double& s2, VDouble& deg2ArrVal, VNodeType& degArrVal,
 }
 
 int cal_lkkProb_exp(VVDouble& lkkProb, const VDouble& s2,
-                    const VDouble& deg2ArrVal, const VNodeType& degArrVal,
-                    const double r) {
+    const VDouble& deg2ArrVal, const VNodeType& degArrVal, const double r)
+{
   const NodeType degSize = degArrVal.size();
   for (NodeType i = 0; i < degSize; i++) {
     double xi = deg2ArrVal[i];
     const double* xj = &deg2ArrVal[0];
-    if (r < 0) xi = 1 - xi;
+    if (r < 0)
+      xi = 1 - xi;
     for (NodeType j = 0; j < degSize; j++) {
       double t = (xi - *xj++) * s2[i];
-      if (t > 0) t = -t;
+      if (t > 0)
+        t = -t;
       lkkProb[i][j] = exp(t);
     }
   }
@@ -161,14 +177,17 @@ int cal_lkkProb_exp(VVDouble& lkkProb, const VDouble& s2,
 }
 
 int cal_lkkProb_exp0S2(double& s2, VDouble& deg2ArrVal, VNodeType& degArrVal,
-                       VNodeType& degArrSize, const LinkType linkSize,
-                       const NodeType xi, const double r) {
+    VNodeType& degArrSize, const LinkType linkSize, const NodeType xi,
+    const double r)
+{
   const NodeType degSize = degArrVal.size();
   s2 = 10.;
-  if (degArrSize[xi] <= 0) return 0;
+  if (degArrSize[xi] <= 0)
+    return 0;
   double ds = s2, sum, sum2 = 0., xi0 = deg2ArrVal[xi], *pxj, t2;
   const double exi = r * (xi0 - 0.5) + 0.5;
-  if (r < 0) xi0 = 1 - xi0;
+  if (r < 0)
+    xi0 = 1 - xi0;
   degArrSize[xi]--;
   while (ds < 1.E9) {
     sum = sum2 = 0.;
@@ -177,12 +196,14 @@ int cal_lkkProb_exp0S2(double& s2, VDouble& deg2ArrVal, VNodeType& degArrVal,
     for (NodeType j = 0, *pj = &degArrVal[0], *psj = &degArrSize[0];
          j < degSize; j++) {
       double t = (xi0 - *pxj) * s2;
-      if (t > 0) t = -t;
+      if (t > 0)
+        t = -t;
       sum += t = (1. - exp(exp(t) * *pj++ * t2)) * *psj++;
       sum2 += t * *pxj++;
     }
     sum2 = sum2 / sum - exi;
-    if ((exi <= 0.5 && sum2 <= 1.E-9) || (exi >= 0.5 && sum2 >= -1.E-9)) break;
+    if ((exi <= 0.5 && sum2 <= 1.E-9) || (exi >= 0.5 && sum2 >= -1.E-9))
+      break;
     ds *= 2;
     s2 += ds;
   }
@@ -205,7 +226,8 @@ int cal_lkkProb_exp0S2(double& s2, VDouble& deg2ArrVal, VNodeType& degArrVal,
     for (NodeType j = 0, *pj = &degArrVal[0], *psj = &degArrSize[0];
          j < degSize; j++) {
       double t = (xi0 - *pxj) * s2;
-      if (t > 0) t = -t;
+      if (t > 0)
+        t = -t;
       sum += t = (1. - exp(exp(t) * *pj++ * t2)) * *psj++;
       sum2 += t * *pxj++;
     }
@@ -220,16 +242,18 @@ int cal_lkkProb_exp0S2(double& s2, VDouble& deg2ArrVal, VNodeType& degArrVal,
 }
 
 int cal_lkkProb_exp0(VVDouble& lkkProb, const VDouble& s2,
-                     const VDouble& deg2ArrVal, const VNodeType& degArrVal,
-                     const double r) {
+    const VDouble& deg2ArrVal, const VNodeType& degArrVal, const double r)
+{
   const NodeType degSize = degArrVal.size();
   for (NodeType i = 0; i < degSize; i++) {
     double xi = deg2ArrVal[i];
     const double* xj = &deg2ArrVal[0];
-    if (r < 0) xi = 1 - xi;
+    if (r < 0)
+      xi = 1 - xi;
     for (NodeType j = 0; j < degSize; j++) {
       double t = (xi - *xj++) * s2[i];
-      if (t > 0) t = -t;
+      if (t > 0)
+        t = -t;
       lkkProb[i][j] = exp(t);
     }
   }
@@ -237,8 +261,8 @@ int cal_lkkProb_exp0(VVDouble& lkkProb, const VDouble& s2,
 }
 
 int degArrVal_2_deg2ArrVal(VDouble& deg2ArrVal, const VNodeType& degArrSize,
-                           const VNodeType& degArrVal, const double linkSize,
-                           const int dirFlag) {
+    const VNodeType& degArrVal, const double linkSize, const int dirFlag)
+{
   const NodeType degSize = degArrVal.size();
   deg2ArrVal.resize(degSize);
   LinkType sum = 0, l = dirFlag ? linkSize : linkSize * 2;
@@ -249,8 +273,9 @@ int degArrVal_2_deg2ArrVal(VDouble& deg2ArrVal, const VNodeType& degArrSize,
   return 0;
 }
 
-int degArrWeight_2_netWeight(WeightSumType& netWeight,
-                             const VWeightSumType& degArrWeight) {
+int degArrWeight_2_netWeight(
+    WeightSumType& netWeight, const VWeightSumType& degArrWeight)
+{
   netWeight = 0;
   for (VWeightTypeCItr i = degArrWeight.begin(); i != degArrWeight.end(); i++)
     netWeight += *i;
@@ -258,8 +283,8 @@ int degArrWeight_2_netWeight(WeightSumType& netWeight,
 }
 
 int degArrWeight_2_deg2ArrVal(VDouble& deg2ArrVal,
-                              const VWeightSumType& degArrWeight,
-                              const WeightSumType netWeight) {
+    const VWeightSumType& degArrWeight, const WeightSumType netWeight)
+{
   deg2ArrVal.resize(degArrWeight.size());
   double sum = 0;
   for (NodeType i = 0; i < degArrWeight.size(); i++) {
@@ -270,11 +295,13 @@ int degArrWeight_2_deg2ArrVal(VDouble& deg2ArrVal,
 }
 
 int cal_nodeNeiAveDeg2(VDouble& nodeNeiAveDeg2, const VVNodeType& p2p,
-                       const VDouble& deg2ArrVal, MNodeType& degArrNo) {
+    const VDouble& deg2ArrVal, MNodeType& degArrNo)
+{
   const NodeType nodeSize = p2p.size();
   nodeNeiAveDeg2.assign(nodeSize, 0);
   for (NodeType i = 0; i < nodeSize; i++) {
-    if (p2p[i].size() <= 0) continue;
+    if (p2p[i].size() <= 0)
+      continue;
     for (VNodeTypeCItr n = p2p[i].begin(); n != p2p[i].end(); n++)
       nodeNeiAveDeg2[i] += deg2ArrVal[degArrNo[p2p[*n].size()]];
     nodeNeiAveDeg2[i] /= p2p[i].size();
@@ -283,12 +310,13 @@ int cal_nodeNeiAveDeg2(VDouble& nodeNeiAveDeg2, const VVNodeType& p2p,
 }
 
 int cal_nodeNeiAveDeg2_nodeDeg(VDouble& nodeNeiAveDeg2, const VVNodeType& p2p,
-                               const VNodeType& nodeDeg,
-                               const VDouble& deg2ArrVal, MNodeType& degArrNo) {
+    const VNodeType& nodeDeg, const VDouble& deg2ArrVal, MNodeType& degArrNo)
+{
   const NodeType nodeSize = p2p.size();
   nodeNeiAveDeg2.assign(nodeSize, 0);
   for (NodeType i = 0; i < nodeSize; i++) {
-    if (p2p[i].size() <= 0) continue;
+    if (p2p[i].size() <= 0)
+      continue;
     for (VNodeTypeCItr n = p2p[i].begin(); n != p2p[i].end(); n++)
       nodeNeiAveDeg2[i] += deg2ArrVal[degArrNo[nodeDeg[*n]]];
     nodeNeiAveDeg2[i] /= p2p[i].size();
@@ -297,93 +325,98 @@ int cal_nodeNeiAveDeg2_nodeDeg(VDouble& nodeNeiAveDeg2, const VVNodeType& p2p,
 }
 
 int cal_nodeNeiAveDeg2_weight(VDouble& nodeNeiAveDeg2, const VVNodeType& p2p,
-                              const VNodeType& nodeDegIn,
-                              const VDouble& deg2ArrValIn,
-                              MNodeType& degArrNoIn,
-                              const VVWeightType& vvweight,
-                              const VWeightType& nodeWeightOut,
-                              const int weightFlag) {
+    const VNodeType& nodeDegIn, const VDouble& deg2ArrValIn,
+    MNodeType& degArrNoIn, const VVWeightType& vvweight,
+    const VWeightType& nodeWeightOut, const int weightFlag)
+{
   if (!weightFlag)
-    return cal_nodeNeiAveDeg2_nodeDeg(nodeNeiAveDeg2, p2p, nodeDegIn,
-                                      deg2ArrValIn, degArrNoIn);
-  if (p2p.empty() || !nodeNeiAveDeg2.empty() || vvweight.size() != p2p.size()) {
+    return cal_nodeNeiAveDeg2_nodeDeg(
+        nodeNeiAveDeg2, p2p, nodeDegIn, deg2ArrValIn, degArrNoIn);
+  if (p2p.empty() || !nodeNeiAveDeg2.empty()
+      || vvweight.size() != p2p.size()) {
     ERROR();
     return -1;
   }
   const NodeType nodeSize = p2p.size();
   nodeNeiAveDeg2.assign(nodeSize, 0);
   for (NodeType i = 0; i < nodeSize; i++) {
-    if (p2p[i].size() <= 0) continue;
+    if (p2p[i].size() <= 0)
+      continue;
     double l = 0;
     for (NodeType j = 0; j < p2p[i].size(); j++)
-      l += (double)vvweight[i][j] *
-           deg2ArrValIn[degArrNoIn[nodeDegIn[p2p[i][j]]]];
+      l += (double)vvweight[i][j]
+          * deg2ArrValIn[degArrNoIn[nodeDegIn[p2p[i][j]]]];
     nodeNeiAveDeg2[i] = l / nodeWeightOut[i];
   }
   return 0;
 }
 
 int cal_nodeNeiAveDeg2_AllAll(VDouble& nodeNeiAveDeg2, const VVNodeType& p2p,
-                              const VNodeType& nodeDeg,
-                              const VDouble& deg2ArrVal, MNodeType& degArrNo,
-                              const VVWeightType& vvweight,
-                              const VWeightType& nodeWeight,
-                              const int weightFlag) {
+    const VNodeType& nodeDeg, const VDouble& deg2ArrVal, MNodeType& degArrNo,
+    const VVWeightType& vvweight, const VWeightType& nodeWeight,
+    const int weightFlag)
+{
   if (!weightFlag)
-    return cal_nodeNeiAveDeg2_nodeDeg(nodeNeiAveDeg2, p2p, nodeDeg, deg2ArrVal,
-                                      degArrNo);
-  if (p2p.empty() || !nodeNeiAveDeg2.empty() || vvweight.size() != p2p.size()) {
+    return cal_nodeNeiAveDeg2_nodeDeg(
+        nodeNeiAveDeg2, p2p, nodeDeg, deg2ArrVal, degArrNo);
+  if (p2p.empty() || !nodeNeiAveDeg2.empty()
+      || vvweight.size() != p2p.size()) {
     ERROR();
     return -1;
   }
   const NodeType nodeSize = p2p.size();
   nodeNeiAveDeg2.assign(nodeSize, 0);
   for (NodeType i = 0; i < nodeSize; i++) {
-    if (p2p[i].size() <= 0) continue;
+    if (p2p[i].size() <= 0)
+      continue;
     for (NodeType j = 0; j < p2p[i].size(); j++) {
-      nodeNeiAveDeg2[i] +=
-          (double)vvweight[i][j] * deg2ArrVal[degArrNo[nodeDeg[p2p[i][j]]]];
-      nodeNeiAveDeg2[p2p[i][j]] +=
-          (double)vvweight[i][j] * deg2ArrVal[degArrNo[nodeDeg[i]]];
+      nodeNeiAveDeg2[i]
+          += (double)vvweight[i][j] * deg2ArrVal[degArrNo[nodeDeg[p2p[i][j]]]];
+      nodeNeiAveDeg2[p2p[i][j]]
+          += (double)vvweight[i][j] * deg2ArrVal[degArrNo[nodeDeg[i]]];
     }
   }
   for (NodeType i = 0; i < nodeSize; i++)
-    if (nodeDeg[i] > 0) nodeNeiAveDeg2[i] /= nodeWeight[i];
+    if (nodeDeg[i] > 0)
+      nodeNeiAveDeg2[i] /= nodeWeight[i];
   return 0;
 }
 
 int cal_neiAveDeg2(VDouble& neiAveDeg2, const VDouble& nodeNeiAveDeg2,
-                   const VNodeType& nodeDeg, const VNodeType& degArrSize,
-                   MNodeType& degArrNo, const VNodeType& degArrVal) {
+    const VNodeType& nodeDeg, const VNodeType& degArrSize, MNodeType& degArrNo,
+    const VNodeType& degArrVal)
+{
   const NodeType nodeSize = nodeDeg.size(), degSize = degArrSize.size();
   neiAveDeg2.assign(degSize, 0);
   for (NodeType i = 0; i < nodeSize; i++)
     neiAveDeg2[degArrNo[nodeDeg[i]]] += nodeNeiAveDeg2[i];
   for (NodeType i = 0; i < degSize; i++)
-    if (degArrSize[i] > 0 && degArrVal[i] > 0) neiAveDeg2[i] /= degArrSize[i];
+    if (degArrSize[i] > 0 && degArrVal[i] > 0)
+      neiAveDeg2[i] /= degArrSize[i];
   return 0;
 }
 
 int cal_neiAveDeg2_weight(VDouble& neiAveDeg2, const VDouble& nodeNeiAveDeg2,
-                          const VNodeType& nodeDeg, const VNodeType& degArrSize,
-                          MNodeType& degArrNo, const VNodeType& degArrVal,
-                          const VWeightSumType& degArrWeight,
-                          const VWeightType& nodeWeightOut,
-                          const int weightFlag) {
+    const VNodeType& nodeDeg, const VNodeType& degArrSize, MNodeType& degArrNo,
+    const VNodeType& degArrVal, const VWeightSumType& degArrWeight,
+    const VWeightType& nodeWeightOut, const int weightFlag)
+{
   if (!weightFlag)
-    return cal_neiAveDeg2(neiAveDeg2, nodeNeiAveDeg2, nodeDeg, degArrSize,
-                          degArrNo, degArrVal);
+    return cal_neiAveDeg2(
+        neiAveDeg2, nodeNeiAveDeg2, nodeDeg, degArrSize, degArrNo, degArrVal);
   const NodeType nodeSize = nodeDeg.size(), degSize = degArrSize.size();
   neiAveDeg2.assign(degSize, 0);
   for (NodeType i = 0; i < nodeSize; i++)
     neiAveDeg2[degArrNo[nodeDeg[i]]] += nodeNeiAveDeg2[i] * nodeWeightOut[i];
   for (NodeType i = 0; i < degSize; i++)
-    if (degArrSize[i] > 0 && degArrVal[i] > 0) neiAveDeg2[i] /= degArrWeight[i];
+    if (degArrSize[i] > 0 && degArrVal[i] > 0)
+      neiAveDeg2[i] /= degArrWeight[i];
   return 0;
 }
 
 int cal_spearman_lkk(double& spearman, const VVLinkType& lkk,
-                     const VDouble& deg2ArrVal, const LinkType linkSize) {
+    const VDouble& deg2ArrVal, const LinkType linkSize)
+{
   const NodeType degSize = lkk.size();
   if (degSize <= 0) {
     spearman = 0;
@@ -412,8 +445,8 @@ int cal_spearman_lkk(double& spearman, const VVLinkType& lkk,
 }
 
 int cal_spearman(double& spearman, const VVNodeType& p2p,
-                 const VDouble& deg2ArrVal, MNodeType& degArrNo,
-                 const LinkType linkSize) {
+    const VDouble& deg2ArrVal, MNodeType& degArrNo, const LinkType linkSize)
+{
   if (deg2ArrVal.size() <= 1) {
     spearman = 0;
     return 0;
@@ -421,7 +454,8 @@ int cal_spearman(double& spearman, const VVNodeType& p2p,
   const LinkType n = linkSize * 2;
   double sx = 0., sxx = 0., sxy = 0.;
   for (NodeType i = 0, k, nodeSize = p2p.size(); i < nodeSize; i++) {
-    if ((k = p2p[i].size()) <= 0) continue;
+    if ((k = p2p[i].size()) <= 0)
+      continue;
     double d = deg2ArrVal[degArrNo[k]];
     sx += d * k;
     sxx += d * d * k;
@@ -437,10 +471,10 @@ int cal_spearman(double& spearman, const VVNodeType& p2p,
 }
 
 int cal_spearman_dir(double& spearman, double& rho, const VVNodeType& p2p,
-                     const double linkSize, const VNodeType& nodeDeg1,
-                     MNodeType& degArrNo1, const VDouble& deg2ArrVal1,
-                     const VNodeType& nodeDeg2, MNodeType& degArrNo2,
-                     const VDouble& deg2ArrVal2) {
+    const double linkSize, const VNodeType& nodeDeg1, MNodeType& degArrNo1,
+    const VDouble& deg2ArrVal1, const VNodeType& nodeDeg2,
+    MNodeType& degArrNo2, const VDouble& deg2ArrVal2)
+{
   if (deg2ArrVal1.size() <= 1 || deg2ArrVal2.size() <= 1) {
     spearman = rho = 0;
     return 0;
@@ -448,7 +482,8 @@ int cal_spearman_dir(double& spearman, double& rho, const VVNodeType& p2p,
   double sx = 0., sxx = 0., sy = 0., syy = 0., sxy = 0.;
   for (NodeType i = 0; i < p2p.size(); i++) {
     const NodeType s = p2p[i].size();
-    if (s <= 0) continue;
+    if (s <= 0)
+      continue;
     const double ki = deg2ArrVal1[degArrNo1[nodeDeg1[i]]];
     for (NodeType j = 0; j < s; j++) {
       const double kj = deg2ArrVal2[degArrNo2[nodeDeg2[p2p[i][j]]]];
@@ -465,30 +500,31 @@ int cal_spearman_dir(double& spearman, double& rho, const VVNodeType& p2p,
     if (linkSize * syy - sy * sy == 0)
       spearman = 0;
     else
-      spearman = (linkSize * sxy - sx * sy) /
-                 sqrt((linkSize * sxx - sx * sx) * (linkSize * syy - sy * sy));
+      spearman = (linkSize * sxy - sx * sy)
+          / sqrt((linkSize * sxx - sx * sx) * (linkSize * syy - sy * sy));
     rho = (linkSize * sxy - sx * sy) / (linkSize * sxx - sx * sx);
   }
   return 0;
 }
 
 int cal_spearman_dir_weight(double& spearman, double& rho,
-                            const VVNodeType& p2p, const VVWeightType& vvweight,
-                            const double netWeight, const VNodeType& nodeDeg1,
-                            MNodeType& degArrNo1, const VDouble& deg2ArrVal1,
-                            const VNodeType& nodeDeg2, MNodeType& degArrNo2,
-                            const VDouble& deg2ArrVal2, const int weightFlag) {
+    const VVNodeType& p2p, const VVWeightType& vvweight,
+    const double netWeight, const VNodeType& nodeDeg1, MNodeType& degArrNo1,
+    const VDouble& deg2ArrVal1, const VNodeType& nodeDeg2,
+    MNodeType& degArrNo2, const VDouble& deg2ArrVal2, const int weightFlag)
+{
   if (deg2ArrVal1.size() <= 1 || deg2ArrVal2.size() <= 1) {
     spearman = rho = 0;
     return 0;
   }
   if (!weightFlag)
     return cal_spearman_dir(spearman, rho, p2p, netWeight, nodeDeg1, degArrNo1,
-                            deg2ArrVal1, nodeDeg2, degArrNo2, deg2ArrVal2);
+        deg2ArrVal1, nodeDeg2, degArrNo2, deg2ArrVal2);
   double sx = 0., sxx = 0., sy = 0., syy = 0., sxy = 0.;
   for (NodeType i = 0; i < p2p.size(); i++) {
     const NodeType s = p2p[i].size();
-    if (s <= 0) continue;
+    if (s <= 0)
+      continue;
     const double ki = deg2ArrVal1[degArrNo1[nodeDeg1[i]]];
     for (NodeType j = 0; j < s; j++) {
       const double kj = deg2ArrVal2[degArrNo2[nodeDeg2[p2p[i][j]]]],
@@ -506,17 +542,16 @@ int cal_spearman_dir_weight(double& spearman, double& rho,
     if (netWeight * syy - sy * sy == 0)
       spearman = 0;
     else
-      spearman =
-          (netWeight * sxy - sx * sy) /
-          sqrt((netWeight * sxx - sx * sx) * (netWeight * syy - sy * sy));
+      spearman = (netWeight * sxy - sx * sy)
+          / sqrt((netWeight * sxx - sx * sx) * (netWeight * syy - sy * sy));
     rho = (netWeight * sxy - sx * sy) / (netWeight * sxx - sx * sx);
   }
   return 0;
 }
 
 int cal_spearman_link(double& spearman, VNodeType& link,
-                      const VNodeType& nodeDeg, VDouble& deg2ArrVal,
-                      MNodeType& degArrNo) {
+    const VNodeType& nodeDeg, VDouble& deg2ArrVal, MNodeType& degArrNo)
+{
   if (deg2ArrVal.size() <= 1) {
     spearman = 0;
     return 0;
@@ -538,4 +573,4 @@ int cal_spearman_link(double& spearman, VNodeType& link,
 }
 
 //**//****************************************************//*
-#endif  // STAT_SPEARMAN
+#endif // STAT_SPEARMAN

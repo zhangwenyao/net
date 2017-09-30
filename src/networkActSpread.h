@@ -15,7 +15,7 @@ class Act_spread {
     LinkType neiCountSize;
 
     double prob;
-    std::vector<int> prob_rand;
+    std::vector<double> prob_rand;
 
     NodeType dataSize;
     std::vector<NodeType> data_node, data_time;

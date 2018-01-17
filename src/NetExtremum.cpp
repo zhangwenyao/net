@@ -283,22 +283,23 @@ int lkk_extreme_pearson(VVLinkType& lkk, const VNodeType& degArrVal,
 }
 
 //**//*****************************************************************//*
-int cal_Min_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
-    const VNodeType& degArrSize, const VLinkType& linkSum, const int fix)
+int cal_Min_lkk_side2mid(VVLinkType& lkk, const VNodeType& degArrVal,
+    const VNodeType& degArrSize, const int fix)
 {
   const NodeType degSize = degArrVal.size();
   lkk.clear();
   lkk.resize(degSize);
   VLinkType vlink(degSize);
+  LinkType L2 = 0;
   for (NodeType i = 0; i < degSize; i++) {
     lkk[i].assign(i + 1, 0);
-    vlink[i] = (LinkType)degArrSize[i] * degArrVal[i];
+    L2 += vlink[i] = (LinkType)degArrSize[i] * degArrVal[i];
   }
   NodeType head = 0, end = degSize - 1, mid = 0;
-  const LinkType linkSize = linkSum.back() / 2;
-  while (linkSum[mid] < linkSize)
-    mid++;
-  LinkType linkMid = linkSize - (mid > 0 ? linkSum[mid - 1] : 0);
+  const LinkType linkSize = L2 / 2;
+  LinkType linkMid = linkSize;
+  while (vlink[mid] < linkMid)
+    linkMid -= vlink[mid++];
 
   // sJ <= mid < sI
   for (NodeType sI = end; mid < sI; sI--) {
@@ -369,9 +370,10 @@ int cal_Min_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
       ERROR();
       return -1;
     }
+
     // 从中间mid往两端修正
-    if (cal_Min_lkk_fix(lkk, degArrVal, degArrSize, degSize, vlink, left,
-            right, mid, linkMid)
+    if (cal_Min_lkk_side2mid_fix(lkk, degArrVal, degArrSize, degSize, vlink,
+            left, right, mid, linkMid)
         == -1) {
       ERROR();
       return -1;
@@ -381,7 +383,7 @@ int cal_Min_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
   return 0;
 }
 
-int cal_Min_lkk_fix(VVLinkType& lkk, const VNodeType& degArrVal,
+int cal_Min_lkk_side2mid_fix(VVLinkType& lkk, const VNodeType& degArrVal,
     const VNodeType& degArrSize, const NodeType degSize, VLinkType& vlink,
     const NodeType& left, const NodeType& right, const NodeType& mid,
     LinkType& linkMid)
@@ -457,11 +459,104 @@ int cal_Min_lkk_fix(VVLinkType& lkk, const VNodeType& degArrVal,
   return 0;
 }
 
+int cal_Min_lkk_mid2side(VVLinkType& lkk, const VNodeType& degArrVal,
+    const VNodeType& degArrSize, const int fix)
+{
+  const NodeType degSize = degArrVal.size();
+  lkk.clear();
+  lkk.resize(degSize);
+  if (degSize <= 0)
+    return 0;
+
+  VLinkType vlink(degSize);
+  LinkType L2 = 0;
+  for (NodeType i = 0; i < degSize; i++) {
+    lkk[i].assign(i + 1, 0);
+    L2 += vlink[i] = (LinkType)degArrSize[i] * degArrVal[i];
+  }
+  NodeType mid = 0, end = degSize - 1;
+  const LinkType linkSize = L2 / 2;
+  LinkType linkMid = linkSize;
+  while (vlink[mid] < linkMid)
+    linkMid -= vlink[mid++];
+
+  // i==mid
+  if (linkMid != vlink[mid]) { // i==mid==j
+    LinkType si = degArrSize[mid], l = si * (si - 1) / 2;
+    if (l > linkMid)
+      l = linkMid;
+    if (l > vlink[mid] - linkMid)
+      l = vlink[mid] - linkMid;
+    lkk[mid][mid] = l;
+    linkMid -= l;
+    vlink[mid] -= l * 2;
+  }
+  if (linkMid > 0) { // i==mid<j
+    for (NodeType j = mid + 1; linkMid > 0 && j <= end; ++j) {
+      if (vlink[j] <= 0)
+        continue;
+      LinkType si = degArrSize[mid], l = si * degArrSize[j];
+      if (l > linkMid)
+        l = linkMid;
+      if (l > vlink[j])
+        l = vlink[j];
+      if (l > 0) {
+        lkk[j][mid] = l;
+        linkMid -= l;
+        vlink[mid] -= l;
+        vlink[j] -= l;
+      }
+    }
+  }
+  if (linkMid > 0)
+    vlink[mid] -= linkMid;
+
+  // i < mid <= j
+  for (NodeType i = mid, j0 = mid; i > 0;) {
+    --i;
+    if (vlink[i] <= 0)
+      continue;
+    while (j0 <= end && vlink[j0] <= 0)
+      ++j0;
+    if (j0 > end) {
+      ERROR();
+      break;
+    }
+
+    for (NodeType j = j0; vlink[i] > 0 && j <= end; ++j) {
+      if (vlink[j] <= 0)
+        continue;
+      LinkType l = (LinkType)degArrSize[i] * degArrSize[j];
+      if (l > vlink[i])
+        l = vlink[i];
+      if (l > vlink[j])
+        l = vlink[j];
+      if (l > 0) {
+        lkk[j][i] = l;
+        vlink[i] -= l;
+        vlink[j] -= l;
+      }
+    }
+  }
+
+  if (linkMid > 0) {
+    ERROR();
+    return -1;
+  }
+  for (size_t i = 0; i <= end; ++i)
+    if (vlink[i] > 0) {
+      ERROR();
+      cout << vlink << endl;
+      return -1;
+    }
+
+  return 0;
+}
+
 //**//*****************************************************************//*
 int cal_Max_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
-    const VNodeType& degArrSize, const VLinkType& linkSum, const int fix)
+    const VNodeType& degArrSize, const int fix)
 {
-  // TODO
   const NodeType degSize = degArrVal.size();
   lkk.clear();
   lkk.resize(degSize);
@@ -470,94 +565,66 @@ int cal_Max_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
     lkk[i].assign(i + 1, 0);
     vlink[i] = (LinkType)degArrSize[i] * degArrVal[i];
   }
-  NodeType head = 0, end = degSize - 1, mid = 0;
-  const LinkType linkSize = linkSum.back() / 2;
-  while (linkSum[mid] < linkSize)
-    mid++;
-  LinkType linkMid = linkSize - (mid ? linkSum[mid - 1] : 0);
-  // sJ <= mid < sI
-  for (NodeType sI = end; mid < sI && vlink[sI]; sI--) {
-    while (vlink[head] == 0)
-      head++;
-    for (NodeType sJ = head; vlink[sI] && sJ < mid; sJ++) { // sJ < mid
-      LinkType links = (LinkType)degArrSize[sI] * degArrSize[sJ];
-      if (links > vlink[sI])
-        links = vlink[sI];
-      if (links > vlink[sJ])
-        links = vlink[sJ];
-      vlink[sI] -= lkk[sI][sJ] = links;
-      vlink[sJ] -= links;
-    }
-    if (vlink[sI] && linkMid) { // sJ == mid
-      LinkType links = (LinkType)degArrSize[sI] * degArrSize[mid];
-      if (links > vlink[sI])
-        links = vlink[sI];
-      if (links > linkMid)
-        links = linkMid;
-      vlink[sI] -= lkk[sI][mid] = links;
-      vlink[mid] -= links;
-      linkMid -= links;
-    }
-  }
-  // sI == mid
-  if (linkMid < vlink[mid]) {
-    LinkType linkRight = vlink[mid] - linkMid;
-    for (NodeType sJ = head; linkRight && sJ < mid; sJ++) { // sJ < mid
-      LinkType links = (LinkType)degArrSize[sJ] * degArrSize[mid];
-      if (links > vlink[sJ])
-        links = vlink[sJ];
-      if (links > linkRight)
-        links = linkRight;
-      vlink[mid] -= lkk[mid][sJ] = links;
-      vlink[sJ] -= links;
-      linkRight -= links;
-    }
-    if (linkRight) { // sJ == mid == sI
-      LinkType links = (LinkType)degArrSize[mid] * (degArrSize[mid] - 1) / 2;
-      if (links > linkRight)
-        links = linkRight;
-      linkMid -= lkk[mid][mid] = links;
-      vlink[mid] -= links * 2;
-    }
-  }
-  for (NodeType left = mid - (linkMid == 0 && mid > 0),
-                right = mid + (linkMid == vlink[mid]);
-       right < degSize; right++) {
-    while (vlink[right] == 0 && right < degSize)
-      right++;
-    while (vlink[left] == 0 && left > 0)
-      left--;
-    if (right == degSize)
-      break; // 全连完
-    if (!fix) {
+
+  for (NodeType i = degSize - 1; 1;) {
+    while (vlink[i] <= 0 && i > 0)
+      --i;
+    if (vlink[i] <= 0)
+      break;
+
+    // j==i
+    NodeType si = degArrSize[i];
+    LinkType l = (LinkType)si * (si - 1);
+    if (l > vlink[i])
+      l = vlink[i];
+    if (l % 2 != 0)
+      --l;
+    vlink[i] -= l;
+    lkk[i][i] = l / 2;
+    if (i <= 0 && vlink[i] > 0) {
       ERROR();
       return -1;
     }
-    // 从中间mid往两端修正
-    if (cal_Min_lkk_fix(lkk, degArrVal, degArrSize, degSize, vlink, left,
-            right, mid, linkMid)
-        == -1) {
+
+    // j<i
+    for (NodeType j = i - 1; vlink[i] > 0; --j) {
+      while (vlink[j] <= 0 && j > 1)
+        --j;
+      if (vlink[j] <= 0) {
+        ERROR();
+        return -1;
+      }
+      NodeType sj = degArrSize[j];
+      LinkType l = (LinkType)sj * si;
+      if (l > vlink[i])
+        l = vlink[i];
+      if (l > vlink[j])
+        l = vlink[j];
+      vlink[i] -= l;
+      vlink[j] -= l;
+      lkk[i][j] += l;
+      if (j <= 0)
+        break;
+    }
+
+    if (vlink[i] > 0) {
       ERROR();
       return -1;
     }
   }
+
   return 0;
 }
 
 //**//*****************************************************************//*
 int Max_new_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
-    const VNodeType& degArrSize, VLinkType& linkSum, const int fix)
+    const VNodeType& degArrSize, const int fix)
 {
   if (degArrSize.empty()) {
     ERROR();
     return -1;
   }
-  if (linkSum.empty()
-      && 0 != degArr_2_linkSum(linkSum, degArrVal, degArrSize)) {
-    ERROR();
-    return -1;
-  }
-  if (0 != cal_Max_lkk(lkk, degArrVal, degArrSize, linkSum, fix)) {
+  if (0 != cal_Max_lkk(lkk, degArrVal, degArrSize, fix)) {
     ERROR();
     return -1;
   }
@@ -960,18 +1027,13 @@ int Min_new(VVNodeType& p2p, const VNodeType& nodeDeg,
 
 int Min_new_lkk_p2p(VVNodeType& p2p, VVLinkType& lkk, const VNodeType& nodeDeg,
     const VNodeType& degArrVal, const VNodeType& degArrSize,
-    const VNodeType& degArrSum, VLinkType& linkSum, const int fix)
+    const VNodeType& degArrSum, const int fix)
 {
   if (degArrSize.empty()) {
     ERROR();
     return -1;
   }
-  if (linkSum.empty()
-      && 0 != degArr_2_linkSum(linkSum, degArrVal, degArrSize)) {
-    ERROR();
-    return -1;
-  }
-  if (0 != cal_Min_lkk(lkk, degArrVal, degArrSize, linkSum, fix)) {
+  if (0 != cal_Min_lkk_mid2side(lkk, degArrVal, degArrSize, fix)) {
     ERROR();
     return -1;
   }
@@ -983,18 +1045,13 @@ int Min_new_lkk_p2p(VVNodeType& p2p, VVLinkType& lkk, const VNodeType& nodeDeg,
 }
 
 int Min_new_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
-    const VNodeType& degArrSize, VLinkType& linkSum, const int fix)
+    const VNodeType& degArrSize, const int fix)
 {
   if (degArrSize.empty()) {
     ERROR();
     return -1;
   }
-  if (linkSum.empty()
-      && 0 != degArr_2_linkSum(linkSum, degArrVal, degArrSize)) {
-    ERROR();
-    return -1;
-  }
-  if (0 != cal_Min_lkk(lkk, degArrVal, degArrSize, linkSum, fix)) {
+  if (0 != cal_Min_lkk_mid2side(lkk, degArrVal, degArrSize, fix)) {
     ERROR();
     return -1;
   }

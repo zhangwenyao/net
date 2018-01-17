@@ -201,17 +201,50 @@ Networks& Networks::degree_power_arr(void)
 {
   if (0 != runStatus) {
     ERROR();
+    runStatus = -1;
     return *this;
   }
+  if (0 >= kMin || kMin >= nodeSize) {
+    ERROR();
+    runStatus = -1;
+    return *this;
+  }
+
+  if (kMax <= 0 || kMax >= nodeSize) {
+    if (0 != PowerLaw_NatureCutoff(
+                 kMax, nodeSize, kMin, degree.power_gamma)) { // 最大度
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+  } else {
+    if (kMax >= nodeSize)
+      kMax = nodeSize - 1;
+  }
+
   // 生成度分布概率
   ::power_cal_degArrProb(
       degree.power_gamma, degArrVal, degArrProb, kMin, kMax);
+
+  // 生成度分布
   ::power_cal_deg_arr(degArrSize, degArrVal, degArrProb, nodeSize);
+  ::fix_degArr_kExtremum(degArrSize, degArrVal, degArrProb); // 去除0
+
   // 修正度序列使总数为偶数
   if (::degArr_2_linkSize(linkSize, degArrVal, degArrSize, dirFlag) != 0) {
-    ::fix_degArr(degArrSize, degArrProb, degArrVal, linkSize, nodeSize);
+    ::fix_degArr_linkSize(degArrSize, degArrVal, degArrProb, linkSize);
     linkSize /= 2;
   }
+  if (!degArrVal.empty() && 0 != fix_degArrSize_0(degArrSize, degArrVal)) {
+    ERROR();
+    runStatus = -1;
+    return *this;
+  }
+
+  degMean = nodeSize > 0 ? (double)linkSize / nodeSize : 0;
+  if (!dirFlag)
+    degMean *= 2;
+
   return *this;
 }
 

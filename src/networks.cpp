@@ -1016,7 +1016,7 @@ Networks& Networks::cal_p2p(const string& s)
       status = -1;
   }
 
-  if (status < 0 || p2p.empty()) {
+  if (status < 0 || runStatus < 0 || p2p.empty()) {
     ERROR();
     runStatus = -1;
     return *this;

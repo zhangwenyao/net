@@ -9,20 +9,23 @@
  *                net_run       argv          options
  * 参数           cal_params    dirFlag !dirFlag        是否有向
  *                              weightFlag !weightFlag  是否带权重
- * 随机数种子     init_seee                   仅首次初始化
+ * 随机数种子     init_seed                   仅首次初始化
  *                init_seed0                  重新初始化种子
  * 度分布         cal_deg       read_deg      读取度序列
  *                              read_degArr   读取度分布
  *                              read_lkk      读取连边分布
  *                              lkk_power     度序列幂律的联合分布矩阵lkk
  *                              power         度序列幂律分布
+ *                              power_arr     度序列幂律分布
  *                              poisson       度序列泊松分布
  * 连边           cal_p2p       p2p           利用已有数组转化
  *                              read_p2p      读取连边链接表
  *                              read_linkMatr 读取连边矩阵
  *                              read_link     读取连边
  *                              Max           最大度关联网络
+ *                              Max_lkk       最大度关联网络
  *                              Min           最小度关联网络
+ *                              Min_lkk       最小度关联网络
  *                              MinLkkP2p     min lkk -> p2p
  *                              MinLkkP2pFix  min lkk -> p2p fix
  *                              ER            ER随机网络
@@ -61,7 +64,7 @@ class Network {
   int dirFlag;                // 网络是否有向，0无向，非0有向
   int weightFlag;             // 网络是否有权，0无权，非0有权
   int distFlag;               //  网络距离是否01，0:01，非0:实数
-  NodeType nodeSize;          // 节点数
+  NodeType nodeSize, degSize; // 节点数，不同度数
   NodeType kMin, kMax;        // 度范围,最小度,最大度
   LinkType linkSize;          // 连边数
   std::vector<int> paramsInt; // 整型参数
@@ -105,6 +108,7 @@ class Network {
   VVLinkType lkk, lkkOutIn;       // 不同度之间连边数目矩阵
   VVLinkType lkkSum, lkkSumOutIn; // 同度点连向不同度的累计边数
   VVDouble lkkProb;               // [degSize]    连边的联合分布概率
+  int lkk_saveType;
 
   Network(void);
   friend std::istream& operator>>(std::istream& is, Network& net);

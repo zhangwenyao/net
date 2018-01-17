@@ -1,20 +1,22 @@
 // g++ -o main.exe *.cpp -O3 -Wall
-#include "net.h"
-#ifdef STAT_BETWEENNESS
+#include "main.h"
+#ifdef MAIN_STAT_BETWEENNESS
 
 #include "common.h"
 #include "networks.h"
 using namespace std;
 //**//****************************************************//*
-int main(int argc, char **argv) {
-  SHOW_TIME(cout);  // 显示系统时间
+int main(int argc, char** argv)
+{
+  SHOW_TIME(cout); // 显示系统时间
 
   do {
     Networks net;
-    net.readName = "data/example/1";
-    net.saveName = "data/betweenness";
-    net.argv = "cal_p2p read_linkMatr stat print save0";
+    //net.readName = "data/example/1";
+    net.readName = "data/example/adDSN";
+    net.saveName = net.readName;
     net.seed = 1;
+    net.argv = "--initseed0 --cal_p2p read_link --stat --print --save0";
 
     // 带参数运行
     if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {
@@ -30,7 +32,7 @@ int main(int argc, char **argv) {
     }
   } while (0);
 
-  SHOW_TIME(cout);  // 显示系统时间
+  SHOW_TIME(cout); // 显示系统时间
   return 0;
 }
 //**//****************************************************//*

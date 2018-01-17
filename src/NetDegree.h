@@ -16,6 +16,9 @@ int power_cal_degArrProb(const double p, VNodeType& degArrVal,
 int power_cal_deg_arr(VNodeType& degArrSize, const VNodeType& degArrVal,
     const VDouble& degArrProb, NodeType nodeSize); // 生成度分布累计序列
 
+int PowerLaw_NatureCutoff(NodeType& kMax, const NodeType nodeSize,
+    const NodeType kMin, const double gamma);
+
 //**//*****************************************************************//*
 #endif // NET_DEGREE
 #endif // NET_DEGREE_H

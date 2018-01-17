@@ -81,5 +81,23 @@ int power_cal_deg_arr(VNodeType& degArrSize, const VNodeType& degArrVal,
   return 0;
 }
 
+//**//**************************************************//**//*
+int PowerLaw_NatureCutoff(NodeType& kMax, const NodeType nodeSize,
+    const NodeType kMin, const double gamma)
+{
+  if (kMin < 1 || nodeSize <= kMin || gamma <= 1) {
+    ERROR();
+    return -1;
+  }
+  kMax = (kMin - 0.5) * pow((double)nodeSize, 1 / (gamma - 1));
+  if (kMax > nodeSize - 1)
+    kMax = nodeSize - 1;
+  if (kMax < kMin) {
+    ERROR();
+    return -1;
+  }
+  return 0;
+}
+
 //**//*****************************************************************//*
 #endif // NET_DEGREE

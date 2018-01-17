@@ -14,6 +14,7 @@ Network::Network(void)
     , weightFlag(0)
     , distFlag(0)
     , nodeSize(0)
+    , degSize(0)
     , kMin(0)
     , kMax(0)
     , linkSize(0)
@@ -34,6 +35,7 @@ Network::Network(void)
     , degWeightMean(0)
     , degWeightMeanOut(0)
     , degWeightMeanIn(0)
+    , lkk_saveType(0)
 {
 }
 
@@ -117,6 +119,11 @@ Network& Network::read_params_1(string& s, istream& is)
       cout << s << '\t' << nodeSize << endl;
       break;
     }
+    if (s == "--degSize") {
+      is >> degSize;
+      cout << s << '\t' << degSize << endl;
+      break;
+    }
     if (s == "--kMin") {
       is >> kMin;
       cout << s << '\t' << kMin << endl;
@@ -125,12 +132,6 @@ Network& Network::read_params_1(string& s, istream& is)
     if (s == "--kMax") {
       is >> kMax;
       cout << s << '\t' << kMax << endl;
-      break;
-    }
-    if (s == "--degSize") {
-      NodeType degSize;
-      is >> degSize;
-      cout << s << '\t' << degSize << endl;
       break;
     }
     if (s == "--degMean") {
@@ -185,6 +186,11 @@ Network& Network::read_params_1(string& s, istream& is)
       cout << s << '\t' << st << "\t" << paramsDouble[st] << endl;
       break;
     }
+    if (s == "--lkk_saveType") {
+      is >> lkk_saveType;
+      cout << s << '\t' << lkk_saveType << endl;
+      break;
+    }
     flag = 0;
   } while (0);
   if (flag)
@@ -209,6 +215,8 @@ ostream& operator<<(std::ostream& os, Network& net)
      << net.nodeSize << "\n--kMin\t" << net.kMin << "\n--kMax\t" << net.kMax
      << "\n--degSize\t" << net.degArrVal.size() << "\n--degMean\t"
      << net.degMean << "\n--linkSize\t" << net.linkSize;
+  if (net.lkk_saveType != 0)
+    os << "\n--lkk_saveType\t" << net.lkk_saveType;
   if (net.weightFlag) {
     os << "\n--netWeight\t" << net.netWeight << "\n--degWeightMean\t"
        << net.degWeightMean;
@@ -534,6 +542,19 @@ Network& Network::save_p2p(const char* name)
     fn = saveName + '_' + ss.str();
   }
 
+  if (!lkk.empty()) {
+    if (lkk_saveType == 3) {
+      if (0
+          != save_lkk_3((fn + ".lkk3.txt").c_str(), lkk, priChar2, priChar)) {
+        ERROR();
+        runStatus = -1;
+      }
+    } else if (0 != common_save2((fn + ".lkk.txt").c_str(), lkk, priChar2)) {
+      ERROR();
+      runStatus = -1;
+    }
+  }
+
   if (!p2p.empty()
       && 0 != common_save2((fn + ".p2p.txt").c_str(), p2p, priChar2)) {
     runStatus = -1;
@@ -562,13 +583,6 @@ Network& Network::save_p2p(const char* name)
   }
   if (status == -2
       && 0 != common_save1((fn + ".p2pSize.txt").c_str(), p2pSize)) {
-    runStatus = -1;
-    ERROR();
-  }
-
-  // common_save2((fn + ".lkk.txt").c_str(), lkk, priChar2)
-  if (!lkk.empty()
-      && 0 != save_lkk_3((fn + ".lkk3.txt").c_str(), lkk, priChar2)) {
     runStatus = -1;
     ERROR();
   }
@@ -697,7 +711,7 @@ Network& Network::read_degArr(const char* name)
     degArrSize_2_degArrSum(degArrSum, degArrSize);
 
   if (linkSize <= 0
-      && 0 != degArr_2_linkSize(linkSize, degArrVal, degArrSize)) {
+      && 0 != degArr_2_linkSize(linkSize, degArrVal, degArrSize, dirFlag)) {
     runStatus = -1;
     ERROR();
     return *this;
@@ -707,19 +721,29 @@ Network& Network::read_degArr(const char* name)
     ERROR();
     return *this;
   }
-  if (nodeDeg.empty()) {
-    nodeDeg.reserve(nodeSize);
-    if (0 != degArr_2_nodeDeg(nodeDeg, degArrVal, degArrSize)) {
-      runStatus = -1;
-      ERROR();
-      return *this;
-    }
-  }
-  if (degArrNo.empty() && 0 != degArrVal_2_degArrNo(degArrNo, degArrVal)) {
-    runStatus = -1;
-    ERROR();
-    return *this;
-  }
+  // if (nodeDeg.empty()) {
+  // nodeDeg.reserve(nodeSize);
+  // if (0 != degArr_2_nodeDeg(nodeDeg, degArrVal, degArrSize)) {
+  // runStatus = -1;
+  // ERROR();
+  // return *this;
+  //}
+  //}
+  // if (degArrNo.empty() && 0 != degArrVal_2_degArrNo(degArrNo, degArrVal)) {
+  // runStatus = -1;
+  // ERROR();
+  // return *this;
+  //}
+
+  if (kMin <= 0)
+    kMin = degArrVal.front() <= degArrVal.back() ? degArrVal.front()
+                                                 : degArrVal.back();
+  if (kMax <= 0)
+    kMax = degArrVal.front() >= degArrVal.back() ? degArrVal.front()
+                                                 : degArrVal.back();
+  degMean = nodeSize > 0 ? (double)linkSize / nodeSize : 0;
+  if (!dirFlag)
+    degMean *= 2;
 
   return *this;
 }

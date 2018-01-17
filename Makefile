@@ -1,5 +1,5 @@
 
-TARGET	= net
+TARGET	= lkk.exe
 SRCEXTS	= .c .cpp
 DIR_INC	= ./include
 DIR_SRC	= ./src

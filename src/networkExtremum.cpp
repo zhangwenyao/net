@@ -20,7 +20,7 @@ Networks& Networks::net_Max_new_lkk(const int fix)
     ERROR();
     return *this;
   }
-  if (0 != ::Max_new_lkk(lkk, degArrVal, degArrSize, linkSum, fix)) {
+  if (0 != ::Max_new_lkk(lkk, degArrVal, degArrSize, fix)) {
     ERROR();
     runStatus = -1;
     status = -1;
@@ -67,7 +67,7 @@ Networks& Networks::net_Min_new_lkk_p2p(const int fix)
     return *this;
   }
   if (0 != ::Min_new_lkk_p2p(p2p, lkk, nodeDeg, degArrVal, degArrSize,
-               degArrSum, linkSum, fix)) {
+               degArrSum, fix)) {
     ERROR();
     runStatus = -1;
     status = -1;
@@ -82,7 +82,7 @@ Networks& Networks::net_Min_new_lkk(const int fix)
     ERROR();
     return *this;
   }
-  if (0 != ::Min_new_lkk(lkk, degArrVal, degArrSize, linkSum, fix)) {
+  if (0 != ::Min_new_lkk(lkk, degArrVal, degArrSize, fix)) {
     ERROR();
     runStatus = -1;
     status = -1;

@@ -351,6 +351,40 @@ int nodeDeg_2_linkSize(
   return 0;
 }
 
+int degArrVal_2_deg2ArrVal(VDouble& deg2ArrVal, const VNodeType& degArrSize,
+    const VNodeType& degArrVal, const LinkType linkSize, const int dirFlag)
+{
+  const NodeType degSize = degArrVal.size();
+  deg2ArrVal.resize(degSize);
+  LinkType sum = 0, l = dirFlag ? linkSize : linkSize * 2;
+  for (NodeType i = 0; i < degSize; i++) {
+    deg2ArrVal[i] = (sum + 0.5 * degArrSize[i] * degArrVal[i]) / l;
+    sum += (LinkType)degArrSize[i] * degArrVal[i];
+  }
+  return 0;
+}
+
+int degArrWeight_2_netWeight(
+    WeightSumType& netWeight, const VWeightSumType& degArrWeight)
+{
+  netWeight = 0;
+  for (VWeightTypeCItr i = degArrWeight.begin(); i != degArrWeight.end(); i++)
+    netWeight += *i;
+  return 0;
+}
+
+int degArrWeight_2_deg2ArrVal(VDouble& deg2ArrVal,
+    const VWeightSumType& degArrWeight, const WeightSumType netWeight)
+{
+  deg2ArrVal.resize(degArrWeight.size());
+  double sum = 0;
+  for (NodeType i = 0; i < degArrWeight.size(); i++) {
+    deg2ArrVal[i] = (sum + 0.5 * degArrWeight[i]) / netWeight;
+    sum += degArrWeight[i];
+  }
+  return 0;
+}
+
 int check_nodeDeg0(const VNodeType& nodeDeg)
 {
   if (nodeDeg.empty())
@@ -361,44 +395,62 @@ int check_nodeDeg0(const VNodeType& nodeDeg)
   return 0;
 }
 
-int fix_degArr(VNodeType& degArrSize, const VDouble& degArrProb,
-    const VNodeType& degArrVal, LinkType& linkSize, const NodeType nodeSize)
+int fix_degArr_kExtremum(VNodeType& degArrSize, const VNodeType& degArrVal,
+    const VDouble& degArrProb)
 {
   const NodeType degSize = degArrVal.size();
-  if (degSize < 2 || nodeSize < 2)
-    return 0;
-  for (NodeType k1, k2; degArrSize[0] <= 0 || degArrSize[degSize - 1] <= 0
-       || linkSize % 2 != 0;) {
+  if (degSize <= 0 || (degSize == 1 && degArrVal[0] <= 1)) {
+    ERROR();
+    return -1;
+  }
+  for (NodeType k1, k2; degArrSize[0] <= 0 || degArrSize[degSize - 1] <= 0;) {
+    if (degArrSize[0] <= 0)
+      k1 = 0;
+    else if (degArrSize[degSize - 1] <= 0)
+      k1 = degSize - 1;
+    while (1) {
+      k2 = std::uniform_int_distribution<NodeType>(0, degSize - 2)(rand2);
+      if (k1 == 0)
+        ++k2;
+      if (degArrSize[k2] > 0 && (k2 != 0 || degArrSize[0] > 1)
+          && (k2 != degSize - 1 || degArrSize[degSize - 1] > 1)
+          && rand_double() < degArrProb[k2])
+        break;
+    }
+    ++degArrSize[k1];
+    --degArrSize[k2];
+  }
+  return 0;
+}
+
+int fix_degArr_linkSize(VNodeType& degArrSize, const VNodeType& degArrVal,
+    const VDouble& degArrProb, LinkType& linkSize)
+{
+  const NodeType degSize = degArrVal.size();
+  if (degSize < 2)
+    return -1;
+  NodeType k1, k2;
+  while (1) {
     while (1) {
       k1 = std::uniform_int_distribution<NodeType>(0, degSize - 1)(rand2);
-      if (rand_double() < degArrProb[k1] && degArrSize[k1] > 0
-          && (k1 != 0 || degArrSize[0] > 1)
-          && (k1 != degSize - 1 || degArrSize[degSize - 1] > 1))
+      if (degArrSize[k1] > 0 && (k1 != 0 || degArrSize[0] > 1)
+          && (k1 != degSize - 1 || degArrSize[degSize - 1] > 1)
+          && rand_double() < degArrProb[k1])
         break;
     }
     while (1) {
-      if (degArrSize[0] <= 0) {
-        k2 = 0;
-        break;
-      }
-      if (degArrSize[degSize - 1] <= 0) {
-        k2 = degSize - 1;
-        break;
-      }
       k2 = std::uniform_int_distribution<NodeType>(0, degSize - 2)(rand2);
       if (k2 <= k1)
         ++k2;
       if (rand_double() < degArrProb[k2])
         break;
     }
-    if ((degArrSize[k2] <= 0 && (k2 == 0 || k2 == degSize - 1))
-        || (degArrSize[0] > 0 && degArrSize[degSize - 1] > 0
-               && degArrSize[k1] % 2 != degArrSize[k2] % 2)) {
-      linkSize = linkSize - degArrVal[k1] + degArrVal[k2];
-      --degArrSize[k1];
-      ++degArrSize[k2];
-    }
+    if (degArrVal[k1] % 2 != degArrVal[k2] % 2)
+      break;
   }
+  linkSize = linkSize - degArrVal[k1] + degArrVal[k2];
+  --degArrSize[k1];
+  ++degArrSize[k2];
   return 0;
 }
 
@@ -415,6 +467,29 @@ int fix_nodeDeg(VNodeType& nodeDeg, const VDouble& degArrProb,
         nodeDeg[num] = degArrVal[k];
         break;
       }
+  }
+  return 0;
+}
+
+int fix_degArrSize_0(VNodeType& degArrSize, VNodeType& degArrVal)
+{
+  size_t d = degArrVal.size(), h = 0;
+  if (degArrSize.size() != d) {
+    ERROR();
+    return -1;
+  }
+  while (h < d && degArrSize[h] > 0)
+    ++h;
+  if (h < d) {
+    for (size_t i = h + 1; i < d; ++i) {
+      if (degArrSize[i] <= 0)
+        continue;
+      degArrVal[h] = degArrVal[i];
+      degArrSize[h] = degArrSize[i];
+      ++h;
+    }
+    degArrVal.resize(h);
+    degArrSize.resize(h);
   }
   return 0;
 }
@@ -1003,8 +1078,8 @@ int addLink_linkMatrC_proNode(VVChar& linkMatrC, LinkType& linkSize,
   return 0;
 }
 
-int addLink_linkMatr_ranNode(
-    VVDistType& linkMatr, LinkType& linkRemain) // 每次直接随机抽取两个点连边
+int addLink_linkMatr_ranNode(VVDistType& linkMatr,
+    LinkType& linkRemain) // 每次直接随机抽取两个点连边
 {
   const NodeType nodeSize = linkMatr.size();
   while (linkRemain > 0) {
@@ -2691,20 +2766,42 @@ int read_link_weight_0(VNodeType& link, LinkType& linkSize,
 }
 
 //**//***********************************************************//*
-int read_lkk_3(istream& is, VVLinkType& lkk)
+int read_lkk_3(
+    istream& is, VVLinkType& lkk, const NodeType degSize, const int rv)
 {
-  LinkType n;
-  for (NodeType i, j; is >> i >> j >> n;) {
-    if (i >= lkk.size())
-      lkk.resize(i + 1);
-    if (j >= lkk[i].size())
-      lkk[i].resize(j + 1, 0);
-    lkk[i][j] = n;
+  if (!rv) {
+    LinkType n;
+    for (NodeType i, j; is >> i >> j >> n;) {
+      if (i >= lkk.size())
+        lkk.resize(i + 1);
+      if (j >= lkk[i].size())
+        lkk[i].resize(j + 1, 0);
+      lkk[i][j] = n;
+    }
+  } else {
+    lkk.resize(degSize);
+    if (degSize <= 0)
+      return 0;
+    LinkType n;
+    for (NodeType i, j; is >> i >> j >> n;) {
+      if (i > degSize || j > degSize) {
+        ERROR();
+        return -1;
+      }
+      i = degSize - i;
+      j = degSize - i;
+      if (i >= lkk.size())
+        lkk.resize(i + 1);
+      if (j >= lkk[i].size())
+        lkk[i].resize(j + 1, 0);
+      lkk[i][j] = n;
+    }
   }
   return 0;
 }
 
-int read_lkk_3(const char* name, VVLinkType& lkk)
+int read_lkk_3(
+    const char* name, VVLinkType& lkk, const NodeType degSize, const int rv)
 {
   if (!name || name[0] == '\0') {
     ERROR();
@@ -2715,27 +2812,36 @@ int read_lkk_3(const char* name, VVLinkType& lkk)
     ERROR();
     return -1;
   }
-  int flag = read_lkk_3(is, lkk);
+  int flag = read_lkk_3(is, lkk, degSize, rv);
   is.close();
   return flag;
 }
 
-int save_lkk_3(
-    ostream& os, const VVLinkType& lkk, const char pri2, const char pri)
+int save_lkk_3(ostream& os, const VVLinkType& lkk, const int rv,
+    const char pri2, const char pri)
 {
   if (!os) {
     ERROR();
     return 0;
   }
-  for (size_t i = 0; i < lkk.size(); ++i)
-    for (size_t j = 0; j < lkk[i].size(); ++j)
-      if (lkk[i][j] > 0)
-        os << i << pri2 << j << pri2 << lkk[i][j] << pri;
+  if (!rv) {
+    for (size_t i = 0; i < lkk.size(); ++i)
+      for (size_t j = 0; j < lkk[i].size(); ++j)
+        if (lkk[i][j] > 0)
+          os << i << pri2 << j << pri2 << lkk[i][j] << pri;
+  } else {
+    const NodeType degSize = lkk.size();
+    for (size_t i = 0; i < lkk.size(); ++i)
+      for (size_t j = 0; j < lkk[i].size(); ++j)
+        if (lkk[i][j] > 0)
+          os << (degSize - i) << pri2 << (degSize - j) << pri2 << lkk[i][j]
+             << pri;
+  }
   return 0;
 }
 
-int save_lkk_3(
-    const char* name, const VVLinkType& lkk, const char pri2, const char pri)
+int save_lkk_3(const char* name, const VVLinkType& lkk, const int rv,
+    const char pri2, const char pri)
 {
   if (!name || name[0] == '\0') {
     ERROR();
@@ -2746,35 +2852,9 @@ int save_lkk_3(
     ERROR();
     return -1;
   }
-  int flag = save_lkk_3(os, lkk, pri2, pri);
+  int flag = save_lkk_3(os, lkk, rv, pri2, pri);
   os.close();
   return flag;
-}
-
-//**//**************************************************//**//*
-int cal_kMax_PowerLaw_NatureCutoff(NodeType& kMax, const NodeType nodeSize,
-    const NodeType kMin, const double gamma)
-{
-  if (kMin < 1 || nodeSize < kMin) {
-    ERROR();
-    return -1;
-  }
-  double r, c = 0, km;
-  if (gamma <= 3)
-    r = 0.5;
-  else
-    r = 1 / (gamma - 1);
-  kMax = pow(nodeSize, r);
-  if (kMax < kMin)
-    return -1;
-  for (NodeType i = kMin; i <= kMax; ++i)
-    c += pow(i, r);
-  km = pow(c / nodeSize, -1. / r);
-  if (kMax > km)
-    kMax = km;
-  if (kMax < kMin)
-    return -1;
-  return 0;
 }
 
 //**//***********************************************************//*

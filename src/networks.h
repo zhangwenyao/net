@@ -83,9 +83,9 @@ class Networks : public Network {
   Networks& run(const std::string argv2 = "");
   Networks& stat(void);
 
-  Networks& cal_params(const std::string& s);
-  Networks& cal_nodeDeg(const std::string& s);
-  Networks& cal_p2p(const std::string& s);
+  Networks& cal_params(const std::string& s = "");
+  Networks& cal_nodeDeg(const std::string& s = "");
+  Networks& cal_p2p(const std::string& s = "");
   Networks& fix_p2p_nodeDeg0(void);
 
 #ifdef NET_DEGREE

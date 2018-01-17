@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
     }
     weightMatr_2_linkMatr(net.linkMatr, net.weightMatr);
 
-    net.argv = "cal_p2p p2p stat print save0";
+    net.argv = "--initseed0 --cal_p2p p2p --stat --print --save0";
     // 带参数运行
     if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {
       ERROR("net.read_params(argc, argv)");
@@ -33,7 +33,8 @@ int main(int argc, char **argv) {
     // 功能模块
     if (0 != net.run().runStatus) {
       ERROR("net.run");
-      cerr << net << endl;
+      net.saveName += "_error";
+      net.save();
       break;
     }
   } while (0);

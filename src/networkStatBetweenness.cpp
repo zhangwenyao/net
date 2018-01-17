@@ -6,9 +6,14 @@
 using namespace std;
 
 //**//****************************************************//*
-Stat_betweenness::Stat_betweenness(void) : meanNode(0), meanEdge(0) {}
+Stat_betweenness::Stat_betweenness(void)
+    : meanNode(0)
+    , meanEdge(0)
+{
+}
 
-ostream& operator<<(ostream& os, const Stat_betweenness& betweenness) {
+ostream& operator<<(ostream& os, const Stat_betweenness& betweenness)
+{
   if (!os) {
     ERROR();
     return os;
@@ -18,7 +23,8 @@ ostream& operator<<(ostream& os, const Stat_betweenness& betweenness) {
   return os;
 }
 
-int Stat_betweenness::save_params(ostream& os) const {
+int Stat_betweenness::save_params(ostream& os) const
+{
   if (!os) {
     ERROR();
     return -1;
@@ -27,7 +33,8 @@ int Stat_betweenness::save_params(ostream& os) const {
   return 0;
 }
 
-int Stat_betweenness::save_params(const char* name) const {
+int Stat_betweenness::save_params(const char* name) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -42,8 +49,9 @@ int Stat_betweenness::save_params(const char* name) const {
   return 0;
 }
 
-int Stat_betweenness::save_data(const char* name, const char priChar,
-                                const char priChar2) const {
+int Stat_betweenness::save_data(
+    const char* name, const char priChar, const char priChar2) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -55,15 +63,18 @@ int Stat_betweenness::save_data(const char* name, const char priChar,
   if (!betwEdge.empty())
     f |= common_save2((fn + ".betwEdge.txt").c_str(), betwEdge, priChar2);
   if (!minDistMatr.empty())
-    f |= common_save2((fn + ".minDistMatr.txt").c_str(), minDistMatr, priChar2);
+    f |= common_save2(
+        (fn + ".minDistMatr.txt").c_str(), minDistMatr, priChar2);
   if (!minDistMean.empty())
     f |= common_save1((fn + ".minDistMean.txt").c_str(), minDistMean, priChar);
-  if (0 != f) ERROR();
+  if (0 != f)
+    ERROR();
   return f;
 }
 
-int Stat_betweenness::save(const char* name, const char priChar,
-                           const char priChar2) const {
+int Stat_betweenness::save(
+    const char* name, const char priChar, const char priChar2) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -80,7 +91,8 @@ int Stat_betweenness::save(const char* name, const char priChar,
   return 0;
 }
 
-int Stat_betweenness::read_params_1(string& s, istream& is) {
+int Stat_betweenness::read_params_1(string& s, istream& is)
+{
   if (!is) {
     ERROR();
     return -1;
@@ -99,11 +111,13 @@ int Stat_betweenness::read_params_1(string& s, istream& is) {
     }
     flag = 0;
   } while (0);
-  if (flag) s.clear();
+  if (flag)
+    s.clear();
   return 0;
 }
 
-Stat_betweenness& Stat_betweenness::clear(void) {
+Stat_betweenness& Stat_betweenness::clear(void)
+{
   meanNode = 0;
   meanEdge = 0;
   betwNode.clear();
@@ -114,7 +128,8 @@ Stat_betweenness& Stat_betweenness::clear(void) {
 }
 
 //**//****************************************************//*
-Networks& Networks::stat_betweenness(void) {
+Networks& Networks::stat_betweenness(void)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -126,35 +141,33 @@ Networks& Networks::stat_betweenness(void) {
       return *this;
     }
     linkMatr_2_p2p(p2p, linkMatr);
-    if (dirFlag) p2p_2_p2pIn(p2pIn, p2p);
+    if (dirFlag)
+      p2p_2_p2pIn(p2pIn, p2p);
   }
 
   if (distFlag) {
     if (dirFlag)
-      runStatus = cal_betweenness(
-          betweenness.betwNode, betweenness.betwEdge, betweenness.meanNode,
-          betweenness.meanEdge, betweenness.minDistMatr,
+      runStatus = cal_betweenness(betweenness.betwNode, betweenness.betwEdge,
+          betweenness.meanNode, betweenness.meanEdge, betweenness.minDistMatr,
           betweenness.minDistMean, p2p, p2pIn, linkMatr);
     else
       runStatus = cal_betweenness(betweenness.betwNode, betweenness.betwEdge,
-                                  betweenness.meanNode, betweenness.meanEdge,
-                                  betweenness.minDistMatr,
-                                  betweenness.minDistMean, p2p, p2p, linkMatr);
+          betweenness.meanNode, betweenness.meanEdge, betweenness.minDistMatr,
+          betweenness.minDistMean, p2p, p2p, linkMatr);
   } else {
     if (dirFlag)
       runStatus = cal_betweenness0(betweenness.betwNode, betweenness.betwEdge,
-                                   betweenness.meanNode, betweenness.meanEdge,
-                                   betweenness.minDistMatr,
-                                   betweenness.minDistMean, p2p, p2pIn);
+          betweenness.meanNode, betweenness.meanEdge, betweenness.minDistMatr,
+          betweenness.minDistMean, p2p, p2pIn);
     else
       runStatus = cal_betweenness0(betweenness.betwNode, betweenness.betwEdge,
-                                   betweenness.meanNode, betweenness.meanEdge,
-                                   betweenness.minDistMatr,
-                                   betweenness.minDistMean, p2p, p2p);
+          betweenness.meanNode, betweenness.meanEdge, betweenness.minDistMatr,
+          betweenness.minDistMean, p2p, p2p);
   }
-  if (0 != runStatus) ERROR();
+  if (0 != runStatus)
+    ERROR();
   return *this;
 }
 
 //**//****************************************************//*
-#endif  // STAT_BETWEENNESS
+#endif // STAT_BETWEENNESS

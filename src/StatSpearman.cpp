@@ -260,40 +260,6 @@ int cal_lkkProb_exp0(VVDouble& lkkProb, const VDouble& s2,
   return 0;
 }
 
-int degArrVal_2_deg2ArrVal(VDouble& deg2ArrVal, const VNodeType& degArrSize,
-    const VNodeType& degArrVal, const double linkSize, const int dirFlag)
-{
-  const NodeType degSize = degArrVal.size();
-  deg2ArrVal.resize(degSize);
-  LinkType sum = 0, l = dirFlag ? linkSize : linkSize * 2;
-  for (NodeType i = 0; i < degSize; i++) {
-    deg2ArrVal[i] = (sum + 0.5 * degArrSize[i] * degArrVal[i]) / l;
-    sum += (LinkType)degArrSize[i] * degArrVal[i];
-  }
-  return 0;
-}
-
-int degArrWeight_2_netWeight(
-    WeightSumType& netWeight, const VWeightSumType& degArrWeight)
-{
-  netWeight = 0;
-  for (VWeightTypeCItr i = degArrWeight.begin(); i != degArrWeight.end(); i++)
-    netWeight += *i;
-  return 0;
-}
-
-int degArrWeight_2_deg2ArrVal(VDouble& deg2ArrVal,
-    const VWeightSumType& degArrWeight, const WeightSumType netWeight)
-{
-  deg2ArrVal.resize(degArrWeight.size());
-  double sum = 0;
-  for (NodeType i = 0; i < degArrWeight.size(); i++) {
-    deg2ArrVal[i] = (sum + 0.5 * degArrWeight[i]) / netWeight;
-    sum += degArrWeight[i];
-  }
-  return 0;
-}
-
 int cal_nodeNeiAveDeg2(VDouble& nodeNeiAveDeg2, const VVNodeType& p2p,
     const VDouble& deg2ArrVal, MNodeType& degArrNo)
 {

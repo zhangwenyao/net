@@ -1,6 +1,6 @@
 // g++ -o main.exe *.cpp -O3 -Wall
-#include "net.h"
-#ifdef NET_EXTREMUM
+#include "main.h"
+#ifdef MAIN_NET_EXTREMUM
 
 #include "common.h"
 #include "networks.h"
@@ -11,49 +11,45 @@ int main(int argc, char** argv)
   SHOW_TIME(cout); // 显示系统时间
 
   char name[200];
-  for (int e = 6; e <= 6; ++e) {
-    cout << e << endl;
-    sprintf(name, "data/extremum/nature/2^%d/2^%d", e, e);
-    for (int seed = 1; seed <= 300; ++seed) {
+  const int EMIN = 27, EMAX = 29, seed_min = 1, seed_max = 300;
+  const string dirRead = "/media/yao/Server1T/net/data/power/nature",
+               dirSave = "/media/yao/Server1T/net/data/extremum/nature";
+  for (int e = EMIN; e <= EMAX; ++e) {
+    for (int seed = seed_min; seed <= seed_max; ++seed) {
       SHOW_TIME(cout); // 显示系统时间
-      cout << seed << endl;
+      cout << "--e\t" << e << "\n"
+           << "--seed\t" << seed << endl;
       Networks net;
-      net.saveName = net.readName = name;
+      net.seed = seed;
+      sprintf(name, "%s/2^%d/4_2.5_%ld", dirRead.c_str(), e, net.seed);
+      net.readName = name;
+      sprintf(name, "%s/2^%d/4_2.5_max", dirSave.c_str(), e);
+      net.saveName = name;
       net.nodeSize = 1 << e;        // 节点数
       net.degree.power_gamma = 2.5; // 度分布幂律分布的幂指数
       net.kMin = 4;                 // 最小度
-      net.argv = "--init_seed0 --cal_deg power_arr --cal_p2p Max_lkk --stat "
-                 "--print";
-      net.seed = seed;
-
+      net.argv = "--init_seed0 --cal_deg read_degArr --cal_p2p Max_lkk";
+      net.lkk_saveType = 3;
       // 带参数运行
       if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {
         ERROR("net.read_params(argc, argv)");
         break;
       }
 
-      if (0 != PowerLaw_NatureCutoff(net.kMax, net.nodeSize, net.kMin,
-                   net.degree.power_gamma)) { // 最大度
-        ERROR();
-        break;
-      }
-
       //功能模块
       if (0 != net.run().runStatus) {
         ERROR("net.run");
-        // cerr << net << endl;
+        cerr << net << endl;
         net.saveName += "_error";
         net.save();
-        // break;
       } else {
-        net.save_deg();
         net.save_params();
         string fn;
         stringstream ss;
         ss.clear();
         ss << seed;
         fn = net.saveName + "_" + ss.str();
-        save_lkk_3((fn + ".Max.lkk3.txt").c_str(), net.lkk);
+        save_lkk_3((fn + ".lkk3.txt").c_str(), net.lkk);
       }
     }
   }

@@ -17,7 +17,7 @@ gnuplot << EOF
 set terminal push
 set terminal postscript eps color solid enh lw 1 font "Helvetica, 24"
 set out "$outfile.eps"
-call "$plt" $@
+call "$plt" "$@"
 set output
 set terminal pop
 EOF

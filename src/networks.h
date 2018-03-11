@@ -59,6 +59,10 @@
 #include "networkActSpread.h"
 #endif
 
+#ifdef ACT_FITNESS_COMPLEXITY
+#include "networkActFitnessComplexity.h"
+#endif
+
 #ifdef ACT_RECOMMEND
 #include "networkActRecommend.h"
 #endif
@@ -188,10 +192,12 @@ class Networks : public Network {
   Networks& act_sis_tau(void);
 #endif
 
+#ifdef ACT_FITNESS_COMPLEXITY
+#endif
+
 #ifdef ACT_RECOMMEND
-  Act_recommend recommend;
-  Networks& act_recommend(void);
-  Networks& act_recommend_mass(void);
+  Act_recommend recommend(void);
+  Networks& act_recommend(std::string s = "mass", const char* name = NULL);
 #endif
 };
 

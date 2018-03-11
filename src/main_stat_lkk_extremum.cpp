@@ -58,19 +58,23 @@ int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
   const double gamma = 2.5;
-  const int N = 11;
-  string names[N] = { "2", "r-1", "1", "r-2", "(r-2)d1.5", "(r-2)d2",
-    "(r-2)d3", "(2-r)d2", "2-r", "1.5-r", "1-r" };
-  double alphas[N] = { 2, gamma - 1, 1, gamma - 2, (gamma - 2) / 1.5,
-    (gamma - 2) / 2, (gamma - 2) / 3, (2 - gamma) / 2, 2 - gamma, 1.5 - gamma,
-    1 - gamma };
-  // const string dirDeg = "/media/yao/Server1T/net/data/power/nature",
-  // dirLkk = "/media/yao/Server1T/net/data/extremum/nature",
-  // dirSave = "/media/yao/Server1T/net/data/extremum/nature";
-  const string dirDeg = "data/power/nature", dirLkk = "data/extremum/nature",
-               dirSave = "data/extremum/nature";
-  const int seed_max = 300, EMIN = 12, EMAX = 29;
+  //const int N = 11;
+  //string names[N] = { "2", "r-1", "1", "r-2", "(r-2)d1.5", "(r-2)d2",
+    //"(r-2)d3", "(2-r)d2", "2-r", "1.5-r", "1-r" };
+  //double alphas[N] = { 2, gamma - 1, 1, gamma - 2, (gamma - 2) / 1.5,
+    //(gamma - 2) / 2, (gamma - 2) / 3, (2 - gamma) / 2, 2 - gamma, 1.5 - gamma,
+    //1 - gamma };
+  const int N = 4;
+  string names[N] ={"2(r-2)", "1.5(r-2)", "1.5(2-r)", "2(2-r)"};
+  double alphas[N] = {2*(gamma-2), 1.5*(gamma-2), 1.5*(2-gamma), 2*(2-gamma)};
+  const string dirDeg = "/media/yao/Server1T/net/data/power/nature",
+               dirLkk = "/media/yao/Server1T/net/data/extremum/nature",
+               dirSave = "/media/yao/Server1T/net/data/extremum/nature";
+  // const string dirDeg = "data/power/nature", dirLkk =
+  // "data/extremum/nature",
+  // dirSave = "data/extremum/nature";
   // const int seed_max = 300, EMIN = 12, EMAX = 29;
+  const int seed_max = 300, EMIN = 12, EMAX = 29;
   ofstream osMax[N], osMin[N];
   for (int n = 0; n < N; ++n) {
     osMax[n].open((dirSave + "/max_" + names[n] + ".txt").c_str());

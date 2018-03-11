@@ -3,7 +3,8 @@
 
 #include "common.h"
 //**//*****************************************************//*
-int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp) {
+int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp)
+{
   int flag = 0;
   const double delta = 0.000001;
   const size_t cs = Mcp.size(), ps = Mcp[0].size();
@@ -16,7 +17,8 @@ int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp) {
     ifMean = 0;
     for (size_t c = 0; c < cs; c++) {
       for (size_t p = 0; p < ps; p++)
-        if (Mcp[c][p]) iFc[c] += Cp[p];
+        if (Mcp[c][p])
+          iFc[c] += Cp[p];
       ifMean += iFc[c];
     }
     ifMean /= cs;
@@ -34,7 +36,8 @@ int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp) {
           iCp[p] = -1;
           break;
         }
-        if (Mcp[c][p]) iCp[p] += 1 / Fc[c];
+        if (Mcp[c][p])
+          iCp[p] += 1 / Fc[c];
       }
       if (iCp[p] <= 0)
         iCp[p] = 0;
@@ -49,21 +52,47 @@ int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp) {
       break;
     }
 
-    for (size_t c = 0; c < cs; c++) Fc[c] = iFc[c] / ifMean;
-    for (size_t p = 0; p < ps; p++) Cp[p] = iCp[p] / icMean;
+    for (size_t c = 0; c < cs; c++)
+      Fc[c] = iFc[c] / ifMean;
+    for (size_t p = 0; p < ps; p++)
+      Cp[p] = iCp[p] / icMean;
 
-    if ((1.0 - delta) * cMean <= icMean && icMean <= (1.0 + delta) * cMean &&
-        (1.0 - delta) * fMean <= ifMean && ifMean <= (1.0 + delta) * fMean) {
+    if ((1.0 - delta) * cMean <= icMean && icMean <= (1.0 + delta) * cMean
+        && (1.0 - delta) * fMean <= ifMean
+        && ifMean <= (1.0 + delta) * fMean) {
       // std::cout << count << std::endl;
       break;
     }
     fMean = ifMean;
     cMean = icMean;
-    if (count % 1000 == 0) INFORM(count, "\tfm ", fMean, "\tcm ", cMean);
+    if (count % 1000 == 0)
+      INFORM(count, "\tfm ", fMean, "\tcm ", cMean);
   }
 
   return flag;
 }
 
 //**//*****************************************************//*
+int read_Mcp_C_P(const char* name, VVInt& mcp, VVNodeType& pc, VVNodeType& pp)
+{
+  common_read2_0(name, mcp);
+  const NodeType nc = mcp.size(), np = mcp[0].size();
+  pc.resize(nc);
+  pp.resize(np);
+  for (NodeType c = 0; c < nc; c++) {
+    for (NodeType p = 0; p < mcp[c].size(); p++) {
+      if (mcp[c][p] != 0) {
+        pc[c].push_back(p);
+        if (p >= np) {
+          ERROR();
+          return -1;
+        }
+        pp[p].push_back(c);
+      }
+    }
+  }
+  return 0;
+}
+
+//**/ /*****************************************************//*
 #endif  // ACT_FITNESS_COMPLEXITY

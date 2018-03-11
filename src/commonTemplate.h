@@ -828,7 +828,7 @@ template <typename Tp> struct Common_RangeP {
 template <typename Tp, typename T2>
 void common_sort_p_val(Tp p, Tp p2, const T2* const val)
 {
-  if (p + 1 > p2)
+  if (p + 1 >= p2)
     return;
   std::stack<Common_RangeP<Tp> > st;
   st.push(Common_RangeP<Tp>(p, p2 - 1));
@@ -856,6 +856,45 @@ void common_sort_p_val(Tp p, Tp p2, const T2* const val)
     while (start > range.start && val[*start] >= pivot)
       start--;
     while (end < range.end && val[*end] <= pivot)
+      end++;
+    if (range.start + 1 <= start)
+      st.push(Common_RangeP<Tp>(range.start, start));
+    if (end + 1 <= range.end)
+      st.push(Common_RangeP<Tp>(end, range.end));
+  }
+}
+
+template <typename Tp, typename T2>
+void common_sort_p_val_less(Tp p, Tp p2, const T2* const val)
+{
+  if (p + 1 >= p2)
+    return;
+  std::stack<Common_RangeP<Tp> > st;
+  st.push(Common_RangeP<Tp>(p, p2 - 1));
+  while (!st.empty()) {
+    Common_RangeP<Tp> range = st.top();
+    st.pop();
+    Tp start = range.start, end = range.end;
+    if (val[*start] < val[*end])
+      std::swap(*start, *end);
+    if (start + 1 >= end)
+      continue;
+    T2 pivot = val[*(start + (end - start) / 2)];
+    if (val[*start] < pivot)
+      pivot = val[*start];
+    else if (val[*end] > pivot)
+      pivot = val[*end];
+    while (start < end) {
+      while (start < end && val[*start] >= pivot)
+        start++;
+      while (start < end && val[*end] <= pivot)
+        end--;
+      if (start < end)
+        std::swap(*start++, *end--);
+    }
+    while (start > range.start && val[*start] <= pivot)
+      start--;
+    while (end < range.end && val[*end] >= pivot)
       end++;
     if (range.start + 1 <= start)
       st.push(Common_RangeP<Tp>(range.start, start));
@@ -895,6 +934,49 @@ bool common_compare_vector(const std::vector<T>& a, const std::vector<T>& b)
   if (ia == a.end())
     return ib != b.end();
   return ib != b.end() && *ia < *ib;
+}
+
+// c = a.b
+template <typename T>
+int common_matrixCross(const std::vector<std::vector<T> > a,
+    const std::vector<std::vector<T> > b, std::vector<std::vector<T> > c)
+{
+  const size_t NX = c.size(), NY = c[0].size();
+  if (a.size() != NX || b.size() != NY) {
+    ERROR();
+    return -1;
+  }
+  for (size_t i = 0; i < NX; i++) {
+    for (size_t j = 0; j < NY; j++) {
+      c[i][j] = 0;
+      for (size_t k = 0; k < a[i].size(); k++)
+        c[i][j] += a[i][k] * b[k][j];
+    }
+  }
+  return 0;
+}
+
+// c = a . p2p . b
+template <typename T, typename T2>
+int common_matrixCross_p2p(const std::vector<std::vector<T2> > p2p,
+    const std::vector<std::vector<T> > a, const std::vector<std::vector<T> > b,
+    std::vector<std::vector<T> > c)
+{
+  const size_t NX = c.size(), NY = c[0].size();
+  if (p2p.size() < NX || a.size() < NX || b[0].size() < NY) {
+    ERROR();
+    return -1;
+  }
+  for (size_t i = 0; i < NX; i++) {
+    for (size_t j = 0; j < NY; j++) {
+      c[i][j] = 0;
+      for (size_t kk = 0; kk < p2p[i].size(); kk++) {
+        const size_t k = p2p[i][kk];
+        c[i][j] += a[i][k] * b[k][j];
+      }
+    }
+  }
+  return 0;
 }
 
 //**//***********************************************************//*

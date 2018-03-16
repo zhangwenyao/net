@@ -225,6 +225,12 @@ template <typename Tp, typename T2>
 void common_sort_p_val_less(Tp p, Tp p2,
     const T2* const val); // 按val[p[i]]大小对p[i]排序
 
+template <typename T, typename T2>
+void common_total(const std::vector<T>& a, T2& s); // 求和
+
+template <typename T, typename T2, typename T3>
+void common_total(const std::vector<T>& a, const std::vector<T2>& p, T3& s);
+
 //**//***********************************************************//*
 template <typename T> T common_GCD(T a, T b); // 最大公约数
 
@@ -232,19 +238,26 @@ template <typename T>
 bool common_compare_vector(const std::vector<T>& a, const std::vector<T>& b);
 
 template <typename T>
-int common_matrixCross(const std::vector<std::vector<T> > a,
-    const std::vector<std::vector<T> > b,
-    std::vector<std::vector<T> > c); // c = a.b
+size_t common_vector_count_same(
+    const std::vector<T>& a, const std::vector<T>& b);
+template <typename T>
+size_t common_vector_count_same_sort(
+    const std::vector<T>& a, const std::vector<T>& b);
+
+template <typename T>
+int common_matrixCross(const std::vector<std::vector<T> >& a,
+    const std::vector<std::vector<T> >& b,
+    std::vector<std::vector<T> >& c); // c = a.b
 
 template <typename T, typename T2>
-int common_matrixCross1(const std::vector<std::vector<T2> > p2p,
-    const std::vector<T> a, const std::vector<T> b,
-    std::vector<T> c); // c = a . p2p . b
+int common_matrixCross_p2p(const std::vector<std::vector<T2> >& p2p,
+    const std::vector<std::vector<T> >& a,
+    const std::vector<std::vector<T> >& b,
+    std::vector<std::vector<T> >& c); // c = a . p2p . b
 
 template <typename T, typename T2>
-int common_matrixCross_p2p(const std::vector<std::vector<T2> > p2p,
-    const std::vector<std::vector<T> > a, const std::vector<std::vector<T> > b,
-    std::vector<std::vector<T> > c); // c = a . p2p . b
+int common_matrixCross1_p2p(const std::vector<std::vector<T2> >& p2p,
+    const std::vector<T>& a, std::vector<T>& c); // c = p2p . a
 
 //**//***********************************************************//*
 int common_get_string(std::istream& is, std::string& s);

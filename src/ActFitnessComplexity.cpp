@@ -73,17 +73,16 @@ int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp)
 }
 
 //**//*****************************************************//*
-int read_Mcp_C_P(const char* name, VVInt& mcp, VVNodeType& pc, VVNodeType& pp)
+int Mcp_2_C_P(const VVNodeType& mcp, VVNodeType& pc, VVNodeType& pp)
 {
-  common_read2_0(name, mcp);
-  const NodeType nc = mcp.size(), np = mcp[0].size();
-  pc.resize(nc);
-  pp.resize(np);
-  for (NodeType c = 0; c < nc; c++) {
+  const NodeType NC = mcp.size(), NP = mcp[0].size();
+  pc.resize(NC);
+  pp.resize(NP);
+  for (NodeType c = 0; c < NC; c++) {
     for (NodeType p = 0; p < mcp[c].size(); p++) {
       if (mcp[c][p] != 0) {
         pc[c].push_back(p);
-        if (p >= np) {
+        if (p >= NP) {
           ERROR();
           return -1;
         }

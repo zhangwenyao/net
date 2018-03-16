@@ -196,7 +196,7 @@ class Networks : public Network {
 #endif
 
 #ifdef ACT_RECOMMEND
-  Act_recommend recommend(void);
+  Act_recommend recommend;
   Networks& act_recommend(std::string s = "mass", const char* name = NULL);
 #endif
 };

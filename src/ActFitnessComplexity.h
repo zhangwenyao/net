@@ -6,7 +6,7 @@
 #ifdef ACT_FITNESS_COMPLEXITY
 //**//*****************************************************//*
 int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp);
-int read_Mcp_C_P(const char* name, VVInt& mcp, VVNodeType& pc, VVNodeType& pp);
+int Mcp_2_C_P(const VVNodeType& mcp, VVNodeType& pc, VVNodeType& pp);
 
 //**//*****************************************************//*
 #endif // ACT_FITNESS_COMPLEXITY

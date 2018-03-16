@@ -904,6 +904,27 @@ void common_sort_p_val_less(Tp p, Tp p2, const T2* const val)
 }
 
 //**//***********************************************************//*
+template <typename T, typename T2>
+// 求和
+void common_total(const std::vector<T>& a, T2& s)
+{
+  s = 0;
+  for (typename std::vector<T>::const_iterator i = a.begin(); i != a.end();
+       i++)
+    s += *i;
+}
+
+template <typename T, typename T2, typename T3>
+// 求和
+void common_total(const std::vector<T>& a, const std::vector<T2>& p, T3& s)
+{
+  s = 0;
+  for (typename std::vector<T2>::const_iterator i = p.begin(); i != p.end();
+       i++)
+    s += a[*i];
+}
+
+//**//***********************************************************//*
 template <typename T> T common_GCD(T a, T b)
 {
   if (a <= 0)
@@ -936,10 +957,59 @@ bool common_compare_vector(const std::vector<T>& a, const std::vector<T>& b)
   return ib != b.end() && *ia < *ib;
 }
 
+template <typename T>
+size_t common_vector_count_same(
+    const std::vector<T>& a, const std::vector<T>& b)
+{
+  size_t n = 0;
+  if (a.size() <= 0 || b.size() <= 0)
+    return n;
+  for (typename std::vector<T>::const_iterator i = a.begin(); i != a.end();
+       i++) {
+    const T iVal = *i;
+    for (typename std::vector<T>::const_iterator j = b.begin(); j != b.end();
+         j++) {
+      if (*j == iVal)
+        n++;
+    }
+  }
+  return n;
+}
+
+template <typename T>
+size_t common_vector_count_same_sort(
+    const std::vector<T>& a, const std::vector<T>& b)
+{
+  size_t n = 0;
+  if (a.size() <= 0 || b.size() <= 0)
+    return n;
+  for (typename std::vector<T>::const_iterator i = a.begin(), j = b.begin();;
+       i != a.end() && j != b.end();) {
+    if (*i == *i) {
+      i++;
+      j++;
+      n++;
+    } else {
+      if (*i < *j) {
+        if (i + 1 != a.end())
+          i++;
+        else
+          j++;
+      } else {
+        if (j + 1 != b.end())
+          j++;
+        else
+          i++;
+      }
+    }
+  }
+  return n;
+}
+
 // c = a.b
 template <typename T>
-int common_matrixCross(const std::vector<std::vector<T> > a,
-    const std::vector<std::vector<T> > b, std::vector<std::vector<T> > c)
+int common_matrixCross(const std::vector<std::vector<T> >& a,
+    const std::vector<std::vector<T> >& b, std::vector<std::vector<T> >& c)
 {
   const size_t NX = c.size(), NY = c[0].size();
   if (a.size() != NX || b.size() != NY) {
@@ -958,9 +1028,9 @@ int common_matrixCross(const std::vector<std::vector<T> > a,
 
 // c = a . p2p . b
 template <typename T, typename T2>
-int common_matrixCross_p2p(const std::vector<std::vector<T2> > p2p,
-    const std::vector<std::vector<T> > a, const std::vector<std::vector<T> > b,
-    std::vector<std::vector<T> > c)
+int common_matrixCross_p2p(const std::vector<std::vector<T2> >& p2p,
+    const std::vector<std::vector<T> >& a,
+    const std::vector<std::vector<T> >& b, std::vector<std::vector<T> >& c)
 {
   const size_t NX = c.size(), NY = c[0].size();
   if (p2p.size() < NX || a.size() < NX || b[0].size() < NY) {
@@ -976,6 +1046,26 @@ int common_matrixCross_p2p(const std::vector<std::vector<T2> > p2p,
       }
     }
   }
+  return 0;
+}
+
+// c = p2p . a
+template <typename T, typename T2>
+int common_matrixCross1_p2p(const std::vector<std::vector<T2> > p2p,
+    const std::vector<std::vector<T> >& a, std::vector<std::vector<T> >& c)
+{
+  const size_t NX = c.size();
+  if (p2p.size() < NX || a.size < NX) {
+    ERROR();
+    return -1;
+  }
+  for (size_t i = 0; i < NX; i++) {
+    c[i] = 0;
+    for (size_t j = 0; j < p2p[i].size(); j++) {
+      c[i] += a[p2p[i][j]];
+    }
+  }
+
   return 0;
 }
 

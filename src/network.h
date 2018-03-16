@@ -42,8 +42,10 @@
  *                              MinLkk            最小度关联网络
  *                              MinLkkFix         最小度关联网络
  * 统计           stat
- * 推荐           recommend   mass            扩散
+ * 推荐           recommend     mass          扩散
  *                              heat          热传导
+ *                              pagerank      网页排名
+ *                              commonNeighbour   共同邻居
  * 传播           sis
  * 输出           print
  * 保存           save                        以种子值命名保存

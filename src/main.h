@@ -8,6 +8,7 @@
 //#define MAIN_STAT_LKK_EXTREMUM
 //#define MAIN_STAT_BETWEENNESS
 #define MAIN_FITNESS_COMPLEXITY
+//#define MAIN_FITNESS_COMPLEXITY_STATIC
 
 //**//*****************************************************//*
 #endif

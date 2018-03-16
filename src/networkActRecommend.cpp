@@ -27,9 +27,52 @@ int Act_recommend::save_params(std::ostream& os) const
   return 0;
 }
 
-int Act_recommend::save_params(const char* name) const { return 0; }
-int Act_recommend::save_data(const char* name) const { return 0; }
-int Act_recommend::save(const char* name) const { return 0; }
+int Act_recommend::save_params(const char* name) const
+{
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  os << *this;
+  os.close();
+  return 0;
+}
+
+int Act_recommend::save_data(
+    const char* name, const char priChar, const char priChar2) const
+{
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  string fn = name;
+  common_save2((fn + ".rcm.txt").c_str(), rcm, priChar2);
+  return 0;
+}
+
+int Act_recommend::save(
+    const char* name, const char priChar, const char priChar2) const
+{
+  if (name == NULL || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  string fn = name;
+  if (0 != save_params((fn + ".recommend.params.txt").c_str())) {
+    ERROR();
+    return -1;
+  }
+  if (0 != save_data((fn + ".recommend").c_str(), priChar, priChar2)) {
+    ERROR();
+    return -1;
+  }
+  return 0;
+}
 
 int Act_recommend::read_params_1(string& s, istream& is) { return 0; }
 
@@ -50,14 +93,15 @@ Networks& Networks::act_recommend(std::string s, const char* name)
     fn = saveName;
 
   if (s == "mass") {
-    status = act_recommend_mass((fn + "_mass.txt").c_str(),
-        *recommend.user_p_object, *recommend.object_p_user);
+    status = ::act_recommend_mass(
+        recommend.rcm, *recommend.user_p_object, *recommend.object_p_user);
   } else if (s == "heat") {
-    status = act_recommend_heat((fn + "_heat.txt").c_str(),
-        *recommend.user_p_object, *recommend.object_p_user);
+    status = act_recommend_heat(
+        recommend.rcm, *recommend.user_p_object, *recommend.object_p_user);
   } else if (s == "pagerank") {
-    status = act_recommend_pagerank(
-        (fn + "_pagerank.txt").c_str(), p2p, recommend.user);
+    status = act_recommend_pagerank(p2p, recommend.user);
+  } else if (s == "commonNeighbour") {
+    status = act_recommend_commonNeighbour(p2p, recommend.user);
   } else {
     status = -1;
   }
@@ -65,4 +109,5 @@ Networks& Networks::act_recommend(std::string s, const char* name)
 }
 
 //**//****************************************************//*
+
 #endif // ACT_RECOMMEND

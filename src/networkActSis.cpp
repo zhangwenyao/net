@@ -7,18 +7,21 @@ using namespace std;
 
 //**//****************************************************//*
 Act_sis::Act_sis(void)
-    : M(0),
-      rho(0),
-      p(0),
-      lambda(0),
-      tau(0),
-      t_av(0),
-      ksi(0),
-      lambda_c(0),
-      nSum(0),
-      n2Sum(0) {}
+    : M(0)
+    , rho(0)
+    , p(0)
+    , lambda(0)
+    , tau(0)
+    , t_av(0)
+    , ksi(0)
+    , lambda_c(0)
+    , nSum(0)
+    , n2Sum(0)
+{
+}
 
-ostream& operator<<(ostream& os, const Act_sis& sis) {
+ostream& operator<<(ostream& os, const Act_sis& sis)
+{
   if (!os) {
     ERROR();
     return os;
@@ -29,7 +32,8 @@ ostream& operator<<(ostream& os, const Act_sis& sis) {
   return os;
 }
 
-int Act_sis::save_params(std::ostream& os) const {
+int Act_sis::save_params(std::ostream& os) const
+{
   if (!os) {
     ERROR();
     return -1;
@@ -38,7 +42,8 @@ int Act_sis::save_params(std::ostream& os) const {
   return 0;
 }
 
-int Act_sis::save_params(const char* name) const {
+int Act_sis::save_params(const char* name) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -53,15 +58,20 @@ int Act_sis::save_params(const char* name) const {
   return 0;
 }
 
-int Act_sis::save_data(const char* name) const {
+int Act_sis::save_data(
+    const char* name, const char priChar, const char priChar2) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
   }
+  string fn = name;
   return 0;
 }
 
-int Act_sis::save(const char* name) const {
+int Act_sis::save(
+    const char* name, const char priChar, const char priChar2) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -71,14 +81,15 @@ int Act_sis::save(const char* name) const {
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + ".sis").c_str())) {
+  if (0 != save_data((fn + ".sis").c_str(), priChar, priChar2)) {
     ERROR();
     return -1;
   }
   return 0;
 }
 
-int Act_sis::read_params_1(string& s, istream& is) {
+int Act_sis::read_params_1(string& s, istream& is)
+{
   if (!is) {
     ERROR();
     return -1;
@@ -142,45 +153,47 @@ int Act_sis::read_params_1(string& s, istream& is) {
     }
     flag = 0;
   } while (0);
-  if (flag) s.clear();
+  if (flag)
+    s.clear();
   return 0;
 }
 
 Act_sis& Act_sis::clear(void) { return *this; }
 
 //**//****************************************************//*
-Networks& Networks::act_sis_tau(void) {
+Networks& Networks::act_sis_tau(void)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
   }
-  ::act_SIS_init(sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t, p2p, sis.rho,
-                 sis.M);
+  ::act_SIS_init(
+      sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t, p2p, sis.rho, sis.M);
   sis.nSum = 0;
   sis.n2Sum = 0;
   sis.nNum = 0;
   ::act_SIS_tau(sis.tau, sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t,
-                sis.nSum, sis.n2Sum, sis.nNum, sis.p, sis.lambda, p2p, kMax);
+      sis.nSum, sis.n2Sum, sis.nNum, sis.p, sis.lambda, p2p, kMax);
   return *this;
 }
 
-Networks& Networks::act_sis(void) {
+Networks& Networks::act_sis(void)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
   }
-  ::act_SIS_init(sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t, p2p, sis.rho,
-                 sis.M);
+  ::act_SIS_init(
+      sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t, p2p, sis.rho, sis.M);
   sis.nSum = 0;
   sis.n2Sum = 0;
   sis.nNum = 0;
   ::act_sis(sis.statusSN, sis.SN, sis.N_i, sis.NDeg_i, sis.t, sis.nSum,
-            sis.n2Sum, sis.nNum, sis.p, sis.lambda, sis.tau, sis.t_av, p2p,
-            kMax);
-  ::act_SIS_cal_params(sis.ksi, sis.lambda_c, p2p, sis.nSum, sis.n2Sum,
-                       sis.nNum);
+      sis.n2Sum, sis.nNum, sis.p, sis.lambda, sis.tau, sis.t_av, p2p, kMax);
+  ::act_SIS_cal_params(
+      sis.ksi, sis.lambda_c, p2p, sis.nSum, sis.n2Sum, sis.nNum);
   return *this;
 }
 
 //**//****************************************************//*
-#endif  // ACT_SIS
+#endif // ACT_SIS

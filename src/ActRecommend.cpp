@@ -16,6 +16,63 @@ int act_recommend_readP2p(VVNodeType& pu, VVNodeType& po, std::istream& is)
   return 0;
 }
 
+int linkMatr_2_p2p2(VVNodeType& user_p_object, VVNodeType& object_p_user,
+    const VVDistType& matr)
+{
+  const NodeType NU = matr.size(), NO = matr[0].size();
+  user_p_object.clear();
+  user_p_object.resize(NU);
+  object_p_user.clear();
+  object_p_user.resize(NO);
+  for (NodeType i = 0; i < NU; i++) {
+    for (NodeType j = 0; j < NO; j++) {
+      if (matr[i][j] != 0) {
+        user_p_object[i].push_back(j);
+        object_p_user[j].push_back(i);
+      }
+    }
+  }
+  return 0;
+}
+
+int linkMatr_2_userP2p(const VVDistType& matr, VVNodeType& userP2p)
+{
+  const NodeType NU = matr.size(), NO = matr[0].size();
+  userP2p.clear();
+  userP2p.resize(NU);
+  for (NodeType i = 0; i < NU; i++) {
+    for (NodeType j = i + 1; j < NU; j++) {
+      for (NodeType k = 0; k < NO; k++) {
+        if (matr[i][k] != 0 && matr[j][k] != 0) {
+          userP2p[i].push_back(j);
+          userP2p[j].push_back(i);
+        }
+        continue;
+      }
+    }
+  }
+  return 0;
+}
+
+int linkMatr_2_objectP2p(const VVDistType& matr, VVNodeType& objectP2p)
+{
+  const NodeType NU = matr.size(), NO = matr[0].size();
+  objectP2p.clear();
+  objectP2p.resize(NO);
+  for (NodeType i = 0; i < NO; i++) {
+    for (NodeType j = i + 1; j < NO; j++) {
+      for (NodeType k = 0; k < NU; k++) {
+        if (matr[k][i] != 0 && matr[k][j] != 0) {
+          objectP2p[i].push_back(j);
+          objectP2p[j].push_back(i);
+        }
+        continue;
+      }
+    }
+  }
+  return 0;
+}
+
 //**//*****************************************************//*
 int act_recommend_mass_sum(const VNodeType& p2p, const double t, VDouble& v)
 {
@@ -118,31 +175,6 @@ int act_recommend_pagerank(const VVNodeType& p2p, VDouble& v)
   if (N <= 1)
     return 0;
 
-  VVNodeType p2p2;
-  const VVNodeType* p;
-  int flag = 0;
-  for (NodeType i = 0; i < N; i++) {
-    if (p2p[i].size() > N) {
-      ERROR();
-      return -1;
-    }
-    if (p2p.size() <= 0) {
-      flag = 1;
-      break;
-    }
-  }
-  if (flag) {
-    p2p2 = p2p;
-    for (NodeType i = 0; i < N; i++) {
-      if (p2p2.size() <= 0) {
-        for (NodeType j = 0; j < N; j++)
-          p2p2[i].push_back(j);
-      }
-    }
-    p = &p2p2;
-  } else
-    p = &p2p;
-
   VDouble v2;
   for (double e = 0, e2 = 1, s2 = N, t;
        s2 > 1e-6 && e2 * N <= e * e * (1 + 1e-4);) {
@@ -150,7 +182,7 @@ int act_recommend_pagerank(const VVNodeType& p2p, VDouble& v)
     e2 = 0;
     s2 = 0;
     v2.assign(N, 0);
-    // common_matrixCross1_p2p(p2p, v, v2);
+    common_matrixCross1_p2p(p2p, v, v2);
     for (size_t i = 0; i < N; i++) {
       s2 += v[i] * v[i];
       t = v2[i] / v[i];
@@ -163,42 +195,10 @@ int act_recommend_pagerank(const VVNodeType& p2p, VDouble& v)
   return 0;
 }
 
-int act_recommend_pagerank(ofstream& os, const VVNodeType& p2p, VDouble& v)
-{
-  if (!os) {
-    ERROR();
-    return -1;
-  }
-
-  int flag = act_recommend_pagerank(p2p, v);
-  if (flag != 0) {
-    ERROR(flag);
-    return flag;
-  }
-
-  os << v;
-  return 0;
-}
-
-int act_recommend_pagerank(const char* name, const VVNodeType& p2p, VDouble& v)
-{
-  if (name == NULL || name[0] == '\0') {
-    ERROR();
-    return -1;
-  }
-  ofstream os(name);
-  if (!os) {
-    ERROR();
-    return -1;
-  }
-  int flag = act_recommend_pagerank(os, p2p, v);
-  os.close();
-  return flag;
-}
-
 //**//*****************************************************//*
-int act_recommend_commonNeighbour(const VVNodeType& p2p, VDouble& v)
+int act_recommend_commonNeighbour_object(VVDouble& rcm, const VVNodeType& p2p, const VVNodeType& oo, VDouble& v)
 {
+  ;
   return 0;
 }
 

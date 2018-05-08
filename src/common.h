@@ -259,11 +259,9 @@ template <typename T, typename T2>
 int common_matrixCross1_p2p(const std::vector<std::vector<T2> >& p2p,
     const std::vector<T>& a, std::vector<T>& c); // c = p2p . a
 
-//**//***********************************************************//*
+//**//***************************************************//*
 int common_get_string(std::istream& is, std::string& s);
 
-//**//***********************************************************//*
-
-#include "commonTemplate.h"
-
+//**//***************************************************//*
+#include "common.template.h"
 #endif // COMMON_H

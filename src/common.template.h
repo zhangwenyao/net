@@ -983,7 +983,7 @@ size_t common_vector_count_same_sort(
   size_t n = 0;
   if (a.size() <= 0 || b.size() <= 0)
     return n;
-  for (typename std::vector<T>::const_iterator i = a.begin(), j = b.begin();;
+  for (typename std::vector<T>::const_iterator i = a.begin(), j = b.begin();
        i != a.end() && j != b.end();) {
     if (*i == *i) {
       i++;

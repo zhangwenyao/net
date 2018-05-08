@@ -103,21 +103,6 @@ int linkMatr_fix_max(VVDistType& linkMatr, const DistType MaxDist)
   return 0;
 }
 
-int linkMatr_2_p2p(VVNodeType& p2p, const VVDistType& linkMatr)
-{
-  const NodeType nodeSize = linkMatr.size();
-  p2p.clear();
-  p2p.resize(nodeSize);
-  for (NodeType i = 0; i < nodeSize; i++) {
-    for (NodeType j = 0; j < nodeSize; j++) {
-      if (j != i && linkMatr[i][j] != 0) {
-        p2p[i].push_back(j);
-      }
-    }
-  }
-  return 0;
-}
-
 int linkMatrC_2_p2p(VVNodeType& p2p, const VVChar& linkMatrC)
 {
   const NodeType nodeSize = linkMatrC.size();

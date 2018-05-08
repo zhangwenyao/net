@@ -73,25 +73,4 @@ int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp)
 }
 
 //**//*****************************************************//*
-int Mcp_2_C_P(const VVNodeType& mcp, VVNodeType& pc, VVNodeType& pp)
-{
-  const NodeType NC = mcp.size(), NP = mcp[0].size();
-  pc.resize(NC);
-  pp.resize(NP);
-  for (NodeType c = 0; c < NC; c++) {
-    for (NodeType p = 0; p < mcp[c].size(); p++) {
-      if (mcp[c][p] != 0) {
-        pc[c].push_back(p);
-        if (p >= NP) {
-          ERROR();
-          return -1;
-        }
-        pp[p].push_back(c);
-      }
-    }
-  }
-  return 0;
-}
-
-//**/ /*****************************************************//*
 #endif  // ACT_FITNESS_COMPLEXITY

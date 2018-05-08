@@ -30,16 +30,16 @@ int main(int argc, char** argv)
       ss << year + 1;
       y2 = ss.str();
 
-      VVNodeType mcp;
+      VVDistType mcp;
       common_read2_0((dir + y1 + ".mcp.txt").c_str(), mcp);
       const size_t NC = mcp.size(), NP = mcp[0].size();
 
       Networks net;
       net.saveName = dir + y1;
-      VVNodeType pc, pp;
-      Mcp_2_C_P(mcp, pc, pp);
-      net.recommend.user_p_object = &pc;
-      net.recommend.object_p_user = &pp;
+      VVNodeType pcp, ppc;
+      linkMatr_2_p2p2(pcp, ppc, mcp);
+      net.recommend.user_p_object = &pcp;
+      net.recommend.object_p_user = &ppc;
       net.act_recommend(method.c_str());
       common_save2(
           (dir + y1 + "." + method + ".txt").c_str(), net.recommend.rcm);

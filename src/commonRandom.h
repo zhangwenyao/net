@@ -36,6 +36,6 @@ int random_new_rankArr(T* a, const size_t n,
 
 //**//*********************************************************//*
 
-#include "commonRandomTemplate.h"
+#include "commonRandom.template.h"
 
 #endif

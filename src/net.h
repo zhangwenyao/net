@@ -22,7 +22,7 @@ const std::string NET_VERSION = "net2.0: " __DATE__ ", " __TIME__;
 //#define NET_ACTOR
 //#define NET_FOODWEB
 
-//const bool STAT_TYPE_DIRAA = 0; // 0:OutIn, 1: OutIn OutOut InOut InIn
+// const bool STAT_TYPE_DIRAA = 0; // 0:OutIn, 1: OutIn OutOut InOut InIn
 //#define STAT_PEARSON
 //#define STAT_SPEARMAN
 //#define MODEL_GAUSS
@@ -58,8 +58,8 @@ const DistType DistMax = UINT_MAX; // 距离无穷大的值
 
 typedef double WeightType;            // 边权
 typedef double WeightSType;           // 边权
-typedef double WeightSumType;         // 边权
-typedef double WeightSumSType;        // 边权
+typedef double WeightSumType;         // 边权求和
+typedef double WeightSumSType;        // 边权求和
 const WeightType WeightMax = DBL_MAX; // 距离无穷大的值
 
 typedef std::vector<char> VChar;
@@ -185,8 +185,14 @@ int init_linkMatrC(VVChar& linkMatrC, const NodeType nodeSize);
 int linkMatr_fix_0(VVDistType& linkMatr, const DistType MaxDist = DistMax);
 int linkMatr_fix_max(VVDistType& linkMatr, const DistType MaxDist = DistMax);
 
-int linkMatr_2_p2p(VVNodeType& p2p, const VVDistType& linkMatr);
+template <typename T, typename T2>
+int linkMatr_2_p2p(std::vector<std::vector<T2> >& p2p,
+    const std::vector<std::vector<T> >& linkMatr);
+template <typename T, typename T2>
+int linkMatr_2_p2pIn(std::vector<std::vector<T2> >& p2pIn,
+    const std::vector<std::vector<T> >& linkMatr);
 int linkMatrC_2_p2p(VVNodeType& p2p, const VVChar& linkMatrC);
+
 int p2p_2_linkMatr(VVDistType& linkMatr, const VVNodeType& p2p);
 int p2p_2_p2pIn(VVNodeType& p2pIn, const VVNodeType& p2p);
 int p2p_2_vvweight_sort(VVWeightType& vvweight, const VVNodeType& p2p);
@@ -396,4 +402,5 @@ int save_lkk_3(const char* name, const VVLinkType& lkk, const int rv = 0,
     const char pri2 = '\t', const char pri = '\n');
 
 //**//*****************************************************//*
+#include "net.template.h"
 #endif // NET_H

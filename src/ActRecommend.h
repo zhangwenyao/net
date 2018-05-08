@@ -6,6 +6,11 @@
 #ifdef ACT_RECOMMEND
 //**//*****************************************************//*
 int act_recommend_readP2p(VVNodeType& pu, VVNodeType& po, std::istream& is);
+int linkMatr_2_p2p2(VVNodeType& user_p_object, VVNodeType& object_p_user,
+    const VVDistType& matr);
+int linkMatr_2_userP2p(const VVDistType& matr, VVNodeType& userP2p);
+int linkMatr_2_objectP2p(const VVDistType& matr, VVNodeType& objectP2p);
+
 int act_recommend_start(const VNodeType p2pI, VDouble& o);
 int act_recommend_mass_1(VDouble& o2, const VVNodeType& uP2p,
     const VVNodeType& oP2p, const NodeType i);
@@ -16,10 +21,6 @@ int act_recommend_heat_1(VDouble& o2, const VVNodeType& uP2p,
 int act_recommend_heat(
     VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p);
 int act_recommend_pagerank(const VVNodeType& p2p, VDouble& v);
-int act_recommend_pagerank(
-    std::ofstream& os, const VVNodeType& p2p, VDouble& v);
-int act_recommend_pagerank(
-    const char* name, const VVNodeType& p2p, VDouble& v);
 int act_recommend_commonNeighbour(const VVNodeType& p2p, VDouble& v);
 
 int recommend_RAC(const VDouble& v0, const VDouble& v, double& r);

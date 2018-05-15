@@ -695,8 +695,7 @@ int link_2_p2p_out_linkSize(VVNodeType& p2p, const VNodeType& link,
   return 0;
 }
 
-int link_2_p2p_in(VVNodeType& p2pIn, const VNodeType& link, NodeType& nodeSize,
-    const int dirFlag)
+int link_2_p2p_in(VVNodeType& p2pIn, const VNodeType& link, NodeType& nodeSize, const int dirFlag)
 {
   if (!dirFlag)
     return -1;

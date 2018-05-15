@@ -26,7 +26,8 @@ inline void ERRINFO()
   return;
 }
 
-template <typename T, typename... Args> inline void ERRINFO(T x, Args... args)
+template <typename T, typename... Args>
+inline void ERRINFO(T x, Args... args)
 {
   std::cerr << x;
   ERRINFO(args...);
@@ -39,7 +40,8 @@ inline void INFO()
   return;
 }
 
-template <typename T, typename... Args> inline void INFO(T x, Args... args)
+template <typename T, typename... Args>
+inline void INFO(T x, Args... args)
 {
   std::cout << x;
   INFO(args...);
@@ -131,7 +133,8 @@ int common_save(const char* name, T* p, const size_t n, const char c)
   return 0;
 }
 
-template <typename T> int common_read(std::istream& is, T* p, const size_t n)
+template <typename T>
+int common_read(std::istream& is, T* p, const size_t n)
 {
   size_t i;
   for (i = 0; i < n && is; i++) {
@@ -143,7 +146,8 @@ template <typename T> int common_read(std::istream& is, T* p, const size_t n)
   return 0;
 }
 
-template <typename T> int common_read(const char* name, T* p, const size_t n)
+template <typename T>
+int common_read(const char* name, T* p, const size_t n)
 {
   std::ifstream is(name);
   if (!is) {
@@ -241,7 +245,8 @@ int common_read2(const char* name, T* p, T2* n)
 template <typename T, const size_t n1, const size_t n2>
 std::ostream& operator<<(std::ostream& os, T (&a)[n1][n2])
 {
-  T(*pp)[n2] = a;
+  T(*pp)
+  [n2] = a;
   for (size_t i = 0; i < n1; i++) {
     if (n2 > 0) {
       T* p = *pp++;
@@ -258,7 +263,8 @@ std::ostream& operator<<(std::ostream& os, T (&a)[n1][n2])
 template <typename T, const size_t n2, const size_t n1>
 int common_save2(std::ostream& os, T (&a)[n2][n1], const char c)
 {
-  T(*pp)[n2] = a;
+  T(*pp)
+  [n2] = a;
   for (size_t i = 0; i < n1; i++) {
     if (n2 > 0) {
       T* p = *pp++;
@@ -288,7 +294,8 @@ int common_save2(const char* name, T (&a)[n2][n1], const char c)
 template <typename T, const size_t n1, const size_t n2>
 std::istream& operator>>(std::istream& is, T (&a)[n1][n2])
 {
-  T(*pp)[n2] = a;
+  T(*pp)
+  [n2] = a;
   for (size_t i = 0; i < n1 && is; i++) {
     T* p = *pp++;
     for (size_t j = 0; j < n2 && is; j++) {
@@ -301,7 +308,8 @@ std::istream& operator>>(std::istream& is, T (&a)[n1][n2])
 template <typename T, const size_t n1, const size_t n2>
 int common_read2(std::istream& is, T (&a)[n1][n2])
 {
-  T(*pp)[n2] = a;
+  T(*pp)
+  [n2] = a;
   for (size_t i = 0; i < n1 && is; i++) {
     T* p = *pp++;
     for (size_t j = 0; j < n2 && is; j++) {
@@ -638,7 +646,8 @@ std::istream& operator>>(std::istream& is, std::vector<T>& v)
   return is;
 }
 
-template <typename T> int common_read1(std::istream& is, std::vector<T>& v)
+template <typename T>
+int common_read1(std::istream& is, std::vector<T>& v)
 {
   if (!is) {
     ERROR();
@@ -650,7 +659,8 @@ template <typename T> int common_read1(std::istream& is, std::vector<T>& v)
   return 0;
 }
 
-template <typename T> int common_read1(const char* name, std::vector<T>& v)
+template <typename T>
+int common_read1(const char* name, std::vector<T>& v)
 {
   std::ifstream is(name);
   if (!is) {
@@ -707,7 +717,8 @@ std::ostream& operator<<(
   if (v.size() > 0)
     os << v[0];
   for (size_t i = 1; i < v.size(); i++) {
-    os << '\n' << v[i];
+    os << '\n'
+       << v[i];
   }
   return os;
 }
@@ -816,7 +827,8 @@ int common_read2_0(const char* name, std::vector<std::vector<T> >& v)
   return status;
 }
 //**//***********************************************************//*
-template <typename Tp> struct Common_RangeP {
+template <typename Tp>
+struct Common_RangeP {
   explicit Common_RangeP(Tp s = NULL, Tp e = NULL)
       : start(s)
       , end(e)
@@ -925,7 +937,8 @@ void common_total(const std::vector<T>& a, const std::vector<T2>& p, T3& s)
 }
 
 //**//***********************************************************//*
-template <typename T> T common_GCD(T a, T b)
+template <typename T>
+T common_GCD(T a, T b)
 {
   if (a <= 0)
     return b;
@@ -1028,9 +1041,7 @@ int common_matrixCross(const std::vector<std::vector<T> >& a,
 
 // c = a . p2p . b
 template <typename T, typename T2>
-int common_matrixCross_p2p(const std::vector<std::vector<T2> >& p2p,
-    const std::vector<std::vector<T> >& a,
-    const std::vector<std::vector<T> >& b, std::vector<std::vector<T> >& c)
+int common_matrixCross_p2p(const std::vector<std::vector<T2> >& p2p, const std::vector<std::vector<T> >& a, const std::vector<std::vector<T> >& b, std::vector<std::vector<T> >& c)
 {
   const size_t NX = c.size(), NY = c[0].size();
   if (p2p.size() < NX || a.size() < NX || b[0].size() < NY) {
@@ -1051,11 +1062,10 @@ int common_matrixCross_p2p(const std::vector<std::vector<T2> >& p2p,
 
 // c = p2p . a
 template <typename T, typename T2>
-int common_matrixCross1_p2p(const std::vector<std::vector<T2> > p2p,
-    const std::vector<std::vector<T> >& a, std::vector<std::vector<T> >& c)
+int common_matrixCross1_p2p(const std::vector<std::vector<T2> >& p2p, const std::vector<T>& a, std::vector<T>& c)
 {
   const size_t NX = c.size();
-  if (p2p.size() < NX || a.size < NX) {
+  if (p2p.size() < NX || a.size() < NX) {
     ERROR();
     return -1;
   }

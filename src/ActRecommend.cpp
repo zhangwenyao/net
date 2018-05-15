@@ -16,8 +16,7 @@ int act_recommend_readP2p(VVNodeType& pu, VVNodeType& po, std::istream& is)
   return 0;
 }
 
-int linkMatr_2_p2p2(VVNodeType& user_p_object, VVNodeType& object_p_user,
-    const VVDistType& matr)
+int linkMatr_2_p2p2(VVNodeType& user_p_object, VVNodeType& object_p_user, const VVDistType& matr)
 {
   const NodeType NU = matr.size(), NO = matr[0].size();
   user_p_object.clear();
@@ -81,8 +80,7 @@ int act_recommend_mass_sum(const VNodeType& p2p, const double t, VDouble& v)
   return 0;
 }
 
-int act_recommend_mass_1(VDouble& o2, const VVNodeType& uP2p,
-    const VVNodeType& oP2p, const NodeType i)
+int act_recommend_mass_1(VDouble& o2, const VVNodeType& uP2p, const VVNodeType& oP2p, const NodeType i)
 {
   const NodeType NU = uP2p.size(), NO = oP2p.size();
   VDouble u2(NU, 0);
@@ -109,8 +107,7 @@ int act_recommend_mass_1(VDouble& o2, const VVNodeType& uP2p,
   return 0;
 }
 
-int act_recommend_mass(
-    VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p)
+int act_recommend_mass(VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p)
 {
   const NodeType NU = uP2p.size();
   rcm.resize(NU);
@@ -121,8 +118,7 @@ int act_recommend_mass(
 }
 
 //**//*****************************************************//*
-int act_recommend_heat_sum(
-    const VNodeType& p2p1, const VVNodeType& p2p2, const double t, VDouble& v)
+int act_recommend_heat_sum(const VNodeType& p2p1, const VVNodeType& p2p2, const double t, VDouble& v)
 {
   for (VNodeTypeCItr p = p2p1.begin(); p != p2p1.end(); p++) {
     const NodeType i = *p, s = p2p2[i].size();
@@ -146,24 +142,53 @@ int act_recommend_heat_1(VDouble& o2, const VVNodeType& uP2p,
       continue;
     act_recommend_heat_sum(oP2p[j], uP2p, 1.0, u2);
   }
+  //cout << "\n"
+       //<< i << "\n"
+       //<< u2 << endl;
 
   // u2 -> o2
   for (NodeType i2 = 0; i2 < NU; i2++) {
     if (uP2p[i2].size() <= 0 || u2[i2] <= 0)
       continue;
-    act_recommend_heat_sum(uP2p[i2], uP2p, u2[i2], o2);
+    act_recommend_heat_sum(uP2p[i2], oP2p, u2[i2], o2);
   }
+  //cout << o2 << endl;
 
   return 0;
 }
 
-int act_recommend_heat(
-    VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p)
+int act_recommend_heat(VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p)
 {
   const NodeType NU = uP2p.size();
   rcm.resize(NU);
   for (NodeType i = 0; i < NU; i++)
     act_recommend_heat_1(rcm[i], uP2p, oP2p, i);
+  return 0;
+}
+
+//**//*****************************************************//*
+int act_recommend_hybrid_matrix(VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p, const double lambda)
+{
+  const NodeType NU = uP2p.size(), NO = oP2p.size();
+  VVDouble w(NO, VDouble(NO, 0));
+  for (NodeType i = 0; i < NU; i++) {
+    NodeType ki = uP2p[i].size();
+    double dki = 1.0 / ki;
+    for (NodeType j = 0; j < ki; j++) {
+      NodeType a = uP2p[i][j];
+      for (NodeType k = 0; k < ki; k++) {
+        NodeType b = uP2p[i][k];
+        w[a][b] += dki / (pow(oP2p[a].size(), 1 - lambda) * pow(oP2p[b].size(), lambda));
+      }
+    }
+  }
+  rcm.assign(NU, VDouble(NO, 0));
+  VVDouble r = rcm;
+  for (NodeType i = 0; i < NU; i++) {
+    for (NodeType j = 0; j < uP2p[i].size(); j++)
+      r[i][uP2p[i][j]] = 1;
+  }
+  common_matrixCross(r, w, rcm);
   return 0;
 }
 
@@ -195,8 +220,8 @@ int act_recommend_pagerank(const VVNodeType& p2p, VDouble& v)
   return 0;
 }
 
-//**//*****************************************************//*
-int act_recommend_commonNeighbour_object(VVDouble& rcm, const VVNodeType& p2p, const VVNodeType& oo, VDouble& v)
+//**//***************************************************//*
+int act_recommend_commonNeighbour_object(VVDouble& rcm, const VVNodeType& oo)
 {
   ;
   return 0;

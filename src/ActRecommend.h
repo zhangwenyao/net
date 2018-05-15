@@ -21,7 +21,8 @@ int act_recommend_heat_1(VDouble& o2, const VVNodeType& uP2p,
 int act_recommend_heat(
     VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p);
 int act_recommend_pagerank(const VVNodeType& p2p, VDouble& v);
-int act_recommend_commonNeighbour(const VVNodeType& p2p, VDouble& v);
+int act_recommend_commonNeighbour_object(VVDouble& rcm, const VVNodeType& oo);
+int act_recommend_hybrid_matrix(VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p, const double lambda);
 
 int recommend_RAC(const VDouble& v0, const VDouble& v, double& r);
 int recommend_RMAE(const VDouble& v0, const VDouble& v, double& r);

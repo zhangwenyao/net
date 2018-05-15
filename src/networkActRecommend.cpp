@@ -98,10 +98,13 @@ Networks& Networks::act_recommend(std::string s, const char* name)
   } else if (s == "heat") {
     status = act_recommend_heat(
         recommend.rcm, *recommend.user_p_object, *recommend.object_p_user);
+  } else if (s == "hybrid") {
+    status = act_recommend_hybrid_matrix(
+        recommend.rcm, *recommend.user_p_object, *recommend.object_p_user, recommend.lambda);
   } else if (s == "pagerank") {
     status = act_recommend_pagerank(p2p, recommend.user);
-  } else if (s == "commonNeighbour") {
-    status = act_recommend_commonNeighbour(p2p, recommend.user);
+  } else if (s == "commonNeighbour_object") {
+    status = act_recommend_commonNeighbour_object(recommend.rcm, *recommend.object_p_object);
   } else {
     status = -1;
   }

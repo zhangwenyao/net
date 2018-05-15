@@ -68,16 +68,16 @@ int main(int argc, char** argv)
   SHOW_TIME(cout); // 显示系统时间
 
   const string DIR = "../../swiss/economic-complexity/201803/", DIR2 = DIR + "1995-2010/";
-  const string methods[] = { "mass" };
   // const string methods[] = { "mass", "heat" };
+  const string methods[] = { "heat" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
-  //const int YEAR1 = 1995, YEAR2=2005;
-  const int YEAR1 = 2009, YEAR2 = 2009;
+  const int YEAR1 = 1995, YEAR2 = 2010;
+  //const int YEAR1 = 2000, YEAR2 = 2000;
   for (size_t iMethod = 0; iMethod < NMETHOD; iMethod++) {
     string method = methods[iMethod];
     cout << method << endl;
 
-    for (int year = YEAR1; year <= YEAR2; year++) {
+    for (int year = YEAR1; year < YEAR2; year++) {
       string y1, y2;
       stringstream ss;
       ss.clear();
@@ -128,10 +128,8 @@ int main(int argc, char** argv)
       common_read1((DIR2 + y1 + ".kNew.txt").c_str(), kNew);
 
       VDouble rankingScore(NC, 0);
-      //count_rankingScore(net, NC, NP, mcp, mcp2, rankingScore,
-      //(DIR2 + y1 + "." + method + ".rankingScore.txt").c_str());
-      common_read1_0((DIR2 + y1 + "." + method + ".rankingScore.txt").c_str(),
-          rankingScore);
+      count_rankingScore(net, NC, NP, mcp, mcp2, rankingScore, (DIR2 + y1 + "." + method + ".rankingScore.txt").c_str());
+      //common_read1_0((DIR2 + y1 + "." + method + ".rankingScore.txt").c_str(), rankingScore);
 
       VDouble fc(NC, 0);
       common_read1_0((DIR2 + y1 + ".fc.txt").c_str(), fc);
@@ -156,10 +154,9 @@ int main(int argc, char** argv)
           fc[i] /= nrs10[i];
         }
       }
-      // common_save1((DIR2 + y1 + "." + method + ".rankingScoreStatic10.txt").c_str(),
-      // rs10, '\n');
-      // common_save1((DIR2 + y1 + "." + method + ".rankingScoreStatic10deviation.txt").c_str(), rs10_2, '\n');
-      // common_save1((DIR2 + y1 + "." + method + ".fc10.txt").c_str(), fc10, '\n');
+      common_save1((DIR2 + y1 + "." + method + ".rankingScoreStatic10.txt").c_str(), rs10, '\n');
+      common_save1((DIR2 + y1 + "." + method + ".rankingScoreStatic10deviation.txt").c_str(), rs10_2, '\n');
+      common_save1((DIR2 + y1 + "." + method + ".fc10.txt").c_str(), fc10, '\n');
 
       VDouble cp(NP, 0), cpMean(NC, 0);
       common_read1_0((DIR2 + y1 + ".cp.txt").c_str(), cp);

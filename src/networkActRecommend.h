@@ -12,11 +12,9 @@
 class Act_recommend {
   public:
   VDouble user, object;
-  VVDouble rcm;
-  const VVNodeType* user_p_user;
-  const VVNodeType* user_p_object;
-  const VVNodeType* object_p_user;
-  const VVNodeType* object_p_object;
+  VVDouble rcm, *rcmP;
+  VVNodeType user_p_user, user_p_object, object_p_user, object_p_object;
+  const VVNodeType *uuP2p, *uoP2p, *ouP2p, *ooP2p;
   double lambda;
 
   Act_recommend(void);

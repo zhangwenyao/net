@@ -10,72 +10,26 @@ int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
 
-  const string dir = "../../swiss/economic-complexity/201803/1995-2010/";
-  // const string methods[] = { "mass", "heat", "commonNeighbour };
-  const string methods[] = { "heat" };
-  const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
+  const string DIR = "../../swiss/economic-complexity/201803/", DIR2 = DIR + "1995-2010/";
   const int YEAR1 = 1995, YEAR2 = 2010;
-  //const int YEAR1 = 2000, YEAR2 = 2000;
-  for (size_t iMethod = 0; iMethod < NMETHOD; iMethod++) {
-    string method = methods[iMethod];
-    cout << method << endl;
+  for (int year = YEAR1; year <= YEAR2; year++) {
+    string y;
+    stringstream ss;
+    ss.clear();
+    ss.str("");
+    ss << year;
+    y = ss.str();
 
-    for (int year = YEAR1; year <= YEAR2; year++) {
-      cout << "\t" << year << endl;
-      string y1, y2;
-      stringstream ss;
-      ss.clear();
-      ss.str("");
-      ss << year;
-      y1 = ss.str();
-      ss.clear();
-      ss.str("");
-      ss << year + 1;
-      y2 = ss.str();
+    VVBool mcp;
+    common_read2_0((DIR2 + y + ".mcp.txt").c_str(), mcp);
+    const size_t NC = mcp.size(), NP = mcp[0].size();
+    cout << "\t" << year << "\t" << NC << "\t" << NP << endl;
 
-      VVDistType mcp;
-      common_read2_0((dir + y1 + ".mcp.txt").c_str(), mcp);
-      //common_read2_0("data/test/mcp.txt", mcp);
-      const size_t NC = mcp.size(), NP = mcp[0].size();
-
-      Networks net;
-      net.saveName = dir + y1;
-      net.recommend.lambda = 1.0;
-      VVNodeType pcp, ppc;
-      linkMatr_2_p2p2(pcp, ppc, mcp);
-      net.recommend.user_p_object = &pcp;
-      net.recommend.object_p_user = &ppc;
-      net.act_recommend(method.c_str());
-      //cout << net.recommend.rcm << endl;
-      common_save2((dir + y1 + "." + method + ".txt").c_str(), net.recommend.rcm);
-      continue;
-      //common_read2_0((dir + y1 + "." + method + ".txt").c_str(), net.recommend.rcm);
-
-      //VVNodeType mcp2;
-      //common_read2_0((dir + y2 + ".mcp.txt").c_str(), mcp2);
-      //if (mcp2.size() != NC || net.recommend.rcm.size() != NC) {
-      //ERROR();
-      //return -1;
-      //}
-      //for (size_t c = 0; c < NC; c++) {
-      //if (mcp[c].size() != NP || mcp2[c].size() != NP) {
-      //ERROR(mcp[c].size(), "\t", mcp2.size());
-      //break;
-      //}
-      //}
-      //cout << year << "\t" << NC << "\t" << NP << "\t" << net.recommend.rcm.size() << endl;
-
-      VNodeType k1(NC, 0);
-      common_read1((dir + y1 + ".k.txt").c_str(), k1);
-
-      //VNodeType k2(NC, 0);
-      //common_read1((dir + y2 + ".k.txt").c_str(), k2);
-
-      //VNodeType kNew(NC, 0);
-      //common_read1((dir + y1 + ".kNew.txt").c_str(), kNew);
-
-    } // year
-  }   // method
+    VDouble cf, pc;
+    Mcp_2_FC(cf, pc, mcp);
+    common_save1((DIR2 + y + ".country.fitness.txt").c_str(), cf, '\n');
+    common_save1((DIR2 + y + ".product.complexity.txt").c_str(), pc, '\n');
+  } // year
 
   SHOW_TIME(cout); // 显示系统时间
   return 0;

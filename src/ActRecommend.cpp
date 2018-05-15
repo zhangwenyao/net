@@ -143,8 +143,8 @@ int act_recommend_heat_1(VDouble& o2, const VVNodeType& uP2p,
     act_recommend_heat_sum(oP2p[j], uP2p, 1.0, u2);
   }
   //cout << "\n"
-       //<< i << "\n"
-       //<< u2 << endl;
+  //<< i << "\n"
+  //<< u2 << endl;
 
   // u2 -> o2
   for (NodeType i2 = 0; i2 < NU; i2++) {
@@ -321,8 +321,7 @@ int recommend_rankingScore(const VNodeType& R, const VNodeType& L, double& rs)
 }
 
 // rs ~ L && !L0 && rank/L
-int recommend_rankingScore(
-    const VNodeType& rk, const VNodeType& L0, const VNodeType& L, double& rs)
+int recommend_rankingScore(const VNodeType& rk, const VNodeType& L0, const VNodeType& L, double& rs)
 {
   rs = 0;
   const size_t N = rk.size();

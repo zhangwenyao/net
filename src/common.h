@@ -30,50 +30,52 @@ inline void SHOW_TIME(std::ostream& os);
 
 #ifdef STD_CPP11
 inline void ERRINFO();
-template <typename T, typename... Args> inline void ERRINFO(T x, Args... args);
+template <typename T, typename... Args>
+inline void ERRINFO(T x, Args... args);
 inline void INFO();
-template <typename T, typename... Args> inline void INFO(T x, Args... args);
+template <typename T, typename... Args>
+inline void INFO(T x, Args... args);
 #else
-#define INFO(...)                                                             \
-  do {                                                                        \
+#define INFO(...) \
+  do {            \
   } while (0)
-#define ERRINFO(...)                                                          \
-  do {                                                                        \
+#define ERRINFO(...) \
+  do {               \
   } while (0)
 #endif
 
 #ifndef ERROR
-#define ERROR(...)                                                            \
-  do {                                                                        \
-    std::cerr << "ERROR : " << __FILE__ << '\t' << __FUNCTION__ << "(Line "   \
-              << __LINE__ << ")\t";                                           \
-    ERRINFO(__VA_ARGS__);                                                     \
-    std::cerr << std::endl;                                                   \
+#define ERROR(...)                                                          \
+  do {                                                                      \
+    std::cerr << "ERROR : " << __FILE__ << '\t' << __FUNCTION__ << "(Line " \
+              << __LINE__ << ")\t";                                         \
+    ERRINFO(__VA_ARGS__);                                                   \
+    std::cerr << std::endl;                                                 \
   } while (0)
 #endif
 
 #ifndef INFORM
-#define INFORM(...)                                                           \
-  do {                                                                        \
-    std::cout << "INFORM: " << __FILE__ << '\t' << __FUNCTION__ << "(Line "   \
-              << __LINE__ << ")\t";                                           \
-    INFO(__VA_ARGS__);                                                        \
-    std::cout << std::endl;                                                   \
+#define INFORM(...)                                                         \
+  do {                                                                      \
+    std::cout << "INFORM: " << __FILE__ << '\t' << __FUNCTION__ << "(Line " \
+              << __LINE__ << ")\t";                                         \
+    INFO(__VA_ARGS__);                                                      \
+    std::cout << std::endl;                                                 \
   } while (0)
 #endif
 
 #ifndef DBG
 #ifdef DEBUG
-#define DBG(...)                                                              \
-  do {                                                                        \
-    std::cerr << "DEBUG : " << __FILE__ << '\t' << __FUNCTION__ << "(Line "   \
-              << __LINE__ << ")\t";                                           \
-    ERRINFO(__VA_ARGS__);                                                     \
-    std::cerr << std::endl;                                                   \
+#define DBG(...)                                                            \
+  do {                                                                      \
+    std::cerr << "DEBUG : " << __FILE__ << '\t' << __FUNCTION__ << "(Line " \
+              << __LINE__ << ")\t";                                         \
+    ERRINFO(__VA_ARGS__);                                                   \
+    std::cerr << std::endl;                                                 \
   } while (0)
 #else // DEBUG
-#define DBG(...)                                                              \
-  do {                                                                        \
+#define DBG(...) \
+  do {           \
   } while (0)
 #endif // DEBUG
 #endif // DBG
@@ -98,8 +100,10 @@ template <typename T>
 int common_save(std::ostream& os, T* p, const size_t n, const char c = '\t');
 template <typename T>
 int common_save(const char* name, T* p, const size_t n, const char c = '\t');
-template <typename T> int common_read(std::istream& is, T* p, const size_t n);
-template <typename T> int common_read(const char* name, T* p, const size_t n);
+template <typename T>
+int common_read(std::istream& is, T* p, const size_t n);
+template <typename T>
+int common_read(const char* name, T* p, const size_t n);
 template <typename T, typename T2>
 int common_read0(std::istream& is, T* p, T2* n);
 template <typename T, typename T2>
@@ -186,8 +190,10 @@ int common_save1(
     const char* name, const std::vector<T>& v, const char c = '\t');
 template <typename T>
 std::istream& operator>>(std::istream& is, std::vector<T>& v);
-template <typename T> int common_read1(std::istream& is, std::vector<T>& v);
-template <typename T> int common_read1(const char* name, std::vector<T>& v);
+template <typename T>
+int common_read1(std::istream& is, std::vector<T>& v);
+template <typename T>
+int common_read1(const char* name, std::vector<T>& v);
 template <typename T>
 int common_read1_0(std::istream& is, std::vector<T>& v, const unsigned n = 0);
 template <typename T>
@@ -215,15 +221,14 @@ template <typename T>
 int common_read2_0(const char* name, std::vector<std::vector<T> >& v);
 
 //**//***********************************************************//*
-template <typename Tp> struct Common_RangeP; // 范围结构
+template <typename Tp>
+struct Common_RangeP; // 范围结构
 
 template <typename Tp, typename T2>
-void common_sort_p_val(Tp p, Tp p2,
-    const T2* const val); // 按val[p[i]]大小对p[i]排序
+void common_sort_p_val(Tp p, Tp p2, const T2* const val); // 按val[p[i]]大小对p[i]排序
 
 template <typename Tp, typename T2>
-void common_sort_p_val_less(Tp p, Tp p2,
-    const T2* const val); // 按val[p[i]]大小对p[i]排序
+void common_sort_p_val_less(Tp p, Tp p2, const T2* const val); // 按val[p[i]]大小对p[i]排序
 
 template <typename T, typename T2>
 void common_total(const std::vector<T>& a, T2& s); // 求和
@@ -232,7 +237,8 @@ template <typename T, typename T2, typename T3>
 void common_total(const std::vector<T>& a, const std::vector<T2>& p, T3& s);
 
 //**//***********************************************************//*
-template <typename T> T common_GCD(T a, T b); // 最大公约数
+template <typename T>
+T common_GCD(T a, T b); // 最大公约数
 
 template <typename T>
 bool common_compare_vector(const std::vector<T>& a, const std::vector<T>& b);

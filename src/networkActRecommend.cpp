@@ -7,8 +7,11 @@ using namespace std;
 
 //**//****************************************************//*
 Act_recommend::Act_recommend(void)
-    : user_p_object(NULL)
-    , object_p_user(NULL)
+    : rcmP(&rcm)
+    , uuP2p(&user_p_user)
+    , uoP2p(&user_p_object)
+    , ouP2p(&object_p_user)
+    , ooP2p(&object_p_object)
 {
 }
 
@@ -94,17 +97,17 @@ Networks& Networks::act_recommend(std::string s, const char* name)
 
   if (s == "mass") {
     status = ::act_recommend_mass(
-        recommend.rcm, *recommend.user_p_object, *recommend.object_p_user);
+        recommend.rcm, *recommend.uoP2p, *recommend.ouP2p);
   } else if (s == "heat") {
     status = act_recommend_heat(
-        recommend.rcm, *recommend.user_p_object, *recommend.object_p_user);
+        recommend.rcm, *recommend.uoP2p, *recommend.ouP2p);
   } else if (s == "hybrid") {
     status = act_recommend_hybrid_matrix(
-        recommend.rcm, *recommend.user_p_object, *recommend.object_p_user, recommend.lambda);
+        recommend.rcm, *recommend.uoP2p, *recommend.ouP2p, recommend.lambda);
   } else if (s == "pagerank") {
     status = act_recommend_pagerank(p2p, recommend.user);
   } else if (s == "commonNeighbour_object") {
-    status = act_recommend_commonNeighbour_object(recommend.rcm, *recommend.object_p_object);
+    status = act_recommend_commonNeighbour_object(recommend.rcm, *recommend.ooP2p);
   } else {
     status = -1;
   }

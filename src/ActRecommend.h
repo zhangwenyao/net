@@ -27,11 +27,9 @@ int act_recommend_hybrid_matrix(VVDouble& rcm, const VVNodeType& uP2p, const VVN
 int recommend_RAC(const VDouble& v0, const VDouble& v, double& r);
 int recommend_RMAE(const VDouble& v0, const VDouble& v, double& r);
 int recommend_NMAE(const VDouble& v0, const VDouble& v, double& r);
-int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall,
-    double& precision, double& F);
+int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall, double& precision, double& F);
 int recommend_rankingScore(const VNodeType& R, const VNodeType& L, double& rs);
-int recommend_rankingScore(
-    const VNodeType& rk, const VNodeType& L0, const VNodeType& L, double& rs);
+int recommend_rankingScore(const VNodeType& rk, const VNodeType& L0, const VNodeType& L, double& rs);
 
 //**//*****************************************************//*
 #endif // ACT_RECOMMEND

@@ -56,6 +56,49 @@ int count_kNew(VNodeType& kNew, const VVNodeType& cpNew, const char* name = NULL
   return 0;
 }
 
+int count_pcNewRemainRank(const VDouble& pc, const size_t NC, const size_t NP, const VVNodeType& mcp, const VVNodeType& cpNew, VVNodeType& rankNew, const char* name = NULL)
+{
+  rankNew.resize(NC);
+  VDouble pc2(NP, 0);
+  VNodeType rk(NP, 0), rk2(NP, 0);
+  for (size_t c = 0; c < NC; c++) {
+    rankNew[c].clear();
+    size_t NN = cpNew[c].size(), NR = 0;
+    if (NN <= 0)
+      continue;
+    for (size_t p = 0; p < NP; p++)
+      if (mcp[c][p] == 0)
+        pc2[NR++] = pc[p];
+    for (size_t p = 0; p < NR; p++)
+      rk[p] = p;
+    common_sort_p_val_less(&rk[0], &rk[NR], &pc2[0]);
+    for (size_t p = 0; p < NR; p++)
+      rk2[rk[p]] = p;
+    for (size_t p = 0; p < NN; p++)
+      rankNew[c].push_back(rk2[cpNew[c][p]]);
+  }
+  if (name != NULL && name[0] != '\0')
+    common_save2(name, rankNew);
+  return 0;
+}
+
+int count_pcNewScale(const size_t NC, const size_t NP, const VNodeType& k1, const VVNodeType& cpNewRemainRank, VVDouble& scale, const char* name = NULL)
+{
+  scale.resize(NC);
+  for (size_t c = 0; c < NC; c++) {
+    scale[c].clear();
+    size_t NN = cpNewRemainRank[c].size();
+    if (NN <= 0)
+      continue;
+    double x = 1.0 / (NP - k1[c]);
+    for (size_t p = 0; p < NN; p++)
+      scale[c].push_back(cpNewRemainRank[c][p] * x);
+  }
+  if (name != NULL && name[0] != '\0')
+    common_save2(name, scale);
+  return 0;
+}
+
 int count_pcNewRank(const VDouble& pc, const size_t NC, const size_t NP, const VVNodeType& cpNew, VVNodeType& rankNew, const char* name = NULL)
 {
   rankNew.resize(NC);
@@ -111,12 +154,13 @@ int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
 
-  const string DIR = "../../swiss/economic-complexity/201803/", DIR2 = DIR + "1995-2010/";
+  const string DIR = "../../swiss/economic-complexity/201803/",
+               DIR2 = DIR + "1995-2010/";
   const string methods[] = { "mass", "heat", "hybrid" };
-  //const string methods[] = { "hybrid" };
+  // const string methods[] = { "hybrid" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
   const int YEAR1 = 1995, YEAR2 = 2010;
-  //const int YEAR1 = 2000, YEAR2 = 2000;
+  // const int YEAR1 = 2000, YEAR2 = 2000;
   for (size_t iMethod = 0; iMethod < NMETHOD; iMethod++) {
     string method = methods[iMethod];
     cout << method << endl;
@@ -157,36 +201,50 @@ int main(int argc, char** argv)
       cout << "\t" << year << "\t" << NC << "\t" << NP << "\t" << net.recommend.rcm.size() << endl;
 
       VNodeType k1;
-      //count_k1(NC, NP, mcp, k1, (DIR2 + y1 + ".country.product.k.txt").c_str());
+      // count_k1(NC, NP, mcp, k1, (DIR2 + y1 + ".country.product.k.txt").c_str());
       common_read1_0((DIR2 + y1 + ".country.product.k.txt").c_str(), k1);
 
       VNodeType k2;
-      //count_k1(NC, NP, mcp2, k2, (DIR2 + y2 + ".country.product.k.txt").c_str());
+      // count_k1(NC, NP, mcp2, k2, (DIR2 + y2 + ".country.product.k.txt").c_str());
       common_read1_0((DIR2 + y2 + ".country.product.k.txt").c_str(), k2);
 
       VVNodeType cpNew;
-      //count_cpNew(NC, NP, mcp, mcp2, cpNew, (DIR2 + y1 + ".country.product.new.txt").c_str());
+      // count_cpNew(NC, NP, mcp, mcp2, cpNew, (DIR2 + y1 + ".country.product.new.txt").c_str());
       common_read2_0((DIR2 + y1 + ".country.product.new.txt").c_str(), cpNew);
+      cpNew.resize(NC);
       VNodeType kNew;
-      //count_kNew(kNew, cpNew, (DIR2 + y1 + ".country.product.new.k.txt").c_str());
+      // count_kNew(kNew, cpNew, (DIR2 + y1 + ".country.product.new.k.txt").c_str());
       common_read1_0((DIR2 + y1 + ".country.product.new.k.txt").c_str(), kNew);
 
       VDouble pc;
       common_read1_0((DIR2 + y1 + ".product.complexity.txt").c_str(), pc);
 
       VVNodeType pcNewRank;
-      //count_pcNewRank(pc, NC, NP, cpNew, pcNewRank, (DIR2 + y1 + ".country.product.new.rank.txt").c_str());
+      // count_pcNewRank(pc, NC, NP, cpNew, pcNewRank, (DIR2 + y1 + ".country.product.new.rank.txt").c_str());
       common_read2_0((DIR2 + y1 + ".country.product.new.rank.txt").c_str(), pcNewRank);
+      pcNewRank.resize(NC);
+
+      VVNodeType pcNewRemainRank;
+      //count_pcNewRemainRank(pc, NC, NP, mcp, cpNew, pcNewRemainRank, (DIR2 + y1 + ".country.product.new.remain.rank.txt").c_str());
+      common_read2_0((DIR2 + y1 + ".country.product.new.remain.rank.txt").c_str(), pcNewRemainRank);
+      pcNewRemainRank.resize(NC);
+
+      VVDouble pcNewScale;
+      //count_pcNewScale(NC, NP, k1, pcNewRemainRank, pcNewScale, (DIR2 + y1 + ".country.product.new.scale.txt").c_str());
+      common_read2_0((DIR2 + y1 + ".country.product.new.scale.txt").c_str(), pcNewScale);
+      pcNewScale.resize(NC);
 
       VVNodeType newRank;
-      //count_rankNew(net.recommend.rcm, NC, NP, cpNew, newRank, (DIR2 + y1 + "." + method + ".new.rank.txt").c_str());
+      // count_rankNew(net.recommend.rcm, NC, NP, cpNew, newRank, (DIR2 + y1 + "." + method + ".new.rank.txt").c_str());
       common_read2_0((DIR2 + y1 + "." + method + ".new.rank.txt").c_str(), newRank);
+      newRank.resize(NC);
       VDouble rankingScore;
-      //count_rankingScore(net.recommend.rcm, NC, NP, mcp, mcp2, rankingScore, (DIR2 + y1 + "." + method + ".rankingScore.txt").c_str());
+      // count_rankingScore(net.recommend.rcm, NC, NP, mcp, mcp2, rankingScore, (DIR2 + y1 + "." + method + ".rankingScore.txt").c_str());
       common_read1_0((DIR2 + y1 + "." + method + ".rankingScore.txt").c_str(), rankingScore);
 
       VDouble cf;
       common_read1_0((DIR2 + y1 + ".country.fitness.txt").c_str(), cf);
+      continue;
 
       const size_t NRS = NP / 10 + 1;
       VNodeType nrs10(NRS, 0);
@@ -208,9 +266,16 @@ int main(int argc, char** argv)
           cf[i] /= nrs10[i];
         }
       }
-      common_save1((DIR2 + y1 + "." + method + ".rankingScoreStatic10.txt").c_str(), rs10, '\n');
-      common_save1((DIR2 + y1 + "." + method + ".rankingScoreStatic10deviation.txt").c_str(), rs10_2, '\n');
-      common_save1((DIR2 + y1 + "." + method + ".countryFitness10.txt").c_str(), cf10, '\n');
+      common_save1(
+          (DIR2 + y1 + "." + method + ".rankingScoreStatic10.txt").c_str(),
+          rs10, '\n');
+      common_save1(
+          (DIR2 + y1 + "." + method + ".rankingScoreStatic10deviation.txt")
+              .c_str(),
+          rs10_2, '\n');
+      common_save1(
+          (DIR2 + y1 + "." + method + ".countryFitness10.txt").c_str(), cf10,
+          '\n');
 
       VDouble pcMean(NC, 0);
       for (size_t c = 0; c < NC; c++) {
@@ -223,7 +288,9 @@ int main(int argc, char** argv)
         }
         pcMean[c] /= k1[c];
       }
-      common_save1((DIR2 + y1 + ".country.product.complexity.mean.txt").c_str(), pcMean, '\n');
+      common_save1(
+          (DIR2 + y1 + ".country.product.complexity.mean.txt").c_str(), pcMean,
+          '\n');
 
       VDouble pcNewMean(NC, 0);
       for (size_t c = 0; c < NC; c++) {
@@ -236,7 +303,10 @@ int main(int argc, char** argv)
         }
         pcNewMean[c] /= kNew[c];
       }
-      common_save1((DIR2 + y1 + "." + method + ".country.product.complexity.new.mean.txt").c_str(), pcNewMean, '\n');
+      common_save1((DIR2 + y1 + "." + method
+                       + ".country.product.complexity.new.mean.txt")
+                       .c_str(),
+          pcNewMean, '\n');
 
     } // year
   }   // method

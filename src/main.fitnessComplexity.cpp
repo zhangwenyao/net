@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
 
-  const string DIR = "../../swiss/economic-complexity/201803/", DIR2 = DIR + "1995-2010/";
+  const string DIR1 = "../../swiss/economic-complexity/201803/", DIR2 = DIR1 + "1995-2010/";
   const int YEAR1 = 1995, YEAR2 = 2010;
   for (int year = YEAR1; year <= YEAR2; year++) {
     string y;
@@ -22,6 +22,8 @@ int main(int argc, char** argv)
 
     VVBool mcp;
     common_read2_0((DIR2 + y + ".mcp.txt").c_str(), mcp);
+    //mcp.assign(3, VBool(4, 1));
+    //mcp[1][0] = mcp[2][2] = mcp[2][3] = 0;
     const size_t NC = mcp.size(), NP = mcp[0].size();
     cout << "\t" << year << "\t" << NC << "\t" << NP << endl;
 

@@ -5,9 +5,23 @@
 
 #ifdef ACT_FITNESS_COMPLEXITY
 //**//*****************************************************//*
-int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp);
+template <typename T, typename T2>
+int exp_2_Mcp(const std::vector<std::vector<T> >& e, std::vector<std::vector<T2> >& mcp);
 template <typename T>
 int Mcp_2_C_P(const std::vector<std::vector<T> >& mcp, VVNodeType& pc, VVNodeType& pp);
+
+int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp);
+
+int count_k1(const size_t NC, const size_t NP, const VVNodeType& mcp, VNodeType& k1, const char* name = NULL);
+int count_cpNew(const size_t NC, const size_t NP, const VVNodeType& mcp, const VVNodeType& mcp2, VVNodeType& cpNew, const char* name = NULL);
+int count_kNew(VNodeType& kNew, const VVNodeType& cpNew, const char* name = NULL);
+int count_pcNewRemainRank(const VDouble& pc, const size_t NC, const size_t NP, const VVNodeType& mcp, const VVNodeType& cpNew, VVNodeType& rankNew, const char* name = NULL);
+int count_pcNewScale(const size_t NC, const size_t NP, const VNodeType& k1, const VVNodeType& cpNewRemainRank, VVDouble& scale, const char* name = NULL);
+int count_pcNewRank(const VDouble& pc, const size_t NC, const size_t NP, const VVNodeType& cpNew, VVNodeType& rankNew, const char* name = NULL);
+int count_newRemainRank(const VVDouble& rcm, const size_t NC, const size_t NP, const VVNodeType& mcp, const VVNodeType& cpNew, VVNodeType& newRemainRank, const char* name = NULL);
+int count_rankNew(const VVDouble& rcm, const size_t NC, const size_t NP, const VVNodeType& cpNew, VVNodeType& rankNew, const char* name = NULL);
+
+int filter_index(const NodeType N, VVNodeType& indexs, VNodeType& index);
 
 //**//*****************************************************//*
 #include "ActFitnessComplexity.template.h"

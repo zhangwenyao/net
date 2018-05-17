@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
 
-  const string DIR2 = "../../swiss/economic-complexity/201803/1995-2010/";
+  const string DIR2 = "data/complexity/1995-2010.data/";
   const string methods[] = { "mass", "heat", "hybrid" };
   //const string methods[] = { "hybrid" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);

@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
 
-  const string DIR1 = "../../swiss/economic-complexity/201803/", DIR2 = DIR1 + "1995-2010/";
+  const string DIR1 = "data/complexity/", DIR2 = DIR1 + "1995-2010.data/";
   const int YEAR1 = 1995, YEAR2 = 2010;
   for (int year = YEAR1; year <= YEAR2; year++) {
     string y;

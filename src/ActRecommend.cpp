@@ -285,8 +285,7 @@ int recommend_NMAE(const VDouble& v0, const VDouble& v, double& r)
   return 0;
 }
 
-int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall,
-    double& precision, double& F)
+int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall, double& precision, double& F)
 {
   NodeType s = 0;
   if (v0.size() > 0 || v.size() > 0) {
@@ -313,14 +312,16 @@ int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall,
 int recommend_rankingScore(const VNodeType& R, const VNodeType& L, double& rs)
 {
   rs = 0;
-  if (L.size() <= 0)
+  if (L.size() <= 1) {
+    rs = 0.5;
     return 0;
+  }
   common_total(R, L, rs);
-  rs /= L.size();
+  rs /= L.size() - 1;
   return 0;
 }
 
-// rs ~ L && !L0 && rank/L
+// rs : not in L0 && in L && rank/size(~L0)
 int recommend_rankingScore(const VNodeType& rk, const VNodeType& L0, const VNodeType& L, double& rs)
 {
   rs = 0;
@@ -329,8 +330,10 @@ int recommend_rankingScore(const VNodeType& rk, const VNodeType& L0, const VNode
     ERROR();
     return -1;
   }
-  if (N <= 0)
+  if (N <= 1) {
+    rs = 0.5;
     return 0;
+  }
   size_t n0 = 0, n = 0;
   for (size_t i = 0; i < N; i++) {
     NodeType p = rk[i];
@@ -342,8 +345,10 @@ int recommend_rankingScore(const VNodeType& rk, const VNodeType& L0, const VNode
       n0++;
     }
   }
-  if (n > 0)
-    rs = rs / n0 / n;
+  if (n0 > 1 && n >= 1)
+    rs /= (n0 - 1.0) * n;
+  else
+    rs = 0.5;
   return 0;
 }
 

@@ -186,15 +186,13 @@ int common_read0(const char* name, T* p, T2* n)
 
 // *p, p[n1][n2]
 template <typename T>
-int common_save2(
-    std::ostream& os, T* p, const size_t n1, const size_t n2, const char c)
+int common_save2(std::ostream& os, T* p, const size_t n1, const size_t n2, const char c)
 {
   for (size_t i = 0; i < n1; i++) {
     if (n2 > 0) {
       os << *p++;
-    }
-    for (size_t j = 1; j < n2; j++) {
-      os << c << *p++;
+      for (size_t j = 1; j < n2; j++)
+        os << c << *p++;
     }
     os << '\n';
   }
@@ -202,8 +200,7 @@ int common_save2(
 }
 
 template <typename T>
-int common_save2(
-    const char* name, T* p, const size_t n1, const size_t n2, const char c)
+int common_save2(const char* name, T* p, const size_t n1, const size_t n2, const char c)
 {
   std::ofstream os(name);
   if (!os) {
@@ -260,26 +257,25 @@ std::ostream& operator<<(std::ostream& os, T (&a)[n1][n2])
   return os;
 }
 
-template <typename T, const size_t n2, const size_t n1>
-int common_save2(std::ostream& os, T (&a)[n2][n1], const char c)
+template <typename T, const size_t n1, const size_t n2>
+int common_save2(std::ostream& os, T (&a)[n1][n2], const char c)
 {
   T(*pp)
   [n2] = a;
   for (size_t i = 0; i < n1; i++) {
-    if (n2 > 0) {
+    if (n1 > 0) {
       T* p = *pp++;
       os << *p;
-      for (size_t j = 1; j < n2; j++) {
+      for (size_t j = 1; j < n2; j++)
         os << c << *++p;
-      }
     }
     os << '\n';
   }
   return 0;
 }
 
-template <typename T, const size_t n2, const size_t n1>
-int common_save2(const char* name, T (&a)[n2][n1], const char c)
+template <typename T, const size_t n1, const size_t n2>
+int common_save2(const char* name, T (&a)[n1][n2], const char c)
 {
   std::ofstream os(name);
   if (!os) {
@@ -342,12 +338,11 @@ int common_save2(std::ostream& os, T* (&a)[n], T2 (&size)[n], const char c)
   T** pa = a;
   T2* ps = size;
   for (size_t i = 0; i < n; ps++, pa++, i++) {
-    T* t = *pa;
     if (*ps > 0) {
+    T* t = *pa;
       os << *t;
-    }
-    for (size_t j = 1; j < *ps; j++) {
-      os << c << *++t;
+      for (size_t j = 1; j < *ps; j++)
+        os << c << *++t;
     }
     os << '\n';
   }
@@ -400,16 +395,14 @@ int common_read2(const char* name, T* (&a)[n], T2 (&size)[n])
 
 //**a, *size, n
 template <typename T, typename T2>
-int common_save2(
-    std::ostream& os, T** a, T2* size, const size_t n, const char c)
+int common_save2(std::ostream& os, T** a, T2* size, const size_t n, const char c)
 {
   for (size_t i = 0; i < n; size++, a++, i++) {
-    T* t = *a;
     if (*size > 0) {
+    T* t = *a;
       os << *t;
-    }
-    for (size_t j = 1; j < *size; j++) {
-      os << c << *++t;
+      for (size_t j = 1; j < *size; j++)
+        os << c << *++t;
     }
     os << '\n';
   }
@@ -417,8 +410,7 @@ int common_save2(
 }
 
 template <typename T, typename T2>
-int common_save2(
-    const char* name, T** a, T2* size, const size_t n, const char c)
+int common_save2(const char* name, T** a, T2* size, const size_t n, const char c)
 {
   std::ofstream os(name);
   if (!os) {
@@ -540,24 +532,21 @@ int common_read2_0(const char* name, T** a, T2* size, T2* n)
 
 // **a, n1, n2
 template <typename T>
-int common_save2(
-    std::ostream& os, T** a, const size_t n1, const size_t n2, const char c)
+int common_save2(std::ostream& os, T** a, const size_t n1, const size_t n2, const char c)
 {
   for (size_t i = 0; i < n1; i++) {
-    T* p = a[i];
     if (n2 > 0) {
+    T* p = a[i];
       os << *p++;
-    }
-    for (size_t j = 1; j < n2; j++) {
-      os << c << *p++;
+      for (size_t j = 1; j < n2; j++)
+        os << c << *p++;
     }
     os << '\n';
   }
   return 0;
 }
 template <typename T>
-int common_save2(
-    const char* name, T** a, const size_t n1, const size_t n2, const char c)
+int common_save2(const char* name, T** a, const size_t n1, const size_t n2, const char c)
 {
   std::ofstream os(name);
   if (!os) {
@@ -724,21 +713,17 @@ std::ostream& operator<<(
 }
 
 template <typename T>
-int common_save2(
-    std::ostream& os, const std::vector<std::vector<T> >& v, const char c)
+int common_save2(std::ostream& os, const std::vector<std::vector<T> >& v, const char c)
 {
-  if (v.size() > 0)
-    common_save1(os, v[0], c);
-  for (size_t i = 1; i < v.size(); i++) {
-    os << '\n';
+  for (size_t i = 0; i < v.size(); i++) {
     common_save1(os, v[i], c);
+    os << '\n';
   }
   return 0;
 }
 
 template <typename T>
-int common_save2(
-    const char* name, const std::vector<std::vector<T> >& v, const char c)
+int common_save2(const char* name, const std::vector<std::vector<T> >& v, const char c)
 {
   std::ofstream os(name);
   if (!os) {

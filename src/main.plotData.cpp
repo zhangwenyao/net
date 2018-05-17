@@ -11,13 +11,13 @@ int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
 
-  const string DIR1 = "../../swiss/economic-complexity/201803/", DIR2 = DIR1 + "1995-2010/", DIR_PLOT = DIR1 + "1995-2010-plot/";
+  const string DIR0 = "data/complexity/", DIR_DATA = DIR0 + "1995-2010.data/", DIR_PLOT = DIR0 + "1995-2010.plot/";
   const string methods[] = { "mass", "heat", "hybrid" };
   //const string methods[] = { "mass" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
-  const int YEAR1 = 1995, YEAR2 = 2010;
+  const int YEAR1 = 1995, YEAR2 = 2010, NYEAR = YEAR2 - YEAR1 + 1;
 
-  const size_t NC = 263;
+  const size_t NC = 212, NP = 773;
   for (int year = YEAR1; year < YEAR2; year++) {
     string y1;
     stringstream ss;
@@ -27,55 +27,124 @@ int main(int argc, char** argv)
     y1 = ss.str();
     cout << y1 << endl;
 
-    {
-      VVNodeType cpNew;
-      VVDouble cpNewScale, newScale[NMETHOD];
-      common_read2_0((DIR2 + y1 + ".country.product.new.txt").c_str(), cpNew);
-      cpNew.resize(NC);
-      common_read2_0((DIR2 + y1 + ".country.product.new.scale.txt").c_str(), cpNewScale);
-      cpNewScale.resize(NC);
-      for (size_t i = 0; i < NMETHOD; i++) {
-        string method = methods[i];
-        common_read2_0((DIR2 + y1 + "." + method + ".new.scale.txt").c_str(), newScale[i]);
-        newScale[i].resize(NC);
-      }
+    VNodeType fullIndex;
+    common_read1_0((DIR0 + "1995-2010.info/GDP.1995-2010.full.index.txt").c_str(), fullIndex);
+    const size_t NCF = fullIndex.size();
 
-      ofstream os((DIR_PLOT + y1 + ".plot.scale.txt").c_str());
-      for (size_t c = 0; c < NC; c++)
-        for (size_t p = 0; p < cpNew[c].size(); p++) {
-          os << c << '\t' << cpNew[c][p] << '\t' << cpNewScale[c][p];
-          for (size_t i = 0; i < NMETHOD; i++) {
-            os << '\t' << newScale[i][c][p];
+    VVDouble gdp;
+    common_read2_0((DIR0 + "1995-2010.info/GDP.1995-2010.full.val.txt").c_str(), gdp);
+    VNodeType rk;
+    {
+      VDouble g;
+      for (size_t c = 0; c < NCF; c++) {
+        g.push_back(gdp[c][year - YEAR1]);
+        rk.push_back(c);
+      }
+      common_sort_p_val_less(&rk[0], &rk[NCF], &g[0]);
+      common_save1((DIR_DATA + y1 + ".gdp.full.rank.txt").c_str(), rk, '\n');
+    }
+
+    const size_t N = 10;
+    VVNodeType rks;
+    rks.resize(N);
+    for (size_t i = 0; i < NCF; i++) {
+      size_t j = int(1.0 * N * i / NCF);
+      rks[j].push_back(rk[i]);
+    }
+    common_save2((DIR_DATA + y1 + ".gdp.full.rank10.txt").c_str(), rks);
+
+    VVNodeType cpNew;
+    common_read2_0((DIR_DATA + y1 + ".country.product.new.txt").c_str(), cpNew);
+    cpNew.resize(NC);
+
+    VVDouble cpNewScale, newScale[NMETHOD];
+    common_read2_0((DIR_DATA + y1 + ".country.product.new.scale.txt").c_str(), cpNewScale);
+    cpNewScale.resize(NC);
+    for (size_t i = 0; i < NMETHOD; i++) {
+      string method = methods[i];
+      common_read2_0((DIR_DATA + y1 + "." + method + ".new.scale.txt").c_str(), newScale[i]);
+      newScale[i].resize(NC);
+    }
+    {
+      ofstream os((DIR_PLOT + "data/" + y1 + ".full.scale.txt").c_str());
+      for (size_t cc = 0, c; cc < NCF; cc++) {
+        c = fullIndex[cc];
+        for (size_t j = 0; j < cpNew[c].size(); j++) {
+          size_t p = cpNew[c][j];
+          os << c << '\t' << p << '\t' << cpNewScale[c][j];
+          for (size_t ii = 0; ii < NMETHOD; ii++) {
+            os << '\t' << newScale[ii][c][j];
           }
           os << '\n';
         }
+      }
       os.close();
+
+      for (size_t i = 0; i < N; i++) {
+        ss.clear();
+        ss.str("");
+        ss << DIR_PLOT << "data/" << y1 << ".full.scale.rank10." << i;
+        string s = ss.str();
+        ofstream os((s + ".txt").c_str());
+        for (size_t cc = 0, c; cc < rks[i].size(); cc++) {
+          c = rks[i][cc];
+          for (size_t j = 0; j < cpNew[c].size(); j++) {
+            size_t p = cpNew[c][j];
+            os << c << '\t' << p << '\t' << cpNewScale[c][j];
+            for (size_t ii = 0; ii < NMETHOD; ii++) {
+              os << '\t' << newScale[ii][c][j];
+            }
+            os << '\n';
+          }
+        }
+        os.close();
+      }
     }
 
+    VDouble pc;
+    VVDouble rcm[NMETHOD];
+    cpNew.resize(NC);
+    common_read1_0((DIR_DATA + y1 + ".product.complexity.txt").c_str(), pc);
+    for (size_t i = 0; i < NMETHOD; i++) {
+      string method = methods[i];
+      common_read2_0((DIR_DATA + y1 + "." + method + ".rcm.txt").c_str(), rcm[i]);
+    }
     {
-      VVNodeType cpNew;
-      VDouble pc;
-      VVDouble rcm[NMETHOD];
-      common_read2_0((DIR2 + y1 + ".country.product.new.txt").c_str(), cpNew);
-      common_read1_0((DIR2 + y1 + ".product.complexity.txt").c_str(), pc);
-      for (size_t i = 0; i < NMETHOD; i++) {
-        string method = methods[i];
-        common_read2_0((DIR2 + y1 + "." + method + ".rcm.txt").c_str(), rcm[i]);
-      }
-      const size_t NC = cpNew.size();
-
-      ofstream os((DIR_PLOT + y1 + ".plot.val.txt").c_str());
-      for (size_t c = 0; c < NC; c++)
-        for (size_t p = 0; p < cpNew[c].size(); p++) {
-          size_t ii = cpNew[c][p];
-          os << c << '\t' << ii << '\t' << pc[ii];
-          for (size_t i = 0; i < NMETHOD; i++) {
-            os << '\t' << rcm[i][c][ii];
+      ofstream os((DIR_PLOT + "data/" + y1 + ".full.val.txt").c_str());
+      for (size_t cc = 0, c; cc < NCF; cc++) {
+        c = fullIndex[cc];
+        for (size_t j = 0; j < cpNew[c].size(); j++) {
+          size_t p = cpNew[c][j];
+          os << c << '\t' << p << '\t' << pc[p];
+          for (size_t ii = 0; ii < NMETHOD; ii++) {
+            os << '\t' << rcm[ii][c][p];
           }
           os << '\n';
         }
+      }
       os.close();
+
+      for (size_t i = 0; i < N; i++) {
+        ss.clear();
+        ss.str("");
+        ss << DIR_PLOT << "data/" << y1 << ".full.val.rank10." << i;
+        string s = ss.str();
+        ofstream os((s + ".txt").c_str());
+        for (size_t cc = 0, c; cc < rks[i].size(); cc++) {
+          c = rks[i][cc];
+          for (size_t j = 0; j < cpNew[c].size(); j++) {
+            size_t p = cpNew[c][j];
+            os << c << '\t' << p << '\t' << pc[p];
+            for (size_t ii = 0; ii < NMETHOD; ii++) {
+              os << '\t' << rcm[ii][c][p];
+            }
+            os << '\n';
+          }
+        }
+        os.close();
+      }
     }
+
   } // year
 
   SHOW_TIME(cout); // 显示系统时间

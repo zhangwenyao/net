@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
 
-  const string DIR1 = "../../swiss/economic-complexity/201803/", DIR2 = DIR1 + "1995-2010/";
+  const string DIR1 = "data/complexity/", DIR2 = DIR1 + "1995-2010.data/";
   const string methods[] = { "mass", "heat", "hybrid" };
   //const string methods[] = { "hybrid" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
@@ -55,6 +55,10 @@ int main(int argc, char** argv)
       net.saveName = DIR2 + y1;
       common_read2_0((DIR2 + y1 + "." + method + ".rcm.txt").c_str(), net.recommend.rcm);
 
+      VNodeType k1;
+      //count_k1(NC, NP, mcp, k1, (DIR2 + y1 + ".country.product.k.txt").c_str());
+      common_read1_0((DIR2 + y1 + ".country.product.k.txt").c_str(), k1);
+
       VVNodeType mcp2;
       common_read2_0((DIR2 + y2 + ".mcp.txt").c_str(), mcp2);
       if (mcp2.size() != NC || net.recommend.rcm.size() != NC) {
@@ -68,10 +72,6 @@ int main(int argc, char** argv)
         }
       }
       cout << "\t" << year << "\t" << NC << "\t" << NP << "\t" << net.recommend.rcm.size() << endl;
-
-      VNodeType k1;
-      //count_k1(NC, NP, mcp, k1, (DIR2 + y1 + ".country.product.k.txt").c_str());
-      common_read1_0((DIR2 + y1 + ".country.product.k.txt").c_str(), k1);
 
       VNodeType k2;
       //count_k1(NC, NP, mcp2, k2, (DIR2 + y2 + ".country.product.k.txt").c_str());
@@ -104,14 +104,12 @@ int main(int argc, char** argv)
       common_read2_0((DIR2 + y1 + ".country.product.new.scale.txt").c_str(), pcNewScale);
       pcNewScale.resize(NC);
 
+      // method
+
       VVNodeType newRank;
       count_rankNew(net.recommend.rcm, NC, NP, cpNew, newRank, (DIR2 + y1 + "." + method + ".new.rank.txt").c_str());
       //common_read2_0((DIR2 + y1 + "." + method + ".new.rank.txt").c_str(), newRank);
       //newRank.resize(NC);
-
-      VDouble rankingScore;
-      count_rankingScore(net.recommend.rcm, NC, NP, mcp, mcp2, rankingScore, (DIR2 + y1 + "." + method + ".rankingScore.txt").c_str());
-      //common_read1_0((DIR2 + y1 + "." + method + ".rankingScore.txt").c_str(), rankingScore);
 
       VVNodeType newRemainRank;
       count_newRemainRank(net.recommend.rcm, NC, NP, mcp, cpNew, newRemainRank, (DIR2 + y1 + "." + method + ".new.remain.rank.txt").c_str());
@@ -122,6 +120,10 @@ int main(int argc, char** argv)
       count_pcNewScale(NC, NP, k1, newRemainRank, newScale, (DIR2 + y1 + "." + method + ".new.scale.txt").c_str());
       //common_read2_0((DIR2 + y1 + "." + method + ".new.scale.txt").c_str(), newScale);
       //newScale.resize(NC);
+
+      VDouble rankingScore;
+      count_rankingScore(net.recommend.rcm, NC, NP, mcp, mcp2, rankingScore, (DIR2 + y1 + "." + method + ".rankingScore.txt").c_str());
+      //common_read1_0((DIR2 + y1 + "." + method + ".rankingScore.txt").c_str(), rankingScore);
 
       VDouble cf;
       common_read1_0((DIR2 + y1 + ".country.fitness.txt").c_str(), cf);

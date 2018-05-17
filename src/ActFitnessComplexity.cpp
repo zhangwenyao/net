@@ -60,9 +60,9 @@ int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp)
     }
 
     for (size_t c = 0; c < NC; c++)
-      Fc[c] = iFc[c] < 0 ? 0 : iFc[c] / ifMean;
+      Fc[c] = iFc[c] < 0 ? -1 : iFc[c] / ifMean;
     for (size_t p = 0; p < NP; p++)
-      Cp[p] = iCp[p] < 0 ? 0 : iCp[p] / icMean;
+      Cp[p] = iCp[p] < 0 ? -1 : iCp[p] / icMean;
 
     if ((1.0 - delta) * cMean <= icMean && icMean <= (1.0 + delta) * cMean
         && (1.0 - delta) * fMean <= ifMean
@@ -75,6 +75,12 @@ int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp)
     if (count % 1000 == 0)
       INFORM(count, "\tfm ", fMean, "\tcm ", cMean);
   }
+  for (size_t c = 0; c < NC; c++)
+    if (iFc[c] < 0)
+      Fc[c] = 0;
+  for (size_t p = 0; p < NP; p++)
+    if (iCp[p] < 0)
+      Cp[p] = 0;
 
   return flag;
 }

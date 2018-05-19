@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//*****************************************************//*
+// *******************************************************
 int act_recommend_readP2p(VVNodeType& pu, VVNodeType& po, std::istream& is)
 {
   if (!is) {
@@ -16,7 +16,8 @@ int act_recommend_readP2p(VVNodeType& pu, VVNodeType& po, std::istream& is)
   return 0;
 }
 
-int linkMatr_2_p2p2(VVNodeType& user_p_object, VVNodeType& object_p_user, const VVDistType& matr)
+int linkMatr_2_p2p2(VVNodeType& user_p_object, VVNodeType& object_p_user,
+    const VVDistType& matr)
 {
   const NodeType NU = matr.size(), NO = matr[0].size();
   user_p_object.clear();
@@ -72,7 +73,7 @@ int linkMatr_2_objectP2p(const VVDistType& matr, VVNodeType& objectP2p)
   return 0;
 }
 
-//**//*****************************************************//*
+// *******************************************************
 int act_recommend_mass_sum(const VNodeType& p2p, const double t, VDouble& v)
 {
   for (VNodeTypeCItr p = p2p.begin(); p != p2p.end(); p++)
@@ -80,7 +81,8 @@ int act_recommend_mass_sum(const VNodeType& p2p, const double t, VDouble& v)
   return 0;
 }
 
-int act_recommend_mass_1(VDouble& o2, const VVNodeType& uP2p, const VVNodeType& oP2p, const NodeType i)
+int act_recommend_mass_1(VDouble& o2, const VVNodeType& uP2p,
+    const VVNodeType& oP2p, const NodeType i)
 {
   const NodeType NU = uP2p.size(), NO = oP2p.size();
   VDouble u2(NU, 0);
@@ -107,7 +109,8 @@ int act_recommend_mass_1(VDouble& o2, const VVNodeType& uP2p, const VVNodeType& 
   return 0;
 }
 
-int act_recommend_mass(VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p)
+int act_recommend_mass(
+    VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p)
 {
   const NodeType NU = uP2p.size();
   rcm.resize(NU);
@@ -117,8 +120,9 @@ int act_recommend_mass(VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& 
   return 0;
 }
 
-//**//*****************************************************//*
-int act_recommend_heat_sum(const VNodeType& p2p1, const VVNodeType& p2p2, const double t, VDouble& v)
+// *******************************************************
+int act_recommend_heat_sum(
+    const VNodeType& p2p1, const VVNodeType& p2p2, const double t, VDouble& v)
 {
   for (VNodeTypeCItr p = p2p1.begin(); p != p2p1.end(); p++) {
     const NodeType i = *p, s = p2p2[i].size();
@@ -142,7 +146,7 @@ int act_recommend_heat_1(VDouble& o2, const VVNodeType& uP2p,
       continue;
     act_recommend_heat_sum(oP2p[j], uP2p, 1.0, u2);
   }
-  //cout << "\n"
+  // cout << "\n"
   //<< i << "\n"
   //<< u2 << endl;
 
@@ -152,12 +156,13 @@ int act_recommend_heat_1(VDouble& o2, const VVNodeType& uP2p,
       continue;
     act_recommend_heat_sum(uP2p[i2], oP2p, u2[i2], o2);
   }
-  //cout << o2 << endl;
+  // cout << o2 << endl;
 
   return 0;
 }
 
-int act_recommend_heat(VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p)
+int act_recommend_heat(
+    VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p)
 {
   const NodeType NU = uP2p.size();
   rcm.resize(NU);
@@ -166,8 +171,9 @@ int act_recommend_heat(VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& 
   return 0;
 }
 
-//**//*****************************************************//*
-int act_recommend_hybrid_matrix(VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p, const double lambda)
+// *******************************************************
+int act_recommend_hybrid_matrix(VVDouble& rcm, const VVNodeType& uP2p,
+    const VVNodeType& oP2p, const double lambda)
 {
   const NodeType NU = uP2p.size(), NO = oP2p.size();
   VVDouble w(NO, VDouble(NO, 0));
@@ -178,7 +184,8 @@ int act_recommend_hybrid_matrix(VVDouble& rcm, const VVNodeType& uP2p, const VVN
       NodeType a = uP2p[i][j];
       for (NodeType k = 0; k < ki; k++) {
         NodeType b = uP2p[i][k];
-        w[a][b] += dki / (pow(oP2p[a].size(), 1 - lambda) * pow(oP2p[b].size(), lambda));
+        w[a][b] += dki
+            / (pow(oP2p[a].size(), 1 - lambda) * pow(oP2p[b].size(), lambda));
       }
     }
   }
@@ -192,7 +199,7 @@ int act_recommend_hybrid_matrix(VVDouble& rcm, const VVNodeType& uP2p, const VVN
   return 0;
 }
 
-//**//*****************************************************//*
+// *******************************************************
 int act_recommend_pagerank(const VVNodeType& p2p, VDouble& v)
 {
   const NodeType N = p2p.size();
@@ -220,14 +227,14 @@ int act_recommend_pagerank(const VVNodeType& p2p, VDouble& v)
   return 0;
 }
 
-//**//***************************************************//*
+// *****************************************************
 int act_recommend_commonNeighbour_object(VVDouble& rcm, const VVNodeType& oo)
 {
   ;
   return 0;
 }
 
-//**//*****************************************************//*
+// *******************************************************
 int recommend_MAE(const VDouble& v0, const VDouble& v, double& r)
 {
   r = 0;
@@ -285,7 +292,8 @@ int recommend_NMAE(const VDouble& v0, const VDouble& v, double& r)
   return 0;
 }
 
-int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall, double& precision, double& F)
+int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall,
+    double& precision, double& F)
 {
   NodeType s = 0;
   if (v0.size() > 0 || v.size() > 0) {
@@ -311,18 +319,18 @@ int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall, double&
 // rs = sum(R[L...] / L.size())
 int recommend_rankingScore(const VNodeType& R, const VNodeType& L, double& rs)
 {
-  rs = 0;
   if (L.size() <= 1) {
     rs = 0.5;
     return 0;
   }
-  common_total(R, L, rs);
+  common_total_p(&R[0], &L[0], L.size(), rs = 0);
   rs /= L.size() - 1;
   return 0;
 }
 
 // rs : not in L0 && in L && rank/size(~L0)
-int recommend_rankingScore(const VNodeType& rk, const VNodeType& L0, const VNodeType& L, double& rs)
+int recommend_rankingScore(
+    const VNodeType& rk, const VNodeType& L0, const VNodeType& L, double& rs)
 {
   rs = 0;
   const size_t N = rk.size();
@@ -352,6 +360,6 @@ int recommend_rankingScore(const VNodeType& rk, const VNodeType& L0, const VNode
   return 0;
 }
 
-//**//*****************************************************//*
+// *******************************************************
 
 #endif // ACT_RECOMMEND

@@ -2,7 +2,9 @@
 #ifdef ACT_FITNESS_COMPLEXITY
 
 #include "common.h"
-//**//*****************************************************//*
+using namespace std;
+
+// *******************************************************
 int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp)
 {
   int flag = 0;
@@ -85,8 +87,9 @@ int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp)
   return flag;
 }
 
-//**//*****************************************************//*
-int count_k1(const size_t NC, const size_t NP, const VVNodeType& mcp, VNodeType& k1, const char* name)
+// *******************************************************
+int count_k1(const size_t NC, const size_t NP, const VVNodeType& mcp,
+    VNodeType& k1, const char* name)
 {
   k1.assign(NC, 0);
   for (size_t c = 0; c < NC; c++) {
@@ -100,7 +103,8 @@ int count_k1(const size_t NC, const size_t NP, const VVNodeType& mcp, VNodeType&
   return 0;
 }
 
-int count_cpNew(const size_t NC, const size_t NP, const VVNodeType& mcp, const VVNodeType& mcp2, VVNodeType& cpNew, const char* name)
+int count_cpNew(const size_t NC, const size_t NP, const VVNodeType& mcp,
+    const VVNodeType& mcp2, VVNodeType& cpNew, const char* name)
 {
   cpNew.resize(NC);
   for (size_t c = 0; c < NC; c++) {
@@ -126,7 +130,9 @@ int count_kNew(VNodeType& kNew, const VVNodeType& cpNew, const char* name)
   return 0;
 }
 
-int count_pcNewRemainRank(const VDouble& pc, const size_t NC, const size_t NP, const VVNodeType& mcp, const VVNodeType& cpNew, VVNodeType& rankNew, const char* name)
+int count_pcNewRemainRank(const VDouble& pc, const size_t NC, const size_t NP,
+    const VVNodeType& mcp, const VVNodeType& cpNew, VVNodeType& rankNew,
+    const char* name)
 {
   rankNew.resize(NC);
   VDouble pc2(NP, 0);
@@ -152,7 +158,8 @@ int count_pcNewRemainRank(const VDouble& pc, const size_t NC, const size_t NP, c
   return 0;
 }
 
-int count_pcNewScale(const size_t NC, const size_t NP, const VNodeType& k1, const VVNodeType& cpNewRemainRank, VVDouble& scale, const char* name)
+int count_pcNewScale(const size_t NC, const size_t NP, const VNodeType& k1,
+    const VVNodeType& cpNewRemainRank, VVDouble& scale, const char* name)
 {
   scale.resize(NC);
   for (size_t c = 0; c < NC; c++) {
@@ -169,7 +176,8 @@ int count_pcNewScale(const size_t NC, const size_t NP, const VNodeType& k1, cons
   return 0;
 }
 
-int count_pcNewRank(const VDouble& pc, const size_t NC, const size_t NP, const VVNodeType& cpNew, VVNodeType& rankNew, const char* name)
+int count_pcNewRank(const VDouble& pc, const size_t NC, const size_t NP,
+    const VVNodeType& cpNew, VVNodeType& rankNew, const char* name)
 {
   rankNew.resize(NC);
   VNodeType rk(NP, 0), rk2(NP, 0);
@@ -187,7 +195,9 @@ int count_pcNewRank(const VDouble& pc, const size_t NC, const size_t NP, const V
   return 0;
 }
 
-int count_newRemainRank(const VVDouble& rcm, const size_t NC, const size_t NP, const VVNodeType& mcp, const VVNodeType& cpNew, VVNodeType& newRemainRank, const char* name)
+int count_newRemainRank(const VVDouble& rcm, const size_t NC, const size_t NP,
+    const VVNodeType& mcp, const VVNodeType& cpNew, VVNodeType& newRemainRank,
+    const char* name)
 {
   newRemainRank.resize(NC);
   VDouble pc2(NP, 0);
@@ -213,7 +223,8 @@ int count_newRemainRank(const VVDouble& rcm, const size_t NC, const size_t NP, c
   return 0;
 }
 
-int count_rankNew(const VVDouble& rcm, const size_t NC, const size_t NP, const VVNodeType& cpNew, VVNodeType& rankNew, const char* name)
+int count_rankNew(const VVDouble& rcm, const size_t NC, const size_t NP,
+    const VVNodeType& cpNew, VVNodeType& rankNew, const char* name)
 {
   rankNew.resize(NC);
   VNodeType rk(NP, 0), rk2(NP, 0);
@@ -231,7 +242,80 @@ int count_rankNew(const VVDouble& rcm, const size_t NC, const size_t NP, const V
   return 0;
 }
 
-//**//*****************************************************//*
+// *******************************************************
+int filter_trade_name(const char* tradeFilename, const char* countryFilename,
+    const char* productFilename)
+{
+  FILE* fp = fopen(tradeFilename, "r");
+  if (NULL == fp) {
+    ERROR();
+    return -1;
+  }
+  size_t NC = 26 * 26 * 26, NP = 9999;
+  VNodeType cVal(NC, 0), pVal(NP, 0);
+  char cChar[300][4] = { { 0 } };
+  char origin[9], dest[9], s[999];
+  fgets(s, 999, fp);
+  for (size_t t, sitc;
+       3 == fscanf(fp, "%*s%s%s%zu%*s%*s", origin, dest, &sitc);) {
+    if (!cVal[t = common_atoi<size_t>(origin)]) {
+      cVal[t] = ++NC;
+      strcpy(cChar[NC], origin);
+    }
+    if (!cVal[t = common_atoi<size_t>(dest)]) {
+      cVal[t] = ++NC;
+      strcpy(cChar[NC], dest);
+    }
+    if (!pVal[sitc]) {
+      pVal[sitc] = ++NP;
+    }
+  }
+  fclose(fp);
+  common_save(countryFilename, cChar + 1, NC, '\n');
+  common_save_bool(productFilename, &pVal[0], 9999, '\n');
+  return 0;
+}
+
+int filter_sum_trade(const char* tradeFilename, const char* countryFilename,
+    const char* productFilename)
+{
+  VNodeType cVal(26 * 26 * 26, 0), pVal(9999, 0);
+  size_t NC = 0;
+  {
+    char s[4] = { 0 };
+    ifstream is(countryFilename);
+    for (size_t i; is >> i >> s;)
+      cVal[common_atoi<size_t>(s)] = i;
+    is.close();
+  }
+  size_t NP = 0;
+  {
+    ifstream is(productFilename);
+    for (size_t i, p; is >> i >> p;)
+      pVal[p] = i;
+    is.close();
+  }
+
+  FILE* fp = fopen(tradeFilename, "r");
+  if (NULL == fp) {
+    ERROR();
+    return -1;
+  }
+  char origin[9], dest[9], s[999];
+  fgets(s, 999, fp);
+  for (size_t t, sitc;
+       3 == fscanf(fp, "%*s%s%s%zu%*s%*s", origin, dest, &sitc);) {
+    if (!cVal[t = common_atoi<size_t>(origin)]) {
+      cVal[t] = ++NC;
+    }
+    if (!pVal[sitc]) {
+      pVal[sitc] = ++NP;
+    }
+  }
+  fclose(fp);
+  return 0;
+}
+
 int filter_index(const NodeType N, VVNodeType& indexs, VNodeType& index)
 {
   index.assign(N, 0);
@@ -248,5 +332,5 @@ int filter_index(const NodeType N, VVNodeType& indexs, VNodeType& index)
   return 0;
 }
 
-//**//*****************************************************//*
+// *******************************************************
 #endif // ACT_FITNESS_COMPLEXITY

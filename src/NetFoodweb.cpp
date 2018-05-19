@@ -6,7 +6,7 @@
 #include <iostream>
 #include "common.h"
 using namespace std;
-//**//*****************************************************//*
+// *******************************************************
 int data_read_foodweb1(VNodeType& link, const char* name) {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -28,5 +28,5 @@ int data_read_foodweb1(VNodeType& link, const char* name) {
   cout << name << '\t' << link.size() / 2 << "\tall:\t" << c << "\n";
   return 0;
 }
-//**//*****************************************************//*
+// *******************************************************
 #endif

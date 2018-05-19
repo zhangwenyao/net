@@ -1,16 +1,16 @@
 #ifndef COMMON_RANDOM_TEMPLATE_H
 #define COMMON_RANDOM_TEMPLATE_H
 
-#include "commonRandom.h"
+#include "common.random.h"
 #include <algorithm>
 #include <functional>
 #include <random>
 #include <vector>
 
-//**//********************************************************//*
+// **********************************************************
 template <typename T>
-int random_new_randKArr(T* a, const size_t n, const double* p,
-    const size_t size)
+int random_new_randKArr(
+    T* a, const size_t n, const double* p, const size_t size)
 {
   if (size <= 0)
     return -1;
@@ -25,8 +25,8 @@ int random_new_randKArr(T* a, const size_t n, const double* p,
 }
 
 template <typename T>
-int random_new_randKArr2(T* a, const size_t n, const double* p,
-    const size_t size)
+int random_new_randKArr2(
+    T* a, const size_t n, const double* p, const size_t size)
 {
   typedef struct {
     double val;
@@ -59,8 +59,8 @@ int random_new_randKArr2(T* a, const size_t n, const double* p,
 }
 
 template <typename T>
-int random_new_randKArr(T* a, const size_t n, const double* p, const T* val,
-    const size_t size)
+int random_new_randKArr(
+    T* a, const size_t n, const double* p, const T* val, const size_t size)
 {
   std::uniform_int_distribution<T> dis(0, size - 1);
   for (size_t i = 0, k; i < n; i++) {
@@ -73,8 +73,8 @@ int random_new_randKArr(T* a, const size_t n, const double* p, const T* val,
 }
 
 template <typename T>
-int random_new_rankKArr(T* a, const size_t n, const double* p,
-    const size_t size)
+int random_new_rankKArr(
+    T* a, const size_t n, const double* p, const size_t size)
 {
   T t;
   for (size_t i = 0, k; i < n; i++) {
@@ -127,8 +127,7 @@ int random_new_randArr(T* a, const size_t n, const size_t m)
   return 0;
 }
 
-template <typename T>
-int random_new_randArrAll(T* a, const size_t n)
+template <typename T> int random_new_randArrAll(T* a, const size_t n)
 {
   if (n <= 1)
     return 0;
@@ -165,5 +164,5 @@ int random_new_rankArr(T* a, const size_t n, const size_t m)
   return 0;
 }
 
-//**//********************************************************//*
-#endif // COMMON_RANDOM_TEMPLATE_H
+// **********************************************************
+#endif // _H

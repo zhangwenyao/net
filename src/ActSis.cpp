@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//*****************************************************//*
+// *******************************************************
 int SIS_update(VNodeType& statusSN, VNodeType& SN, NodeType& N_i,
     LinkType& NDeg_i, const NodeType degMax, const VVNodeType& p2p,
     double& dt, const double lambda);
@@ -13,7 +13,7 @@ int SIS_update2(VVNodeType& statusSN, VVNodeType& SN, VNodeType& N_i,
     const double lambda, const VVNodeType& p2p,
     const NodeType degMax);
 
-//**//*****************************************************//*
+// *******************************************************
 int act_SIS_init(VVNodeType& statusSN, VVNodeType& SN, VNodeType& N_i,
     VLinkType& NDeg_i, VDouble& t, const VVNodeType& p2p,
     const double p0, const unsigned M)
@@ -182,5 +182,5 @@ int act_SIS_cal_params(double& ksi, double& lambda_c, const VVNodeType& p2p,
   lambda_c = (double)kSum / k2Sum;
   return 0;
 }
-//**//*****************************************************//*
+// *******************************************************
 #endif // ACT_SIS

@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//************************************************************//*
+// **************************************************************
 int Grid_new(const NodeType NX, const NodeType NY, NodeType& kMin,
     NodeType& kMax, NodeType& nodeSize, VVNodeType& p2p)
 {
@@ -150,5 +150,5 @@ NodeType Grid_get_maxDistance(const NodeType NX, const NodeType NY)
   return NX + NY - 2;
 }
 
-//**//************************************************************//*
+// **************************************************************
 #endif // NET_GRID

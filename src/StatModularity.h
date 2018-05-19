@@ -4,7 +4,7 @@
 #include "net.h"
 
 #ifdef STAT_MODULARITY
-//**//****************************************************//*
+// ******************************************************
 int save_moduStk(std::ostream& os, const VNodeType& moduStk,
                  const VRNodeType& moduRange, const char c = '\t');
 int save_moduStk(const VNodeType& moduStk, const VRNodeType& moduRange,
@@ -38,6 +38,6 @@ int cal_moduNodeCoef(VDouble& moduNodeCoef, const NodeType moduSize,
                      const VNodeType& moduVal,
                      const VVNodeType& p2p);  // 计算节点分组系数P
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_MODULARITY
 #endif  // STAT_MODULARITY_H

@@ -5,7 +5,7 @@
 #include "networks.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 Act_recommend::Act_recommend(void)
     : rcmP(&rcm)
     , uuP2p(&user_p_user)
@@ -86,7 +86,7 @@ Act_recommend& Act_recommend::clear(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::act_recommend(std::string s, const char* name)
 {
   string fn;
@@ -114,6 +114,6 @@ Networks& Networks::act_recommend(std::string s, const char* name)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 
 #endif // ACT_RECOMMEND

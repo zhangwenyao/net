@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 int BA_new(const NodeType M, const NodeType M0, const NodeType nodeSize,
     VVNodeType& p2p, NodeType& kMin, NodeType& kMax)
 {
@@ -55,7 +55,7 @@ int BA_new(const NodeType M, const NodeType M0, const NodeType nodeSize,
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 NodeType BA_get_distance(const NodeType ni, const NodeType nj,
     const NodeType nodeSize, const VVNodeType& p2p)
 {
@@ -130,6 +130,6 @@ NodeType BA_get_maxDistance(const NodeType nodeSize)
     return 0;
   return nodeSize - 1;
 }
-//**//****************************************************//*
+// ******************************************************
 
 #endif // NET_BA

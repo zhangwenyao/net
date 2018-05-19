@@ -5,7 +5,7 @@
 #include "networks.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 Stat_modularity::Stat_modularity(void) : coef(0) {}
 
 ostream& operator<<(ostream& os, const Stat_modularity& modularity) {
@@ -112,7 +112,7 @@ Stat_modularity& Stat_modularity::clear(void) {
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::stat_modularity(void) {
   if (0 != runStatus) {
     ERROR();
@@ -143,7 +143,7 @@ Networks& Networks::cal_modularity(void) {
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #ifdef STAT_BETWEENNESS
 #include "StatBetweenness.h"
 Networks& Networks::stat_modularity_newman(double& qMax, NodeType mSize) {
@@ -186,5 +186,5 @@ Networks& Networks::stat_modularity_newman(double& qMax, NodeType mSize) {
 }
 #endif
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_MODULARITY

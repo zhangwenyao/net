@@ -6,7 +6,7 @@
 #include <random>
 using namespace std;
 
-//**//*****************************************************************//*
+// *******************************************************************
 // 生成度分布概率
 int poisson_cal_degArrProb(const double p, VNodeType& degArrVal,
     VDouble& degArrProb, const NodeType kMin, const NodeType kMax,
@@ -34,7 +34,7 @@ int poisson_cal_degArrProb(const double p, VNodeType& degArrVal,
   return 0;
 }
 
-//**//*****************************************************************//*
+// *******************************************************************
 // 生成度分布概率
 int power_cal_degArrProb(const double r, VNodeType& degArrVal,
     VDouble& degArrProb, const NodeType kMin, const NodeType kMax)
@@ -81,7 +81,7 @@ int power_cal_deg_arr(VNodeType& degArrSize, const VNodeType& degArrVal,
   return 0;
 }
 
-//**//**************************************************//**//*
+// *************************************************//*****
 int PowerLaw_NatureCutoff(NodeType& kMax, const NodeType nodeSize,
     const NodeType kMin, const double gamma)
 {
@@ -99,5 +99,5 @@ int PowerLaw_NatureCutoff(NodeType& kMax, const NodeType nodeSize,
   return 0;
 }
 
-//**//*****************************************************************//*
+// *******************************************************************
 #endif // NET_DEGREE

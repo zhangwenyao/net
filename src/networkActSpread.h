@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-//**//****************************************************//*
+// ******************************************************
 class Act_spread {
   public:
     NodeType SOURCE_HEAD, SOURCE_NULL;
@@ -31,7 +31,7 @@ class Act_spread {
 };
 std::ostream& operator<<(std::ostream& os, const Act_spread& spread);
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // ACT_SPREAD
 #endif  // NETWORK_ACT_SPREAD_H
 

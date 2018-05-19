@@ -6,7 +6,7 @@
 #include <string>
 using namespace std;
 
-//**//*****************************************************//*
+// *******************************************************
 int net_clear_spread(Networks& net)
 {
   net.source.clear();
@@ -21,7 +21,7 @@ int net_clear_spread(Networks& net)
   return 0;
 }
 
-//**//*******************************************************
+// ******************************************************
 int net_read_params_spread(istream& is, Networks& net)
 {
   for (string s; is >> s;) {
@@ -44,7 +44,7 @@ int net_save_params_spread(ostream& os, const Networks& net)
   return 0;
 }
 
-//**//*******************************************************
+// ******************************************************
 
 int Spread::init(const Networks& net)
 {
@@ -121,7 +121,7 @@ int Spread::cal(const Networks& net)
   return 0;
 }
 
-//**//*******************************************************
+// ******************************************************
 int Spread::saveSpread(const Networks& net)
 {
   stringstream fileName("");
@@ -284,7 +284,7 @@ inline void Spread::update_nei1(const NodeType nj)
   return;
 }
 
-//**//*******************************************************
+// ******************************************************
 int Spread::calData()
 {
   if (dataSize > spreadSize)
@@ -321,5 +321,5 @@ int Spread::saveData(const Networks& net)
   return 0;
 }
 
-//**//*****************************************************//*
+// *******************************************************
 #endif // NET_GRID

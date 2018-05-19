@@ -6,7 +6,7 @@
 #include "networks.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 // 特殊网络参数
 //      nodeSize    网络节点数目
 //      nodeDeg     节点度分布序列
@@ -105,7 +105,7 @@ Networks& Networks::net_extremum_lkk(const int extrMax, const unsigned countN)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::extremum_cal_lkk(string& s, istream& is)
 {
   if (0 != runStatus) {
@@ -170,5 +170,5 @@ Networks& Networks::extremum_cal_lkk(string& s, istream& is)
 
   return *this;
 }
-//**//****************************************************//*
+// ******************************************************
 #endif

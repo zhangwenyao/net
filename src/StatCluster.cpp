@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 int cal_cluster_directed_weight(double &cluster_c, VDouble &cluster,
                                 VVWeightType &weightMatr,
                                 const VVDistType &linkMatr) {
@@ -118,5 +118,5 @@ int cal_cluster_directed_unweight(double &cluster_c, VDouble &cluster,
   return 0;
 }
 
-//**//*******************************************************//*
+// *********************************************************
 #endif  // STAT_CLUSTER

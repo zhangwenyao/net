@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 int cal_betweenness0(VDouble& betwNode, VVDouble& betwEdge, double& meanNode,
     double& meanEdge, VVDistType& minDistMatr, VDouble& minDistMean,
     const VVNodeType& p2p, const VVNodeType& p2pIn)
@@ -109,7 +109,7 @@ int cal_betweenness0(VDouble& betwNode, VVDouble& betwEdge, double& meanNode,
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 int cal_betweenness(VDouble& betwNode, VVDouble& betwEdge, double& meanNode,
     double& meanEdge, VVDistType& minDistMatr, VDouble& minDistMean,
     const VVNodeType& p2p, const VVNodeType& p2pIn, const VVDistType& linkMatr)
@@ -247,5 +247,5 @@ int cal_betweenness(VDouble& betwNode, VVDouble& betwEdge, double& meanNode,
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif // STAT_BETWEENNESS

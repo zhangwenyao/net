@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-//**//************************************************************//*
+// **************************************************************
 class Net_degree {
   public:
 #ifdef DEG_POISSON
@@ -26,7 +26,7 @@ class Net_degree {
 
 std::ostream& operator<<(std::ostream& os, const Net_degree& degree);
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // NET_DEGREE
 #endif  // NETWORK_DEGREE_H
 

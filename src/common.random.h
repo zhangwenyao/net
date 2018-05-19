@@ -1,10 +1,11 @@
 #ifndef COMMON_RANDOM_H
 #define COMMON_RANDOM_H
+
 #include <cfloat>
 #include <functional>
 #include <random>
 
-//**//****** rand *************//*
+// ***** rand ****************
 //系统随机数
 extern std::default_random_engine rand2;
 extern std::uniform_real_distribution<double> dis_real; // [0,1)
@@ -14,7 +15,7 @@ extern std::uniform_real_distribution<double> dis_real; // [0,1)
 long rand_seed(long
         seed); // 随机数种子初始化，正数:直接初始化，0:采用系统微秒时间，负数:绝对值&系统时间
 
-//**//*********************************************************//*
+// ***********************************************************
 template <typename T>
 int random_new_randKArr(T* a, const size_t n, const double* p,
     const size_t size); // 按概率产生随机序列
@@ -34,8 +35,6 @@ template <typename T>
 int random_new_rankArr(T* a, const size_t n,
     const size_t m); // a[n]中，产生m个不同的随机数并排序
 
-//**//*********************************************************//*
-
-#include "commonRandom.template.h"
-
+// ***********************************************************
+#include "common.random.template.h"
 #endif

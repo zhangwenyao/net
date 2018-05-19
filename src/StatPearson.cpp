@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 int cal_nodeNeiAveDeg(VDouble& nodeNeiAveDeg, const VVNodeType& p2p) {
   if (p2p.empty() || !nodeNeiAveDeg.empty()) {
     ERROR();
@@ -302,5 +302,5 @@ int cal_No_link(double& No, const VNodeType& link) {
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_PEARSON

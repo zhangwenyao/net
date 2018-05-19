@@ -3,7 +3,7 @@
 #include "common.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 Networks::Networks(void)
     : net2(NULL)
 {
@@ -46,7 +46,7 @@ Networks& Networks::clear(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 ostream& operator<<(ostream& os, Networks& net)
 {
   if (!os) {
@@ -227,7 +227,7 @@ Networks& Networks::save(const char* name)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 std::istream& operator>>(std::istream& is, Networks& net)
 {
   if (0 != net.runStatus || !is) {
@@ -438,7 +438,7 @@ Networks& Networks::read_params(int argc, char** argv)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::run(const string argv2)
 {
   if (0 != runStatus) {
@@ -601,7 +601,7 @@ Networks& Networks::run(const string argv2)
   return *this;
 }
 
-//**//************************************************************//*
+// **************************************************************
 Networks& Networks::stat(void)
 {
   if (runStatus != 0) {
@@ -683,7 +683,7 @@ Networks& Networks::stat(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::cal_params(const string& s)
 {
   if (runStatus != 0) {
@@ -718,7 +718,7 @@ Networks& Networks::cal_params(const string& s)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::cal_nodeDeg(const string& s)
 {
   if (runStatus != 0) {
@@ -787,7 +787,7 @@ Networks& Networks::cal_nodeDeg(const string& s)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::cal_p2p(const string& s)
 {
   cout << "\t" << s << '\n';
@@ -1047,7 +1047,7 @@ Networks& Networks::cal_p2p(const string& s)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 // 节点按度排序 net->net2 剔除度为0的点
 Networks& Networks::fix_p2p_nodeDeg0(void)
 {
@@ -1114,4 +1114,4 @@ Networks& Networks::fix_p2p_nodeDeg0(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************

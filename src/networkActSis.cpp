@@ -5,7 +5,7 @@
 #include "networks.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 Act_sis::Act_sis(void)
     : M(0)
     , rho(0)
@@ -160,7 +160,7 @@ int Act_sis::read_params_1(string& s, istream& is)
 
 Act_sis& Act_sis::clear(void) { return *this; }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::act_sis_tau(void)
 {
   if (0 != runStatus) {
@@ -195,5 +195,5 @@ Networks& Networks::act_sis(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif // ACT_SIS

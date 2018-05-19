@@ -3,7 +3,7 @@
 #include "common.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 Network::Network(void)
     : argv(".")
     , saveName("data/test")
@@ -39,7 +39,7 @@ Network::Network(void)
 {
 }
 
-//**//************************************************************//*
+// **************************************************************
 istream& operator>>(istream& is, Network& net)
 {
   if (0 != net.runStatus || !is) {
@@ -199,7 +199,7 @@ Network& Network::read_params_1(string& s, istream& is)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 ostream& operator<<(std::ostream& os, Network& net)
 {
   if (!os) {
@@ -311,7 +311,7 @@ Network& Network::save(const char* name)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Network& Network::init_seed(const long s)
 {
   if (runStatus != 0) {
@@ -335,7 +335,7 @@ Network& Network::init_seed0(const long s)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Network& Network::clear_deg(void)
 {
   if (0 != runStatus) {
@@ -502,7 +502,7 @@ Network& Network::save_deg(const char* name)
   return *this;
 }
 
-//**//***********************************************************//*
+// *************************************************************
 Network& Network::clear_p2p(void)
 {
   if (0 != runStatus) {
@@ -613,7 +613,7 @@ Network& Network::save_p2p(const char* name)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Network& Network::clear_lkk(void)
 {
   if (0 != runStatus) {
@@ -630,7 +630,7 @@ Network& Network::clear_lkk(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Network& Network::clear(void)
 {
   status = 0;
@@ -641,7 +641,7 @@ Network& Network::clear(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Network& Network::read_nodeDeg(const char* name)
 {
   if (0 != runStatus) {
@@ -780,7 +780,7 @@ Network& Network::read_lkk(const char* name)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Network& Network::read_link_0(const char* name)
 {
   if (0 != runStatus) {
@@ -953,7 +953,7 @@ Network& Network::read_weightMatr(const char* name)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Network& Network::lkk_2_degArr(void)
 {
   if (0 != runStatus) {
@@ -1223,4 +1223,4 @@ Network& Network::p2p_2_degArr(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************

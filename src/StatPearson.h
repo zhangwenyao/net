@@ -4,7 +4,7 @@
 #include "net.h"
 
 #ifdef STAT_PEARSON
-//**//****************************************************//*
+// ******************************************************
 int cal_nodeNeiAveDeg(VDouble& nodeNeiAveDeg,
                       const VVNodeType& p2p);  // 计算各点邻居平均度
 int cal_nodeNeiAveDeg_nodeDeg(VDouble& nodeNeiAveDeg, const VVNodeType& p2p,
@@ -50,6 +50,6 @@ int cal_pearson_link(double& pearson, const VNodeType& link,
 int cal_No(double& No, const VVNodeType& p2p, const LinkType linkSize);
 int cal_No_link(double& No, const VNodeType& link);
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_PEARSON
 #endif  // STAT_PEARSON_H

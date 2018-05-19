@@ -4,7 +4,7 @@
 #include "net.h"
 
 #ifdef ACT_RECOMMEND
-//**//*****************************************************//*
+// *******************************************************
 int act_recommend_readP2p(VVNodeType& pu, VVNodeType& po, std::istream& is);
 int linkMatr_2_p2p2(VVNodeType& user_p_object, VVNodeType& object_p_user,
     const VVDistType& matr);
@@ -31,6 +31,6 @@ int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall, double&
 int recommend_rankingScore(const VNodeType& R, const VNodeType& L, double& rs);
 int recommend_rankingScore(const VNodeType& rk, const VNodeType& L0, const VNodeType& L, double& rs);
 
-//**//*****************************************************//*
+// *******************************************************
 #endif // ACT_RECOMMEND
 #endif // ACT_RECOMMEND_H

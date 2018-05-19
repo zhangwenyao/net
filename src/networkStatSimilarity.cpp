@@ -5,7 +5,7 @@
 #include "networks.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 Stat_similarity::Stat_similarity(void) : nodeCoef(0), edgeCoef(0) {}
 
 ostream& operator<<(ostream& os, const Stat_similarity& similarity) {
@@ -99,7 +99,7 @@ Stat_similarity& Stat_similarity::clear(void) {
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::stat_similarity(Networks& net2) {
   if (0 != runStatus) {
     ERROR();
@@ -120,5 +120,5 @@ Networks& Networks::stat_similarity(Networks& net2) {
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_SIMILARITY

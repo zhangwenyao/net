@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-//**//****************************************************//*
+// ******************************************************
 class Stat_pearson {
   public:
     double pearson, InIn, InOut, OutIn, OutOut;
@@ -35,6 +35,6 @@ class Stat_pearson {
 };
 std::ostream& operator<<(std::ostream& os, const Stat_pearson& pearson);
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_KENDALL
 #endif  // NETWORK_STAT_KENDALL_H

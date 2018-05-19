@@ -4,7 +4,7 @@
 #include "net.h"
 
 #ifdef NET_EXTREMUM
-//**//****************************************************//*
+// ******************************************************
 int lkk_new_p2p(VVNodeType& p2p, const VVLinkType& lkk,
     const VNodeType& nodeDeg, const VNodeType& degArrSize,
     const VNodeType& degArrSum);
@@ -40,6 +40,6 @@ int Min_new_lkk_p2p(VVNodeType& p2p, VVLinkType& lkk, const VNodeType& nodeDeg,
     const VNodeType& degArrSum, const int fix
     = 0); // 最小相关网络，先生成lkk连接矩阵，再生成网络；按度从大到小，再从中间往连边修正
 
-//**//****************************************************//*
+// ******************************************************
 #endif // NET_EXTREMUM
 #endif // NET_EXTREMUM_H

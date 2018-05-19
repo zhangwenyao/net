@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 int addLink_linkMatr_proNode(VVDistType& linkMatr, LinkType& linkSize,
     const double p,
     const int dirFlag) // 所有点按概率p连边
@@ -569,5 +569,5 @@ int delLink_p2p_ranNode1(VVNodeType& p2p, const NodeType nodeSize,
   return (delCount > 0 ? -1 : 0);
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif // NET_RANDOM

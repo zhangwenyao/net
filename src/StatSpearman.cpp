@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 int cal_lkkProb_gauss_sum(double& sum, VDouble& deg2ArrVal,
     VNodeType& degArrVal, VNodeType& degArrSize, const double s2,
     const NodeType xi, const double r)
@@ -538,5 +538,5 @@ int cal_spearman_link(double& spearman, VNodeType& link,
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif // STAT_SPEARMAN

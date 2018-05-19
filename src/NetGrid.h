@@ -4,7 +4,7 @@
 #include "net.h"
 
 #ifdef NET_GRID
-//**//****************************************************//*
+// ******************************************************
 int Grid_new(const NodeType NX, const NodeType NY, NodeType& kMin,
              NodeType& kMax, NodeType& nodeSize,
              VVNodeType& p2p);  // 生成格点网络
@@ -23,6 +23,6 @@ int Grid_get_shortPath(VNodeType& path, const NodeType ni, const NodeType nj,
 NodeType Grid_get_maxDistance(const NodeType NX,
                               const NodeType NY);  // 格点网络两点间的最大距离
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // NET_GRID
 #endif  // NET_GRID_H

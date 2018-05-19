@@ -6,7 +6,7 @@
 #include "common.h"
 #include "networks.h"
 using namespace std;
-//**//****************************************************//*
+// ******************************************************
 Stat_spearman::Stat_spearman(void)
     : spearman(0)
     , InIn(0)
@@ -221,7 +221,7 @@ Stat_spearman& Stat_spearman::clear(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::stat_spearman(void)
 {
   if (0 != runStatus) {
@@ -384,7 +384,7 @@ Networks& Networks::spearman_degArr_2_deg2ArrVal_weight(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #ifdef MODEL_GAUSS
 Networks& Networks::spearman_read_GaussS2(const char* name)
 {
@@ -406,7 +406,7 @@ Networks& Networks::spearman_read_GaussS2(const char* name)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::spearman_cal_lkkProb_gauss(void)
 {
   const NodeType degSize = degArrVal.size();
@@ -483,8 +483,8 @@ Networks& Networks::spearman_gauss_new_ranLink(
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif // MODEL_GAUSS
 
-//**//****************************************************//*
+// ******************************************************
 #endif // STAT_SPEARMAN

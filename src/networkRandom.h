@@ -4,7 +4,7 @@
 #ifdef NET_RANDOM
 #include <iostream>
 
-//**//****************************************************//*
+// ******************************************************
 class Net_random {
   public:
     double p;
@@ -18,7 +18,7 @@ class Net_random {
 };
 std::ostream& operator<<(std::ostream& os, const Net_random& random);
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // NET_RANDOM
 #endif  // NETWORK_RANDOM_H
 

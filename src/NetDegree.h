@@ -4,12 +4,12 @@
 #include "net.h"
 
 #ifdef NET_DEGREE
-//**//************** 泊松网络 type:deg_poisson *************//*
+// ************* 泊松网络 type:deg_poisson ****************
 int poisson_cal_degArrProb(const double r, VNodeType& degArrVal,
     VDouble& degArrProb, const NodeType kMin, const NodeType kMax,
     NodeType& nodeSize); // 计算度分布概率
 
-//**//************** 幂律网络 type:deg_power *************//*
+// ************* 幂律网络 type:deg_power ****************
 int power_cal_degArrProb(const double p, VNodeType& degArrVal,
     VDouble& degArrProb, const NodeType kMin,
     const NodeType kMax); // 计算度分布概率
@@ -19,6 +19,6 @@ int power_cal_deg_arr(VNodeType& degArrSize, const VNodeType& degArrVal,
 int PowerLaw_NatureCutoff(NodeType& kMax, const NodeType nodeSize,
     const NodeType kMin, const double gamma);
 
-//**//*****************************************************************//*
+// *******************************************************************
 #endif // NET_DEGREE
 #endif // NET_DEGREE_H

@@ -4,7 +4,7 @@
 #include "net.h"
 
 #ifdef NET_RANDOM
-//**//*******************************************************;
+// ******************************************************;
 int addLink_linkMatr_proNode(VVDistType& linkMatr, LinkType& linkSize,
                              const double p,
                              const int dirFlag = 0);  // 所有点按概率p连边
@@ -48,6 +48,6 @@ int delLink_p2p_ranNode1(VVNodeType& p2p, const NodeType nodeSize,
                          LinkType& linkRemain, const LinkType linkSize,
                          LinkType delCount);  // 随机选点再选边删除
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // NET_RANDOM
 #endif  // NET_RANDOM_H

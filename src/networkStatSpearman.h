@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-//**//****************************************************//*
+// ******************************************************
 class Stat_spearman {
   public:
     double spearman, InIn, InOut, OutIn, OutOut, rho, rhoInIn, rhoInOut, rhoOutIn,
@@ -39,7 +39,7 @@ class Stat_spearman {
 };
 std::ostream& operator<<(std::ostream& os, const Stat_spearman& spearman);
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_SPEARMAN
 #endif  // NETWORK_STAT_SPEARMAN_H
 

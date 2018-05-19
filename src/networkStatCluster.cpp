@@ -5,7 +5,7 @@
 #include "networks.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 Stat_cluster::Stat_cluster(void) : coef(0) {}
 
 ostream& operator<<(ostream& os, const Stat_cluster& cluster) {
@@ -91,7 +91,7 @@ Stat_cluster& Stat_cluster::clear(void) {
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::stat_cluster(void) {
   if (0 != runStatus) {
     ERROR();
@@ -115,5 +115,5 @@ Networks& Networks::stat_cluster(void) {
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_CLUSTER

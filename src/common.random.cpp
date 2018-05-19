@@ -1,4 +1,4 @@
-#include "commonRandom.h"
+#include "common.random.h"
 #include <chrono>
 #include <climits>
 #include <iostream>
@@ -10,7 +10,7 @@ default_random_engine rand2;
 // uniform_real_distribution<double> dis_real(0, std::nextafter(1, DBL_MAX));
 // // [0,1]
 uniform_real_distribution<double> dis_real(0, 1); // [0,1)
-//auto rand_double = bind(dis_real, rand2);
+// auto rand_double = bind(dis_real, rand2);
 
 long rand_seed(long seed)
 {

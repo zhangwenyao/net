@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-//**//****************************************************//*
+// ******************************************************
 class Stat_similarity {
   public:
     VVDouble nodeCoef;  // 网络节点相似系数
@@ -25,7 +25,7 @@ class Stat_similarity {
 };
 std::ostream& operator<<(std::ostream& os, const Stat_similarity& similarity);
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_SIMILARITY
 #endif  // NETWORK_STAT_SIMILARITH_H
 

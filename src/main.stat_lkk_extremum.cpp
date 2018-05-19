@@ -5,7 +5,7 @@
 #include "common.h"
 #include "networks.h"
 using namespace std;
-//**//**************************************************//**//*
+// *************************************************//*****
 double func_0(
     const VNodeType degArrVal, const VNodeType& degArrSize, const double a)
 {
@@ -199,5 +199,5 @@ int main(int argc, char** argv)
   return 0;
 }
 
-//**//**************************************************//**//*
+// *************************************************//*****
 #endif

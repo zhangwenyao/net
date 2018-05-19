@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-//**//****************************************************//*
+// ******************************************************
 // 参数：   mass
 //          heat
 
@@ -31,6 +31,6 @@ class Act_recommend {
 };
 std::ostream& operator<<(std::ostream& os, const Act_recommend& recommend);
 
-//**//****************************************************//*
+// ******************************************************
 #endif // ACT_RECOMMEND
 #endif // NETWORK_ACT_RECOMMEND_H

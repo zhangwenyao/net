@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-//**//****************************************************//*
+// ******************************************************
 class Stat_cluster {
   public:
     double coef;
@@ -25,6 +25,6 @@ class Stat_cluster {
 };
 std::ostream& operator<<(std::ostream& os, const Stat_cluster& cluster);
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_CLUSTER
 #endif  //NETWORK_STAT_CLUSTER_H

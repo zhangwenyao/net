@@ -5,7 +5,7 @@
 #include "networks.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 Stat_betweenness::Stat_betweenness(void)
     : meanNode(0)
     , meanEdge(0)
@@ -127,7 +127,7 @@ Stat_betweenness& Stat_betweenness::clear(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::stat_betweenness(void)
 {
   if (0 != runStatus) {
@@ -169,5 +169,5 @@ Networks& Networks::stat_betweenness(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif // STAT_BETWEENNESS

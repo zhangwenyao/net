@@ -67,7 +67,7 @@
 #include "networkActRecommend.h"
 #endif
 
-//**//************************************************************//*
+// **************************************************************
 class Networks : public Network {
   public:
   Networks* net2;
@@ -203,5 +203,5 @@ class Networks : public Network {
 
 std::ostream& operator<<(std::ostream& os, Networks& net);
 
-//**//************************************************************//*
+// **************************************************************
 #endif // NETWOKS_H

@@ -4,7 +4,7 @@
 #include "net.h"
 
 #ifdef STAT_SPEARMAN
-//**//****************************************************//*
+// ******************************************************
 int cal_lkkProb_gauss_sum(double& sum, VDouble& deg2ArrVal,
     VNodeType& degArrVal, VNodeType& degArrSize, const double s2,
     const NodeType xi, const double r);
@@ -62,6 +62,6 @@ int cal_spearman_dir_weight(double& spearman, double& rho,
 int cal_spearman_link(double& spearman, const VNodeType& link,
     const VNodeType& nodeDeg, const VDouble& deg2ArrVal, MNodeType& degArrNo);
 
-//**//****************************************************//*
+// ******************************************************
 #endif // STAT_SPEARMAN
 #endif // STAT_SPEARMAN_H

@@ -5,7 +5,7 @@
 #include "common.h"
 #include "networks.h"
 using namespace std;
-//**//**************************************************//**//*
+// *************************************************//*****
 
 int count_rankingScore(const VVDouble& rcm, const size_t NC, const size_t NP, const VVNodeType& mcp, const VVNodeType& mcp2, VDouble& rankingScore, const char* name = NULL)
 {
@@ -187,5 +187,5 @@ int main(int argc, char** argv)
   return 0;
 }
 
-//**//**************************************************//**//*
+// *************************************************//*****
 #endif

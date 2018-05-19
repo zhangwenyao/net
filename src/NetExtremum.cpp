@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//*****************************************************************//*
+// *******************************************************************
 int lkk_new_p2p(VVNodeType& p2p, const VVLinkType& lkk,
     const VNodeType& nodeDeg, const VNodeType& degArrSize,
     const VNodeType& degArrSum)
@@ -144,7 +144,7 @@ int lkk_new_p2p(VVNodeType& p2p, const VVLinkType& lkk,
   return check_p2p_nodeDeg(p2p, nodeDeg);
 }
 
-//**//*****************************************************************//*
+// *******************************************************************
 int lkk_extreme_pearson(VVLinkType& lkk, const VNodeType& degArrVal,
     const VNodeType& degArrSize, const int extrMax, const unsigned countN)
 {
@@ -282,7 +282,7 @@ int lkk_extreme_pearson(VVLinkType& lkk, const VNodeType& degArrVal,
   return 0;
 }
 
-//**//*****************************************************************//*
+// *******************************************************************
 int cal_Min_lkk_side2mid(VVLinkType& lkk, const VNodeType& degArrVal,
     const VNodeType& degArrSize, const int fix)
 {
@@ -553,7 +553,7 @@ int cal_Min_lkk_mid2side(VVLinkType& lkk, const VNodeType& degArrVal,
   return 0;
 }
 
-//**//*****************************************************************//*
+// *******************************************************************
 int cal_Max_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
     const VNodeType& degArrSize, const int fix)
 {
@@ -616,7 +616,7 @@ int cal_Max_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
   return 0;
 }
 
-//**//*****************************************************************//*
+// *******************************************************************
 int Max_new_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
     const VNodeType& degArrSize, const int fix)
 {
@@ -831,7 +831,7 @@ int Max_new(VVNodeType& p2p, const VNodeType& nodeDeg,
   return 0;
 }
 
-//**//*****************************************************************//*
+// *******************************************************************
 int Min_new(VVNodeType& p2p, const VNodeType& nodeDeg,
     const VNodeType& degArrVal, const VNodeType& degArrSize,
     const VNodeType& degArrSum)
@@ -1058,5 +1058,5 @@ int Min_new_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
   return 0;
 }
 
-//**//*****************************************************************//*
+// *******************************************************************
 #endif // NET_EXTREMUM

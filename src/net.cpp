@@ -1,73 +1,9 @@
 #include "net.h"
 #include "common.h"
-//#include <cmath>
 
 using namespace std;
 
-//**//****************************************************//*
-ostream& operator<<(ostream& os, const RNodeType& r)
-{
-  os << r.start << '\t' << r.end;
-  return os;
-}
-
-istream& operator>>(istream& is, RNodeType& r)
-{
-  is >> r.start >> r.end;
-  return is;
-}
-
-int save_VRNodeType_start(ostream& os, const VRNodeType& v, const char c)
-{
-  if (!os)
-    return -1;
-  if (!v.empty()) {
-    VRNodeTypeCItr i = v.begin();
-    os << (i++)->start;
-    while (i != v.end())
-      os << c << (i++)->start;
-  }
-  return 0;
-}
-
-int save_VRNodeType_start(const char* name, const VRNodeType& v, const char c)
-{
-  if (name == NULL || name[0] == '\0')
-    return -1;
-  ofstream os(name);
-  if (!os)
-    return -1;
-  save_VRNodeType_start(os, v, c);
-  os.close();
-  return 0;
-}
-
-int save_VRNodeType_end(ostream& os, const VRNodeType& v, const char c)
-{
-  if (!os)
-    return -1;
-  if (!v.empty()) {
-    VRNodeTypeCItr i = v.begin();
-    os << (i++)->end;
-    while (i != v.end())
-      os << c << (i++)->end;
-  }
-  return 0;
-}
-
-int save_VRNodeType_end(const char* name, const VRNodeType& v, const char c)
-{
-  if (name == NULL || name[0] == '\0')
-    return -1;
-  ofstream os(name);
-  if (!os)
-    return -1;
-  save_VRNodeType_end(os, v, c);
-  os.close();
-  return 0;
-}
-
-//**//****************************************************//*
+// ******************************************************
 int init_linkMatrC(VVChar& linkMatrC, const NodeType nodeSize)
 {
   const NodeType len = nodeSize / 8 + 1;
@@ -78,7 +14,7 @@ int init_linkMatrC(VVChar& linkMatrC, const NodeType nodeSize)
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 int linkMatr_fix_0(VVDistType& linkMatr, const DistType MaxDist)
 {
   const NodeType nodeSize = linkMatr.size();
@@ -695,7 +631,8 @@ int link_2_p2p_out_linkSize(VVNodeType& p2p, const VNodeType& link,
   return 0;
 }
 
-int link_2_p2p_in(VVNodeType& p2pIn, const VNodeType& link, NodeType& nodeSize, const int dirFlag)
+int link_2_p2p_in(VVNodeType& p2pIn, const VNodeType& link, NodeType& nodeSize,
+    const int dirFlag)
 {
   if (!dirFlag)
     return -1;
@@ -833,7 +770,7 @@ int degArrWeight_2_degArrWeightSum(
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 int sort_p2p(VVNodeType& p2p)
 {
   for (VVNodeTypeItr i = p2p.begin(); i != p2p.end(); i++)
@@ -1025,7 +962,7 @@ int sort_link_betwEdge(VNodeType& link, VVDouble& betwEdge, LinkType linkSize)
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 int addLink_linkMatrC_ranNode(
     VVChar& linkMatrC, LinkType& linkRemain) // 每次直接随机抽取两个点连边
 {
@@ -1706,7 +1643,7 @@ int delLink_p2p_ranNode1(VVNodeType& p2p, const NodeType nodeSize,
   return (delCount > 0 ? -1 : 0);
 }
 
-//**//*******************************************************************//*
+// *********************************************************************
 int check_p2pSize_linkSize(const VVNodeType& p2p, const LinkType linkSize)
 {
   LinkType t = 0;
@@ -2552,7 +2489,7 @@ int count_sameAdiff(LinkType& sum, LinkType& sum1, LinkType& sum3,
   return 0;
 }
 
-//**//***********************************************************//*
+// *************************************************************
 bool cmp_RNodeType_start(const RNodeType& a, const RNodeType& b)
 {
   return a.start < b.start;
@@ -2574,7 +2511,7 @@ int nodeDeg_update_nodeMap(VNodeType& nodeDeg, const VRNodeType& nodeMap)
   return 0;
 }
 
-//**//***********************************************************//*
+// *************************************************************
 int read0_link(VNodeType& link, const char* name, const unsigned n)
 {
   if (n < 2 || name == NULL || name[0] == '\0') {
@@ -2749,7 +2686,7 @@ int read_link_weight_0(VNodeType& link, LinkType& linkSize,
   return 0;
 }
 
-//**//***********************************************************//*
+// *************************************************************
 int read_lkk_3(
     istream& is, VVLinkType& lkk, const NodeType degSize, const int rv)
 {
@@ -2841,4 +2778,4 @@ int save_lkk_3(const char* name, const VVLinkType& lkk, const int rv,
   return flag;
 }
 
-//**//***********************************************************//*
+// *************************************************************

@@ -6,7 +6,7 @@
 #include <random>
 #include <vector>
 
-//**//********************************************************//*
+// **********************************************************
 template <typename T, typename T2>
 int linkMatr_2_p2p(std::vector<std::vector<T2> >& p2p,
     const std::vector<std::vector<T> >& linkMatr)
@@ -41,5 +41,5 @@ int linkMatr_2_p2pIn(std::vector<std::vector<T2> >& p2pIn,
   return 0;
 }
 
-//**//********************************************************//*
+// **********************************************************
 #endif

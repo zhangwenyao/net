@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-//**//****************************************************//*
+// ******************************************************
 class Stat_modularity {
   public:
     double coef;       // 网络分组系数Q
@@ -31,7 +31,7 @@ class Stat_modularity {
 };
 std::ostream& operator<<(std::ostream& os, const Stat_modularity& modularity);
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_MODULARITY
 #endif  // NETWORK_NET_MODULARITY_H
 

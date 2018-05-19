@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 int save_moduStk(ostream& os, const VNodeType& moduStk,
                  const VRNodeType& moduRange, const char c) {
   if (!os) return -1;
@@ -27,7 +27,7 @@ int save_moduStk(const VNodeType& moduStk, const VRNodeType& moduRange,
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 int modularity_move(const NodeType a, const NodeType b, VNodeType& moduStk,
                     VNodeType& moduNum,
                     VRNodeType& moduRange)  // b组移到a组后面
@@ -102,7 +102,7 @@ int moduStk_sort(VNodeType& moduStk, VRNodeType& moduRange,
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 int cal_modularity(VNodeType& moduVal, VNodeType& moduStk, VNodeType& moduNum,
                    VRNodeType& moduRange, const VVNodeType& p2p,
                    const VVNodeType& p2pIn, const int dirFlag) {
@@ -244,7 +244,7 @@ int update_modularity_iNode(const NodeType i, VNodeType& moduVal,
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 int cal_moduLKK(VVLinkType& moduLKK, const NodeType moduSize,
                 const VNodeType& moduVal, const VVNodeType& p2p,
                 const int dirFlag) {
@@ -326,5 +326,5 @@ int cal_moduNodeCoef(VDouble& moduNodeCoef, const NodeType moduSize,
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_MODULARITY

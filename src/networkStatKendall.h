@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-//**//****************************************************//*
+// ******************************************************
 class Stat_kendall {
   public:
     double tau, OutIn;
@@ -24,7 +24,7 @@ class Stat_kendall {
 };
 std::ostream& operator<<(std::ostream& os, const Stat_kendall& kendall);
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_KENDALL
 #endif  // NETWORK_STAT_KENDALL_H
 

@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-//**//****************************************************//*
+// ******************************************************
 class Stat_betweenness {
   public:
     double meanNode, meanEdge;  // 平均介数
@@ -28,7 +28,7 @@ class Stat_betweenness {
 };
 std::ostream& operator<<(std::ostream& os, const Stat_betweenness& betweenness);
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_BETWEENNESS
 #endif  //NETWORK_STAT_BETWEENNESS_H
 

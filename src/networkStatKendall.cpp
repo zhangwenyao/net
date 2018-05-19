@@ -5,7 +5,7 @@
 #include "StatKendall.h"
 #include "networks.h"
 using namespace std;
-//**//****************************************************//*
+// ******************************************************
 Stat_kendall::Stat_kendall(void) : tau(0), OutIn(0) {}
 
 ostream& operator<<(ostream& os, const Stat_kendall& kendall) {
@@ -90,7 +90,7 @@ Stat_kendall& Stat_kendall::clear(void) {
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::stat_kendall(void) {
   if (0 != runStatus) {
     ERROR();
@@ -114,10 +114,10 @@ Networks& Networks::stat_kendall(void) {
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 int net_clear_kendallTau(Network& net) { return 0; }
 
-//**//****************************************************//*
+// ******************************************************
 int net_cal_kendallTau(Network& net) {
   if (lkkSum.empty() &&
       0 != lkk_2_lkkSum(lkkSum, lkk, dirFlag)) {
@@ -140,7 +140,7 @@ int net_cal_kendallTau(Network& net) {
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 int net_read_params_kendallTau(istream& is, Network& net) {
   for (string s; is >> s;) {
     if (s == "--params_kendall.tau") {
@@ -176,5 +176,5 @@ int net_save_kendallTau(const Network& net, const char* name) {
   int f = 0;
   return f;
 }
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_KENDALL

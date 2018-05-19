@@ -5,7 +5,7 @@
 #include "networks.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 Stat_pearson::Stat_pearson(void)
     : pearson(0)
     , No(0)
@@ -203,7 +203,7 @@ Stat_pearson& Stat_pearson::clear(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 Networks& Networks::stat_pearson(void)
 {
   if (0 != runStatus) {
@@ -284,5 +284,5 @@ Networks& Networks::stat_pearson(void)
   return *this;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif // STAT_PEARSON

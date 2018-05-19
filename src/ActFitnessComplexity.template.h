@@ -1,10 +1,15 @@
 #include "ActFitnessComplexity.h"
 #ifdef ACT_FITNESS_COMPLEXITY
 
+#include "ActFitnessComplexity.h"
 #include "common.h"
-//**//*****************************************************//*
+#include "cstdlib"
+#include <cstring>
+
+#// *******************************************************
 template <typename T, typename T2>
-int exp_2_Mcp(const std::vector<std::vector<T> >& e, std::vector<std::vector<T2> >& mcp)
+int exp_2_Mcp(
+    const std::vector<std::vector<T> >& e, std::vector<std::vector<T2> >& mcp)
 {
   // cal Qp Qc Qsum
   const size_t NC = e.size(), NP = e[0].size();
@@ -30,7 +35,8 @@ int exp_2_Mcp(const std::vector<std::vector<T> >& e, std::vector<std::vector<T2>
 }
 
 template <typename T>
-int Mcp_2_C_P(const std::vector<std::vector<T> >& mcp, VVNodeType& pc, VVNodeType& pp)
+int Mcp_2_C_P(
+    const std::vector<std::vector<T> >& mcp, VVNodeType& pc, VVNodeType& pp)
 {
   const size_t NC = mcp.size(), NP = mcp[0].size();
   pc.clear();
@@ -52,5 +58,6 @@ int Mcp_2_C_P(const std::vector<std::vector<T> >& mcp, VVNodeType& pc, VVNodeTyp
   return 0;
 }
 
-//**/ /*****************************************************//*
+// */ /********************************************************
+// */ /********************************************************
 #endif // ACT_FITNESS_COMPLEXITY

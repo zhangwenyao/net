@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 int cal_similarity(VVDouble &simiNodeCoef, VVDouble &simiEdgeCoef,
                    const VNodeType &link1, const VNodeType &link2,
                    const int dirFlag) {
@@ -95,5 +95,5 @@ int cal_similarity_update(VVDouble &simiNodeCoef, VVDouble &simiEdgeCoef,
 
   return 0;
 }
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_SIMILARITY

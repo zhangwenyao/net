@@ -6,7 +6,7 @@
 #include <iostream>
 #include "common.h"
 using namespace std;
-//**//*****************************************************//*
+// *******************************************************
 int data_read_actor_p2p(VVNodeType& p2p, const char* name) {
   if (name == NULL || name[0] == '\0') {
     return -1;
@@ -35,5 +35,5 @@ int data_read_actor_p2p(VVNodeType& p2p, const char* name) {
   cout << name << "\t" << c << '\n';
   return 0;
 }
-//**//*****************************************************//*
+// *******************************************************
 #endif

@@ -4,7 +4,7 @@
 #include "common.h"
 using namespace std;
 
-//**//****************************************************//*
+// ******************************************************
 int cal_kendallTau_lkk(double& tau, const VVLinkType& lkk,
                        const LinkType linkSize, const int dir) {
   const NodeType degSize = lkk.size();
@@ -185,5 +185,5 @@ int cal_kendallTau_p2p(double tau, const VVNodeType& p2p,
   return 0;
 }
 
-//**//****************************************************//*
+// ******************************************************
 #endif  // STAT_KENDALL

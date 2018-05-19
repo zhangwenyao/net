@@ -1,11 +1,11 @@
-// g++ -o main.exe *.cpp -O3 -Wall
 #include "main.h"
 #ifdef MAIN_TEST
 
 #include "common.h"
 #include "networks.h"
 using namespace std;
-//**//**************************************************//**//*
+
+// ******************************************************
 int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
@@ -37,5 +37,5 @@ int main(int argc, char** argv)
   return 0;
 }
 
-//**//**************************************************//**//*
+// ******************************************************
 #endif

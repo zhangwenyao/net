@@ -11,7 +11,7 @@
 
 // *********************************************************************
 template <typename T>
-inline T common_atoi(char* s, const char c, const char base)
+inline T common_atoi(const char* s, const char c, const char base)
 {
   T t = 0;
   while (*s)
@@ -19,8 +19,24 @@ inline T common_atoi(char* s, const char c, const char base)
   return t;
 }
 
+template <typename T>
+inline size_t common_itoa(
+    T i, char* s, const char c, const char base, size_t n)
+{
+  size_t l = 0;
+  do {
+    *s++ = c + i % base;
+    i /= base;
+    l++;
+  } while (i);
+  while (l < n--)
+    *s++ = c;
+  *s = '\0';
+  return l;
+}
+
 // *********************** common_save, common_read **********************
-// 一维数组a[n]
+// 一维数组 a[n]
 template <typename T, const size_t n>
 int common_save(std::ostream& os, T (&a)[n], const char c)
 {
@@ -179,7 +195,8 @@ int common_save_bool(
 
 // a[p[i]]
 template <typename T, typename T2>
-int common_save1_p(std::ostream& os, T* a, T2* p, const size_t n, const char c)
+int common_save1_p(
+    std::ostream& os, T* a, T2* p, const size_t n, const char c)
 {
   if (n > 0) {
     os << a[p[0]];
@@ -190,7 +207,8 @@ int common_save1_p(std::ostream& os, T* a, T2* p, const size_t n, const char c)
 }
 
 template <typename T, typename T2>
-int common_save1_p(const char* name, T* a, T2* p, const size_t n, const char c)
+int common_save1_p(
+    const char* name, T* a, T2* p, const size_t n, const char c)
 {
   std::ofstream os(name);
   if (!os) {
@@ -284,7 +302,7 @@ int common_read2(const char* name, T* p, T2* n)
   return status;
 }
 
-// 二维数组a[n1][n2]
+// 二维数组 a[n1][n2]
 template <typename T, const size_t n1, const size_t n2>
 std::ostream& operator<<(std::ostream& os, T (&a)[n1][n2])
 {

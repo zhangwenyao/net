@@ -18,7 +18,7 @@ template <typename Tp> struct Common_RangeP {
 };
 
 template <typename Tp, typename T2>
-void common_sort_p_val(Tp p, Tp p2, const T2* const val)
+void common_sort_p_val_greater(Tp p, Tp p2, const T2* const val)
 {
   if (p + 1 >= p2)
     return;
@@ -55,10 +55,6 @@ void common_sort_p_val(Tp p, Tp p2, const T2* const val)
       st.push(Common_RangeP<Tp>(end, range.end));
   }
 }
-
-#ifndef common_sort_p_val_greater
-#define common_sort_p_val_greater common_sort_p_val
-#endif
 
 template <typename Tp, typename T2>
 void common_sort_p_val_less(Tp p, Tp p2, const T2* const val)

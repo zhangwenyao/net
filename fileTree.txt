@@ -9,17 +9,17 @@ main.h          : networks.h
 
 
 一、通用模块
-    1) commonRandom*    无依赖  
-        是随机函数模块，主要是为了修正windows下随机数最大值RAND_MAX不够大，可以采用两个rand()组合成一个随机数RAND2()；另外添加了16807随机数生成器。
+    1) commonRandom*    无依赖
+        是随机函数模块，主要是为了修正 windows 下随机数最大值 RAND_MAX 不够大，可以采用两个 rand() 组合成一个随机数 RAND2()；另外添加了 16807 随机数生成器。
     2) common* 依赖     commonRandom*
-        是通用函数模板，包括各种数组的输入输出、输出，调试ERROR()，通用的小函数等，commonTemplate.h是具体函数模板。
-        使用时，将common.h头文件包含到程序文件中即可。
+        是通用函数模板，包括各种数组的输入输出、输出，调试 ERROR()，通用的小函数等，commonTemplate.h 是具体函数模板。
+        使用时，将 common.h 头文件包含到程序文件中即可。
 
 
 
 二、独立的功能函数模块
     1) net.h            无依赖
-        声明了一些网络所使用的类型，NodeType、LinkType等，主要是为了适应不同尺寸网络、调整电脑内存占用大小方便。
+        声明了一些网络所使用的类型，NodeType、LinkType 等，主要是为了适应不同尺寸网络、调整电脑内存占用大小方便。
     2) Net*,Stat*,Act*  依赖  net.h,common*
         是各个功能模块，都是作用在具体度、两边等数据上的独立功能函数。
 
@@ -27,15 +27,15 @@ main.h          : networks.h
 
 三、网络结构上的函数模块
     1) network.h        依赖  net.h
-        定义了一个打包好的网络结构Network，及相应的通用简单功能函数。
+        定义了一个打包好的网络结构 Network，及相应的通用简单功能函数。
     2) networks*.h      依赖  network.h,Net*,Stat*,Act*
-        利用network.h中的Network结构，将Net*、Stat*、Act*中的独立函数打包成相应的Network结构的函数。
+        利用 network.h 中的 Network 结构，将 Net*、Stat*、Act*中的独立函数打包成相应的 Network 结构的函数。
     3) networks.h       依赖  networks*.h
-        将所有networks*中函数组合起来，形成一个完整的Network结构，提供主函数main.cpp要调用的各种功能。
+        将所有 networks*中函数组合起来，形成一个完整的 Network 结构，提供主函数 main.cpp 要调用的各种功能。
 
 
 
 四、主程序
     main.h      依赖  networks.h
         主函数，实现工作所需要的具体功能。
-    
+

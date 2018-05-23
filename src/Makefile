@@ -1,6 +1,6 @@
 
-.PHONY: all clean cleanall rebuild run debug redebug rundebug
+.PHONY: all clean cleanall rebuild run debug debug-rebuild debug-run
 
-all clean cleanall rebuild run debug rundebug :
+all clean cleanall rebuild run debug debug-rebuild debug-run :
 	cd .. && make $@
 

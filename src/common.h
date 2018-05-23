@@ -26,20 +26,23 @@
 // *************************************************************
 template <typename Tp> struct Common_RangeP; // 范围结构
 
+// 按 val[p[i]] 大小对 p[i] 排序 [i<=i+1]
 template <typename Tp, typename T2>
-void common_sort_p_val(
-    Tp p, Tp p2, const T2* const val); // 按val[p[i]]大小对p[i]排序
+void common_sort_p_val_greater(Tp p, Tp p2, const T2* const val);
 
-#ifndef common_sort_p_val_greater
-#define common_sort_p_val_greater common_sort_p_val
+// 按 val[p[i]] 大小对 p[i] 排序 [i>=i+1]
+template <typename Tp, typename T2>
+void common_sort_p_val_less(Tp p, Tp p2, const T2* const val);
+
+#ifndef common_sort_p_val
+#define common_sort_p_val common_sort_p_val_greater
 #endif
-
-template <typename Tp, typename T2>
-void common_sort_p_val_less(
-    Tp p, Tp p2, const T2* const val); // 按val[p[i]]大小对p[i]排序
 
 template <typename T, typename T2> // a[id] != 0 ==> id
 void common_bool_2_index(const T* a, const size_t n, std::vector<T2>& id);
+
+void common_cstring_swap(char* a, char* b);
+void common_cstring_reverse(char* a);
 
 // *************************************************************
 // s += a[p[i]] for i..n

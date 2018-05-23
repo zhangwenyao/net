@@ -7,12 +7,15 @@
 
 // *********************************************************************
 template <typename T>
-inline T common_atoi(char* s, const char c = 'a', const char base = 26);
+inline T common_atoi(const char* s, const char c = 'a', const char base = 26);
+template <typename T>
+inline size_t common_itoa(
+    T i, char* s, const char c = 'a', const char base = 26, size_t n = 0);
 
 int common_get_string(std::istream& is, std::string& s);
 
 // ********************* print, common_save ************************
-// 一维数组a[n]
+// 一维数组 a[n]
 template <typename T, const size_t n>
 int common_save(std::ostream& os, T (&a)[n], const char c = '\t');
 template <typename T, const size_t n>
@@ -71,7 +74,7 @@ std::ostream& operator<<(std::ostream& os, T (&a)[n1][n2]);
 template <typename T, const size_t n1, const size_t n2>
 int common_save2(std::ostream& os, T (&a)[n1][n2], const char c = '\t');
 template <typename T, const size_t n1, const size_t n2>
-int common_save2(const char* name, T (&a)[n1][n2]);
+int common_save2(const char* name, T (&a)[n1][n2], const char c = '\t');
 template <typename T, const size_t n1, const size_t n2>
 std::istream& operator>>(std::istream& is, T (&a)[n1][n2]);
 template <typename T, const size_t n1, const size_t n2>

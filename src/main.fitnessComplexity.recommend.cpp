@@ -10,11 +10,11 @@ int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
 
-  const string DIR2 = "data/complexity/1995-2010.data/";
+  const string DIR_DATA = "data/complexity/data/";
   const string methods[] = { "mass", "heat", "hybrid" };
-  //const string methods[] = { "hybrid" };
+  // const string methods[] = { "hybrid" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
-  const int YEAR1 = 1995, YEAR2 = 2010;
+  const int YEAR1 = 1995, YEAR2 = 2014;
   for (size_t iMethod = 0; iMethod < NMETHOD; iMethod++) {
     string method = methods[iMethod];
     cout << method << endl;
@@ -32,17 +32,20 @@ int main(int argc, char** argv)
       y2 = ss.str();
 
       VVDistType mcp;
-      common_read2_0((DIR2 + y1 + ".mcp.txt").c_str(), mcp);
-      const size_t NC = mcp.size(), NP = mcp[0].size();
+      common_read2_0((DIR_DATA + y1 + ".mcp.txt").c_str(), mcp);
+      const NodeType NC = mcp.size(), NP = mcp[0].size();
       cout << "\t" << year << "\t" << NC << "\t" << NP << endl;
 
       Networks net;
-      net.saveName = DIR2 + y1;
+      net.saveName = DIR_DATA + y1;
       net.recommend.lambda = 0.1;
-      linkMatr_2_p2p2(net.recommend.user_p_object, net.recommend.object_p_user, mcp);
+      linkMatr_2_p2p2(
+          net.recommend.user_p_object, net.recommend.object_p_user, mcp);
       net.act_recommend(method.c_str());
-      common_save2((DIR2 + y1 + "." + method + ".rcm.txt").c_str(), net.recommend.rcm);
-      //common_read2_0((DIR2 + y1 + "." + method + ".txt").c_str(), net.recommend.rcm);
+      common_save2((DIR_DATA + y1 + "." + method + ".rcm.txt").c_str(),
+          net.recommend.rcm);
+      // common_read2_0((DIR_DATA + y1 + "." + method + ".txt").c_str(),
+      // net.recommend.rcm);
 
     } // year
   }   // method

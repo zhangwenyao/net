@@ -5,96 +5,13 @@
 using namespace std;
 
 // *******************************************************
-int Mcp_2_FC(VDouble& Fc, VDouble& Cp, const VVBool& Mcp)
-{
-  int flag = 0;
-  const double delta = 1.0e-6;
-  const size_t NC = Mcp.size(), NP = Mcp[0].size();
-  Fc.assign(NC, 1);
-  Cp.assign(NP, 1);
-  VDouble iFc = Fc, iCp = Cp;
-  double fMean = 1, cMean = 1, ifMean, icMean;
-  for (int count = 1; 1; count++) {
-    iFc.assign(NC, -1);
-    ifMean = 0;
-    for (size_t c = 0; c < NC; c++) {
-      for (size_t p = 0; p < NP; p++)
-        if (Mcp[c][p] && Cp[p] > 0) {
-          if (iFc[c] < 0)
-            iFc[c] = 0;
-          iFc[c] += Cp[p];
-        }
-      if (iFc[c] >= 0)
-        ifMean += iFc[c];
-    }
-    ifMean /= NC;
-    if (ifMean <= 0) {
-      flag = -1;
-      ERROR("ifMean = ", ifMean, "\t", count);
-      break;
-    }
-
-    iCp.assign(NP, -1);
-    icMean = 0;
-    for (size_t p = 0; p < NP; p++) {
-      for (size_t c = 0; c < NC; c++) {
-        if (Mcp[c][p]) {
-          if (Fc[c] <= 0) {
-            iCp[p] = -1;
-            INFORM(p, "\t", c);
-            break;
-          }
-          if (iCp[p] < 0)
-            iCp[p] = 0;
-          iCp[p] += 1 / Fc[c];
-        }
-      }
-      if (iCp[p] >= 0) {
-        iCp[p] = 1 / iCp[p];
-        icMean += iCp[p];
-      }
-    }
-    icMean /= NP;
-    if (icMean <= 0) {
-      flag = -1;
-      ERROR("icMean = ", icMean, "\t", count);
-      break;
-    }
-
-    for (size_t c = 0; c < NC; c++)
-      Fc[c] = iFc[c] < 0 ? -1 : iFc[c] / ifMean;
-    for (size_t p = 0; p < NP; p++)
-      Cp[p] = iCp[p] < 0 ? -1 : iCp[p] / icMean;
-
-    if ((1.0 - delta) * cMean <= icMean && icMean <= (1.0 + delta) * cMean
-        && (1.0 - delta) * fMean <= ifMean
-        && ifMean <= (1.0 + delta) * fMean) {
-      // std::cout << count << std::endl;
-      break;
-    }
-    fMean = ifMean;
-    cMean = icMean;
-    if (count % 1000 == 0)
-      INFORM(count, "\tfm ", fMean, "\tcm ", cMean);
-  }
-  for (size_t c = 0; c < NC; c++)
-    if (iFc[c] < 0)
-      Fc[c] = 0;
-  for (size_t p = 0; p < NP; p++)
-    if (iCp[p] < 0)
-      Cp[p] = 0;
-
-  return flag;
-}
-
-// *******************************************************
-int count_k1(const size_t NC, const size_t NP, const VVNodeType& mcp,
+int count_k1(const NodeType NC, const NodeType NP, const VVNodeType& mcp,
     VNodeType& k1, const char* name)
 {
   k1.assign(NC, 0);
-  for (size_t c = 0; c < NC; c++) {
-    for (size_t p = 0; p < NP; p++) {
-      if (mcp[c][p] != 0)
+  for (NodeType c = 0; c < NC; c++) {
+    for (NodeType p = 0; p < NP; p++) {
+      if (mcp[c][p])
         k1[c]++;
     }
   }
@@ -103,7 +20,7 @@ int count_k1(const size_t NC, const size_t NP, const VVNodeType& mcp,
   return 0;
 }
 
-int count_cpNew(const size_t NC, const size_t NP, const VVNodeType& mcp,
+int count_cpNew(const NodeType NC, const NodeType NP, const VVNodeType& mcp,
     const VVNodeType& mcp2, VVNodeType& cpNew, const char* name)
 {
   cpNew.resize(NC);
@@ -251,68 +168,110 @@ int filter_trade_name(const char* tradeFilename, const char* countryFilename,
     ERROR();
     return -1;
   }
-  size_t NC = 26 * 26 * 26, NP = 9999;
-  VNodeType cVal(NC, 0), pVal(NP, 0);
-  char cChar[300][4] = { { 0 } };
-  char origin[9], dest[9], s[999];
+  const unsigned NC = 26 * 26 * 26, NP = 9999;
+  unsigned cVal[NC] = { 0 }, pVal[NP] = { 0 };
+  char origin[9], s[999];
+  unsigned nc = 0, np = 0;
   fgets(s, 999, fp);
-  for (size_t t, sitc;
-       3 == fscanf(fp, "%*s%s%s%zu%*s%*s", origin, dest, &sitc);) {
-    if (!cVal[t = common_atoi<size_t>(origin)]) {
-      cVal[t] = ++NC;
-      strcpy(cChar[NC], origin);
-    }
-    if (!cVal[t = common_atoi<size_t>(dest)]) {
-      cVal[t] = ++NC;
-      strcpy(cChar[NC], dest);
-    }
-    if (!pVal[sitc]) {
-      pVal[sitc] = ++NP;
-    }
+  for (unsigned t, hs92; 2 == fscanf(fp, "%*s%s%u%*s", origin, &hs92);) {
+    if (!cVal[t = common_atoi<unsigned>(origin)])
+      cVal[t] = ++nc;
+    if (!pVal[hs92])
+      pVal[hs92] = ++np;
   }
   fclose(fp);
-  common_save(countryFilename, cChar + 1, NC, '\n');
+
+  char cChar[300][4] = { { 0 } };
+  for (unsigned i = 0, c = 0; i < NC && c < nc; ++i) {
+    if (cVal[i]) {
+      common_itoa(i, cChar[c], 'a', 26, 3);
+      common_cstring_reverse(cChar[c++]);
+    }
+  }
+  common_save(countryFilename, cChar, nc, '\n');
+
   common_save_bool(productFilename, &pVal[0], 9999, '\n');
+
+  return 0;
+}
+
+int read_country_names(
+    const char* countryFilename, NodeType& NC, VNodeType& cVal)
+{
+  ifstream is(countryFilename);
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  NC = 0;
+  for (string s; is >> s;)
+    cVal[common_atoi<unsigned>(s.c_str())] = NC++;
+  is.close();
+  return 0;
+}
+
+int read_product_names(
+    const char* productFilename, NodeType& NP, VNodeType& pVal)
+{
+  ifstream is(productFilename);
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  NP = 0;
+  for (NodeType v; is >> v;)
+    pVal[v] = NP++;
+  is.close();
   return 0;
 }
 
 int filter_sum_trade(const char* tradeFilename, const char* countryFilename,
-    const char* productFilename)
+    const char* productFilename, const char* dirSave)
 {
-  VNodeType cVal(26 * 26 * 26, 0), pVal(9999, 0);
-  size_t NC = 0;
+  VNodeType cVal(26 * 26 * 26, 0);
+  NodeType NC = 0;
+  read_country_names(countryFilename, NC, cVal);
+  cout << NC << endl;
+
+  VNodeType pVal(9999, 0);
+  NodeType NP = 0;
+  read_product_names(productFilename, NP, pVal);
+  cout << NP << endl;
+
+  VVDouble expts(NC, VDouble(NP, 0));
   {
-    char s[4] = { 0 };
-    ifstream is(countryFilename);
-    for (size_t i; is >> i >> s;)
-      cVal[common_atoi<size_t>(s)] = i;
-    is.close();
-  }
-  size_t NP = 0;
-  {
-    ifstream is(productFilename);
-    for (size_t i, p; is >> i >> p;)
-      pVal[p] = i;
-    is.close();
+    FILE* fp = fopen(tradeFilename, "r");
+    if (NULL == fp) {
+      ERROR();
+      return -1;
+    }
+    char origin[4], s[999];
+    unsigned year, pd, YEAR1 = 1995, year0 = YEAR1;
+    long long unsigned l = 1;
+    fgets(s, 999, fp);
+    for (double v; 4 == fscanf(fp, "%u%s%u%lf", &year, origin, &pd, &v);
+         ++l) {
+      if (year < year0) {
+        ERROR();
+        break;
+      }
+      if (year > year0) {
+        cout << l << "\t" << year0 << endl;
+        sprintf(s, "%s%u.export.txt", dirSave, year0);
+        common_save2(s, expts);
+        expts.assign(NC, VDouble(NP, 0));
+        expts[cVal[common_atoi<size_t>(origin)]][pVal[pd]] = v;
+        year0 = year;
+      } else { // year==year0
+        expts[cVal[common_atoi<size_t>(origin)]][pVal[pd]] += v;
+      }
+    }
+    cout << l << "\t" << year0 << endl;
+    sprintf(s, "%s%u.export.txt", dirSave, year0);
+    common_save2(s, expts);
+    fclose(fp);
   }
 
-  FILE* fp = fopen(tradeFilename, "r");
-  if (NULL == fp) {
-    ERROR();
-    return -1;
-  }
-  char origin[9], dest[9], s[999];
-  fgets(s, 999, fp);
-  for (size_t t, sitc;
-       3 == fscanf(fp, "%*s%s%s%zu%*s%*s", origin, dest, &sitc);) {
-    if (!cVal[t = common_atoi<size_t>(origin)]) {
-      cVal[t] = ++NC;
-    }
-    if (!pVal[sitc]) {
-      pVal[sitc] = ++NP;
-    }
-  }
-  fclose(fp);
   return 0;
 }
 

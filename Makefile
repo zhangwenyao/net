@@ -65,8 +65,8 @@ run:
 
 debug:
 	make DEBUG=1
-redebug: cleanall
+debug-rebuild: cleanall
 	make debug
-rundebug:
+debug-run:
 	-reset && make debug && $(BIN_TARGET)
 

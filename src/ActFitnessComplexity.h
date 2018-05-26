@@ -35,20 +35,24 @@ int count_newRemainRank(const VVDouble& rcm, const size_t NC, const size_t NP,
 int count_rankNew(const VVDouble& rcm, const size_t NC, const size_t NP,
     const VVNodeType& cpNew, VVNodeType& rankNew, const char* name = NULL);
 
-// 筛选出国家和商品名
+// 筛选进出口数据的国家和产品名
 int filter_trade_name(const char* tradeFilename, const char* countryFilename,
     const char* productFilename);
 
+// 合并进出口数据
 int read_country_names(
     const char* countryFilename, NodeType& NC, VNodeType& cVal);
 int read_product_names(
     const char* productFilename, NodeType& NP, VNodeType& pVal);
-
-// 合并进出口数据
 int filter_sum_trade(const char* tradeFilename, const char* countryFilename,
     const char* productFilename, const char* dirSave);
 
-int filter_index(const NodeType N, VVNodeType& indexs, VNodeType& index);
+// 筛选进出口和 gdp 的共同国家名
+int filter_export_gdp_country_name(const char* exportNames,
+    const char* exportNames3c, const char* gdpNames, const char* savePrefix);
+int filter_index_same_all(const char* namesFull, const char* sameAll);
+int filter_index_same_gdp(const char* dir);
+int filter_gdp(const char* DIR_DATA0, const char* DIR_DATA);
 
 // *******************************************************
 #include "ActFitnessComplexity.template.h"

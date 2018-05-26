@@ -22,11 +22,21 @@ int main(int argc, char** argv)
     ss << year;
     y = ss.str();
 
-    VVNodeType mcp;
-    common_read2_0((DIR_DATA + y + ".mcp.txt").c_str(), mcp);
-    const NodeType NC = mcp.size(), NP = mcp[0].size();
-    cout << "" << year << "\t" << NC << "\t" << NP << endl;
+    // export to mcp
+    VVDouble e;
+    common_read2_0(
+        (DIR_DATA0 + "hs92.export/" + y + ".export.txt").c_str(), e);
+    cout << "" << year << "\t" << e.size() << "\t" << e[0].size() << endl;
+    if (e.size() != NC || e[0].size() != NP) {
+      ERROR();
+      return -1;
+    }
+    VVBool mcp(NC, VBool(NP, false));
+    exp_2_Mcp(e, mcp);
+    common_save2((DIR_DATA + y + ".mcp.txt").c_str(), mcp);
+    // common_read2_0((DIR_DATA + y + ".mcp.txt").c_str(), mcp);
 
+    // Mcp to country fitness & product complexity
     VDouble cf, pc;
     Mcp_2_FC(cf, pc, mcp);
     common_save1((DIR_DATA + y + ".country.fitness.txt").c_str(), cf, '\n');

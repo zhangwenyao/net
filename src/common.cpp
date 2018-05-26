@@ -7,12 +7,12 @@ void common_cstring_swap(char* a, char* b)
 {
   if (a == b || (*a == '\0' && *b == '\0'))
     return;
+  char t, *c;
   while (*a && *b) {
-    *a ^= *b;
-    *b ^= *a;
-    *a++ ^= *b++;
+    t = *b;
+    *b++ = *a;
+    *a++ = t;
   }
-  char* c;
   if (*a) {
     c = b;
   } else {
@@ -32,13 +32,13 @@ void common_cstring_reverse(char* a)
 {
   if (*a == '\0')
     return;
-  char* p = a;
+  char c, *p = a;
   while (*++p)
     continue;
   while (a < --p) {
-    *a ^= *p;
-    *p ^= *a;
-    *a++ ^= *p;
+    c = *p;
+    *p = *a;
+    *a++ = c;
   }
   return;
 }

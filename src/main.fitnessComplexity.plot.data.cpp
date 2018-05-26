@@ -1,6 +1,6 @@
 // g++ -o main.exe *.cpp -O3 -Wall
 #include "main.h"
-#ifdef MAIN_PLOTDATA
+#ifdef MAIN_FITNESS_COMPLEXITY_PLOTDATA
 
 #include "common.h"
 #include "networks.h"
@@ -11,13 +11,14 @@ int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
 
-  const string DIR0 = "data/complexity/", DIR_DATA = DIR0 + "1995-2010.data/", DIR_PLOT = DIR0 + "1995-2010.plot/";
+  const string DIR0 = "data/complexity/", DIR_DATA = DIR0 + "data/",
+               DIR_PLOT_DATA = DIR0 + "plot/data/";
   const string methods[] = { "mass", "heat", "hybrid" };
-  //const string methods[] = { "mass" };
+  // const string methods[] = { "mass" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
-  const int YEAR1 = 1995, YEAR2 = 2010, NYEAR = YEAR2 - YEAR1 + 1;
+  const int YEAR1 = 1995, YEAR2 = 2014, NYEAR = YEAR2 - YEAR1 + 1;
 
-  const size_t NC = 212, NP = 773;
+  const size_t NC = 237, NP = 1241;
   for (int year = YEAR1; year < YEAR2; year++) {
     string y1;
     stringstream ss;
@@ -28,11 +29,14 @@ int main(int argc, char** argv)
     cout << y1 << endl;
 
     VNodeType fullIndex;
-    common_read1_0((DIR0 + "1995-2010.info/GDP.1995-2010.full.index.txt").c_str(), fullIndex);
+    common_read1_0(
+        (DIR0 + "1995-2010.info/GDP.1995-2010.full.index.txt").c_str(),
+        fullIndex);
     const size_t NCF = fullIndex.size();
 
     VVDouble gdp;
-    common_read2_0((DIR0 + "1995-2010.info/GDP.1995-2010.full.val.txt").c_str(), gdp);
+    common_read2_0(
+        (DIR0 + "1995-2010.info/GDP.1995-2010.full.val.txt").c_str(), gdp);
     VNodeType rk;
     {
       VDouble g;
@@ -54,26 +58,30 @@ int main(int argc, char** argv)
     common_save2((DIR_DATA + y1 + ".gdp.full.rank10.txt").c_str(), rks);
 
     VVNodeType cpNew;
-    common_read2_0((DIR_DATA + y1 + ".country.product.new.txt").c_str(), cpNew);
+    common_read2_0(
+        (DIR_DATA + y1 + ".country.product.new.txt").c_str(), cpNew);
     cpNew.resize(NC);
 
     VVDouble cpNewScale, newScale[NMETHOD];
-    common_read2_0((DIR_DATA + y1 + ".country.product.new.scale.txt").c_str(), cpNewScale);
+    common_read2_0((DIR_DATA + y1 + ".country.product.new.scale.txt").c_str(),
+        cpNewScale);
     cpNewScale.resize(NC);
     for (size_t i = 0; i < NMETHOD; i++) {
       string method = methods[i];
-      common_read2_0((DIR_DATA + y1 + "." + method + ".new.scale.txt").c_str(), newScale[i]);
+      common_read2_0(
+          (DIR_DATA + y1 + "." + method + ".new.scale.txt").c_str(),
+          newScale[i]);
       newScale[i].resize(NC);
     }
     {
-      ofstream os((DIR_PLOT + "data/" + y1 + ".full.scale.txt").c_str());
+      ofstream os((DIR_PLOT_DATA + "data/" + y1 + ".full.scale.txt").c_str());
       for (size_t cc = 0, c; cc < NCF; cc++) {
         c = fullIndex[cc];
         for (size_t j = 0; j < cpNew[c].size(); j++) {
           size_t p = cpNew[c][j];
-          os << c << '\t' << p << '\t' << cpNewScale[c][j];
+          os << c << '[t' << p << '\t' << cpNewScale[c][j];
           for (size_t ii = 0; ii < NMETHOD; ii++) {
-            os << '\t' << newScale[ii][c][j];
+            os << '[t' << newScale[ii][c][j];
           }
           os << '\n';
         }
@@ -83,16 +91,16 @@ int main(int argc, char** argv)
       for (size_t i = 0; i < N; i++) {
         ss.clear();
         ss.str("");
-        ss << DIR_PLOT << "data/" << y1 << ".full.scale.rank10." << i;
+        ss << DIR_PLOT_DATA << "data/" << y1 << ".full.scale.rank10." << i;
         string s = ss.str();
         ofstream os((s + ".txt").c_str());
         for (size_t cc = 0, c; cc < rks[i].size(); cc++) {
           c = rks[i][cc];
           for (size_t j = 0; j < cpNew[c].size(); j++) {
             size_t p = cpNew[c][j];
-            os << c << '\t' << p << '\t' << cpNewScale[c][j];
+            os << c << '[t' << p << '\t' << cpNewScale[c][j];
             for (size_t ii = 0; ii < NMETHOD; ii++) {
-              os << '\t' << newScale[ii][c][j];
+              os << '[t' << newScale[ii][c][j];
             }
             os << '\n';
           }
@@ -107,17 +115,18 @@ int main(int argc, char** argv)
     common_read1_0((DIR_DATA + y1 + ".product.complexity.txt").c_str(), pc);
     for (size_t i = 0; i < NMETHOD; i++) {
       string method = methods[i];
-      common_read2_0((DIR_DATA + y1 + "." + method + ".rcm.txt").c_str(), rcm[i]);
+      common_read2_0(
+          (DIR_DATA + y1 + "." + method + ".rcm.txt").c_str(), rcm[i]);
     }
     {
-      ofstream os((DIR_PLOT + "data/" + y1 + ".full.val.txt").c_str());
+      ofstream os((DIR_PLOT_DATA + "data/" + y1 + ".full.val.txt").c_str());
       for (size_t cc = 0, c; cc < NCF; cc++) {
         c = fullIndex[cc];
         for (size_t j = 0; j < cpNew[c].size(); j++) {
           size_t p = cpNew[c][j];
           os << c << '\t' << p << '\t' << pc[p];
           for (size_t ii = 0; ii < NMETHOD; ii++) {
-            os << '\t' << rcm[ii][c][p];
+            os << '[t' << rcm[ii][c][p];
           }
           os << '\n';
         }
@@ -127,7 +136,7 @@ int main(int argc, char** argv)
       for (size_t i = 0; i < N; i++) {
         ss.clear();
         ss.str("");
-        ss << DIR_PLOT << "data/" << y1 << ".full.val.rank10." << i;
+        ss << DIR_PLOT_DATA << "data/" << y1 << ".full.val.rank10." << i;
         string s = ss.str();
         ofstream os((s + ".txt").c_str());
         for (size_t cc = 0, c; cc < rks[i].size(); cc++) {
@@ -136,7 +145,7 @@ int main(int argc, char** argv)
             size_t p = cpNew[c][j];
             os << c << '\t' << p << '\t' << pc[p];
             for (size_t ii = 0; ii < NMETHOD; ii++) {
-              os << '\t' << rcm[ii][c][p];
+              os << '[t' << rcm[ii][c][p];
             }
             os << '\n';
           }

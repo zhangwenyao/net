@@ -9,53 +9,35 @@ using namespace std;
 int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
-
   const string DIR0 = "data/complexity/", DIR_DATA0 = DIR0 + "data0/",
                DIR_DATA = DIR0 + "data/", DIR_INFO = DIR0 + "info/";
 
-  //// fileter country and product name
-  // filter_trade_name((DIR_DATA0 + "year_origin_hs92_4.export.txt").c_str(),
-  //(DIR_DATA0 + "country.names.export.txt").c_str(),
-  //(DIR_DATA0 + "product.names.export.txt").c_str());
+  /* // 筛选进出口数据的国家和产品名
+  filter_trade_name((DIR_DATA0 + "year_origin_hs92_4.export.txt").c_str(),
+      (DIR_DATA0 + "country3c.names.export.txt").c_str(),
+      (DIR_DATA0 + "product.names4d.hs92.export.txt").c_str());
+   */
 
-  //// sum export data
-  // filter_sum_trade((DIR_DATA0 + "year_origin_hs92_4.export.txt").c_str(),
-  //(DIR_DATA0 + "country.names.export.txt").c_str(),
-  //(DIR_DATA0 + "product.names.export.txt").c_str(),
-  //(DIR_DATA0 + "hs92.export/").c_str());
+  /*  // sum export data
+    filter_sum_trade((DIR_DATA0 + "year_origin_hs92_4.export.txt").c_str(),
+        (DIR_DATA0 + "country.names3c.export.txt").c_str(),
+        (DIR_DATA0 + "product.names4d.hs92.export.txt").c_str(),
+        (DIR_DATA0 + "hs92.export/").c_str());
+   */
 
-  // NodeType NC;
-  // VNodeType cVal(26 * 26 * 26, 0);
-  // read_country_names(
-  //(DIR_DATA0 + "country.names.export.txt").c_str(), NC, cVal);
-  // unsigned NP = 0;
-  // VUnsigned pVal(9999, 0);
-  // read_product_names(
-  //(DIR_DATA0 + "product.names.export.txt").c_str(), NP, pVal);
+  /*  // 筛选进出口和 gdp 的共同国家名
+    filter_export_gdp_country_name((DIR_DATA0 + "country_names.txt").c_str(),
+        (DIR_DATA0 + "country.names3c.export.txt").c_str(),
+        (DIR_DATA0 + "country.namesFull.gdp.txt").c_str(),
+        (DIR_DATA0 + "country.namesFull").c_str());
+    // 手动查找相同国家，得到 same.export.txt 和 same.gdp.txt，再执行下面步骤
+    filter_index_same_all((DIR_DATA0 + "country.namesFull").c_str(),
+        (DIR_DATA0 + "country.index.same.all").c_str());
+    filter_index_same_gdp((DIR_DATA0).c_str());
+   */
 
-  const NodeType YEAR1 = 1995, YEAR2 = 2014, NC = 237, NP = 1241;
-  for (NodeType year = YEAR1; year <= YEAR2; year++) {
-    string y;
-    stringstream ss;
-    ss.clear();
-    ss.str("");
-    ss << year;
-    y = ss.str();
-
-    VVDouble e;
-    common_read2_0(
-        (DIR_DATA0 + "hs92.export/" + y + ".export.txt").c_str(), e);
-    cout << "" << year << "\t" << e.size() << "\t" << e[0].size() << endl;
-    if (e.size() != NC || e[0].size() != NP) {
-      ERROR();
-      return -1;
-    }
-
-    VVBool mcp(NC, VBool(NP, false));
-    exp_2_Mcp(e, mcp);
-    common_save2((DIR_DATA + y + ".mcp.txt").c_str(), mcp);
-
-  } // year
+  // 输出可用进出口和 gdp 数据，用于进一步分析
+  filter_gdp(DIR_DATA0.c_str(), DIR_DATA.c_str());
 
   SHOW_TIME(cout); // 显示系统时间
   return 0;

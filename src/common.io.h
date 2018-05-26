@@ -165,6 +165,12 @@ int common_read2_0(std::istream& is, std::vector<std::vector<T> >& v);
 template <typename T>
 int common_read2_0(const char* name, std::vector<std::vector<T> >& v);
 
+// VString
+int common_save_VString(std::ostream& os, const std::vector<std::string>& vs);
+int common_save_VString(const char* name, const std::vector<std::string>& vs);
+int common_read_VString(std::istream& is, std::vector<std::string>& vs);
+int common_read_VString(const char* name, std::vector<std::string>& vs);
+
 // *************************************************************
 #include "common.io.template.h"
 #endif //_H

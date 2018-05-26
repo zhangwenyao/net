@@ -15,8 +15,7 @@
 //#define MAIN_FITNESS_COMPLEXITY
 //#define MAIN_FITNESS_COMPLEXITY_RECOMMEND
 #define MAIN_FITNESS_COMPLEXITY_COUNT
-
-//#define MAIN_PLOTDATA
+//#define MAIN_FITNESS_COMPLEXITY_PLOTDATA
 
 // *******************************************************
 #endif

@@ -22,14 +22,24 @@ int act_recommend_heat(
     VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p);
 int act_recommend_pagerank(const VVNodeType& p2p, VDouble& v);
 int act_recommend_commonNeighbour_object(VVDouble& rcm, const VVNodeType& oo);
-int act_recommend_hybrid_matrix(VVDouble& rcm, const VVNodeType& uP2p, const VVNodeType& oP2p, const double lambda);
+int act_recommend_hybrid_matrix(VVDouble& rcm, const VVNodeType& uP2p,
+    const VVNodeType& oP2p, const double lambda);
 
 int recommend_RAC(const VDouble& v0, const VDouble& v, double& r);
 int recommend_RMAE(const VDouble& v0, const VDouble& v, double& r);
 int recommend_NMAE(const VDouble& v0, const VDouble& v, double& r);
-int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall, double& precision, double& F);
-int recommend_rankingScore(const VNodeType& R, const VNodeType& L, double& rs);
-int recommend_rankingScore(const VNodeType& rk, const VNodeType& L0, const VNodeType& L, double& rs);
+int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall,
+    double& precision, double& F);
+int recommend_rankingScore(
+    const VNodeType& R, const VNodeType& L, double& rs);
+template <typename T>
+int recommend_rankingScore(const std::vector<T>& rk, const std::vector<T>& L0,
+    const VNodeType& L, double& rs);
+template <typename T>
+int count_rankingScore(const VVDouble& rcm, const size_t NC, const size_t NP,
+    const std::vector<std::vector<T> >& mcp,
+    const std::vector<std::vector<T> >& mcp2, VDouble& rankingScore,
+    const char* name);
 
 // *******************************************************
 #endif // ACT_RECOMMEND

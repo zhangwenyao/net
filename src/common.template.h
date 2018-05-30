@@ -104,6 +104,25 @@ void common_bool_2_index(const T* a, const size_t n, std::vector<T2>& id)
   }
 }
 
+template <typename T, typename T2>
+void common_change_type_vector(std::vector<T> v, std::vector<T2> v2)
+{
+  v2.resize(v.size());
+  for (size_t i = 0; i < v.size(); ++i)
+    v2[i] = (T2)v[i];
+  return;
+}
+
+template <typename T, typename T2>
+void common_change_type_vector2(
+    std::vector<std::vector<T> > v, std::vector<std::vector<T2> > v2)
+{
+  v2.resize(v.size());
+  for (size_t i = 0; i < v.size(); ++i)
+    common_change_type_vector(v[i], v2[i]);
+  return;
+}
+
 // *************************************************************
 template <typename T, typename T2, typename T3>
 void common_total_p(const T* a, const T2* p, const size_t n, T3& s)

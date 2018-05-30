@@ -328,38 +328,6 @@ int recommend_rankingScore(const VNodeType& R, const VNodeType& L, double& rs)
   return 0;
 }
 
-// rs : not in L0 && in L && rank/size(~L0)
-int recommend_rankingScore(
-    const VNodeType& rk, const VNodeType& L0, const VNodeType& L, double& rs)
-{
-  rs = 0;
-  const size_t N = rk.size();
-  if (L0.size() < N || L.size() < N) {
-    ERROR();
-    return -1;
-  }
-  if (N <= 1) {
-    rs = 0.5;
-    return 0;
-  }
-  size_t n0 = 0, n = 0;
-  for (size_t i = 0; i < N; i++) {
-    NodeType p = rk[i];
-    if (L0[p] == 0) {
-      if (L[p] != 0) {
-        n++;
-        rs += n0;
-      }
-      n0++;
-    }
-  }
-  if (n0 > 1 && n >= 1)
-    rs /= (n0 - 1.0) * n;
-  else
-    rs = 0.5;
-  return 0;
-}
-
 // *******************************************************
 
 #endif // ACT_RECOMMEND

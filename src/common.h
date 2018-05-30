@@ -44,6 +44,12 @@ void common_bool_2_index(const T* a, const size_t n, std::vector<T2>& id);
 void common_cstring_swap(char* a, char* b);
 void common_cstring_reverse(char* a);
 
+template <typename T, typename T2>
+void common_change_type_vector(std::vector<T> v, std::vector<T2> v2);
+template <typename T, typename T2>
+void common_change_type_vector2(
+    std::vector<std::vector<T> > v, std::vector<std::vector<T2> > v2);
+
 // *************************************************************
 // s += a[p[i]] for i..n
 template <typename T, typename T2, typename T3>

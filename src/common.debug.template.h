@@ -6,42 +6,32 @@
 #include <cstdlib>
 #include <iostream>
 
-// ************* INFO, SHOW_TIME ****************
-#ifdef STD_CPP11
-inline void SHOW_TIME(std::ostream& os)
+// ************* INFO ****************
+template <typename T, typename... Args>
+void INFO(std::ostream& os, T x, Args... args)
 {
-  time_t timeNow = time(NULL);
-  struct tm* timeLocal = localtime(&timeNow);
-  (os ? os : std::cerr) << asctime(timeLocal);
+  os << x;
+  INFO(os, args...);
   return;
 }
 
-inline void ERRINFO()
+template <typename... Args> void ERROR_INFO(Args... args)
 {
-  std::cerr << std::flush;
+  INFO(std::cerr, args...);
   return;
 }
 
-template <typename T, typename... Args> inline void ERRINFO(T x, Args... args)
+template <typename... Args> void INFORM_INFO(Args... args)
 {
-  std::cerr << x;
-  ERRINFO(args...);
+  INFO(std::cout, args...);
   return;
 }
 
-inline void INFO()
+template <typename... Args> void DEBUG_INFO(Args... args)
 {
-  std::cout << std::flush;
+  INFO(std::clog, args...);
   return;
 }
-
-template <typename T, typename... Args> inline void INFO(T x, Args... args)
-{
-  std::cout << x;
-  INFO(args...);
-  return;
-}
-#endif // STD_CPP11
 
 // *****************************************************
 #endif //_H

@@ -9,13 +9,15 @@ using namespace std;
 int main(int argc, char** argv)
 {
   SHOW_TIME(cout); // 显示系统时间
+  if (argc > 0 && NULL == argv)
+    return -1;
 
   const string DIR0 = "data/complexity/OEC.sitc_rev2/",
                DIR_DATA0 = DIR0 + "data0/", DIR_DATA = DIR0 + "data/",
                DIR_INFO = DIR0 + "info/";
 
-  NodeType YEAR1 = 2000, YEAR2 = 2010, NC, NP;
-  for (NodeType year = YEAR1; year <= YEAR2; year++) {
+  NodeType YEAR1 = 1995, YEAR2 = 1996, NC, NP;
+  for (NodeType year = YEAR1; year < YEAR2; year++) {
     string y;
     stringstream ss;
     ss.clear();
@@ -33,9 +35,10 @@ int main(int argc, char** argv)
     common_save2((DIR_DATA + y + ".mcp.txt").c_str(), mcp);
     // common_read2_0((DIR_DATA + y + ".mcp.txt").c_str(), mcp);
 
-    VNodeType k1;
-    count_k1(
-        NC, NP, mcp, k1, (DIR_DATA + y + ".country.product.k.txt").c_str());
+    VNodeType k1, product_k1;
+    count_k1(mcp, k1, (DIR_DATA + y + ".country.product.k.txt").c_str());
+    count_product_k1(
+        mcp, product_k1, (DIR_DATA + y + ".product.country.k.txt").c_str());
 
     // Mcp to country fitness & product complexity
     VDouble cf, pc;

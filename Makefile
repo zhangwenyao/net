@@ -1,5 +1,5 @@
 
-TARGET	= lkk.exe
+TARGET	= net.exe
 SRCEXTS	= .c .cpp
 DIR_INC	= ./include
 DIR_SRC	= ./src
@@ -16,13 +16,13 @@ DEP	= $(patsubst %.o,%.d,$(OBJ))
 BIN_TARGET = ${DIR_BIN}/${TARGET}
 
 ifdef DEBUG
-CFLAGS	= -Wall -O0 -I${DIR_INC} -g -DDEBUG
-CXXFLAGS= -Wall -O0 -I${DIR_INC} -g -DDEBUG -std=c++11
-LDFLAGS	= -Wall -O0 -g -DDEBUG
+	CFLAGS	= -Wall -O0 -I${DIR_INC} -g -DDEBUG
+	CXXFLAGS= -Wall -O0 -I${DIR_INC} -g -DDEBUG -std=c++11
+	LDFLAGS	= -Wall -O0 -g -DDEBUG
 else
-CFLAGS	= -Wall -O3 -I${DIR_INC}
-CXXFLAGS= -Wall -O3 -I${DIR_INC} -std=c++11
-LDFLAGS	= -Wall -O3
+	CFLAGS	= -Wall -O3 -I${DIR_INC}
+	CXXFLAGS= -Wall -O3 -I${DIR_INC} -std=c++11
+	LDFLAGS	= -Wall -O3
 endif
 
 $(shell mkdir -p ${DIR_OBJ} 2> /dev/null)
@@ -35,11 +35,13 @@ all:$(BIN_TARGET)
 
 ${DIR_OBJ}/%.d	:	${DIR_SRC}/%.c
 	@set -e; $(CC)  -MM $< $(CFLAGS) | sed 's,\($*\)\.o[ :]*,${DIR_OBJ}/\1.o $@ : ,g' > $@
+
 ${DIR_OBJ}/%.d	:	${DIR_SRC}/%.cpp
 	@set -e; $(CXX) -MM $< $(CXXFLAGS)| sed 's,\($*\)\.o[ :]*,${DIR_OBJ}/\1.o $@ : ,g' > $@
 
 ${DIR_OBJ}/%.o	:	${DIR_SRC}/%.c
 	$(CC)  -o $@ -c $< $(CFLAGS)
+
 $(DIR_OBJ)/%.o	:	$(DIR_SRC)/%.cpp
 	$(CXX) -o $@ -c $< $(CXXFLAGS)
 
@@ -54,19 +56,23 @@ endif
 
 clean:
 	-rm -rf $(OBJ) $(DEP)
+
 cleanall: clean
 	-rm -rf $(BIN_TARGET)
 	-rmdir $(DIR_OBJ) $(DIR_BIN)
 
 rebuild: cleanall
 	make all
+
 run:
 	-reset && make all && $(BIN_TARGET)
 
 debug:
 	make DEBUG=1
+
 debug-rebuild: cleanall
 	make debug
+
 debug-run:
 	-reset && make debug && $(BIN_TARGET)
 

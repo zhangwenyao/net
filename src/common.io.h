@@ -140,9 +140,9 @@ std::istream& operator>>(std::istream& is, std::vector<T>& v);
 template <typename T> int common_read1(std::istream& is, std::vector<T>& v);
 template <typename T> int common_read1(const char* name, std::vector<T>& v);
 template <typename T>
-int common_read1_0(std::istream& is, std::vector<T>& v, const unsigned n = 0);
+int common_read1_0(std::istream& is, std::vector<T>& v, unsigned n = 0);
 template <typename T>
-int common_read1_0(const char* name, std::vector<T>& v, const unsigned n = 0);
+int common_read1_0(const char* name, std::vector<T>& v, unsigned n = 0);
 
 // vv
 template <typename T>

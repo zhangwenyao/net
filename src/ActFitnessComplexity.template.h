@@ -64,7 +64,7 @@ int Mcp_2_FC(
     VDouble& Fc, VDouble& Cp, const std::vector<std::vector<T> >& Mcp)
 {
   int flag = 0;
-  const double delta = 1.0e-6;
+  const double delta = 1.0e-8;
   const size_t NC = Mcp.size(), NP = Mcp[0].size();
   Fc.assign(NC, 1);
   Cp.assign(NP, 1);
@@ -95,8 +95,8 @@ int Mcp_2_FC(
       ERROR("ifMean = ", ifMean, "\t", count);
       break;
     }
-    // ifMean /= n;
-    ifMean /= NC;
+    ifMean /= n;
+    // ifMean /= NC;
 
     iCp.assign(NP, -1);
     icMean = 0;
@@ -124,8 +124,8 @@ int Mcp_2_FC(
       ERROR("icMean = ", icMean, "\t", count);
       break;
     }
-    // icMean /= n;
-    icMean /= NP;
+    icMean /= n;
+    // icMean /= NP;
 
     for (size_t c = 0; c < NC; c++)
       Fc[c] = iFc[c] < 0 ? -1 : iFc[c] / ifMean;

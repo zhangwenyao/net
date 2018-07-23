@@ -81,7 +81,7 @@ int power_cal_deg_arr(VNodeType& degArrSize, const VNodeType& degArrVal,
   return 0;
 }
 
-// *************************************************//*****
+// ********************************************************
 int PowerLaw_NatureCutoff(NodeType& kMax, const NodeType nodeSize,
     const NodeType kMin, const double gamma)
 {

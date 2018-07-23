@@ -40,6 +40,7 @@ inline size_t common_itoa(
 template <typename T, const size_t n>
 int common_save(std::ostream& os, T (&a)[n], const char c)
 {
+  ERROR_TEST(!os);
   if (n > 0) {
     os << a[0];
     for (size_t i = 1; i < n; i++)
@@ -56,21 +57,20 @@ int common_save(const char* name, T (&a)[n], const char c)
     ERROR("open file ", name);
     return -1;
   }
-  common_save(os, a, c);
+  int status = common_save(os, a, c);
+  ERROR_TEST(0 != status);
   os.close();
-  return 0;
+  return status;
 }
 
 template <typename T, const size_t n>
 int common_read(std::istream& is, T (&a)[n])
 {
+  ERROR_TEST(!is);
   size_t i = 0;
   while (i < n && is >> a[i])
     i++;
-  if (i < n) {
-    ERROR();
-    return -1;
-  }
+  ERROR_TEST(i < n);
   return 0;
 }
 
@@ -82,12 +82,8 @@ int common_read(const char* name, T (&a)[n])
     ERROR("open file ", name);
     return -1;
   }
-  common_read(is, a);
-  int status = 0;
-  if (!is) {
-    ERROR();
-    status = -1;
-  }
+  int status = common_read(is, a);
+  ERROR_TEST(0 != status);
   is.close();
   return status;
 }
@@ -96,6 +92,7 @@ int common_read(const char* name, T (&a)[n])
 template <typename T>
 int common_save(std::ostream& os, T* a, const size_t n, const char c)
 {
+  ERROR_TEST(!os);
   if (n > 0) {
     os << *a;
     for (size_t i = 1; i < n; i++)
@@ -112,20 +109,19 @@ int common_save(const char* name, T* a, const size_t n, const char c)
     ERROR("open file ", name);
     return -1;
   }
-  common_save(os, a, n, c);
+  int status = common_save(os, a, n, c);
+  ERROR_TEST(0 != status);
   os.close();
-  return 0;
+  return status;
 }
 
 template <typename T> int common_read(std::istream& is, T* a, const size_t n)
 {
-  size_t i;
-  for (i = 0; i < n && is; i++)
-    is >> *a++;
-  if (i < n) {
-    ERROR();
-    return -1;
-  }
+  ERROR_TEST(!is);
+  size_t i = 0;
+  while (i < n && is >> *a++)
+    i++;
+  ERROR_TEST(i < n);
   return 0;
 }
 
@@ -137,6 +133,7 @@ template <typename T> int common_read(const char* name, T* a, const size_t n)
     return -1;
   }
   int status = common_read(is, a, n);
+  ERROR_TEST(0 != status);
   is.close();
   return status;
 }
@@ -144,9 +141,10 @@ template <typename T> int common_read(const char* name, T* a, const size_t n)
 template <typename T, typename T2>
 int common_read0(std::istream& is, T* a, T2& n)
 {
+  ERROR_TEST(!is);
   n = 0;
-  for (T t; is >> t; n++)
-    *a++ = t;
+  while (is >> *a++)
+    n++;
   return 0;
 }
 
@@ -159,6 +157,7 @@ int common_read0(const char* name, T* a, T2& n)
     return -1;
   }
   int status = common_read0(is, a, n);
+  ERROR_TEST(0 != status);
   is.close();
   return status;
 }
@@ -167,6 +166,7 @@ template <typename T>
 int common_save_bool(
     std::ostream& os, const T* a, const size_t n, const char c)
 {
+  ERROR_TEST(!os);
   for (size_t i = 0, flag = 0; i < n; i++)
     if (*a++) {
       if (flag)
@@ -188,9 +188,10 @@ int common_save_bool(
     ERROR("open file ", name);
     return -1;
   }
-  common_save_bool(os, a, n, c);
+  int status = common_save_bool(os, a, n, c);
+  ERROR_TEST(0 != status);
   os.close();
-  return 0;
+  return status;
 }
 
 // a[p[i]]
@@ -198,6 +199,7 @@ template <typename T, typename T2>
 int common_save1_p(
     std::ostream& os, T* a, T2* p, const size_t n, const char c)
 {
+  ERROR_TEST(!os);
   if (n > 0) {
     os << a[p[0]];
     for (size_t i = 1; i < n; i++)
@@ -215,21 +217,20 @@ int common_save1_p(
     ERROR("open file ", name);
     return -1;
   }
-  common_save1_p(os, a, p, n, c);
+  int status = common_save1_p(os, a, p, n, c);
+  ERROR_TEST(0 != status);
   os.close();
-  return 0;
+  return status;
 }
 
 template <typename T, typename T2>
 int common_read1_p(std::istream& is, T* a, T2* p, const size_t n)
 {
-  size_t i;
-  for (i = 0; i < n && is; i++)
-    is >> a[p[i]];
-  if (i < n || !is) {
-    ERROR();
-    return -1;
-  }
+  ERROR_TEST(!is);
+  size_t i = 0;
+  while (i < n && is >> a[p[i]])
+    i++;
+  ERROR_TEST(i < n);
   return 0;
 }
 
@@ -251,6 +252,7 @@ template <typename T>
 int common_save2(
     std::ostream& os, T* p, const size_t n1, const size_t n2, const char c)
 {
+  ERROR_TEST(!os);
   for (size_t i = 0; i < n1; i++) {
     if (n2 > 0) {
       os << *p++;
@@ -271,9 +273,10 @@ int common_save2(
     ERROR("open file ", name);
     return -1;
   }
-  common_save2(os, p, n1, n2, c);
+  int status = common_save2(os, p, n1, n2, c);
+  ERROR_TEST(0 != status);
   os.close();
-  return 0;
+  return status;
 }
 
 template <typename T>
@@ -306,6 +309,10 @@ int common_read2(const char* name, T* p, T2* n)
 template <typename T, const size_t n1, const size_t n2>
 std::ostream& operator<<(std::ostream& os, T (&a)[n1][n2])
 {
+  if (!os) {
+    ERROR();
+    return os;
+  }
   T(*pp)[n2] = a;
   for (size_t i = 0; i < n1; i++) {
     if (n2 > 0) {
@@ -323,6 +330,7 @@ std::ostream& operator<<(std::ostream& os, T (&a)[n1][n2])
 template <typename T, const size_t n1, const size_t n2>
 int common_save2(std::ostream& os, T (&a)[n1][n2], const char c)
 {
+  ERROR_TEST(!os);
   T(*pp)[n2] = a;
   for (size_t i = 0; i < n1; i++) {
     if (n1 > 0) {
@@ -344,34 +352,46 @@ int common_save2(const char* name, T (&a)[n1][n2], const char c)
     ERROR("open file ", name);
     return -1;
   }
-  common_save2(os, a, c);
+  int status = common_save2(os, a, c);
+  ERROR_TEST(0 != status);
   os.close();
-  return 0;
+  return status;
 }
 
 template <typename T, const size_t n1, const size_t n2>
 std::istream& operator>>(std::istream& is, T (&a)[n1][n2])
 {
-  T(*pp)[n2] = a;
-  for (size_t i = 0; i < n1 && is; i++) {
-    T* p = *pp++;
-    for (size_t j = 0; j < n2 && is; j++) {
-      is >> *p++;
-    }
+  if (!is) {
+    ERROR();
+    return is;
   }
+  T(*pp)[n2] = a;
+  size_t i = 0;
+  for (; i < n1 && is; i++) {
+    T* p = *pp++;
+    size_t j = 0;
+    while (j < n2 && is >> *p++)
+      j++;
+    INFORM_TEST(j < n2);
+  }
+  INFORM_TEST(i < n1);
   return is;
 }
 
 template <typename T, const size_t n1, const size_t n2>
 int common_read2(std::istream& is, T (&a)[n1][n2])
 {
+  ERROR_TEST(!is);
   T(*pp)[n2] = a;
-  for (size_t i = 0; i < n1 && is; i++) {
+  size_t i = 0;
+  for (; i < n1 && is; i++) {
     T* p = *pp++;
-    for (size_t j = 0; j < n2 && is; j++) {
-      is >> *p++;
-    }
+    size_t j = 0;
+    while (j < n2 && is >> *p++)
+      j++;
+    INFORM_TEST(j < n2);
   }
+  INFORM_TEST(i < n1);
   return 0;
 }
 
@@ -384,9 +404,6 @@ int common_read2(const char* name, T (&a)[n2][n1])
     return -1;
   }
   int status = common_read2(is, a);
-  if (!is) {
-    status = -1;
-  }
   is.close();
   return status;
 }
@@ -396,6 +413,7 @@ template <typename T, typename T2, const size_t n>
 int common_save2_size(
     std::ostream& os, T* (&a)[n], T2 (&size)[n], const char c)
 {
+  ERROR_TEST(!os);
   T** pa = a;
   T2* ps = size;
   for (size_t i = 0; i < n; ps++, pa++, i++) {
@@ -460,6 +478,7 @@ template <typename T, typename T2>
 int common_save2_size(
     std::ostream& os, T** a, T2* size, const size_t n, const char c)
 {
+  ERROR_TEST(!os);
   for (size_t i = 0; i < n; size++, a++, i++) {
     if (*size > 0) {
       T* t = *a;
@@ -481,24 +500,25 @@ int common_save2_size(
     ERROR("open file ", name);
     return -1;
   }
-  common_save2_size(os, a, size, n, c);
+  int status = common_save2_size(os, a, size, n, c);
+  ERROR_TEST(0 != status);
   os.close();
-  return 0;
+  return status;
 }
 
 template <typename T, typename T2>
 int common_read2_size(std::istream& is, T** a, T2* size, const size_t n)
 {
+  ERROR_TEST(!is);
   size_t i;
   for (i = 0; i < n && is; size++, a++, i++) {
     T* t = *a;
-    for (size_t j = 0; j < *size && is; j++) {
-      is >> *t++;
-    }
+    size_t j = 0;
+    while (j < *size && is >> *t++)
+      j++;
+    ERROR_TEST(j < *size);
   }
-  if (i < n || !is) {
-    return -1;
-  }
+  ERROR_TEST(i < n);
   return 0;
 }
 
@@ -518,6 +538,7 @@ int common_read2_size(const char* name, T** a, T2* size, const size_t n)
 template <typename T, typename T2>
 int common_read2_0_size(std::istream& is, T* a, T2* size, T2* n)
 {
+  ERROR_TEST(!is);
   std::string s;
   std::istringstream istr;
   T t;
@@ -557,6 +578,7 @@ int common_read2_0_size(const char* name, T* a, T2* size, T2* n)
 template <typename T, typename T2>
 int common_read2_0_size(std::istream& is, T** a, T2* size, T2* n)
 {
+  ERROR_TEST(!is);
   std::string s;
   std::istringstream istr;
   T t, *p;
@@ -619,24 +641,25 @@ int common_save2(
     ERROR("open file ", name);
     return -1;
   }
-  common_save2(os, a, n1, n2, c);
+  int status = common_save2(os, a, n1, n2, c);
+  ERROR_TEST(0 != status);
   os.close();
-  return 0;
+  return status;
 }
 
 template <typename T>
 int common_read2(std::istream& is, T** a, const size_t n1, const size_t n2)
 {
+  ERROR_TEST(!is);
   size_t i;
   for (i = 0; i < n1 && is; i++) {
     T* p = a[i];
-    for (size_t j = 0; j < n2 && is; j++) {
-      is >> *p++;
-    }
+    size_t j = 0;
+    while (j < n2 && is >> *p++)
+      j++;
+    ERROR_TEST(j < n2);
   }
-  if (i < n1 || !is) {
-    return -1;
-  }
+  ERROR_TEST(i < n1);
   return 0;
 }
 
@@ -657,6 +680,10 @@ int common_read2(const char* name, T** a, const size_t n1, const size_t n2)
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
 {
+  if (!os) {
+    ERROR();
+    return os;
+  }
   if (!v.empty()) {
     os << v[0];
     for (size_t i = 1; i < v.size(); i++) {
@@ -669,6 +696,7 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
 template <typename T>
 int common_save1(std::ostream& os, const std::vector<T>& v, const char c)
 {
+  ERROR_TEST(!os);
   if (!v.empty()) {
     os << v[0];
     for (size_t i = 1; i < v.size(); ++i) {
@@ -686,30 +714,30 @@ int common_save1(const char* name, const std::vector<T>& v, const char c)
     ERROR("open file ", name);
     return -1;
   }
-  common_save1(os, v, c);
+  int status = common_save1(os, v, c);
+  ERROR_TEST(0 != status);
   os.close();
-  return 0;
+  return status;
 }
 
 template <typename T>
 std::istream& operator>>(std::istream& is, std::vector<T>& v)
 {
-  for (typename std::vector<T>::iterator i = v.begin(); i != v.end() && is;
-       i++) {
-    is >> *i;
+  if (!is) {
+    ERROR();
+    return is;
+  }
+  for (auto& i : v) {
+    is >> i;
   }
   return is;
 }
 
 template <typename T> int common_read1(std::istream& is, std::vector<T>& v)
 {
-  if (!is) {
-    ERROR();
-    return -1;
-  }
-  for (typename std::vector<T>::iterator i = v.begin(); i != v.end() && is;
-       i++)
-    is >> *i;
+  ERROR_TEST(!is);
+  for (auto& i : v)
+    is >> i;
   return 0;
 }
 
@@ -720,37 +748,28 @@ template <typename T> int common_read1(const char* name, std::vector<T>& v)
     ERROR("open file ", name);
     return -1;
   }
-  common_read1(is, v);
+  int status = common_read1(is, v);
   is.close();
-  return 0;
+  return status;
 }
 
 template <typename T>
-int common_read1_0(std::istream& is, std::vector<T>& v, const unsigned n)
+int common_read1_0(std::istream& is, std::vector<T>& v, unsigned n)
 {
+  ERROR_TEST(!is);
   v.clear();
   if (n == 0) {
     for (T t; is >> t;)
       v.push_back(t);
   } else {
-    std::string s;
-    std::istringstream istr;
-    T t;
-    for (unsigned i = 0; i < n; i++) {
-      getline(is, s);
-      if (!is)
-        return -1;
-      istr.clear();
-      istr.str(s);
-      while (istr >> t)
-        v.push_back(t);
-    }
+    for (T t; n > 0 && is >> t; --n)
+      v.push_back(t);
   }
   return 0;
 }
 
 template <typename T>
-int common_read1_0(const char* name, std::vector<T>& v, const unsigned n)
+int common_read1_0(const char* name, std::vector<T>& v, unsigned n)
 {
   std::ifstream is(name);
   if (!is) {
@@ -767,8 +786,12 @@ template <typename T>
 std::ostream& operator<<(
     std::ostream& os, const std::vector<std::vector<T> >& v)
 {
-  for (size_t i = 0; i < v.size(); i++)
-    os << v[i] << '\n';
+  if (!os) {
+    ERROR();
+    return os;
+  }
+  for (auto& i : v)
+    os << i << '\n';
   return os;
 }
 
@@ -776,8 +799,9 @@ template <typename T>
 int common_save2(
     std::ostream& os, const std::vector<std::vector<T> >& v, const char c)
 {
-  for (size_t i = 0; i < v.size(); i++) {
-    common_save1(os, v[i], c);
+  ERROR_TEST(!os);
+  for (auto& i : v) {
+    common_save1(os, i, c);
     os << '\n';
   }
   return 0;
@@ -792,32 +816,29 @@ int common_save2(
     ERROR("open file ", name);
     return -1;
   }
-  common_save2(os, v, c);
+  int status = common_save2(os, v, c);
   os.close();
-  return 0;
+  return status;
 }
 
 template <typename T>
 std::istream& operator>>(std::istream& is, std::vector<std::vector<T> >& v)
 {
-  for (typename std::vector<std::vector<T> >::iterator i = v.begin();
-       i != v.end() && is; i++) {
-    is >> *i;
+  if (!is) {
+    ERROR();
+    return is;
   }
+  for (auto& i : v)
+    is >> i;
   return is;
 }
 
 template <typename T>
 int common_read2(std::istream& is, std::vector<std::vector<T> >& v)
 {
-  if (!is) {
-    ERROR();
-    return -1;
-  }
-  for (typename std::vector<std::vector<T> >::iterator i = v.begin();
-       i != v.end() && is; i++) {
-    common_read1(is, *i);
-  }
+  ERROR_TEST(!is);
+  for (auto& i : v)
+    common_read1(is, i);
   return 0;
 }
 
@@ -829,9 +850,8 @@ int common_read2(const char* name, std::vector<std::vector<T> >& v)
     ERROR("open file ", name);
     return -1;
   }
-  for (typename std::vector<std::vector<T> >::iterator i = v.begin();
-       i != v.end() && is; i++)
-    common_read1(is, *i);
+  for (auto& i : v)
+    common_read1(is, i);
   is.close();
   return 0;
 }
@@ -839,11 +859,9 @@ int common_read2(const char* name, std::vector<std::vector<T> >& v)
 template <typename T>
 int common_read2_0(std::istream& is, std::vector<std::vector<T> >& v)
 {
-  if (!is)
-    return -1;
+  ERROR_TEST(!is);
   std::string s;
   std::istringstream istr;
-  typename std::vector<std::vector<T> >::reverse_iterator p;
   T t;
   v.clear();
   while (1) {
@@ -853,10 +871,8 @@ int common_read2_0(std::istream& is, std::vector<std::vector<T> >& v)
     istr.clear();
     istr.str(s);
     v.push_back(std::vector<T>());
-    p = v.rbegin();
-    while (istr >> t) {
+    for (auto p = v.rbegin(); istr >> t;)
       p->push_back(t);
-    }
   }
   return 0;
 }

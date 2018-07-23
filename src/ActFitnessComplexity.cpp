@@ -2,17 +2,33 @@
 #ifdef ACT_FITNESS_COMPLEXITY
 
 #include "common.h"
+#include <algorithm>
 using namespace std;
 
 // *******************************************************
-int count_k1(const NodeType NC, const NodeType NP, const VVNodeType& mcp,
-    VNodeType& k1, const char* name)
+int count_k1(const VVNodeType& mcp, VNodeType& k1, const char* name)
 {
-  k1.assign(NC, 0);
-  for (NodeType c = 0; c < NC; c++) {
-    for (NodeType p = 0; p < NP; p++) {
+  const NodeType NC = mcp.size(), NP = mcp[0].size();
+  k1.assign(NP, 0);
+  for (NodeType c = 0; c < NC; ++c) {
+    for (NodeType p = 0; p < NP; ++p) {
       if (mcp[c][p])
         k1[c]++;
+    }
+  }
+  if (name != NULL && name[0] != '\0')
+    common_save1(name, k1, '\n');
+  return 0;
+}
+
+int count_product_k1(const VVNodeType& mcp, VNodeType& k1, const char* name)
+{
+  const NodeType NC = mcp.size(), NP = mcp[0].size();
+  k1.assign(NP, 0);
+  for (NodeType c = 0; c < NC; ++c) {
+    for (NodeType p = 0; p < NP; ++p) {
+      if (mcp[c][p])
+        k1[p]++;
     }
   }
   if (name != NULL && name[0] != '\0')
@@ -196,28 +212,30 @@ int filter_trade_name(const char* tradeFilename, const char* countryFilename,
 }
 
 int filter_trade_name_OEC(const char* tradeFilename,
-    const char* countryFilename, const char* productFilename)
+    const char* countryFilename, const char* productFilename,
+    const NodeType YEAR1, const NodeType YEAR2)
 {
-  FILE* fp = fopen(tradeFilename, "r");
-  if (NULL == fp) {
+  ifstream is(tradeFilename);
+  if (!is) {
     ERROR();
     return -1;
   }
-  const unsigned NC = 26 * 26 * 26, NP = 9999;
-  unsigned cVal[NC] = { 0 }, pVal[NP] = { 0 };
+  const NodeType NC = 26 * 26 * 26, NP = 9999;
+  NodeType nc = 0, np = 0, cVal[NC] = { 0 }, pVal[NP] = { 0 }, year;
   char origin[9], s[999];
-  unsigned nc = 0, np = 0;
-  fgets(s, 999, fp);
-  for (unsigned t, pd; 2 == fscanf(fp, "%*s%s%u%*s", origin, &pd);) {
-    if (!cVal[t = common_atoi<unsigned>(origin)])
+  is.getline(s, 999);
+  for (NodeType t, pd; is >> year >> origin >> pd >> s;) {
+    if (year < YEAR1 || year >= YEAR2)
+      continue;
+    if (!cVal[t = common_atoi<NodeType>(origin)])
       cVal[t] = ++nc;
     if (!pVal[pd])
       pVal[pd] = ++np;
   }
-  fclose(fp);
+  is.close();
 
   char cChar[300][4] = { { 0 } };
-  for (unsigned i = 0, c = 0; i < NC && c < nc; ++i) {
+  for (NodeType i = 0, c = 0; i < NC && c < nc; ++i) {
     if (cVal[i]) {
       common_itoa(i, cChar[c], 'a', 26, 3);
       common_cstring_reverse(cChar[c++]);
@@ -227,6 +245,92 @@ int filter_trade_name_OEC(const char* tradeFilename,
 
   common_save_bool(productFilename, &pVal[0], 9999, '\n');
 
+  return 0;
+}
+
+int filter_trade_name_NBERUN_wtf(const char* tradeFilename,
+    const char* countryFilename, const char* productFilename,
+    const char* countryFilename0, const char* productFilename0)
+{
+  if (tradeFilename == NULL || tradeFilename[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ifstream is(tradeFilename);
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  VString cVal, pVal;
+  if (countryFilename0 != NULL && countryFilename0[0] != '\0')
+    INFORM_TEST(0 != common_read1_0(countryFilename0, cVal));
+  if (productFilename0 != NULL && productFilename0[0] != '\0')
+    INFORM_TEST(0 != common_read1_0(productFilename0, pVal));
+  typedef char CS[99];
+  CS node, year, importer, exporter, unit, dot, value, quantity;
+  string icode, ecode, sitc4;
+  char s[999];
+  for (is.getline(s, 999); is >> node >> year >> icode >> importer >> ecode
+       >> exporter >> sitc4 >> unit >> dot >> value >> quantity;) {
+    if (icode != "100000" || ecode == "100000" || sitc4 == "0") // World
+      continue;
+    if (ecode.length() != 6 || sitc4.length() != 4) {
+      ERROR(node, "\t", ecode, "\t", sitc4, "\t", tradeFilename);
+      return -1;
+    }
+    if (find(cVal.begin(), cVal.end(), ecode) == cVal.end())
+      cVal.push_back(ecode);
+    if (find(pVal.begin(), pVal.end(), sitc4) == pVal.end())
+      pVal.push_back(sitc4);
+  }
+  is.close();
+  sort(cVal.begin(), cVal.end());
+  common_save1(countryFilename, cVal, '\n');
+  sort(pVal.begin(), pVal.end());
+  common_save1(productFilename, pVal, '\n');
+  return 0;
+}
+
+int filter_trade_name_NBERUN_wtf2(const char* tradeFilename,
+    const char* countryFilename, const char* productFilename,
+    const char* countryFilename0, const char* productFilename0)
+{
+  if (tradeFilename == NULL || tradeFilename[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ifstream is(tradeFilename);
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  VString cVal, pVal;
+  if (countryFilename0 != NULL && countryFilename0[0] != '\0')
+    INFORM_TEST(0 != common_read1_0(countryFilename0, cVal));
+  if (productFilename0 != NULL && productFilename0[0] != '\0')
+    INFORM_TEST(0 != common_read1_0(productFilename0, pVal));
+  typedef char CS[99];
+  CS node, year, importer, exporter, unit, dot, value, quantity;
+  string icode, ecode, sitc4;
+  char s[999];
+  for (is.getline(s, 999); is >> node >> year >> icode >> importer >> ecode
+       >> exporter >> sitc4 >> unit >> dot >> value >> quantity;) {
+    if (icode == "100000" || ecode == "100000" || sitc4 == "0") // World
+      continue;
+    if (ecode.length() != 6 || sitc4.length() != 4) {
+      ERROR(node, "\t", ecode, "\t", sitc4, "\t", tradeFilename);
+      return -1;
+    }
+    if (find(cVal.begin(), cVal.end(), ecode) == cVal.end())
+      cVal.push_back(ecode);
+    if (find(pVal.begin(), pVal.end(), sitc4) == pVal.end())
+      pVal.push_back(sitc4);
+  }
+  is.close();
+  sort(cVal.begin(), cVal.end());
+  common_save1(countryFilename, cVal, '\n');
+  sort(pVal.begin(), pVal.end());
+  common_save1(productFilename, pVal, '\n');
   return 0;
 }
 
@@ -276,7 +380,7 @@ int save_export_data(const char* s, VVDouble expts)
       if (expts[i][j] <= 0.001)
         fprintf(fp, "\t0");
       else
-        fprintf(fp, "\t%.2f", expts[i][j]);
+        fprintf(fp, "[t%.2f", expts[i][j]);
     fprintf(fp, "\n");
   }
   fclose(fp);
@@ -334,7 +438,7 @@ int filter_sum_trade(const char* tradeFilename, const char* countryFilename,
 
 int filter_sum_trade_OEC(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
-    const char* dirSave, const NodeType YEAR1)
+    const char* dirSave, const NodeType YEAR1, const NodeType YEAR2)
 {
   VNodeType cVal(26 * 26 * 26, 0);
   NodeType NC = 0;
@@ -345,38 +449,99 @@ int filter_sum_trade_OEC(const char* tradeFilename,
   cout << NC << "\t" << NP << endl;
 
   VVLinkType expts(NC, VLinkType(NP, 0));
-  {
-    FILE* fp = fopen(tradeFilename, "r");
-    if (NULL == fp) {
-      ERROR();
-      return -1;
-    }
-    char origin[4], s[999];
-    unsigned year, pd, year0 = YEAR1;
-    long long unsigned l = 1;
-    fgets(s, 999, fp);
-    for (LinkType v; 4 == fscanf(fp, "%u%s%u%llu", &year, origin, &pd, &v);
-         ++l) {
-      if (year >= YEAR1 && year < year0) {
-        ERROR();
-        break;
-      }
-      if (year > year0) {
-        cout << l << "\t" << year0 << endl;
-        sprintf(s, "%s%u.export.txt", dirSave, year0);
-        common_save2(s, expts);
-        expts.assign(NC, VLinkType(NP, 0));
-        expts[cVal[common_atoi<size_t>(origin)]][pVal[pd]] = v;
-        year0 = year;
-      } else { // year==year0
-        expts[cVal[common_atoi<size_t>(origin)]][pVal[pd]] += v;
-      }
-    }
-    cout << l << "\t" << year0 << endl;
-    sprintf(s, "%s%u.export.txt", dirSave, year0);
-    common_save2(s, expts);
-    fclose(fp);
+  ifstream is(tradeFilename);
+  if (!is) {
+    ERROR();
+    return -1;
   }
+  char origin[4], s[999];
+  string name = dirSave;
+  NodeType year, pd, year0 = YEAR1;
+  LinkType l = 1;
+  is.getline(s, 999);
+  for (LinkType v; is >> year >> origin >> pd >> v; ++l) {
+    if (YEAR1 > year || year >= YEAR2)
+      continue;
+    if (year > year0) {
+      cout << l << "\t" << year0 << endl;
+      common_save2((name + to_string(year0) + ".export.txt").c_str(), expts);
+      expts.assign(NC, VLinkType(NP, 0));
+      expts[cVal[common_atoi<size_t>(origin)]][pVal[pd]] = v;
+      year0 = year;
+    } else if (year == year0) { // year==year0
+      expts[cVal[common_atoi<size_t>(origin)]][pVal[pd]] += v;
+    } else { // year<year0
+      ERROR();
+    }
+  }
+  cout << l << "\t" << year0 << endl;
+  sprintf(s, "%s%u.export.txt", dirSave, year0);
+  common_save2((name + to_string(year0) + ".export.txt").c_str(), expts);
+  is.close();
+
+  return 0;
+}
+
+int filter_sum_trade_NBER_wtf(const char* tradeFilename,
+    const char* countryFilename, const char* productFilename,
+    const char* saveName)
+{
+  VString cVal, pVal;
+  ERROR_TEST(common_read1_0(countryFilename, cVal));
+  ERROR_TEST(common_read1_0(productFilename, pVal));
+  const NodeType NC = cVal.size(), NP = pVal.size();
+
+  VVDouble expts(NC, VDouble(NP, 0));
+  ifstream is(tradeFilename);
+  ERROR_TEST(!is);
+  typedef char CS[99];
+  CS node, year, importer, exporter, unit, dot, quantity;
+  char s[999];
+  string icode, ecode, sitc4;
+  double value;
+  is.getline(s, 999);
+  for (size_t c, p; is >> node >> year >> icode >> importer >> ecode
+       >> exporter >> sitc4 >> unit >> dot >> value >> quantity;) {
+    if (icode != "100000" || ecode == "100000" || sitc4 == "0") // World
+      continue;
+    c = find(cVal.begin(), cVal.end(), ecode) - cVal.begin();
+    p = find(pVal.begin(), pVal.end(), sitc4) - pVal.begin();
+    expts[c][p] += value;
+  }
+  is.close();
+  common_save2(saveName, expts);
+
+  return 0;
+}
+
+int filter_sum_trade_NBER_wtf2(const char* tradeFilename,
+    const char* countryFilename, const char* productFilename,
+    const char* saveName)
+{
+  VString cVal, pVal;
+  ERROR_TEST(common_read1_0(countryFilename, cVal));
+  ERROR_TEST(common_read1_0(productFilename, pVal));
+  const NodeType NC = cVal.size(), NP = pVal.size();
+
+  VVDouble expts(NC, VDouble(NP, 0));
+  ifstream is(tradeFilename);
+  ERROR_TEST(!is);
+  typedef char CS[99];
+  CS node, year, importer, exporter, unit, dot, quantity;
+  char s[999];
+  string icode, ecode, sitc4;
+  double value;
+  is.getline(s, 999);
+  for (size_t c, p; is >> node >> year >> icode >> importer >> ecode
+       >> exporter >> sitc4 >> unit >> dot >> value >> quantity;) {
+    if (icode == "100000" || ecode == "100000" || sitc4 == "0") // World
+      continue;
+    c = find(cVal.begin(), cVal.end(), ecode) - cVal.begin();
+    p = find(pVal.begin(), pVal.end(), sitc4) - pVal.begin();
+    expts[c][p] += value;
+  }
+  is.close();
+  common_save2(saveName, expts);
 
   return 0;
 }
@@ -549,6 +714,94 @@ int filter_index_export_0(const char* epDIR, const char* indexFile,
       }
     }
   }
+  sort(index.begin(), index.end());
+  common_save1(indexFile, index, '\n');
+  sort(pdIndex.begin(), pdIndex.end());
+  common_save1(pdIndexFile, pdIndex, '\n');
+
+  return 0;
+}
+
+int filter_index_export_0_NBER_wtf(const char* epDIR, const char* indexFile,
+    const char* pdIndexFile, const NodeType YEAR1, const NodeType YEAR2,
+    const NodeType YEAR0)
+{
+  const NodeType NYEAR = YEAR2 - YEAR1 + 1;
+  ERROR_TEST(YEAR1 > YEAR0 || YEAR0 > YEAR2);
+  vector<VVString> ep(NYEAR);
+  string s = epDIR;
+  for (NodeType i = 0; i < NYEAR; ++i) {
+    common_read2_0((s + to_string(i + YEAR1) + ".export.txt").c_str(), ep[i]);
+    cout << i + YEAR1 << "\t" << ep[i].size() << "\t" << ep[i][0].size()
+         << endl;
+  }
+
+  NodeType NC = ep[0].size(), NP = ep[0][0].size();
+  VNodeType index(NC), pdIndex(NP);
+  for (NodeType ci = 0; ci < index.size(); ++ci)
+    index[ci] = ci;
+  for (NodeType pi = 0; pi < pdIndex.size(); ++pi)
+    pdIndex[pi] = pi;
+
+  for (bool flag = true; flag;) {
+    flag = false;
+
+    for (NodeType ci = 0; ci < index.size();) { // filter country
+      NodeType c = index[ci], year = YEAR1;
+      for (NodeType pi; year <= YEAR2; ++year) {
+        for (pi = 0;
+             pi < pdIndex.size() && ep[year - YEAR1][c][pdIndex[pi]] == "0";
+             ++pi)
+          continue;
+        if (pi >= pdIndex.size()) {
+          flag = true;
+          index[ci] = index.back();
+          index.pop_back();
+          break;
+        }
+      }
+      if (year > YEAR2)
+        ++ci;
+    }
+
+    for (NodeType pi = 0; pi < pdIndex.size();) { // filter product
+      NodeType p = pdIndex[pi], year = YEAR1;
+      for (NodeType ci; year <= YEAR2; ++year) {
+        for (ci = 0;
+             ci < index.size() && ep[year - YEAR1][index[ci]][p] == "0"; ++ci)
+          continue;
+        if (ci >= index.size()) {
+          flag = true;
+          pdIndex[pi] = pdIndex.back();
+          pdIndex.pop_back();
+          break;
+        }
+      }
+      if (year > YEAR2)
+        ++pi;
+    }
+
+    for (NodeType ci = 0; ci < index.size();) { // filter country
+      for (NodeType pi = 0; pi < pdIndex.size(); ++pi) {
+        NodeType p = pdIndex[pi], year = YEAR1;
+        bool f1 = true, f2 = ep[year - YEAR1][index[ci]][p] == "0", f3;
+        for (year = YEAR1 + 1; year <= YEAR2; ++year) { // cal f3
+          f3 = ep[year - YEAR1][index[ci]][p] == "0";
+          if (f1 && !f2 && f3) {
+            flag = true;
+            index[ci] = index.back();
+            index.pop_back();
+            break;
+          }
+          f1 = f2;
+          f2 = f3;
+        }
+        if (year <= YEAR2)
+          break;
+      }
+    }
+  }
+
   sort(index.begin(), index.end());
   common_save1(indexFile, index, '\n');
   sort(pdIndex.begin(), pdIndex.end());

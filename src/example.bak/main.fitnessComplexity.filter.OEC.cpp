@@ -1,6 +1,6 @@
 // g++ -o main.exe *.cpp -O3 -Wall
 #include "main.h"
-#ifdef MAIN_FITNESS_COMPLEXITY_FILTER
+#ifdef MAIN_FITNESS_COMPLEXITY_FILTER_OEC
 
 #include "common.h"
 #include "networks.h"
@@ -14,38 +14,63 @@ int main(int argc, char** argv)
                DIR_INFO = DIR0 + "info/";
 
   // 筛选进出口数据的国家和产品名
-  filter_trade_name_OEC((DIR_DATA0 + "year_origin_sitc_rev2.txt").c_str(),
-      (DIR_INFO + "country.names3c.export.txt").c_str(),
-      (DIR_INFO + "product.names4d.export.txt").c_str(), 1995, 1996);
+  for (unsigned year = 1995; year <= 2014; ++year) {
+    cout << year << endl;
+    ERROR_TEST(filter_trade_name_OEC(
+        (string("data/DataSet/NBER-UN - WORLD TRADE FLOWS/NBER-UN/wtf")
+            + (year % 100 == 0 ? "0" : "") + to_string(year % 100) + ".txt")
+            .c_str(),
+        (DIR_INFO + "country.namesCode.export2.all.txt").c_str(),
+        (DIR_INFO + "product.names4c.export2.all.txt").c_str(),
+        (DIR_INFO + "country.namesCode.export2.all.txt").c_str(),
+        (DIR_INFO + "product.names4c.export2.all.txt").c_str()));
+  }
 
-  /*
   // sum export data
-  filter_sum_trade_OEC((DIR_DATA0 + "year_origin_sitc_rev2.txt").c_str(),
-      (DIR_INFO + "country.names3c.export.txt").c_str(),
-      (DIR_INFO + "product.names4d.export.txt").c_str(), (DIR_DATA).c_str(),
-      1995, 1996);
-  */
+  for (unsigned year = 1962; year <= 2000; ++year) {
+    cout << year << endl;
+    ERROR_TEST(filter_sum_trade_NBER_wtf(
+        (string("data/DataSet/NBER-UN - WORLD TRADE FLOWS/NBER-UN/wtf")
+            + (year % 100 == 0 ? "0" : "") + to_string(year % 100) + ".txt")
+            .c_str(),
+        (DIR_INFO + "country.namesCode.export2.all.txt").c_str(),
+        (DIR_INFO + "product.names4c.export2.all.txt").c_str(),
+        (DIR_DATA0 + to_string(year) + ".export.txt").c_str()));
+  }
+  * /
+
+      // 剔除 0 值国家和产品
+      ERROR_TEST(filter_index_export_0_NBER_wtf((DIR_DATA0).c_str(),
+          (DIR_INFO + "country.index.export2.not0.txt").c_str(),
+          (DIR_INFO + "product.index.export2.not0.txt").c_str()));
 
   /*
+  // 筛选进出口和 gdp 的共同国家名
+  filter_sum_trade_OEC((DIR_DATA0 + "year_origin_sitc_rev2.txt").c_str(),
+      (DIR_INFO + "country.nameCcode.export.txt").c_str(),
+      (DIR_INFO + "product.names4c.export.txt").c_str(), (DIR_DATA).c_str(),
+      1995, 1996);
+
   // 剔除 0 值国家和产品
   filter_index_export_0((DIR_DATA0).c_str(),
       (DIR_INFO + "country.index.export.not0.txt").c_str(),
       (DIR_INFO + "product.index.export.not0.txt").c_str(), 2000, 2014);
 
   // 输出可用进出口，用于进一步分析
-  ((DIR_DATA0).c_str(),
-      (DIR_INFO + "country.index.export.not0.txt").c_str(),
-      (DIR_INFO + "product.index.export.not0.txt").c_str(),
-  DIR_DATA.c_str(),2000,2010);
+  ((DIR_DATA0).c_str(), (DIR_INFO + "country.index.export.not0.txt").c_str(),
+      (DIR_INFO + "product.index.export.not0.txt").c_str(), DIR_DATA.c_str(),
+      2000, 2010);
   */
 
   /*
   // 筛选进出口和 gdp 的共同国家名
-  filter_export_gdp_country_name((DIR_DATA0 + "country_names.txt").c_str(),
+  filter_export_gdp_country_name((DIR_DATA0 +
+  "country_names.txt").c_str(),
       (DIR_DATA0 + "country.names3c.export.txt").c_str(),
       (DIR_DATA0 + "country.namesFull.gdp.txt").c_str(),
       (DIR_DATA0 + "country.namesFull").c_str());
-  // 手动查找相同国家，得到 same.export.txt 和 same.gdp.txt，再执行下面步骤
+  // 手动查找相同国家，得到 same.export.txt 和
+  same.gdp.txt，再执行下面步骤
   filter_index_same_all((DIR_DATA0 + "country.namesFull").c_str(),
       (DIR_DATA0 + "country.index.same.all").c_str());
 

@@ -1,6 +1,6 @@
 // g++ -o main.exe *.cpp -O3 -Wall
 #include "main.h"
-#ifdef MAIN_FITNESS_COMPLEXITY_FILTER_NBER_UN
+#ifdef MAIN_FITNESS_COMPLEXITY_FILTER
 
 #include "common.h"
 #include "networks.h"
@@ -11,44 +11,47 @@ int main(int argc, char** argv)
   SHOW_TIME(cout); // 显示系统时间
   const string DIR0 = "data/complexity/NBER-UN/", DIR_DATA0 = DIR0 + "data0/",
                DIR_DATA = DIR0 + "data/", DIR_INFO = DIR0 + "info/";
+  const NodeType YEAR1 = 1984, YEAR2 = 2001;
 
-  /*
-  // 筛选进出口数据的国家和产品名
-  for (unsigned year = 1962; year <= 2000; ++year) {
-    cout << year << endl;
-    ERROR_TEST(filter_trade_name_NBERUN_wtf2(
-        (string("data/DataSet/NBER-UN - WORLD TRADE FLOWS/NBER-UN/wtf")
-            + (year % 100 == 0 ? "0" : "") + to_string(year % 100) + ".txt")
-            .c_str(),
-        (DIR_INFO + "country.namesCode.export2.all.txt").c_str(),
-        (DIR_INFO + "product.names4c.export2.all.txt").c_str(),
-        (DIR_INFO + "country.namesCode.export2.all.txt").c_str(),
-        (DIR_INFO + "product.names4c.export2.all.txt").c_str()));
-  }
+  if (0) {
+    // 筛选进出口数据的国家和产品名
+    for (unsigned year = YEAR1; year < YEAR2; ++year) {
+      cout << year << endl;
+      ERROR_TEST(filter_trade_name_NBERUN_wtf(
+          (string("data/DataSet/NBER-UN - WORLD TRADE FLOWS/NBER-UN/wtf")
+              + (year % 100 == 0 ? "0" : "") + to_string(year % 100) + ".txt")
+              .c_str(),
+          (DIR_INFO + "country.namesCode.export.all.txt").c_str(),
+          (DIR_INFO + "product.names4c.export.all.txt").c_str()));
+    }
 
-  // sum export data
-  for (unsigned year = 1962; year <= 2000; ++year) {
-    cout << year << endl;
-    ERROR_TEST(filter_sum_trade_NBER_wtf(
-        (string("data/DataSet/NBER-UN - WORLD TRADE FLOWS/NBER-UN/wtf")
-            + (year % 100 == 0 ? "0" : "") + to_string(year % 100) + ".txt")
-            .c_str(),
-        (DIR_INFO + "country.namesCode.export2.all.txt").c_str(),
-        (DIR_INFO + "product.names4c.export2.all.txt").c_str(),
-        (DIR_DATA0 + to_string(year) + ".export.txt").c_str()));
+    // sum export data
+    for (unsigned year = YEAR1; year < YEAR2; ++year) {
+      cout << year << endl;
+      ERROR_TEST(filter_sum_trade_NBER_wtf(
+          (string("data/DataSet/NBER-UN - WORLD TRADE FLOWS/NBER-UN/wtf")
+              + (year % 100 == 0 ? "0" : "") + to_string(year % 100) + ".txt")
+              .c_str(),
+          (DIR_INFO + "country.namesCode.export.all.txt").c_str(),
+          (DIR_INFO + "product.names4c.export.all.txt").c_str(),
+          (DIR_DATA0 + to_string(year) + ".export.txt").c_str()));
+    }
   }
-  */
 
   // 剔除 0 值国家和产品
   ERROR_TEST(filter_index_export_0_NBER_wtf((DIR_DATA0).c_str(),
-      (DIR_INFO + "country.index.export2.not0.txt").c_str(),
-      (DIR_INFO + "product.index.export2.not0.txt").c_str()));
+      (DIR_INFO + "country.index.export.not0.txt").c_str(),
+      (DIR_INFO + "product.index.export.not0.txt").c_str(),
+      (DIR_INFO + "product.index.export.all.nonaggregate.txt").c_str(), YEAR1,
+      YEAR2));
+  return 0;
 
   /*
   // 筛选进出口和 gdp 的共同国家名
   filter_sum_trade_OEC((DIR_DATA0 + "year_origin_sitc_rev2.txt").c_str(),
       (DIR_INFO + "country.nameCcode.export.txt").c_str(),
-      (DIR_INFO + "product.names4c.export.txt").c_str(), (DIR_DATA).c_str(),
+      (DIR_INFO + "product.names4c.export.txt").c_str(),
+  (DIR_DATA).c_str(),
       1995, 1996);
 
   // 剔除 0 值国家和产品
@@ -57,8 +60,10 @@ int main(int argc, char** argv)
       (DIR_INFO + "product.index.export.not0.txt").c_str(), 2000, 2014);
 
   // 输出可用进出口，用于进一步分析
-  ((DIR_DATA0).c_str(), (DIR_INFO + "country.index.export.not0.txt").c_str(),
-      (DIR_INFO + "product.index.export.not0.txt").c_str(), DIR_DATA.c_str(),
+  filter_data_export((DIR_DATA0).c_str(), (DIR_INFO +
+  "country.index.export.not0.txt").c_str(),
+      (DIR_INFO + "product.index.export.not0.txt").c_str(),
+  DIR_DATA.c_str(),
       2000, 2010);
   */
 

@@ -1,4 +1,3 @@
-// g++ -o main.exe *.cpp -O3 -Wall
 #include "main.h"
 #ifdef MAIN_FITNESS_COMPLEXITY_PLOTDATA
 
@@ -7,27 +6,18 @@
 using namespace std;
 // ********************************************************
 
-int main(int argc, char** argv)
+int main_fitness_complexity_plotdata(int argc, char** argv)
 {
-  SHOW_TIME(cout); // 显示系统时间
-
-  const string DIR0 = "data/complexity/", DIR_DATA = DIR0 + "data/",
-               DIR_PLOT_DATA = DIR0 + "plot/data/";
+  const string DIR0 = "data/complexity/OEC.sitc_rev2/",
+               DIR_DATA0 = DIR0 + "data0/", DIR_DATA = DIR0 + "data/",
+               DIR_INFO = DIR0 + "info/";
   const string methods[] = { "mass", "heat", "hybrid" };
   // const string methods[] = { "mass" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
-  const int YEAR1 = 1995, YEAR2 = 2014, NYEAR = YEAR2 - YEAR1 + 1;
+  const int YEAR1 = 2001, YEAR2 = 2014+1, NYEAR = YEAR2 - YEAR1 ;
 
   const size_t NC = 237, NP = 1241;
   for (int year = YEAR1; year < YEAR2; year++) {
-    string y1;
-    stringstream ss;
-    ss.clear();
-    ss.str("");
-    ss << year;
-    y1 = ss.str();
-    cout << y1 << endl;
-
     VNodeType fullIndex;
     common_read1_0(
         (DIR0 + "1995-2010.info/GDP.1995-2010.full.index.txt").c_str(),
@@ -156,7 +146,6 @@ int main(int argc, char** argv)
 
   } // year
 
-  SHOW_TIME(cout); // 显示系统时间
   return 0;
 }
 

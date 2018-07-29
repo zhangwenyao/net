@@ -1,18 +1,18 @@
-// g++ -o main.exe *.cpp -O3 -Wall
 #include "main.h"
-#ifdef MAIN_FITNESS_COMPLEXITY_FILTER_OEC
+#ifdef MAIN_FITNESS_COMPLEXITY_FILTER
 
 #include "common.h"
 #include "networks.h"
 using namespace std;
 // *****************************************************
-int main(int argc, char** argv)
+int main_fitness_complexity_filter(int argc, char** argv)
 {
-  SHOW_TIME(cout); // 显示系统时间
-  const string DIR0 = "data/complexity/OEC.sitc_rev2/",
+  const string DIR0 = "data/complexity/OEC.rzm/",
                DIR_DATA0 = DIR0 + "data0/", DIR_DATA = DIR0 + "data/",
                DIR_INFO = DIR0 + "info/";
+  const NodeType YEAR1 = 2001, YEAR2 = 2014 + 1;
 
+  if(0){}
   // 筛选进出口数据的国家和产品名
   for (unsigned year = 1995; year <= 2014; ++year) {
     cout << year << endl;
@@ -26,6 +26,7 @@ int main(int argc, char** argv)
         (DIR_INFO + "product.names4c.export2.all.txt").c_str()));
   }
 
+  /*
   // sum export data
   for (unsigned year = 1962; year <= 2000; ++year) {
     cout << year << endl;
@@ -37,10 +38,10 @@ int main(int argc, char** argv)
         (DIR_INFO + "product.names4c.export2.all.txt").c_str(),
         (DIR_DATA0 + to_string(year) + ".export.txt").c_str()));
   }
-  * /
+  */
 
-      // 剔除 0 值国家和产品
-      ERROR_TEST(filter_index_export_0_NBER_wtf((DIR_DATA0).c_str(),
+  // 剔除 0 值国家和产品
+  ERROR_TEST(filter_index_export_0_NBER_wtf((DIR_DATA0).c_str(),
           (DIR_INFO + "country.index.export2.not0.txt").c_str(),
           (DIR_INFO + "product.index.export2.not0.txt").c_str()));
 
@@ -57,7 +58,7 @@ int main(int argc, char** argv)
       (DIR_INFO + "product.index.export.not0.txt").c_str(), 2000, 2014);
 
   // 输出可用进出口，用于进一步分析
-  ((DIR_DATA0).c_str(), (DIR_INFO + "country.index.export.not0.txt").c_str(),
+  filter_data_export((DIR_DATA0).c_str(), (DIR_INFO + "country.index.export.not0.txt").c_str(),
       (DIR_INFO + "product.index.export.not0.txt").c_str(), DIR_DATA.c_str(),
       2000, 2010);
   */

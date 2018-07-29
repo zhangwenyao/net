@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include <algorithm>
+#include <iomanip>
 using namespace std;
 
 // *******************************************************
@@ -216,10 +217,7 @@ int filter_trade_name_OEC(const char* tradeFilename,
     const NodeType YEAR1, const NodeType YEAR2)
 {
   ifstream is(tradeFilename);
-  if (!is) {
-    ERROR();
-    return -1;
-  }
+  ERROR_TEST(!is);
   const NodeType NC = 26 * 26 * 26, NP = 9999;
   NodeType nc = 0, np = 0, cVal[NC] = { 0 }, pVal[NP] = { 0 }, year;
   char origin[9], s[999];
@@ -248,6 +246,7 @@ int filter_trade_name_OEC(const char* tradeFilename,
   return 0;
 }
 
+// count world
 int filter_trade_name_NBERUN_wtf(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
     const char* countryFilename0, const char* productFilename0)
@@ -262,8 +261,12 @@ int filter_trade_name_NBERUN_wtf(const char* tradeFilename,
     return -1;
   }
   VString cVal, pVal;
+  if (countryFilename0 == NULL)
+    countryFilename0 = countryFilename;
   if (countryFilename0 != NULL && countryFilename0[0] != '\0')
     INFORM_TEST(0 != common_read1_0(countryFilename0, cVal));
+  if (productFilename0 == NULL)
+    productFilename0 = productFilename;
   if (productFilename0 != NULL && productFilename0[0] != '\0')
     INFORM_TEST(0 != common_read1_0(productFilename0, pVal));
   typedef char CS[99];
@@ -291,6 +294,7 @@ int filter_trade_name_NBERUN_wtf(const char* tradeFilename,
   return 0;
 }
 
+// sum all country
 int filter_trade_name_NBERUN_wtf2(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
     const char* countryFilename0, const char* productFilename0)
@@ -305,8 +309,12 @@ int filter_trade_name_NBERUN_wtf2(const char* tradeFilename,
     return -1;
   }
   VString cVal, pVal;
+  if (countryFilename0 == NULL)
+    countryFilename0 = countryFilename;
   if (countryFilename0 != NULL && countryFilename0[0] != '\0')
     INFORM_TEST(0 != common_read1_0(countryFilename0, cVal));
+  if (productFilename0 == NULL)
+    productFilename0 = productFilename;
   if (productFilename0 != NULL && productFilename0[0] != '\0')
     INFORM_TEST(0 != common_read1_0(productFilename0, pVal));
   typedef char CS[99];
@@ -446,7 +454,7 @@ int filter_sum_trade_OEC(const char* tradeFilename,
   VNodeType pVal(9999, 0);
   NodeType NP = 0;
   read_product_names(productFilename, NP, pVal);
-  cout << NC << "\t" << NP << endl;
+  INFORM(NC, "\t", NP);
 
   VVLinkType expts(NC, VLinkType(NP, 0));
   ifstream is(tradeFilename);
@@ -459,23 +467,25 @@ int filter_sum_trade_OEC(const char* tradeFilename,
   NodeType year, pd, year0 = YEAR1;
   LinkType l = 1;
   is.getline(s, 999);
-  for (LinkType v; is >> year >> origin >> pd >> v; ++l) {
+  for (double v; is >> year >> origin >> pd >> v; ++l) {
     if (YEAR1 > year || year >= YEAR2)
       continue;
-    if (year > year0) {
-      cout << l << "\t" << year0 << endl;
-      common_save2((name + to_string(year0) + ".export.txt").c_str(), expts);
-      expts.assign(NC, VLinkType(NP, 0));
-      expts[cVal[common_atoi<size_t>(origin)]][pVal[pd]] = v;
-      year0 = year;
-    } else if (year == year0) { // year==year0
-      expts[cVal[common_atoi<size_t>(origin)]][pVal[pd]] += v;
-    } else { // year<year0
+    if (year < year0) {
       ERROR();
+    } else {
+      if (year > year0) {
+        INFORM(l, "\t", year0);
+        common_save2(
+            (name + to_string(year0) + ".export.txt").c_str(), expts);
+        expts.assign(NC, VLinkType(NP, 0));
+        year0 = year;
+      }
+      size_t c = cVal[common_atoi<size_t>(origin)], p = pVal[pd];
+      INFORM_TEST(expts[c][p] != 0);
+      expts[c][p] = v;
     }
   }
-  cout << l << "\t" << year0 << endl;
-  sprintf(s, "%s%u.export.txt", dirSave, year0);
+  INFORM(l, "\t", year0);
   common_save2((name + to_string(year0) + ".export.txt").c_str(), expts);
   is.close();
 
@@ -490,6 +500,7 @@ int filter_sum_trade_NBER_wtf(const char* tradeFilename,
   ERROR_TEST(common_read1_0(countryFilename, cVal));
   ERROR_TEST(common_read1_0(productFilename, pVal));
   const NodeType NC = cVal.size(), NP = pVal.size();
+  cout << NC << "\t" << NP << endl;
 
   VVDouble expts(NC, VDouble(NP, 0));
   ifstream is(tradeFilename);
@@ -500,16 +511,24 @@ int filter_sum_trade_NBER_wtf(const char* tradeFilename,
   string icode, ecode, sitc4;
   double value;
   is.getline(s, 999);
-  for (size_t c, p; is >> node >> year >> icode >> importer >> ecode
+  for (VStringItr c, p; is >> node >> year >> icode >> importer >> ecode
        >> exporter >> sitc4 >> unit >> dot >> value >> quantity;) {
     if (icode != "100000" || ecode == "100000" || sitc4 == "0") // World
       continue;
-    c = find(cVal.begin(), cVal.end(), ecode) - cVal.begin();
-    p = find(pVal.begin(), pVal.end(), sitc4) - pVal.begin();
-    expts[c][p] += value;
+    c = find(cVal.begin(), cVal.end(), ecode);
+    p = find(pVal.begin(), pVal.end(), sitc4);
+    if (c == cVal.end() || p == pVal.end()) {
+      INFORM();
+      continue;
+    }
+    expts[c - cVal.begin()][p - pVal.begin()] += value;
   }
   is.close();
-  common_save2(saveName, expts);
+  ofstream os(saveName);
+  ERROR_TEST(!os);
+  os << fixed << setprecision(3);
+  common_save2(os, expts);
+  os.close();
 
   return 0;
 }
@@ -546,33 +565,16 @@ int filter_sum_trade_NBER_wtf2(const char* tradeFilename,
   return 0;
 }
 
-int filter_export_gdp_country_name(const char* exportNames,
-    const char* exportNames3c, const char* gdpNames, const char* savePrefix)
+int filter_export_gdp_country_name(
+    const char* exportNames, const char* gdpNames, const char* savePrefix)
 {
-  VString vept, vept3c, veptAll, vgdp, same, diffGdp, diffEpt;
+  VString vept, veptAll, vgdp, same, diffGdp, diffEpt;
   common_read_VString(exportNames, veptAll);
-  common_read_VString(exportNames3c, vept3c);
-  NodeType NE3 = vept3c.size(), NE = veptAll.size() / 2;
-  for (NodeType i = 0, j; i < NE3; ++i) {
-    for (j = 0; j < NE; ++j)
-      if (vept3c[i] == veptAll[j * 2])
-        break;
-    if (j < NE) {
-      vept.push_back(veptAll[j * 2 + 1]);
-    } else {
-      ERROR(vept3c[i]);
-      return -1;
-    }
-  }
-  string s = savePrefix;
-  common_save_VString((s + ".export.txt").c_str(), vept);
-
   common_read_VString(gdpNames, vgdp);
-  // NodeType NG = vgdp.size();
   VStringCItr ie, ig;
   for (ie = vept.begin(); ie != vept.end(); ++ie) {
     for (ig = vgdp.begin(); ig != vgdp.end(); ++ig)
-      if (*ie == *ig)
+      if (*ig == *ie)
         break;
     if (ig != vgdp.end())
       same.push_back(*ie);
@@ -587,11 +589,12 @@ int filter_export_gdp_country_name(const char* exportNames,
       diffGdp.push_back(*ig);
   }
   sort(same.begin(), same.end());
-  common_save_VString((s + ".same.common.txt").c_str(), same);
+  string s = savePrefix;
+  common_save_VString((s + ".same.txt").c_str(), same);
   sort(diffGdp.begin(), diffGdp.end());
-  common_save_VString((s + ".diff.gdp.all.txt").c_str(), diffGdp);
+  common_save_VString((s + ".diff.gdp.txt").c_str(), diffGdp);
   sort(diffEpt.begin(), diffEpt.end());
-  common_save_VString((s + ".diff.export.all.txt").c_str(), diffEpt);
+  common_save_VString((s + ".diff.trade.txt").c_str(), diffEpt);
   return 0;
 }
 
@@ -603,18 +606,18 @@ int filter_index_same_all(const char* namesFull, const char* sameAll)
     common_read_VString((s + ".export.txt").c_str(), veptAll);
     common_read_VString((s + ".same.common.txt").c_str(), vept);
     common_read_VString((s + ".same.export.txt").c_str(), vept);
-    VNodeType index;
+    VNodeType cIndex;
     for (NodeType i = 0, j; i < vept.size(); ++i) {
       for (j = 0; j < veptAll.size(); ++j)
         if (vept[i] == veptAll[j])
           break;
       if (j < veptAll.size())
-        index.push_back(j);
+        cIndex.push_back(j);
       else
         ERROR(vept[i]);
     }
     s = sameAll;
-    common_save1((s + ".export.txt").c_str(), index, '\n');
+    common_save1((s + ".export.txt").c_str(), cIndex, '\n');
   }
 
   {
@@ -623,189 +626,319 @@ int filter_index_same_all(const char* namesFull, const char* sameAll)
     common_read_VString((s + ".gdp.txt").c_str(), vgdpAll);
     common_read_VString((s + ".same.common.txt").c_str(), vgdp);
     common_read_VString((s + ".same.gdp.txt").c_str(), vgdp);
-    VNodeType index;
+    VNodeType cIndex;
     for (NodeType i = 0, j; i < vgdp.size(); ++i) {
       for (j = 0; j < vgdpAll.size(); ++j)
         if (vgdp[i] == vgdpAll[j])
           break;
       if (j < vgdpAll.size())
-        index.push_back(j);
+        cIndex.push_back(j);
       else
         ERROR(vgdp[i]);
     }
     s = sameAll;
-    common_save1((s + ".gdp.txt").c_str(), index, '\n');
+    common_save1((s + ".gdp.txt").c_str(), cIndex, '\n');
   }
   return 0;
 }
 
-int filter_index_gdp_0(const char* gdpFile, const char* indexFile)
+int filter_index_same_all_OEC(const char* namesFull)
+{
+  VString c, cept, cgdp;
+  string s = namesFull;
+  s += ".common";
+  common_read_VString((s + ".same.txt").c_str(), c);
+  common_read_VString((s + ".same.trade.txt").c_str(), cept);
+  common_read_VString((s + ".same.gdp.txt").c_str(), cgdp);
+  for (VStringItr i = c.begin(); i != c.end(); i++) {
+    cept.push_back(*i);
+    cgdp.push_back(*i);
+  }
+  sort(cept.begin(), cept.end());
+  common_save1((s + ".trade.txt").c_str(), cept, '\n');
+  sort(cgdp.begin(), cgdp.end());
+  common_save1((s + ".gdp.txt").c_str(), cgdp, '\n');
+
+  s = namesFull;
+  VString ept, gdp;
+  common_read_VString((s + ".trade.txt").c_str(), ept);
+  common_read_VString((s + ".gdp.txt").c_str(), gdp);
+  VNodeType iept, igdp;
+  for (size_t i = 0; i < ept.size(); i++) {
+    if (find(cept.begin(), cept.end(), ept[i]) != cept.end())
+      iept.push_back(i);
+  }
+  common_save1((s + ".common.trade.index.txt").c_str(), iept, '\n');
+  for (size_t i = 0; i < gdp.size(); i++) {
+    if (find(cgdp.begin(), cgdp.end(), gdp[i]) != cgdp.end())
+      igdp.push_back(i);
+  }
+  common_save1((s + ".common.gdp.index.txt").c_str(), igdp, '\n');
+  return 0;
+}
+
+int filter_index_gdp_0(const char* gdpFile, const char* cIndexFile)
 {
   VVString gdp;
   common_read2_0(gdpFile, gdp);
-  VNodeType index;
+  VNodeType cIndex;
   for (NodeType i = 0, j; i < gdp.size(); ++i) {
     for (j = 0; j < gdp[i].size(); ++j)
       if (gdp[i][j] == "0")
         break;
     if (j >= gdp[i].size()) {
-      index.push_back(i);
+      cIndex.push_back(i);
     }
   }
-  common_save1(indexFile, index, '\n');
-  return 0;
+  common_save1(cIndexFile, cIndex, '\n');
+  return -1;
 }
 
-int filter_index_export_0(const char* epDIR, const char* indexFile,
-    const char* pdIndexFile, const NodeType YEAR1, const NodeType YEAR2)
+int filter_index_export_0_OEC(const char* epDIR, const char* cIndexFile,
+    const char* pIndexFile, const char* countryFilename,
+    const char* productFilename, const NodeType YEAR1, const NodeType YEAR2)
 {
-  const NodeType NYEAR = YEAR2 - YEAR1 + 1;
-  vector<VVString> ep(NYEAR);
-  for (NodeType i = 0; i < NYEAR; ++i) {
-    string y;
-    stringstream ss;
-    ss << YEAR1 + i;
-    y = ss.str();
-    string s = epDIR;
-    common_read2_0((s + y + ".export.txt").c_str(), ep[i]);
-  }
+  const NodeType NYEAR = YEAR2 - YEAR1;
+  vector<VVLinkType> ep(NYEAR);
+  for (NodeType i = 0; i < NYEAR; ++i)
+    common_read2_0(
+        (string(epDIR) + to_string(YEAR1 + i) + ".export.txt").c_str(),
+        ep[i]);
 
   NodeType NC = ep[0].size(), NP = ep[0][0].size();
-  VNodeType index(NC), pdIndex(NP);
-  for (NodeType ci = 0; ci < index.size(); ++ci)
-    index[ci] = ci;
-  for (NodeType pi = 0; pi < pdIndex.size(); ++pi)
-    pdIndex[pi] = pi;
-  for (bool flag = 1; flag;) {
-    flag = 0;
-    for (NodeType ci = 0; ci < index.size(); ++ci) {
-      NodeType c = index[ci];
-      for (NodeType i = 0, pi; i < NYEAR; ++i) {
-        for (pi = 0; pi < pdIndex.size(); ++pi) {
-          NodeType p = pdIndex[pi];
-          if (ep[i][c][p] != "0")
-            break;
-        }
-        if (pi >= pdIndex.size()) {
-          // INFORM(c, "\t", i + YEAR1);
-          index[ci] = index.back();
-          index.pop_back();
-          flag = 1;
-          break;
-        }
-      }
+  VNodeType cIndex, pIndex;
+  {
+    // exclude: wld xx.
+    if (countryFilename != NULL || countryFilename[0] != '\0') {
+      VString cNames;
+      common_read1_0(countryFilename, cNames);
+      for (NodeType ci = 0; ci < cNames.size(); ++ci)
+        if (cNames[ci] != "wld"
+            && !(cNames[ci][0] == 'x' && cNames[ci][1] == 'x'))
+          cIndex.push_back(ci);
+      INFORM(cIndex.size());
+    } else {
+      cIndex.resize(NC);
+      for (NodeType ci = 0; ci < cIndex.size(); ++ci)
+        cIndex[ci] = ci;
     }
-    for (NodeType pi = 0; pi < pdIndex.size(); ++pi) {
-      NodeType p = pdIndex[pi];
-      for (NodeType i = 0, ci; i < NYEAR; ++i) {
-        for (ci = 0; ci < index.size(); ++ci) {
-          NodeType c = index[ci];
-          if (ep[i][c][p] != "0") {
+  }
+  {
+    if (productFilename != NULL || productFilename[0] != '\0') {
+      VNodeType pNames;
+      common_read1_0(productFilename, pNames);
+      for (NodeType pi = 0; pi < pNames.size(); ++pi) {
+        // if (pNames[pi] % 10 != 0) // exclude: xxx0
+        pIndex.push_back(pi);
+      }
+      INFORM(pIndex.size());
+    } else {
+      pIndex.resize(NP);
+      for (NodeType pi = 0; pi < pIndex.size(); ++pi)
+        pIndex[pi] = pi;
+    }
+  }
+
+  if (0)
+    for (bool flag = true; flag;) {
+      flag = false;
+
+      for (NodeType ci = 0; ci < cIndex.size();) { // filter country
+        NodeType c = cIndex[ci], i = 0;
+        for (i = 0; i < NYEAR; ++i) {
+          NodeType pi = 0;
+          while (pi < pIndex.size() && ep[i][c][pIndex[pi]] <= 0)
+            ++pi;
+          if (pi >= pIndex.size())
             break;
+        }
+        if (i < NYEAR) {
+          flag = true;
+          cIndex[ci] = cIndex.back();
+          cIndex.pop_back();
+        } else
+          ++ci;
+      }
+
+      for (NodeType pi = 0; pi < pIndex.size();) { // filter product
+        NodeType p = pIndex[pi], i = 0;
+        for (i = 0; i < NYEAR; ++i) {
+          NodeType ci = 0;
+          while (ci < cIndex.size() && ep[i][cIndex[ci]][p] <= 0)
+            ++ci;
+          if (ci >= cIndex.size())
+            break;
+        }
+        if (i < NYEAR) {
+          flag = true;
+          pIndex[pi] = pIndex.back();
+          pIndex.pop_back();
+        } else
+          ++pi;
+      }
+
+      if (flag)
+        continue;
+      break;
+
+      if (0)
+        for (NodeType ci = 0; ci < cIndex.size();) { // filter country
+          NodeType c = cIndex[ci], i = 0;
+          bool f1 = true, f2 = true, f3 = true, vFlag = false;
+          { // cal f2
+            NodeType pi = 0;
+            while (pi < pIndex.size() && ep[i][c][pIndex[pi]] <= 0)
+              ++pi;
+            f2 = pi < pIndex.size();
           }
+          for (i = 1; i < NYEAR; ++i) { // cal f3
+            NodeType pi = 0;
+            while (pi < pIndex.size() && ep[i][c][pIndex[pi]] <= 0)
+              ++pi;
+            f3 = pi < pIndex.size();
+            if ((vFlag = f1 && !f2 && f3))
+              break;
+          }
+          if (vFlag) {
+            flag = true;
+            cIndex[ci] = cIndex.back();
+            cIndex.pop_back();
+          } else
+            ++ci;
         }
-        if (ci >= index.size()) {
-          // INFORM(p, "\t", i + YEAR1);
-          pdIndex[pi] = pdIndex.back();
-          pdIndex.pop_back();
-          flag = 1;
-          break;
+
+      for (NodeType pi = 0; pi < pIndex.size();) { // filter product
+        NodeType p = pIndex[pi], i = 0;
+        bool f1 = true, f2 = true, f3 = true, vFlag = false;
+        { // cal f2
+          NodeType ci = 0;
+          while (ci < cIndex.size() && ep[i][cIndex[ci]][p] <= 0)
+            ++ci;
+          f2 = ci < cIndex.size();
         }
+        for (i = 1; i < NYEAR; ++i) { // cal f3
+          NodeType ci = 0;
+          while (ci < cIndex.size() && ep[i][cIndex[ci]][p] <= 0)
+            ++ci;
+          f3 = ci < cIndex.size();
+          if ((vFlag = f1 && !f2 && f3))
+            break;
+        }
+        if (vFlag) {
+          flag = true;
+          pIndex[pi] = pIndex.back();
+          pIndex.pop_back();
+        } else
+          ++pi;
       }
     }
-  }
-  sort(index.begin(), index.end());
-  common_save1(indexFile, index, '\n');
-  sort(pdIndex.begin(), pdIndex.end());
-  common_save1(pdIndexFile, pdIndex, '\n');
+
+  sort(cIndex.begin(), cIndex.end());
+  common_save1(cIndexFile, cIndex, '\n');
+  sort(pIndex.begin(), pIndex.end());
+  common_save1(pIndexFile, pIndex, '\n');
 
   return 0;
 }
 
-int filter_index_export_0_NBER_wtf(const char* epDIR, const char* indexFile,
-    const char* pdIndexFile, const NodeType YEAR1, const NodeType YEAR2,
-    const NodeType YEAR0)
+int filter_index_export_0_NBER_wtf(const char* epDIR, const char* cIndexFile,
+    const char* pIndexFile, const char* pIndexFileAll, const NodeType YEAR1,
+    const NodeType YEAR2, const NodeType YEAR0)
 {
-  const NodeType NYEAR = YEAR2 - YEAR1 + 1;
+  const NodeType NYEAR = YEAR2 - YEAR1;
   ERROR_TEST(YEAR1 > YEAR0 || YEAR0 > YEAR2);
-  vector<VVString> ep(NYEAR);
+  vector<VVDouble> ep(NYEAR);
+  const double EP0 = 1e-5;
   string s = epDIR;
-  for (NodeType i = 0; i < NYEAR; ++i) {
-    common_read2_0((s + to_string(i + YEAR1) + ".export.txt").c_str(), ep[i]);
-    cout << i + YEAR1 << "\t" << ep[i].size() << "\t" << ep[i][0].size()
-         << endl;
-  }
+  for (NodeType year = YEAR1; year < YEAR2; ++year)
+    common_read2_0(
+        (s + to_string(year) + ".export.txt").c_str(), ep[year - YEAR1]);
 
   NodeType NC = ep[0].size(), NP = ep[0][0].size();
-  VNodeType index(NC), pdIndex(NP);
-  for (NodeType ci = 0; ci < index.size(); ++ci)
-    index[ci] = ci;
-  for (NodeType pi = 0; pi < pdIndex.size(); ++pi)
-    pdIndex[pi] = pi;
+  VNodeType cIndex(NC), pIndex;
+  for (NodeType ci = 0; ci < cIndex.size(); ++ci)
+    cIndex[ci] = ci;
+  if (pIndexFileAll != NULL && pIndexFileAll[0] != '\0') {
+    common_read1_0(pIndexFileAll, pIndex);
+    cout << pIndexFileAll << "\t" << pIndex.size() << endl;
+  } else {
+    pIndex.resize(NP);
+    for (NodeType pi = 0; pi < pIndex.size(); ++pi)
+      pIndex[pi] = pi;
+  }
 
   for (bool flag = true; flag;) {
     flag = false;
 
-    for (NodeType ci = 0; ci < index.size();) { // filter country
-      NodeType c = index[ci], year = YEAR1;
-      for (NodeType pi; year <= YEAR2; ++year) {
+    for (NodeType ci = 0; ci < cIndex.size();) { // filter country
+      NodeType c = cIndex[ci], year = YEAR1;
+      for (NodeType pi; year < YEAR2; ++year) {
         for (pi = 0;
-             pi < pdIndex.size() && ep[year - YEAR1][c][pdIndex[pi]] == "0";
+             pi < pIndex.size() && ep[year - YEAR1][c][pIndex[pi]] <= EP0;
              ++pi)
           continue;
-        if (pi >= pdIndex.size()) {
+        if (pi >= pIndex.size()) {
           flag = true;
-          index[ci] = index.back();
-          index.pop_back();
+          cIndex[ci] = cIndex.back();
+          cIndex.pop_back();
           break;
         }
       }
-      if (year > YEAR2)
+      if (year >= YEAR2)
         ++ci;
     }
 
-    for (NodeType pi = 0; pi < pdIndex.size();) { // filter product
-      NodeType p = pdIndex[pi], year = YEAR1;
-      for (NodeType ci; year <= YEAR2; ++year) {
+    for (NodeType pi = 0; pi < pIndex.size();) { // filter product
+      NodeType p = pIndex[pi], year = YEAR1;
+      for (NodeType ci; year < YEAR2; ++year) {
         for (ci = 0;
-             ci < index.size() && ep[year - YEAR1][index[ci]][p] == "0"; ++ci)
+             ci < cIndex.size() && ep[year - YEAR1][cIndex[ci]][p] <= EP0;
+             ++ci)
           continue;
-        if (ci >= index.size()) {
+        if (ci >= cIndex.size()) {
           flag = true;
-          pdIndex[pi] = pdIndex.back();
-          pdIndex.pop_back();
+          pIndex[pi] = pIndex.back();
+          pIndex.pop_back();
           break;
         }
       }
-      if (year > YEAR2)
+      if (year >= YEAR2)
         ++pi;
     }
+    if (flag)
+      continue;
+    break;
 
-    for (NodeType ci = 0; ci < index.size();) { // filter country
-      for (NodeType pi = 0; pi < pdIndex.size(); ++pi) {
-        NodeType p = pdIndex[pi], year = YEAR1;
-        bool f1 = true, f2 = ep[year - YEAR1][index[ci]][p] == "0", f3;
-        for (year = YEAR1 + 1; year <= YEAR2; ++year) { // cal f3
-          f3 = ep[year - YEAR1][index[ci]][p] == "0";
-          if (f1 && !f2 && f3) {
+    for (NodeType ci = 0; ci < cIndex.size();) { // filter country
+      NodeType c = cIndex[ci];
+      bool flag2 = false;
+      for (NodeType pi = 0; pi < pIndex.size(); ++pi) {
+        NodeType p = pIndex[pi];
+        NodeType year = YEAR0;
+        bool f1 = true, f2 = ep[year - YEAR1][c][p] <= EP0, f3 = true;
+        for (year = YEAR0 + 1; year <= YEAR2; ++year) { // cal f3
+          f3 = ep[year - YEAR1][c][p] <= EP0;
+          if ((flag2 = f1 && !f2 && f3)) {
             flag = true;
-            index[ci] = index.back();
-            index.pop_back();
+            pIndex[pi] = pIndex.back();
+            pIndex.pop_back();
             break;
           }
           f1 = f2;
           f2 = f3;
         }
-        if (year <= YEAR2)
+        if (flag2)
           break;
       }
+      if (!flag2)
+        ++ci;
     }
   }
 
-  sort(index.begin(), index.end());
-  common_save1(indexFile, index, '\n');
-  sort(pdIndex.begin(), pdIndex.end());
-  common_save1(pdIndexFile, pdIndex, '\n');
+  sort(cIndex.begin(), cIndex.end());
+  common_save1(cIndexFile, cIndex, '\n');
+  sort(pIndex.begin(), pIndex.end());
+  common_save1(pIndexFile, pIndex, '\n');
 
   return 0;
 }
@@ -825,23 +958,23 @@ int filter_index_export_gdp(const char* gdpIndexFile0,
     return -1;
   }
   NodeType n = g0.size();
-  VNodeType index(n, 0), id;
+  VNodeType cIndex(n, 0), id;
   for (NodeType i = 0; i < n; ++i)
     for (NodeType j = 0; j < g.size(); ++j) {
       if (g[j] == g0[i]) {
-        ++index[i];
+        ++cIndex[i];
         break;
       }
     }
   for (NodeType i = 0; i < n; ++i)
     for (NodeType j = 0; j < e.size(); ++j) {
       if (e[j] == e0[i]) {
-        ++index[i];
+        ++cIndex[i];
         break;
       }
     }
   for (NodeType i = 0; i < n; ++i)
-    if (index[i] == 2)
+    if (cIndex[i] == 2)
       id.push_back(i);
   common_save1_p(gdpIndexFile2, &g0[0], &id[0], id.size(), '\n');
   common_save1_p(exportIndexFile2, &e0[0], &id[0], id.size(), '\n');
@@ -855,22 +988,18 @@ int filter_data_export(const char* exportDIR, const char* countryIndexFile,
   VNodeType cIndex, pIndex;
   common_read1_0(countryIndexFile, cIndex);
   common_read1_0(productIndexFile, pIndex);
-  const NodeType NYEAR = YEAR2 - YEAR1 + 1;
-  for (NodeType i = 0; i < NYEAR; ++i) {
-    string y;
-    stringstream ss;
-    ss << YEAR1 + i;
-    y = ss.str();
-    string s = DATA_DIR;
-
+  for (NodeType year = YEAR1; year < YEAR2; ++year) {
+    INFORM(year);
     VVString epts;
     string s0 = exportDIR;
-    common_read2_0((s0 + y + ".export.txt").c_str(), epts);
+    common_read2_0(
+        (string(exportDIR) + to_string(year) + ".export.txt").c_str(), epts);
     VVString epts2(cIndex.size());
     for (NodeType ci = 0; ci < cIndex.size(); ++ci)
       for (NodeType pi = 0; pi < pIndex.size(); ++pi)
         epts2[ci].push_back(epts[cIndex[ci]][pIndex[pi]]);
-    common_save2((s + y + ".export.txt").c_str(), epts2);
+    common_save2(
+        (string(DATA_DIR) + to_string(year) + ".export.txt").c_str(), epts2);
   }
   return 0;
 }

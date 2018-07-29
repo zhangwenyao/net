@@ -1,4 +1,3 @@
-// g++ -o main.exe *.cpp -O3 -Wall
 #include "main.h"
 #ifdef MAIN_FITNESS_COMPLEXITY_COUNT
 
@@ -7,15 +6,13 @@
 using namespace std;
 // ******************************************************
 
-int main(int argc, char** argv)
+int main_fitness_complexity_count(int argc, char** argv)
 {
-  SHOW_TIME(cout); // 显示系统时间
-
   const string DIR0 = "data/complexity/", DIR_DATA = DIR0 + "data/";
   // const string methods[] = { "mass", "heat", "hybrid" };
   const string methods[] = { "heat" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
-  const size_t YEAR1 = 1995, YEAR2 = 2014, NC = 228, NCGDP = 197, NP = 1241;
+  const size_t YEAR1 = 2001, YEAR2 = 2014+1, NC = 228, NCGDP = 197, NP = 1241;
 
   for (size_t year = YEAR1; year < YEAR2; year++) {
     cout << year << endl;
@@ -202,7 +199,6 @@ int main(int argc, char** argv)
     } // year
   }   // method
 
-  SHOW_TIME(cout); // 显示系统时间
   return 0;
 }
 

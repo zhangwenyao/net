@@ -6,8 +6,8 @@
 #ifdef ACT_FITNESS_COMPLEXITY
 // *******************************************************
 template <typename T, typename T2>
-int export_2_Mcp(const std::vector<std::vector<T> >& e,
-    std::vector<std::vector<T2> >& mcp);
+int export_2_Mcp(
+    const std::vector<std::vector<T> >& e, std::vector<std::vector<T2> >& mcp);
 template <typename T>
 int Mcp_2_C_P(
     const std::vector<std::vector<T> >& mcp, VVNodeType& pc, VVNodeType& pp);
@@ -41,7 +41,7 @@ int filter_trade_name(const char* tradeFilename, const char* countryFilename,
     const char* productFilename);
 int filter_trade_name_OEC(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
-    const NodeType YEAR1 = 1962, const NodeType YEAR2 = 2015);
+    const NodeType YEAR1 = 2001, const NodeType YEAR2 = 2015);
 int filter_trade_name_NBERUN_wtf(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
     const char* countryFilename0 = NULL, const char* productFilename0 = NULL);
@@ -58,7 +58,7 @@ int filter_sum_trade(const char* tradeFilename, const char* countryFilename,
     const char* productFilename, const char* dirSave);
 int filter_sum_trade_OEC(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
-    const char* dirSave, const NodeType YEAR1 = 1962,
+    const char* dirSave, const NodeType YEAR1 = 2001,
     const NodeType YEAR2 = 2015);
 int filter_sum_trade_NBER_wtf(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
@@ -68,24 +68,27 @@ int filter_sum_trade_NBER_wtf2(const char* tradeFilename,
     const char* saveName);
 
 // 筛选进出口和 gdp 的共同国家名
-int filter_export_gdp_country_name(const char* exportNames,
-    const char* exportNames3c, const char* gdpNames, const char* savePrefix);
+int filter_export_gdp_country_name(
+    const char* exportNames, const char* gdpNames, const char* savePrefix);
 int filter_index_same_all(const char* namesFull, const char* sameAll);
-int filter_index_gdp_0(const char* gdpFile, const char* indexFile);
-int filter_index_export_0(const char* epDIR, const char* indexFile,
-    const char* pdIndexFile, const NodeType YEAR1 = 1995,
-    const NodeType YEAR2 = 2014);
-int filter_index_export_0_NBER_wtf(const char* epDIR, const char* indexFile,
-    const char* pdIndexFile, const NodeType YEAR1 = 1962,
-    const NodeType YEAR2 = 2000, const NodeType YEAR0 = 1993);
+int filter_index_same_all_OEC(const char* namesFull);
+int filter_index_gdp_0(const char* gdpFile, const char* cIndexFile);
+int filter_index_export_0_OEC(const char* epDIR, const char* cIndexFile,
+    const char* pIndexFile, const char* countryFilename = NULL,
+    const char* productFilename = NULL, const NodeType YEAR1 = 2001,
+    const NodeType YEAR2 = 2015);
+int filter_index_export_0_NBER_wtf(const char* epDIR, const char* cIndexFile,
+    const char* pIndexFile, const char* pIndexFileAll = NULL,
+    const NodeType YEAR1 = 1984, const NodeType YEAR2 = 2001,
+    const NodeType YEAR0 = 1993);
 int filter_index_export_gdp(const char* gdpIndexFile0,
     const char* gdpIndexFile, const char* gdpIndexFile2,
     const char* exportIndexFile, const char* exportIndexFile0,
     const char* exportIndexFile2);
+
 int filter_data_export(const char* exportDIR, const char* countryIndexFile,
-    const char* productIndexFile, const char* DATA_DIR,
-    const NodeType YEAR1 = 1995, const NodeType YEAR2 = 2014,
-    const NodeType YEAR0 = 1993);
+    const char* productIndexFile, const char* DATA_DIR, const NodeType YEAR1,
+    const NodeType YEAR2);
 int filter_data(const char* gdpFile, const char* gdpIndexFile,
     const char* exportFile, const char* countryIndexFile,
     const char* productIndexFile, const char* DATA_DIR);

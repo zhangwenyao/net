@@ -20,7 +20,7 @@ template <typename... Args> void DEBUG_INFO(Args... args);
 #ifndef ERROR
 #define ERROR(...)                                                           \
   do {                                                                       \
-    std::cerr << "ERROR : " << __FILE__ << '\t' << __FUNCTION__ << "(Line "  \
+    std::cerr << "ERROR : " << __FILE__ << '\t' << __FUNCTION__ << " (Line " \
               << __LINE__ << ")\t";                                          \
     ERROR_INFO(__VA_ARGS__);                                                 \
     std::cerr << std::endl;                                                  \
@@ -30,7 +30,7 @@ template <typename... Args> void DEBUG_INFO(Args... args);
 #ifndef INFORM
 #define INFORM(...)                                                          \
   do {                                                                       \
-    std::cout << "INFORM: " << __FILE__ << '\t' << __FUNCTION__ << "(Line "  \
+    std::cout << "INFORM: " << __FILE__ << '\t' << __FUNCTION__ << " (Line " \
               << __LINE__ << ")\t";                                          \
     INFORM_INFO(__VA_ARGS__);                                                \
     std::cout << std::endl;                                                  \
@@ -41,7 +41,7 @@ template <typename... Args> void DEBUG_INFO(Args... args);
 #ifdef DEBUG
 #define DBG(...)                                                             \
   do {                                                                       \
-    std::cerr << "DEBUG : " << __FILE__ << '\t' << __FUNCTION__ << "(Line "  \
+    std::cerr << "DEBUG : " << __FILE__ << '\t' << __FUNCTION__ << " (Line " \
               << __LINE__ << ")\t";                                          \
     DEBUG_INFO(__VA_ARGS__);                                                 \
     std::clog << std::endl;                                                  \

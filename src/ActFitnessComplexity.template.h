@@ -13,22 +13,23 @@ int export_2_Mcp(
 {
   // cal Qp Qc Qsum
   const size_t NC = e.size(), NP = e[0].size();
-  VDouble Qc(NC, 0), Qp(NP, 0);
-  double Qsum = 0;
+  std::vector<T> Qc(NC, 0), Qp(NP, 0);
+  T Qsum = 0;
   for (size_t c = 0; c < NC; c++) {
     for (size_t p = 0; p < NP; p++) {
       Qp[p] += e[c][p];
       Qc[c] += e[c][p];
     }
-    Qsum += Qp[c];
+    Qsum += Qc[c];
   }
 
   // cal Mcp
   mcp.assign(NC, std::vector<T2>(NP, (T2)0));
   for (size_t c = 0; c < NC; c++) {
     for (size_t p = 0; p < NP; p++) {
-      mcp[c][p]
-          = (T2)(e[c][p] > 0.01 && e[c][p] * Qsum >= Qc[c] * Qp[p] ? 1 : 0);
+      mcp[c][p] = (T2)(
+          e[c][p] > 0 && (double)e[c][p] * Qsum >= (double)Qc[c] * Qp[p] ? 1
+                                                                         : 0);
     }
   }
 
@@ -77,10 +78,6 @@ int Mcp_2_FC(
     for (size_t c = 0; c < NC; c++) {
       for (size_t p = 0; p < NP; p++)
         if (Mcp[c][p]) {
-          if (Cp[p] < 0) {
-            ERROR(count, "\t", c, "\t", p);
-            return -1;
-          }
           if (iFc[c] < 0)
             iFc[c] = 0;
           iFc[c] += Cp[p];
@@ -104,10 +101,6 @@ int Mcp_2_FC(
     for (size_t p = 0; p < NP; p++) {
       for (size_t c = 0; c < NC; c++) {
         if (Mcp[c][p]) {
-          if (Fc[c] < 0) {
-            ERROR(count, "\t", c, "\t", p);
-            return -1;
-          }
           if (iCp[p] < 0)
             iCp[p] = 0;
           iCp[p] += 1 / Fc[c];
@@ -127,6 +120,7 @@ int Mcp_2_FC(
     icMean /= n;
     // icMean /= NP;
 
+    // INFORM(count, "\t", ifMean, "\t", icMean);
     for (size_t c = 0; c < NC; c++)
       Fc[c] = iFc[c] < 0 ? -1 : iFc[c] / ifMean;
     for (size_t p = 0; p < NP; p++)

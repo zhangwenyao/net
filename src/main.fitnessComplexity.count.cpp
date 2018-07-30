@@ -15,7 +15,6 @@ int main_fitness_complexity_count(int argc, char** argv)
   const string methods[] = { "mass", "heat", "hybrid" };
   // const string methods[] = { "hybrid" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
-<<<<<<< HEAD
 
   VNodeType cIndex, pIndex, gIndex, cIndex0;
   ERROR_TEST(common_read1_0(
@@ -30,25 +29,6 @@ int main_fitness_complexity_count(int argc, char** argv)
       (DIR_INFO + "country.index.export.not0.txt").c_str(), cIndex0));
   const size_t NG = gIndex.size(), NP = pIndex.size(), NC = cIndex0.size();
   cout << NC << "\t" << NC << "\t" << NP << endl;
-=======
-
-  VNodeType cIndex, pIndex, gIndex, cIndex0;
-  ERROR_TEST(common_read1_0(
-      (DIR_INFO + "country.namesFull.common.trade.index.not0.txt").c_str(),
-      cIndex));
-  ERROR_TEST(common_read1_0(
-      (DIR_INFO + "country.namesFull.common.gdp.index.not0.txt").c_str(),
-      gIndex));
-  ERROR_TEST(common_read1_0(
-      (DIR_INFO + "product.index.export.not0.txt").c_str(), pIndex));
-  ERROR_TEST(common_read1_0(
-      (DIR_INFO + "country.index.export.not0.txt").c_str(), cIndex0));
-  const size_t NG = gIndex.size(), NP = pIndex.size(), NC = cIndex0.size();
-  cout << NC << "\t" << NC << "\t" << NP << endl;
-
-  for (size_t year = YEAR1; year < YEAR2; year++) {
-    INFORM(year);
->>>>>>> 11c90f7c5a9b2eadb2183c1771aa3c1f5741ed2f
 
   for (size_t year = YEAR1; year < YEAR2; year++) {
     VVNodeType mcp;
@@ -62,20 +42,12 @@ int main_fitness_complexity_count(int argc, char** argv)
     ERROR_TEST(common_read1_0(
         (DIR_DATA + to_string(year) + ".country.product.mcp.deg.txt").c_str(),
         mcpDeg));
-<<<<<<< HEAD
-=======
-    INFORM();
->>>>>>> 11c90f7c5a9b2eadb2183c1771aa3c1f5741ed2f
 
     VDouble pc;
     ERROR_TEST(common_read1_0(
         (DIR_DATA + to_string(year) + ".product.complexity.txt").c_str(),
         pc));
 
-<<<<<<< HEAD
-=======
-    INFORM();
->>>>>>> 11c90f7c5a9b2eadb2183c1771aa3c1f5741ed2f
     VNodeType pcRank(NP), pcRankIndex(NP), pcRankV2(NP), pcRankV2Index(NP);
     VDouble pcRankScale(NP);
     cal_val_2_rankScale(
@@ -111,10 +83,6 @@ int main_fitness_complexity_count(int argc, char** argv)
                      + ".pruduct.complexity.rankLessV2.scale.txt")
                      .c_str(),
         pcRankScale, '\n');
-<<<<<<< HEAD
-=======
-    INFORM();
->>>>>>> 11c90f7c5a9b2eadb2183c1771aa3c1f5741ed2f
 
     // count 2 var
 
@@ -132,10 +100,6 @@ int main_fitness_complexity_count(int argc, char** argv)
         (DIR_DATA + to_string(year - 1) + ".country.product.mcp.deg.txt")
             .c_str(),
         mcpDeg0));
-<<<<<<< HEAD
-=======
-    INFORM();
->>>>>>> 11c90f7c5a9b2eadb2183c1771aa3c1f5741ed2f
 
     VVNodeType mcpNew, mcpRemain;
     count_mcpNew(mcp0, mcp, mcpNew, mcpRemain);
@@ -149,10 +113,6 @@ int main_fitness_complexity_count(int argc, char** argv)
     // ".country.product.new.txt").c_str(),
     // mcpNew);
     // mcpNew.resize(NC);
-<<<<<<< HEAD
-=======
-    INFORM();
->>>>>>> 11c90f7c5a9b2eadb2183c1771aa3c1f5741ed2f
 
     VNodeType newDeg;
     p2p_2_nodeDeg(newDeg, mcpNew);
@@ -162,10 +122,6 @@ int main_fitness_complexity_count(int argc, char** argv)
     // common_read1_0((DIR_DATA + to_string(year) +
     // ".country.product.new.deg.txt").c_str(), newDeg);
     // newDeg.resize(NC);
-<<<<<<< HEAD
-=======
-    INFORM();
->>>>>>> 11c90f7c5a9b2eadb2183c1771aa3c1f5741ed2f
 
     VVNodeType mcpPcRank(NC), mcpPcRankIndex(NC), mcpPcRankV2(NC),
         mcpPcRankV2Index(NC);
@@ -180,10 +136,6 @@ int main_fitness_complexity_count(int argc, char** argv)
       const size_t deg = mcpDeg[c];
       if (deg <= 0)
         continue;
-<<<<<<< HEAD
-=======
-      INFORM();
->>>>>>> 11c90f7c5a9b2eadb2183c1771aa3c1f5741ed2f
 
       VNodeType& pcRank = mcpPcRank[c];
       VNodeType& pcRankIndex = mcpPcRankIndex[c];
@@ -211,10 +163,6 @@ int main_fitness_complexity_count(int argc, char** argv)
       // if (deg > 1)
       // for (size_t p = 0; p < deg; ++p)
       // pcRankScale[p] = (double)pcRankV2Index[p] / 2 / (deg - 1);
-<<<<<<< HEAD
-=======
-      INFORM();
->>>>>>> 11c90f7c5a9b2eadb2183c1771aa3c1f5741ed2f
 
       for (size_t p = 0, i = 0; p < NP; ++p)
         if (mcp[c][p] != 0) {
@@ -234,10 +182,6 @@ int main_fitness_complexity_count(int argc, char** argv)
           ++i;
         }
     }
-<<<<<<< HEAD
-=======
-    INFORM();
->>>>>>> 11c90f7c5a9b2eadb2183c1771aa3c1f5741ed2f
     common_save2(
         (DIR_DATA + to_string(year) + ".pruduct.complexity.mcp.rankLess.txt")
             .c_str(),
@@ -298,11 +242,6 @@ int main_fitness_complexity_count(int argc, char** argv)
                      + ".pruduct.complexity.remain.rankLessV2.scale.txt")
                      .c_str(),
         mcpRemainPcRankScale);
-<<<<<<< HEAD
-    return 0;
-=======
-    INFORM();
->>>>>>> 11c90f7c5a9b2eadb2183c1771aa3c1f5741ed2f
 
     for (size_t iMethod = 0; iMethod < NMETHOD; iMethod++) {
       string method = methods[iMethod];
@@ -343,9 +282,9 @@ int main_fitness_complexity_count(int argc, char** argv)
       return 0;
       VNodeType rk, rkIndex, rkV2, rkV2Index;
       VDouble rkScale;
-      // cal_val_2_rankScale_p(rcm[c], mcpNew[c]);
+      //cal_val_2_rankScale_p(rcm[c], mcpNew[c]);
 
-      VDouble rankingScore;
+          VDouble rankingScore;
       count_rankingScore(net.recommend.rcm, NC, NP, mcp0, mcp, rankingScore,
           (DIR_DATA + to_string(year) + "." + method + ".rankingScore.txt")
               .c_str());

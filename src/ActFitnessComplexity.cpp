@@ -7,129 +7,107 @@
 using namespace std;
 
 // *******************************************************
-int count_k1(const VVNodeType& mcp, VNodeType& k1, const char* name)
+int count_deg(const VVNodeType& mcp, VNodeType& deg, const char* name)
 {
   const NodeType NC = mcp.size(), NP = mcp[0].size();
-  k1.assign(NP, 0);
+  deg.assign(NP, 0);
   for (NodeType c = 0; c < NC; ++c) {
     for (NodeType p = 0; p < NP; ++p) {
       if (mcp[c][p])
-        k1[c]++;
+        deg[c]++;
     }
   }
   if (name != NULL && name[0] != '\0')
-    common_save1(name, k1, '\n');
+    ERROR_TEST(common_save1(name, deg, '\n'));
   return 0;
 }
 
-int count_product_k1(const VVNodeType& mcp, VNodeType& k1, const char* name)
+int count_product_deg(const VVNodeType& mcp, VNodeType& deg, const char* name)
 {
   const NodeType NC = mcp.size(), NP = mcp[0].size();
-  k1.assign(NP, 0);
+  deg.assign(NP, 0);
   for (NodeType c = 0; c < NC; ++c) {
     for (NodeType p = 0; p < NP; ++p) {
       if (mcp[c][p])
-        k1[p]++;
+        deg[p]++;
     }
   }
   if (name != NULL && name[0] != '\0')
-    common_save1(name, k1, '\n');
+    ERROR_TEST(common_save1(name, deg, '\n'));
   return 0;
 }
 
-int count_mcpNew(const NodeType NC, const NodeType NP, const VVNodeType& mcp,
-    const VVNodeType& mcp2, VVNodeType& mcpNew, const char* name)
+int count_mcpNew(const VVNodeType& mcp0, const VVNodeType& mcp,
+    VVNodeType& mcpNew, VVNodeType& mcpRemain)
 {
+  NodeType NC = mcp.size(), NP = mcp[0].size();
   mcpNew.resize(NC);
+  mcpRemain.resize(NC);
   for (size_t c = 0; c < NC; c++) {
     mcpNew[c].clear();
+    mcpRemain[c].clear();
     for (size_t p = 0; p < NP; p++) {
-      if (mcp[c][p] == 0 && mcp2[c][p] != 0)
-        mcpNew[c].push_back(p);
+      if (mcp[c][p] != 0) {
+        if (mcp0[c][p] == 0)
+          mcpNew[c].push_back(p);
+        else
+          mcpRemain[c].push_back(p);
+      }
     }
   }
-  if (name != NULL && name[0] != '\0')
-    common_save2(name, mcpNew);
   return 0;
 }
 
-int count_kNew(VNodeType& kNew, const VVNodeType& mcpNew, const char* name)
+int count_pcNewRankV2(const VNodeType& pcRankV2, const VVNodeType& mcpNew,
+    VVNodeType& pcNewRankV2)
 {
-  kNew.resize(mcpNew.size());
-  for (size_t c = 0; c < mcpNew.size(); c++) {
-    kNew[c] = mcpNew[c].size();
-  }
-  if (name != NULL && name[0] != '\0')
-    common_save1(name, kNew, '\n');
-  return 0;
-}
-
-int count_pcNewRank(const VDouble& pc, const size_t NC, const size_t NP,
-    const VVNodeType& mcpNew, VVNodeType& pcNewRank, const char* name)
-{
-  pcNewRank.resize(NC);
-  VNodeType rk(NP, 0), rk2(NP, 0);
-  for (size_t p = 0; p < NP; p++)
-    rk[p] = p;
-  common_sort_p_val_less(&rk[0], &rk[NP], &pc[0]); // pc[rk[i]]<=pc[rk[i+1]]
-  for (size_t p = 0; p < NP; p++)                  // pc[i]'s rank is rk2[i]
-    rk2[rk[p]] = p;
+  const size_t NC = mcpNew.size();
+  pcNewRankV2.clear();
+  pcNewRankV2.resize(NC);
   for (size_t c = 0; c < NC; c++) {
     for (size_t p = 0; p < mcpNew[c].size(); p++)
-      pcNewRank[c].push_back(rk2[mcpNew[c][p]]);
+      pcNewRankV2[c].push_back(pcRankV2[mcpNew[c][p]]);
     break;
   }
-  if (name != NULL && name[0] != '\0')
-    common_save2(name, pcNewRank);
   return 0;
 }
 
-int count_pcNewRemainRank(const VDouble& pc, const size_t NC, const size_t NP,
-    const VVNodeType& mcp, const VVNodeType& mcpNew,
-    VVNodeType& pcNewRemainRank, const char* name)
+int count_pcNewRemainRankV2(const VNodeType& pcRankV2, const VVNodeType& mcp,
+    const VVNodeType& mcpNew, VVNodeType& pcNewRemainRankV2)
 {
-  pcNewRemainRank.resize(NC);
-  VNodeType rk(NP, 0), rk2(NP, 0);
+  const size_t NC = mcp.size(), NP = mcp[0].size();
+  pcNewRemainRankV2.clear();
+  pcNewRemainRankV2.resize(NC);
   for (size_t c = 0; c < NC; c++) {
-    pcNewRemainRank[c].clear();
-    size_t NN = mcpNew[c].size(), NR = 0;
-    if (NN <= 0)
-      continue;
-    for (size_t p = 0; p < NP; p++)
-      if (mcp[c][p] == 0)
-        rk[NR++] = p;
-    INFORM(NR);
-    common_sort_p_val_less(&rk[0], &rk[NR], &pc[0]);
-    for (size_t p = 0; p < NR; p++)
-      rk2[rk[p]] = p;
-    for (size_t p = 0; p < NN; p++)
-      pcNewRemainRank[c].push_back(rk2[mcpNew[c][p]]);
-    break;
+    VNodeType rk = mcp[c];
+    for (auto p : mcpNew[c])
+      rk[p] = 0;
+    for (size_t p = 0; p < NP; ++p)
+      if (rk[p] != 0)
+        pcNewRemainRankV2[c].push_back(pcRankV2[p]);
   }
-  if (name != NULL && name[0] != '\0')
-    common_save2(name, pcNewRemainRank);
   return 0;
 }
 
-int count_newScale(const size_t NC, const size_t NP, const VNodeType& k1,
-    const VVNodeType& newRemainRank, VVDouble& newScale, const char* name)
-{
-  newScale.resize(NC);
-  for (size_t c = 0; c < NC; c++) {
-    newScale[c].clear();
-    if (NP == k1[c] + 1 && newRemainRank[c].size() == 1) {
-      newScale[c].push_back(0.5);
-      continue;
-    }
-    double x = 1.0 / (NP - k1[c] - 1);
-    for (size_t p = 0; p < newRemainRank[c].size(); p++)
-      newScale[c].push_back(newRemainRank[c][p] * x);
-    break;
-  }
-  if (name != NULL && name[0] != '\0')
-    common_save2(name, newScale);
-  return 0;
-}
+//int count_newScale(const VNodeType& deg, const VVNodeType& newRemainRankV2,
+    //VVDouble& newScale)
+//{
+  //const size_t NC = deg.size(), NP, newScale.resize(NC);
+  //for (size_t c = 0; c < NC; c++) {
+    //newScale[c].clear();
+    //if (NP == deg[c] + 1 && newRemainRank[c].size() == 1) {
+      //newScale[c].push_back(0.5);
+      //continue;
+    //}
+    //double x = 1.0 / (NP - deg[c] - 1);
+    //for (size_t p = 0; p < newRemainRank[c].size(); p++)
+      //newScale[c].push_back(newRemainRank[c][p] * x);
+    //break;
+  //}
+  //if (name != NULL && name[0] != '\0')
+    //ERROR_TEST(common_save2(name, newScale));
+  //return 0;
+//}
 
 int count_newRank(const VVDouble& rcm, const size_t NC, const size_t NP,
     const VVNodeType& cpNew, VVNodeType& newRank, const char* name)
@@ -146,7 +124,7 @@ int count_newRank(const VVDouble& rcm, const size_t NC, const size_t NP,
       newRank[c].push_back(rk2[cpNew[c][p]]);
   }
   if (name != NULL && name[0] != '\0')
-    common_save2(name, newRank);
+    ERROR_TEST(common_save2(name, newRank));
   return 0;
 }
 
@@ -172,11 +150,42 @@ int count_newRemainRank(const VVDouble& rcm, const size_t NC, const size_t NP,
     break;
   }
   if (name != NULL && name[0] != '\0')
-    common_save2(name, newRemainRank);
+    ERROR_TEST(common_save2(name, newRemainRank));
   return 0;
 }
 
-// *******************************************************
+int cal_val_2_rankScale(const VDouble& val, VNodeType& rk, VNodeType& rkIndex,
+    VNodeType& rkV2, VNodeType& rkV2Index, VDouble& rkScale, const size_t N)
+{
+  rk.resize(N);
+  rkIndex.resize(N);
+  rkV2.resize(N);
+  rkV2Index.resize(N);
+  rkScale.resize(N);
+  for (size_t i = 0; i < N; ++i)
+    rk[i] = i;
+  common_sort_p_val_less(rk.begin(), rk.end(), &val.front());
+  common_sort_rankV2(&val.front(), rk.begin(), rk.end(), &rkV2.front());
+  common_get_index_val(
+      rk.begin(), rk.end(), &rkV2Index.front(), &rkIndex.front());
+  if (N > 1)
+    for (size_t i = 0; i < N; ++i)
+      rkScale[i] = (double)rkV2Index[i] / 2 / (N - 1);
+  else
+    rkScale.assign(N, 0);
+  return 0;
+}
+
+int cal_val_2_rankScale_p(const VDouble& val, const NodeType* p,
+    VNodeType& rk, VNodeType& rkIndex, VNodeType& rkV2, VNodeType& rkV2Index,
+    VDouble& rkScale, const size_t N)
+{
+  VNodeType v(N);
+  for (size_t i = 0; i < N; ++i)
+    v[i] = val[*p++];
+  return cal_val_2_rankScale(val, rk, rkIndex, rkV2, rkV2Index, rkScale, N);
+}
+//*******************************************************
 int filter_trade_name(const char* tradeFilename, const char* countryFilename,
     const char* productFilename)
 {
@@ -205,7 +214,7 @@ int filter_trade_name(const char* tradeFilename, const char* countryFilename,
       common_cstring_reverse(cChar[c++]);
     }
   }
-  common_save(countryFilename, cChar, nc, '\n');
+  ERROR_TEST(common_save(countryFilename, cChar, nc, '\n'));
 
   common_save_bool(productFilename, &pVal[0], 9999, '\n');
 
@@ -239,9 +248,9 @@ int filter_trade_name_OEC(const char* tradeFilename,
       common_cstring_reverse(cChar[c++]);
     }
   }
-  common_save(countryFilename, cChar, nc, '\n');
+  ERROR_TEST(common_save(countryFilename, cChar, nc, '\n'));
 
-  common_save_bool(productFilename, &pVal[0], 9999, '\n');
+  ERROR_TEST(common_save_bool(productFilename, &pVal[0], 9999, '\n'));
 
   return 0;
 }
@@ -288,9 +297,9 @@ int filter_trade_name_NBERUN_wtf(const char* tradeFilename,
   }
   is.close();
   sort(cVal.begin(), cVal.end());
-  common_save1(countryFilename, cVal, '\n');
+  ERROR_TEST(common_save1(countryFilename, cVal, '\n'));
   sort(pVal.begin(), pVal.end());
-  common_save1(productFilename, pVal, '\n');
+  ERROR_TEST(common_save1(productFilename, pVal, '\n'));
   return 0;
 }
 
@@ -336,9 +345,9 @@ int filter_trade_name_NBERUN_wtf2(const char* tradeFilename,
   }
   is.close();
   sort(cVal.begin(), cVal.end());
-  common_save1(countryFilename, cVal, '\n');
+  ERROR_TEST(common_save1(countryFilename, cVal, '\n'));
   sort(pVal.begin(), pVal.end());
-  common_save1(productFilename, pVal, '\n');
+  ERROR_TEST(common_save1(productFilename, pVal, '\n'));
   return 0;
 }
 
@@ -426,8 +435,8 @@ int filter_sum_trade(const char* tradeFilename, const char* countryFilename,
       if (year > year0) {
         cout << l << "\t" << year0 << endl;
         sprintf(s, "%s%u.export.txt", dirSave, year0);
-        // common_save2(s, expts);
-        save_export_data(s, expts);
+        // ERROR_TEST(common_save2(s, expts));
+        ERROR_TEST(save_export_data(s, expts));
         expts.assign(NC, VDouble(NP, 0));
         expts[cVal[common_atoi<size_t>(origin)]][pVal[pd]] = v;
         year0 = year;
@@ -437,7 +446,7 @@ int filter_sum_trade(const char* tradeFilename, const char* countryFilename,
     }
     cout << l << "\t" << year0 << endl;
     sprintf(s, "%s%u.export.txt", dirSave, year0);
-    common_save2(s, expts);
+    ERROR_TEST(common_save2(s, expts));
     fclose(fp);
   }
 
@@ -475,8 +484,8 @@ int filter_sum_trade_OEC(const char* tradeFilename,
     } else {
       if (year > year0) {
         INFORM(l, "\t", year0);
-        common_save2(
-            (name + to_string(year0) + ".export.txt").c_str(), expts);
+        ERROR_TEST(common_save2(
+            (name + to_string(year0) + ".export.txt").c_str(), expts));
         expts.assign(NC, VLinkType(NP, 0));
         year0 = year;
       }
@@ -486,7 +495,8 @@ int filter_sum_trade_OEC(const char* tradeFilename,
     }
   }
   INFORM(l, "\t", year0);
-  common_save2((name + to_string(year0) + ".export.txt").c_str(), expts);
+  ERROR_TEST(
+      common_save2((name + to_string(year0) + ".export.txt").c_str(), expts));
   is.close();
 
   return 0;
@@ -527,7 +537,7 @@ int filter_sum_trade_NBER_wtf(const char* tradeFilename,
   ofstream os(saveName);
   ERROR_TEST(!os);
   os << fixed << setprecision(3);
-  common_save2(os, expts);
+  ERROR_TEST(common_save2(os, expts));
   os.close();
 
   return 0;
@@ -560,7 +570,7 @@ int filter_sum_trade_NBER_wtf2(const char* tradeFilename,
     expts[c][p] += value;
   }
   is.close();
-  common_save2(saveName, expts);
+  ERROR_TEST(common_save2(saveName, expts));
 
   return 0;
 }
@@ -568,9 +578,9 @@ int filter_sum_trade_NBER_wtf2(const char* tradeFilename,
 int filter_export_gdp_country_name(
     const char* exportNames, const char* gdpNames, const char* savePrefix)
 {
-  VString vept, veptAll, vgdp, same, diffGdp, diffEpt;
-  common_read_VString(exportNames, veptAll);
-  common_read_VString(gdpNames, vgdp);
+  VString vept, vgdp, same, diffGdp, diffEpt;
+  ERROR_TEST(common_read_VString(exportNames, vept));
+  ERROR_TEST(common_read_VString(gdpNames, vgdp));
   VStringCItr ie, ig;
   for (ie = vept.begin(); ie != vept.end(); ++ie) {
     for (ig = vgdp.begin(); ig != vgdp.end(); ++ig)
@@ -588,13 +598,10 @@ int filter_export_gdp_country_name(
     if (ie == vept.end())
       diffGdp.push_back(*ig);
   }
-  sort(same.begin(), same.end());
   string s = savePrefix;
-  common_save_VString((s + ".same.txt").c_str(), same);
-  sort(diffGdp.begin(), diffGdp.end());
-  common_save_VString((s + ".diff.gdp.txt").c_str(), diffGdp);
-  sort(diffEpt.begin(), diffEpt.end());
-  common_save_VString((s + ".diff.trade.txt").c_str(), diffEpt);
+  ERROR_TEST(common_save_VString((s + ".same.txt").c_str(), same));
+  ERROR_TEST(common_save_VString((s + ".diff.gdp.txt").c_str(), diffGdp));
+  ERROR_TEST(common_save_VString((s + ".diff.trade.txt").c_str(), diffEpt));
   return 0;
 }
 
@@ -603,9 +610,9 @@ int filter_index_same_all(const char* namesFull, const char* sameAll)
   {
     VString vept, veptAll;
     string s = namesFull;
-    common_read_VString((s + ".export.txt").c_str(), veptAll);
-    common_read_VString((s + ".same.common.txt").c_str(), vept);
-    common_read_VString((s + ".same.export.txt").c_str(), vept);
+    ERROR_TEST(common_read_VString((s + ".export.txt").c_str(), veptAll));
+    ERROR_TEST(common_read_VString((s + ".same.common.txt").c_str(), vept));
+    ERROR_TEST(common_read_VString((s + ".same.export.txt").c_str(), vept));
     VNodeType cIndex;
     for (NodeType i = 0, j; i < vept.size(); ++i) {
       for (j = 0; j < veptAll.size(); ++j)
@@ -617,15 +624,15 @@ int filter_index_same_all(const char* namesFull, const char* sameAll)
         ERROR(vept[i]);
     }
     s = sameAll;
-    common_save1((s + ".export.txt").c_str(), cIndex, '\n');
+    ERROR_TEST(common_save1((s + ".export.txt").c_str(), cIndex, '\n'));
   }
 
   {
     VString vgdp, vgdpAll;
     string s = namesFull;
-    common_read_VString((s + ".gdp.txt").c_str(), vgdpAll);
-    common_read_VString((s + ".same.common.txt").c_str(), vgdp);
-    common_read_VString((s + ".same.gdp.txt").c_str(), vgdp);
+    ERROR_TEST(common_read_VString((s + ".gdp.txt").c_str(), vgdpAll));
+    ERROR_TEST(common_read_VString((s + ".same.common.txt").c_str(), vgdp));
+    ERROR_TEST(common_read_VString((s + ".same.gdp.txt").c_str(), vgdp));
     VNodeType cIndex;
     for (NodeType i = 0, j; i < vgdp.size(); ++i) {
       for (j = 0; j < vgdpAll.size(); ++j)
@@ -637,7 +644,7 @@ int filter_index_same_all(const char* namesFull, const char* sameAll)
         ERROR(vgdp[i]);
     }
     s = sameAll;
-    common_save1((s + ".gdp.txt").c_str(), cIndex, '\n');
+    ERROR_TEST(common_save1((s + ".gdp.txt").c_str(), cIndex, '\n'));
   }
   return 0;
 }
@@ -647,40 +654,59 @@ int filter_index_same_all_OEC(const char* namesFull)
   VString c, cept, cgdp;
   string s = namesFull;
   s += ".common";
-  common_read_VString((s + ".same.txt").c_str(), c);
-  common_read_VString((s + ".same.trade.txt").c_str(), cept);
-  common_read_VString((s + ".same.gdp.txt").c_str(), cgdp);
+  ERROR_TEST(common_read_VString((s + ".same.txt").c_str(), c));
+  ERROR_TEST(common_read_VString((s + ".same.trade.txt").c_str(), cept));
+  ERROR_TEST(common_read_VString((s + ".same.gdp.txt").c_str(), cgdp));
   for (VStringItr i = c.begin(); i != c.end(); i++) {
     cept.push_back(*i);
     cgdp.push_back(*i);
   }
-  sort(cept.begin(), cept.end());
-  common_save1((s + ".trade.txt").c_str(), cept, '\n');
-  sort(cgdp.begin(), cgdp.end());
-  common_save1((s + ".gdp.txt").c_str(), cgdp, '\n');
+  ERROR_TEST(common_save1((s + ".trade.txt").c_str(), cept, '\n'));
+  ERROR_TEST(common_save1((s + ".gdp.txt").c_str(), cgdp, '\n'));
 
   s = namesFull;
   VString ept, gdp;
-  common_read_VString((s + ".trade.txt").c_str(), ept);
-  common_read_VString((s + ".gdp.txt").c_str(), gdp);
+  ERROR_TEST(common_read_VString((s + ".trade.txt").c_str(), ept));
+  ERROR_TEST(common_read_VString((s + ".gdp.txt").c_str(), gdp));
   VNodeType iept, igdp;
   for (size_t i = 0; i < ept.size(); i++) {
     if (find(cept.begin(), cept.end(), ept[i]) != cept.end())
       iept.push_back(i);
   }
-  common_save1((s + ".common.trade.index.txt").c_str(), iept, '\n');
+  ERROR_TEST(
+      common_save1((s + ".common.trade.index.txt").c_str(), iept, '\n'));
   for (size_t i = 0; i < gdp.size(); i++) {
     if (find(cgdp.begin(), cgdp.end(), gdp[i]) != cgdp.end())
       igdp.push_back(i);
   }
-  common_save1((s + ".common.gdp.index.txt").c_str(), igdp, '\n');
+  ERROR_TEST(common_save1((s + ".common.gdp.index.txt").c_str(), igdp, '\n'));
+  return 0;
+}
+
+int filter_index_same_not0_OEC(const char* namesFull, const char* countryNot0)
+{
+  VNodeType ep, gdp, epN0, e, g;
+  string s = namesFull;
+  ERROR_TEST(common_read1_0((s + ".trade.index.txt").c_str(), ep));
+  ERROR_TEST(common_read1_0((s + ".gdp.index.txt").c_str(), gdp));
+  ERROR_TEST(common_read1_0(countryNot0, epN0));
+  for (size_t i = 0; i < ep.size(); ++i) {
+    for (size_t j = 0; j < epN0.size(); ++j)
+      if (ep[i] == epN0[j]) {
+        e.push_back(ep[i]);
+        g.push_back(gdp[i]);
+        break;
+      }
+  }
+  ERROR_TEST(common_save1((s + ".trade.index.not0.txt").c_str(), e, '\n'));
+  ERROR_TEST(common_save1((s + ".gdp.index.not0.txt").c_str(), g, '\n'));
   return 0;
 }
 
 int filter_index_gdp_0(const char* gdpFile, const char* cIndexFile)
 {
   VVString gdp;
-  common_read2_0(gdpFile, gdp);
+  ERROR_TEST(common_read2_0(gdpFile, gdp));
   VNodeType cIndex;
   for (NodeType i = 0, j; i < gdp.size(); ++i) {
     for (j = 0; j < gdp[i].size(); ++j)
@@ -690,7 +716,7 @@ int filter_index_gdp_0(const char* gdpFile, const char* cIndexFile)
       cIndex.push_back(i);
     }
   }
-  common_save1(cIndexFile, cIndex, '\n');
+  ERROR_TEST(common_save1(cIndexFile, cIndex, '\n'));
   return -1;
 }
 
@@ -701,9 +727,9 @@ int filter_index_export_0_OEC(const char* epDIR, const char* cIndexFile,
   const NodeType NYEAR = YEAR2 - YEAR1;
   vector<VVLinkType> ep(NYEAR);
   for (NodeType i = 0; i < NYEAR; ++i)
-    common_read2_0(
+    ERROR_TEST(common_read2_0(
         (string(epDIR) + to_string(YEAR1 + i) + ".export.txt").c_str(),
-        ep[i]);
+        ep[i]));
 
   NodeType NC = ep[0].size(), NP = ep[0][0].size();
   VNodeType cIndex, pIndex;
@@ -711,7 +737,7 @@ int filter_index_export_0_OEC(const char* epDIR, const char* cIndexFile,
     // exclude: wld xx.
     if (countryFilename != NULL || countryFilename[0] != '\0') {
       VString cNames;
-      common_read1_0(countryFilename, cNames);
+      ERROR_TEST(common_read1_0(countryFilename, cNames));
       for (NodeType ci = 0; ci < cNames.size(); ++ci)
         if (cNames[ci] != "wld"
             && !(cNames[ci][0] == 'x' && cNames[ci][1] == 'x'))
@@ -726,7 +752,7 @@ int filter_index_export_0_OEC(const char* epDIR, const char* cIndexFile,
   {
     if (productFilename != NULL || productFilename[0] != '\0') {
       VNodeType pNames;
-      common_read1_0(productFilename, pNames);
+      ERROR_TEST(common_read1_0(productFilename, pNames));
       for (NodeType pi = 0; pi < pNames.size(); ++pi) {
         // if (pNames[pi] % 10 != 0) // exclude: xxx0
         pIndex.push_back(pi);
@@ -834,9 +860,9 @@ int filter_index_export_0_OEC(const char* epDIR, const char* cIndexFile,
     }
 
   sort(cIndex.begin(), cIndex.end());
-  common_save1(cIndexFile, cIndex, '\n');
+  ERROR_TEST(common_save1(cIndexFile, cIndex, '\n'));
   sort(pIndex.begin(), pIndex.end());
-  common_save1(pIndexFile, pIndex, '\n');
+  ERROR_TEST(common_save1(pIndexFile, pIndex, '\n'));
 
   return 0;
 }
@@ -851,15 +877,15 @@ int filter_index_export_0_NBER_wtf(const char* epDIR, const char* cIndexFile,
   const double EP0 = 1e-5;
   string s = epDIR;
   for (NodeType year = YEAR1; year < YEAR2; ++year)
-    common_read2_0(
-        (s + to_string(year) + ".export.txt").c_str(), ep[year - YEAR1]);
+    ERROR_TEST(common_read2_0(
+        (s + to_string(year) + ".export.txt").c_str(), ep[year - YEAR1]));
 
   NodeType NC = ep[0].size(), NP = ep[0][0].size();
   VNodeType cIndex(NC), pIndex;
   for (NodeType ci = 0; ci < cIndex.size(); ++ci)
     cIndex[ci] = ci;
   if (pIndexFileAll != NULL && pIndexFileAll[0] != '\0') {
-    common_read1_0(pIndexFileAll, pIndex);
+    ERROR_TEST(common_read1_0(pIndexFileAll, pIndex));
     cout << pIndexFileAll << "\t" << pIndex.size() << endl;
   } else {
     pIndex.resize(NP);
@@ -936,9 +962,9 @@ int filter_index_export_0_NBER_wtf(const char* epDIR, const char* cIndexFile,
   }
 
   sort(cIndex.begin(), cIndex.end());
-  common_save1(cIndexFile, cIndex, '\n');
+  ERROR_TEST(common_save1(cIndexFile, cIndex, '\n'));
   sort(pIndex.begin(), pIndex.end());
-  common_save1(pIndexFile, pIndex, '\n');
+  ERROR_TEST(common_save1(pIndexFile, pIndex, '\n'));
 
   return 0;
 }
@@ -949,10 +975,10 @@ int filter_index_export_gdp(const char* gdpIndexFile0,
     const char* exportIndexFile2)
 {
   VNodeType g0, g, g2, e0, e, e2;
-  common_read1_0(gdpIndexFile0, g0);
-  common_read1_0(gdpIndexFile, g);
-  common_read1_0(exportIndexFile0, e0);
-  common_read1_0(exportIndexFile, e);
+  ERROR_TEST(common_read1_0(gdpIndexFile0, g0));
+  ERROR_TEST(common_read1_0(gdpIndexFile, g));
+  ERROR_TEST(common_read1_0(exportIndexFile0, e0));
+  ERROR_TEST(common_read1_0(exportIndexFile, e));
   if (g0.size() != e0.size()) {
     ERROR();
     return -1;
@@ -976,8 +1002,9 @@ int filter_index_export_gdp(const char* gdpIndexFile0,
   for (NodeType i = 0; i < n; ++i)
     if (cIndex[i] == 2)
       id.push_back(i);
-  common_save1_p(gdpIndexFile2, &g0[0], &id[0], id.size(), '\n');
-  common_save1_p(exportIndexFile2, &e0[0], &id[0], id.size(), '\n');
+  ERROR_TEST(common_save1_p(gdpIndexFile2, &g0[0], &id[0], id.size(), '\n'));
+  ERROR_TEST(
+      common_save1_p(exportIndexFile2, &e0[0], &id[0], id.size(), '\n'));
   return 0;
 }
 
@@ -986,20 +1013,20 @@ int filter_data_export(const char* exportDIR, const char* countryIndexFile,
     const NodeType YEAR2)
 {
   VNodeType cIndex, pIndex;
-  common_read1_0(countryIndexFile, cIndex);
-  common_read1_0(productIndexFile, pIndex);
+  ERROR_TEST(common_read1_0(countryIndexFile, cIndex));
+  ERROR_TEST(common_read1_0(productIndexFile, pIndex));
   for (NodeType year = YEAR1; year < YEAR2; ++year) {
     INFORM(year);
     VVString epts;
     string s0 = exportDIR;
-    common_read2_0(
-        (string(exportDIR) + to_string(year) + ".export.txt").c_str(), epts);
+    ERROR_TEST(common_read2_0(
+        (string(exportDIR) + to_string(year) + ".export.txt").c_str(), epts));
     VVString epts2(cIndex.size());
     for (NodeType ci = 0; ci < cIndex.size(); ++ci)
       for (NodeType pi = 0; pi < pIndex.size(); ++pi)
         epts2[ci].push_back(epts[cIndex[ci]][pIndex[pi]]);
-    common_save2(
-        (string(DATA_DIR) + to_string(year) + ".export.txt").c_str(), epts2);
+    ERROR_TEST(common_save2(
+        (string(DATA_DIR) + to_string(year) + ".export.txt").c_str(), epts2));
   }
   return 0;
 }
@@ -1009,12 +1036,12 @@ int filter_data(const char* gdpFile, const char* gdpIndexFile,
     const char* productIndexFile, const char* DATA_DIR)
 {
   VVString gdp;
-  common_read2_0(gdpFile, gdp);
+  ERROR_TEST(common_read2_0(gdpFile, gdp));
   VNodeType gIndex;
-  common_read1_0(gdpIndexFile, gIndex);
+  ERROR_TEST(common_read1_0(gdpIndexFile, gIndex));
   VNodeType cIndex, pIndex;
-  common_read1_0(countryIndexFile, cIndex);
-  common_read1_0(productIndexFile, pIndex);
+  ERROR_TEST(common_read1_0(countryIndexFile, cIndex));
+  ERROR_TEST(common_read1_0(productIndexFile, pIndex));
   const NodeType YEAR1 = 1995, YEAR2 = 2014, NYEAR = YEAR2 - YEAR1 + 1;
   for (NodeType i = 0; i < NYEAR; ++i) {
     string y;
@@ -1025,16 +1052,33 @@ int filter_data(const char* gdpFile, const char* gdpIndexFile,
     VString g(gIndex.size());
     for (NodeType gi = 0; gi < gIndex.size(); ++gi)
       g[gi] = gdp[gIndex[gi]][i];
-    common_save1((s + y + ".gdp.txt").c_str(), g, '\n');
+    ERROR_TEST(common_save1((s + y + ".gdp.txt").c_str(), g, '\n'));
 
     VVString epts;
     string s0 = exportDIR;
-    common_read2_0((s0 + y + ".export.txt").c_str(), epts);
+    ERROR_TEST(common_read2_0((s0 + y + ".export.txt").c_str(), epts));
     VVString epts2(cIndex.size());
     for (NodeType ci = 0; ci < cIndex.size(); ++ci)
       for (NodeType pi = 0; pi < pIndex.size(); ++pi)
         epts2[ci].push_back(epts[cIndex[ci]][pIndex[pi]]);
-    common_save2((s + y + ".export.txt").c_str(), epts2);
+    ERROR_TEST(common_save2((s + y + ".export.txt").c_str(), epts2));
+  }
+  return 0;
+}
+
+int filter_common_gdp(const char* name, const char* dir, const size_t YEAR1,
+    const size_t YEAR2, size_t YEAR0)
+{
+  VVString gdps;
+  ERROR_TEST(common_read2_0(name, gdps));
+  const size_t NC = gdps.size(), NY = gdps[0].size();
+  ERROR_TEST(YEAR2 - YEAR1 > NY);
+  VString g(NC);
+  string s = dir;
+  for (size_t y = YEAR1; y < YEAR2; ++y) {
+    for (size_t c = 0; c < NC; ++c)
+      g[c] = gdps[c][y - YEAR0];
+    ERROR_TEST(common_save1((dir + to_string(y) + ".gdp.txt").c_str(), g));
   }
   return 0;
 }

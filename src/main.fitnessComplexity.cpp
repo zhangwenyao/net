@@ -10,9 +10,10 @@ int main_fitness_complexity(int argc, char** argv)
   const string DIR0 = "data/complexity/OEC.sitc_rev2/",
                DIR_DATA0 = DIR0 + "data0/", DIR_DATA = DIR0 + "data/",
                DIR_INFO = DIR0 + "info/";
+  const size_t YEAR1 = 2001, YEAR2 = 2014 + 1;
 
-  NodeType YEAR1 = 2001, YEAR2 = 2014 + 1, NC, NP;
-  for (NodeType year = YEAR1; year < YEAR2; year++) {
+  size_t NC, NP;
+  for (size_t year = YEAR1; year < YEAR2; year++) {
     // export to mcp
     VVLinkType e;
     ERROR_TEST(common_read2_0(
@@ -27,11 +28,11 @@ int main_fitness_complexity(int argc, char** argv)
         common_save2((DIR_DATA + to_string(year) + ".mcp.txt").c_str(), mcp));
     // common_read2_0((DIR_DATA + y + ".mcp.txt").c_str(), mcp);
 
-    VNodeType k1, product_k1;
-    ERROR_TEST(count_k1(mcp, k1,
-        (DIR_DATA + to_string(year) + ".country.product.k.txt").c_str()));
-    ERROR_TEST(count_product_k1(mcp, product_k1,
-        (DIR_DATA + to_string(year) + ".product.country.k.txt").c_str()));
+    VNodeType deg, product_deg;
+    ERROR_TEST(count_deg(mcp, deg,
+        (DIR_DATA + to_string(year) + ".country.product.mcp.deg.txt").c_str()));
+    ERROR_TEST(count_product_deg(mcp, product_deg,
+        (DIR_DATA + to_string(year) + ".product.country.mcp.deg.txt").c_str()));
 
     // Mcp to country fitness & product complexity
     VDouble cf, pc;

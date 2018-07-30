@@ -7,27 +7,24 @@
 // *******************************************************
 template <typename T, typename T2>
 int export_2_Mcp(
-    const std::vector<std::vector<T> >& e, std::vector<std::vector<T2> >& mcp);
+    const std::vector<std::vector<T>>& e, std::vector<std::vector<T2>>& mcp);
 template <typename T>
 int Mcp_2_C_P(
-    const std::vector<std::vector<T> >& mcp, VVNodeType& pc, VVNodeType& pp);
+    const std::vector<std::vector<T>>& mcp, VVNodeType& pc, VVNodeType& pp);
 template <typename T>
 int Mcp_2_FC(
-    VDouble& Fc, VDouble& Cp, const std::vector<std::vector<T> >& Mcp);
+    VDouble& Fc, VDouble& Cp, const std::vector<std::vector<T>>& Mcp);
 
-int count_k1(const VVNodeType& mcp, VNodeType& k1, const char* name = NULL);
-int count_product_k1(
-    const VVNodeType& mcp, VNodeType& k1, const char* name = NULL);
-int count_mcpNew(const NodeType NC, const NodeType NP, const VVNodeType& mcp,
-    const VVNodeType& mcp2, VVNodeType& mcpNew, const char* name = NULL);
-int count_kNew(
-    VNodeType& kNew, const VVNodeType& mcpNew, const char* name = NULL);
-int count_pcNewRank(const VDouble& pc, const size_t NC, const size_t NP,
-    const VVNodeType& mcpNew, VVNodeType& pcNewRank, const char* name = NULL);
-int count_pcNewRemainRank(const VDouble& pc, const size_t NC, const size_t NP,
-    const VVNodeType& mcp, const VVNodeType& mcpNew,
-    VVNodeType& pcNewRemainRank, const char* name = NULL);
-int count_newScale(const size_t NC, const size_t NP, const VNodeType& k1,
+int count_deg(const VVNodeType& mcp, VNodeType& deg, const char* name = NULL);
+int count_product_deg(
+    const VVNodeType& mcp, VNodeType& deg, const char* name = NULL);
+int count_mcpNew(const VVNodeType& mcp0, const VVNodeType& mcp,
+    VVNodeType& mcpNew, VVNodeType& mcpRemain);
+int count_pcNewRankV2(const VNodeType& pcRankV2, const VVNodeType& mcpNew,
+    VVNodeType& pcNewRankV2);
+int count_pcNewRemainRankV2(const VNodeType& pcRankV2, const VVNodeType& mcp,
+    const VVNodeType& mcpNew, VVNodeType& pcNewRemainRankV2);
+int count_newScale(const size_t NC, const size_t NP, const VNodeType& deg,
     const VVNodeType& newRemainRank, VVDouble& newScale,
     const char* name = NULL);
 int count_newRank(const VVDouble& rcm, const size_t NC, const size_t NP,
@@ -35,6 +32,18 @@ int count_newRank(const VVDouble& rcm, const size_t NC, const size_t NP,
 int count_newRemainRank(const VVDouble& rcm, const size_t NC, const size_t NP,
     const VVNodeType& mcp, const VVNodeType& mcpNew,
     VVNodeType& newRemainRank, const char* name = NULL);
+
+int cal_val_2_rankScale(const VDouble& val, VNodeType& rk, VNodeType& rkIndex,
+    VNodeType& rkV2, VNodeType& rkV2Index, VDouble& rkScale, const size_t N);
+int cal_val_2_rankScale_p(const VDouble& val, const NodeType* p,
+    VNodeType& rk, VNodeType& rkIndex, VNodeType& rkV2, VNodeType& rkV2Index,
+    VDouble& rkScale, const size_t N);
+
+template <typename T>
+int count_rankingScore(const VVDouble& rcm, const size_t NC, const size_t NP,
+    const std::vector<std::vector<T> >& mcp,
+    const std::vector<std::vector<T> >& mcp2, VDouble& rankingScore,
+    const char* name);
 
 // 筛选进出口数据的国家和产品名
 int filter_trade_name(const char* tradeFilename, const char* countryFilename,
@@ -72,6 +81,8 @@ int filter_export_gdp_country_name(
     const char* exportNames, const char* gdpNames, const char* savePrefix);
 int filter_index_same_all(const char* namesFull, const char* sameAll);
 int filter_index_same_all_OEC(const char* namesFull);
+int filter_index_same_not0_OEC(
+    const char* namesFull, const char* countryNot0);
 int filter_index_gdp_0(const char* gdpFile, const char* cIndexFile);
 int filter_index_export_0_OEC(const char* epDIR, const char* cIndexFile,
     const char* pIndexFile, const char* countryFilename = NULL,
@@ -92,6 +103,8 @@ int filter_data_export(const char* exportDIR, const char* countryIndexFile,
 int filter_data(const char* gdpFile, const char* gdpIndexFile,
     const char* exportFile, const char* countryIndexFile,
     const char* productIndexFile, const char* DATA_DIR);
+int filter_common_gdp(const char* name, const char* dir, const size_t YEAR1,
+    const size_t YEAR2, size_t YEAR0);
 
 // *******************************************************
 #include "ActFitnessComplexity.template.h"

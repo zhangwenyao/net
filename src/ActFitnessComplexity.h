@@ -6,18 +6,19 @@
 #ifdef ACT_FITNESS_COMPLEXITY
 // *******************************************************
 template <typename T, typename T2>
-int export_2_Mcp(
-    const std::vector<std::vector<T>>& e, std::vector<std::vector<T2>>& mcp);
+int export_2_Mcp(const std::vector<std::vector<T> >& e,
+    std::vector<std::vector<T2> >& mcp);
 template <typename T>
 int Mcp_2_C_P(
-    const std::vector<std::vector<T>>& mcp, VVNodeType& pc, VVNodeType& pp);
+    const std::vector<std::vector<T> >& mcp, VVNodeType& pc, VVNodeType& pp);
 template <typename T>
 int Mcp_2_FC(
-    VDouble& Fc, VDouble& Cp, const std::vector<std::vector<T>>& Mcp);
+    VDouble& Fc, VDouble& Cp, const std::vector<std::vector<T> >& Mcp);
 
 int count_deg(const VVNodeType& mcp, VNodeType& deg, const char* name = NULL);
 int count_product_deg(
     const VVNodeType& mcp, VNodeType& deg, const char* name = NULL);
+int count_mcpMcp(const VVNodeType& mcp, VVNodeType& mcpMcp);
 int count_mcpNew(const VVNodeType& mcp0, const VVNodeType& mcp,
     VVNodeType& mcpNew, VVNodeType& mcpRemain);
 int count_pcNewRankV2(const VNodeType& pcRankV2, const VVNodeType& mcpNew,
@@ -38,6 +39,18 @@ int cal_val_2_rankScale(const VDouble& val, VNodeType& rk, VNodeType& rkIndex,
 int cal_val_2_rankScale_p(const VDouble& val, const NodeType* p,
     VNodeType& rk, VNodeType& rkIndex, VNodeType& rkV2, VNodeType& rkV2Index,
     VDouble& rkScale, const size_t N);
+int save_rankScale(const char* dir, const VNodeType& rk,
+    const VNodeType& rkIndex, const VNodeType& rkV2,
+    const VNodeType& rkV2Index, const VDouble& rkScale);
+int save_rankScale2(const char* dir, const VVNodeType& rk,
+    const VVNodeType& rkIndex, const VVNodeType& rkV2,
+    const VVNodeType& rkV2Index, const VVDouble& rkScale);
+int save_rankScale_val(const char* dir, const VDouble& val);
+int save_rankScale2_val(const char* dir, const VVDouble& val);
+int save_rankScale2_val_p(
+    const char* dir, const VVDouble& val, const VVNodeType p);
+int save_rankScale2_val_mcp(const char* dir, const VVDouble& val,
+    const VVNodeType& mcp0, const VVNodeType& mcp, const VVNodeType& mcpMcp);
 
 template <typename T>
 int count_rankingScore(const VVDouble& rcm, const size_t NC, const size_t NP,
@@ -103,8 +116,6 @@ int filter_data_export(const char* exportDIR, const char* countryIndexFile,
 int filter_data(const char* gdpFile, const char* gdpIndexFile,
     const char* exportFile, const char* countryIndexFile,
     const char* productIndexFile, const char* DATA_DIR);
-int filter_common_gdp(const char* name, const char* dir, const size_t YEAR1,
-    const size_t YEAR2, size_t YEAR0);
 
 // *******************************************************
 #include "ActFitnessComplexity.template.h"

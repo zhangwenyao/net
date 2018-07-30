@@ -10,7 +10,7 @@ using namespace std;
 int count_deg(const VVNodeType& mcp, VNodeType& deg, const char* name)
 {
   const NodeType NC = mcp.size(), NP = mcp[0].size();
-  deg.assign(NP, 0);
+  deg.assign(NC, 0);
   for (NodeType c = 0; c < NC; ++c) {
     for (NodeType p = 0; p < NP; ++p) {
       if (mcp[c][p])
@@ -26,14 +26,28 @@ int count_product_deg(const VVNodeType& mcp, VNodeType& deg, const char* name)
 {
   const NodeType NC = mcp.size(), NP = mcp[0].size();
   deg.assign(NP, 0);
-  for (NodeType c = 0; c < NC; ++c) {
-    for (NodeType p = 0; p < NP; ++p) {
+  for (NodeType p = 0; p < NP; ++p) {
+    for (NodeType c = 0; c < NC; ++c) {
       if (mcp[c][p])
         deg[p]++;
     }
   }
   if (name != NULL && name[0] != '\0')
     ERROR_TEST(common_save1(name, deg, '\n'));
+  return 0;
+}
+
+int count_mcpMcp(const VVNodeType& mcp, VVNodeType& mcpMcp)
+{
+  NodeType NC = mcp.size(), NP = mcp[0].size();
+  mcpMcp.resize(NC);
+  for (size_t c = 0; c < NC; c++) {
+    mcpMcp[c].clear();
+    for (size_t p = 0; p < NP; p++) {
+      if (mcp[c][p] != 0)
+        mcpMcp[c].push_back(p);
+    }
+  }
   return 0;
 }
 
@@ -89,24 +103,24 @@ int count_pcNewRemainRankV2(const VNodeType& pcRankV2, const VVNodeType& mcp,
   return 0;
 }
 
-//int count_newScale(const VNodeType& deg, const VVNodeType& newRemainRankV2,
-    //VVDouble& newScale)
+// int count_newScale(const VNodeType& deg, const VVNodeType& newRemainRankV2,
+// VVDouble& newScale)
 //{
-  //const size_t NC = deg.size(), NP, newScale.resize(NC);
-  //for (size_t c = 0; c < NC; c++) {
-    //newScale[c].clear();
-    //if (NP == deg[c] + 1 && newRemainRank[c].size() == 1) {
-      //newScale[c].push_back(0.5);
-      //continue;
-    //}
-    //double x = 1.0 / (NP - deg[c] - 1);
-    //for (size_t p = 0; p < newRemainRank[c].size(); p++)
-      //newScale[c].push_back(newRemainRank[c][p] * x);
-    //break;
-  //}
-  //if (name != NULL && name[0] != '\0')
-    //ERROR_TEST(common_save2(name, newScale));
-  //return 0;
+// const size_t NC = deg.size(), NP, newScale.resize(NC);
+// for (size_t c = 0; c < NC; c++) {
+// newScale[c].clear();
+// if (NP == deg[c] + 1 && newRemainRank[c].size() == 1) {
+// newScale[c].push_back(0.5);
+// continue;
+//}
+// double x = 1.0 / (NP - deg[c] - 1);
+// for (size_t p = 0; p < newRemainRank[c].size(); p++)
+// newScale[c].push_back(newRemainRank[c][p] * x);
+// break;
+//}
+// if (name != NULL && name[0] != '\0')
+// ERROR_TEST(common_save2(name, newScale));
+// return 0;
 //}
 
 int count_newRank(const VVDouble& rcm, const size_t NC, const size_t NP,
@@ -165,6 +179,7 @@ int cal_val_2_rankScale(const VDouble& val, VNodeType& rk, VNodeType& rkIndex,
   for (size_t i = 0; i < N; ++i)
     rk[i] = i;
   common_sort_p_val_less(rk.begin(), rk.end(), &val.front());
+  common_get_index(rk.begin(), rk.end(), &rkIndex.front());
   common_sort_rankV2(&val.front(), rk.begin(), rk.end(), &rkV2.front());
   common_get_index_val(
       rk.begin(), rk.end(), &rkV2Index.front(), &rkIndex.front());
@@ -172,7 +187,7 @@ int cal_val_2_rankScale(const VDouble& val, VNodeType& rk, VNodeType& rkIndex,
     for (size_t i = 0; i < N; ++i)
       rkScale[i] = (double)rkV2Index[i] / 2 / (N - 1);
   else
-    rkScale.assign(N, 0);
+    rkScale.assign(N, 0.5);
   return 0;
 }
 
@@ -180,11 +195,126 @@ int cal_val_2_rankScale_p(const VDouble& val, const NodeType* p,
     VNodeType& rk, VNodeType& rkIndex, VNodeType& rkV2, VNodeType& rkV2Index,
     VDouble& rkScale, const size_t N)
 {
-  VNodeType v(N);
+  VDouble v(N);
   for (size_t i = 0; i < N; ++i)
     v[i] = val[*p++];
   return cal_val_2_rankScale(val, rk, rkIndex, rkV2, rkV2Index, rkScale, N);
 }
+
+int save_rankScale(const char* dir, const VNodeType& rk,
+    const VNodeType& rkIndex, const VNodeType& rkV2,
+    const VNodeType& rkV2Index, const VDouble& rkScale)
+{
+  string s = dir;
+  common_save1((s + ".txt").c_str(), rk, '\n');
+  common_save1((s + ".index.txt").c_str(), rkIndex, '\n');
+  common_save1((s + "V2.txt").c_str(), rkV2, '\n');
+  common_save1((s + "V2.index.txt").c_str(), rkV2Index, '\n');
+  common_save1((s + "V2.scale.txt").c_str(), rkScale, '\n');
+  return 0;
+}
+
+int save_rankScale2(const char* dir, const VVNodeType& rk,
+    const VVNodeType& rkIndex, const VVNodeType& rkV2,
+    const VVNodeType& rkV2Index, const VVDouble& rkScale)
+{
+  string s = dir;
+  common_save2((s + ".txt").c_str(), rk);
+  common_save2((s + ".index.txt").c_str(), rkIndex);
+  common_save2((s + "V2.txt").c_str(), rkV2);
+  common_save2((s + "V2.index.txt").c_str(), rkV2Index);
+  common_save2((s + "V2.scale.txt").c_str(), rkScale);
+  return 0;
+}
+
+int save_rankScale_val(const char* dir, const VDouble& val)
+{
+  VNodeType rk, rkIndex, rkV2, rkV2Index;
+  VDouble rkScale;
+  cal_val_2_rankScale(val, rk, rkIndex, rkV2, rkV2Index, rkScale, val.size());
+  save_rankScale(dir, rk, rkIndex, rkV2, rkV2Index, rkScale);
+  return 0;
+}
+
+int save_rankScale2_val(const char* dir, const VVDouble& val)
+{
+  const size_t N = val.size();
+  VVNodeType rk(N), rkIndex(N), rkV2(N), rkV2Index(N);
+  VVDouble rkScale(N);
+  for (size_t i = 0; i < N; ++i)
+    cal_val_2_rankScale(val[i], rk[i], rkIndex[i], rkV2[i], rkV2Index[i],
+        rkScale[i], val[i].size());
+  save_rankScale2(dir, rk, rkIndex, rkV2, rkV2Index, rkScale);
+  return 0;
+}
+
+int save_rankScale2_val_p(
+    const char* dir, const VVDouble& val, const VVNodeType p)
+{
+  const size_t N = val.size();
+  VVNodeType rk(N), rkIndex(N), rkV2(N), rkV2Index(N);
+  VVDouble rkScale(N);
+  for (size_t i = 0; i < N; ++i) {
+    size_t NN = p[i].size();
+    VDouble v(NN);
+    for (size_t j = 0; j < NN; ++j)
+      v[j] = val[i][p[i][j]];
+    cal_val_2_rankScale(
+        v, rk[i], rkIndex[i], rkV2[i], rkV2Index[i], rkScale[i], NN);
+  }
+  save_rankScale2(dir, rk, rkIndex, rkV2, rkV2Index, rkScale);
+  return 0;
+}
+
+int save_rankScale2_val_mcp(const char* dir, const VVDouble& val,
+    const VVNodeType& mcp0, const VVNodeType& mcp, const VVNodeType& mcpMcp)
+{
+  string DIR = dir;
+  const size_t NC = mcp.size(), NP = mcp[0].size();
+  VVNodeType mcpPcRank(NC), mcpPcRankIndex(NC), mcpPcRankV2(NC),
+      mcpPcRankV2Index(NC);
+  VVDouble mcpPcRankScale(NC);
+  VVNodeType mcpNewPcRank(NC), mcpNewPcRankIndex(NC), mcpNewPcRankV2(NC),
+      mcpNewPcRankV2Index(NC);
+  VVDouble mcpNewPcRankScale(NC);
+  VVNodeType mcpRemainPcRank(NC), mcpRemainPcRankIndex(NC),
+      mcpRemainPcRankV2(NC), mcpRemainPcRankV2Index(NC);
+  VVDouble mcpRemainPcRankScale(NC);
+  for (size_t c = 0; c < NC; ++c) {
+    cal_val_2_rankScale_p(val[c], &mcpMcp[c][0], mcpPcRank[c],
+        mcpPcRankIndex[c], mcpPcRankV2[c], mcpPcRankV2Index[c],
+        mcpPcRankScale[c], mcpMcp[c].size());
+    for (size_t p = 0, i = 0; p < NP; ++p)
+      if (mcp[c][p] != 0) {
+        if (mcp0[c][p] == 0) { // New
+          mcpNewPcRank[c].push_back(mcpPcRank[c][i]);
+          mcpNewPcRankIndex[c].push_back(mcpPcRankIndex[c][i]);
+          mcpNewPcRankV2[c].push_back(mcpPcRankV2[c][i]);
+          mcpNewPcRankV2Index[c].push_back(mcpPcRankV2Index[c][i]);
+          mcpNewPcRankScale[c].push_back(mcpPcRankScale[c][i]);
+        } else { // remain
+          mcpRemainPcRank[c].push_back(mcpPcRank[c][i]);
+          mcpRemainPcRankIndex[c].push_back(mcpPcRankIndex[c][i]);
+          mcpRemainPcRankV2[c].push_back(mcpPcRankV2[c][i]);
+          mcpRemainPcRankV2Index[c].push_back(mcpPcRankV2Index[c][i]);
+          mcpRemainPcRankScale[c].push_back(mcpPcRankScale[c][i]);
+        }
+        ++i;
+      }
+  }
+
+  save_rankScale2((DIR + ".mcp.rankLess").c_str(), mcpPcRank, mcpPcRankIndex,
+      mcpPcRankV2, mcpPcRankV2Index, mcpPcRankScale);
+  save_rankScale2((DIR + ".new.rankLess").c_str(), mcpNewPcRank,
+      mcpNewPcRankIndex, mcpNewPcRankV2, mcpNewPcRankV2Index,
+      mcpNewPcRankScale);
+  save_rankScale2((DIR + ".remain.rankLess").c_str(), mcpRemainPcRank,
+      mcpRemainPcRankIndex, mcpRemainPcRankV2, mcpRemainPcRankV2Index,
+      mcpRemainPcRankScale);
+
+  return 0;
+}
+
 //*******************************************************
 int filter_trade_name(const char* tradeFilename, const char* countryFilename,
     const char* productFilename)
@@ -669,15 +799,17 @@ int filter_index_same_all_OEC(const char* namesFull)
   ERROR_TEST(common_read_VString((s + ".trade.txt").c_str(), ept));
   ERROR_TEST(common_read_VString((s + ".gdp.txt").c_str(), gdp));
   VNodeType iept, igdp;
-  for (size_t i = 0; i < ept.size(); i++) {
-    if (find(cept.begin(), cept.end(), ept[i]) != cept.end())
-      iept.push_back(i);
+  for (size_t i = 0; i < cept.size(); i++) {
+    auto t = find(ept.begin(), ept.end(), cept[i]);
+    if (t != ept.end())
+      iept.push_back(t - ept.begin());
   }
   ERROR_TEST(
       common_save1((s + ".common.trade.index.txt").c_str(), iept, '\n'));
-  for (size_t i = 0; i < gdp.size(); i++) {
-    if (find(cgdp.begin(), cgdp.end(), gdp[i]) != cgdp.end())
-      igdp.push_back(i);
+  for (size_t i = 0; i < cgdp.size(); i++) {
+    auto t = find(gdp.begin(), gdp.end(), cgdp[i]);
+    if (t != gdp.end())
+      igdp.push_back(t - gdp.begin());
   }
   ERROR_TEST(common_save1((s + ".common.gdp.index.txt").c_str(), igdp, '\n'));
   return 0;
@@ -685,7 +817,7 @@ int filter_index_same_all_OEC(const char* namesFull)
 
 int filter_index_same_not0_OEC(const char* namesFull, const char* countryNot0)
 {
-  VNodeType ep, gdp, epN0, e, g;
+  VNodeType ep, gdp, epN0, e, eAll, g;
   string s = namesFull;
   ERROR_TEST(common_read1_0((s + ".trade.index.txt").c_str(), ep));
   ERROR_TEST(common_read1_0((s + ".gdp.index.txt").c_str(), gdp));
@@ -693,11 +825,14 @@ int filter_index_same_not0_OEC(const char* namesFull, const char* countryNot0)
   for (size_t i = 0; i < ep.size(); ++i) {
     for (size_t j = 0; j < epN0.size(); ++j)
       if (ep[i] == epN0[j]) {
-        e.push_back(ep[i]);
+        e.push_back(j);
+        eAll.push_back(ep[i]);
         g.push_back(gdp[i]);
         break;
       }
   }
+  // ERROR_TEST(
+  // common_save1((s + ".trade.index.not0.all.txt").c_str(), eAll, '\n'));
   ERROR_TEST(common_save1((s + ".trade.index.not0.txt").c_str(), e, '\n'));
   ERROR_TEST(common_save1((s + ".gdp.index.not0.txt").c_str(), g, '\n'));
   return 0;
@@ -1062,23 +1197,6 @@ int filter_data(const char* gdpFile, const char* gdpIndexFile,
       for (NodeType pi = 0; pi < pIndex.size(); ++pi)
         epts2[ci].push_back(epts[cIndex[ci]][pIndex[pi]]);
     ERROR_TEST(common_save2((s + y + ".export.txt").c_str(), epts2));
-  }
-  return 0;
-}
-
-int filter_common_gdp(const char* name, const char* dir, const size_t YEAR1,
-    const size_t YEAR2, size_t YEAR0)
-{
-  VVString gdps;
-  ERROR_TEST(common_read2_0(name, gdps));
-  const size_t NC = gdps.size(), NY = gdps[0].size();
-  ERROR_TEST(YEAR2 - YEAR1 > NY);
-  VString g(NC);
-  string s = dir;
-  for (size_t y = YEAR1; y < YEAR2; ++y) {
-    for (size_t c = 0; c < NC; ++c)
-      g[c] = gdps[c][y - YEAR0];
-    ERROR_TEST(common_save1((dir + to_string(y) + ".gdp.txt").c_str(), g));
   }
   return 0;
 }

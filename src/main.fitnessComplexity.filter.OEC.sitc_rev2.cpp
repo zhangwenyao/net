@@ -9,7 +9,7 @@ int main_fitness_complexity_filter(int argc, char** argv)
 {
   const string DIR0 = "data/complexity/OEC.sitc_rev2/",
                DIR_DATA0 = DIR0 + "data0/", DIR_DATA = DIR0 + "data/",
-               DIR_INFO = DIR0 + "info/";
+               DIR_INFO = DIR0 + "info/", DIR_COMMON = DIR0 + "dataCommon/";
   const NodeType YEAR1 = 2001, YEAR2 = 2014 + 1;
 
   // 筛选进出口数据的国家和产品名
@@ -54,8 +54,6 @@ int main_fitness_complexity_filter(int argc, char** argv)
         (DIR_INFO + "country.namesFull.common").c_str(),
         (DIR_INFO + "country.index.export.not0.txt").c_str()));
 
-    ERROR_TEST(filter_common_gdp((DIR_DATA0 + "2001-2014.gdps.txt").c_str(),
-        (DIR_DATA + "common.").c_str(), YEAR1, YEAR2, 2001));
   }
 
   return 0;

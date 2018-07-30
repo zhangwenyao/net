@@ -33,9 +33,15 @@ int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall,
 int recommend_rankingScore(
     const VNodeType& R, const VNodeType& L, double& rs);
 template <typename T>
-int recommend_rankingScore(const std::vector<T>& rk, const std::vector<T>& L0,
-    const VNodeType& L, double& rs);
+int recommend_rankingScore(const VNodeType& rk, const std::vector<T>& L0,
+    const std::vector<T>& L, double& rs, double& rsDev);
+template <typename T>
+int count_rankingScore(const VVDouble& rcm, const size_t NC, const size_t NP,
+    const std::vector<std::vector<T> >& mcp,
+    const std::vector<std::vector<T> >& mcp2, VDouble& rankingScore,
+    VDouble& rankingScoreDev);
 
 // *******************************************************
+#include "ActRecommend.template.h"
 #endif // ACT_RECOMMEND
 #endif // ACT_RECOMMEND_H

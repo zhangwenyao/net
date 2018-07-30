@@ -13,7 +13,7 @@ int main_fitness_complexity_filter(int argc, char** argv)
   const NodeType YEAR1 = 2001, YEAR2 = 2014 + 1;
 
   // 筛选进出口数据的国家和产品名
-  if (0) {
+  if (1) {
     ERROR_TEST(filter_trade_name_OEC(
         (DIR_DATA0 + "year_origin_sitc_rev2.txt").c_str(),
         (DIR_INFO + "country.names3c.export.txt").c_str(),
@@ -38,37 +38,25 @@ int main_fitness_complexity_filter(int argc, char** argv)
         (DIR_INFO + "country.index.export.not0.txt").c_str(),
         (DIR_INFO + "product.index.export.not0.txt").c_str(),
         DIR_DATA.c_str(), YEAR1, YEAR2));
+
+    // 筛选进出口和 gdp 的共同国家名
+    ERROR_TEST(filter_export_gdp_country_name(
+        (DIR_INFO + "country.namesFull.trade.txt").c_str(),
+        (DIR_INFO + "country.namesFull.gdp.txt").c_str(),
+        (DIR_INFO + "country.namesFull.common").c_str()));
+
+    // 手动查找相同国家，得到 same.trade.txt 和 same.gdp.txt，再执行
+    // 合并国家名，得到下标 trade.index 和 gdp.index
+    ERROR_TEST(
+        filter_index_same_all_OEC((DIR_INFO + "country.namesFull").c_str()));
+    // 剔除 0 值国家
+    ERROR_TEST(filter_index_same_not0_OEC(
+        (DIR_INFO + "country.namesFull.common").c_str(),
+        (DIR_INFO + "country.index.export.not0.txt").c_str()));
+
+    ERROR_TEST(filter_common_gdp((DIR_DATA0 + "2001-2014.gdps.txt").c_str(),
+        (DIR_DATA + "common.").c_str(), YEAR1, YEAR2, 2001));
   }
-
-  // 筛选进出口和 gdp 的共同国家名
-  ERROR_TEST(filter_export_gdp_country_name(
-      (DIR_INFO + "country.namesFull.trade.txt").c_str(),
-      (DIR_INFO + "country.namesFull.gdp.txt").c_str(),
-      (DIR_INFO + "country.namesFull.common").c_str()));
-
-  return 0;
-  // 手动查找相同国家，得到 same.trade.txt 和 same.gdp.txt，再执行下面步骤
-  // 合并国家名
-  ERROR_TEST(
-      filter_index_same_all_OEC((DIR_INFO + "country.namesFull").c_str()));
-
-  return 0;
-  // 输出可用进出口和 gdp 下标
-  filter_index_export_gdp(
-      (DIR_DATA0 + "country.index.same.all.gdp.txt").c_str(),
-      (DIR_DATA0 + "country.index.gdp.not0.txt").c_str(),
-      (DIR_DATA0 + "country.index.gdp.data.txt").c_str(),
-      (DIR_DATA0 + "country.index.same.all.export.txt").c_str(),
-      (DIR_DATA0 + "country.index.export.not0.txt").c_str(),
-      (DIR_DATA0 + "country.index.export.data.txt").c_str());
-
-  // 输出可用进出口和 gdp 数据，用于进一步分析
-  filter_data((DIR_DATA0 + "gdp.1995-2014.txt").c_str(),
-      (DIR_DATA0 + "country.index.gdp.data.txt").c_str(),
-      (DIR_DATA0 + "hs92.export/").c_str(),
-      (DIR_DATA0 + "country.index.export.data.txt").c_str(),
-      (DIR_DATA0 + "product.index.export.not0.txt").c_str(),
-      DIR_DATA.c_str());
 
   return 0;
 }

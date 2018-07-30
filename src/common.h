@@ -38,6 +38,14 @@ void common_sort_p_val_less(Tp p, Tp p2, const T2* const val);
 #define common_sort_p_val common_sort_p_val_greater
 #endif
 
+template <typename T, typename T2, typename T3>
+int common_sort_rankV2(const T* const ranks, const T2 b, const T2 e, T3* v2);
+
+template <typename T, typename T2>
+int common_get_index(T b, const T e, T2* index);
+template <typename T, typename T2, typename T3>
+int common_get_index_val(T b, const T e, T2* index, const T3* val);
+
 template <typename T, typename T2> // a[id] != 0 ==> id
 void common_bool_2_index(const T* a, const size_t n, std::vector<T2>& id);
 

@@ -95,6 +95,40 @@ void common_sort_p_val_less(Tp p, Tp p2, const T2* const val)
   }
 }
 
+template <typename T, typename T2, typename T3>
+int common_sort_rankV2(const T* const ranks, const T2 b, const T2 e, T3* v2)
+{
+  if (b >= e)
+    return 0;
+  for (T2 i = b, j; i < e;) {
+    j = i + 1;
+    while (j < e && ranks[*i] == ranks[*j])
+      ++j;
+    T3 t = (i - b) + (j - 1 - b);
+    while (i < j) {
+      *v2++ = t;
+      i++;
+    }
+  }
+  return 0;
+}
+
+template <typename T, typename T2>
+int common_get_index(T b, const T e, T2* index)
+{
+  for (size_t i = 0; b < e;)
+    index[*b++] = i++;
+  return 0;
+}
+
+template <typename T, typename T2, typename T3>
+int common_get_index_val(T b, const T e, T2* index, const T3* val)
+{
+  for (size_t i = 0; b < e;)
+    index[*b++] = val[i++];
+  return 0;
+}
+
 template <typename T, typename T2> // a[id] != 0 ==> id
 void common_bool_2_index(const T* a, const size_t n, std::vector<T2>& id)
 {

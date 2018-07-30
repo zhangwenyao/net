@@ -1,13 +1,13 @@
 #ifndef NET_H
 #define NET_H
 
+#include "net.type.h"
 #include <cfloat>
 #include <climits>
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
-#include "net.type.h"
 
 const std::string NET_VERSION = "net2.1: " __DATE__ ", " __TIME__;
 // *******************************************************
@@ -47,11 +47,14 @@ int linkMatr_fix_0(VVDistType& linkMatr, const DistType MaxDist = DistMax);
 int linkMatr_fix_max(VVDistType& linkMatr, const DistType MaxDist = DistMax);
 
 template <typename T, typename T2>
-int linkMatr_2_p2p(std::vector<std::vector<T2> >& p2p,
-    const std::vector<std::vector<T> >& linkMatr);
+int linkMatr_2_nodeDeg(
+    std::vector<T>& nodeDeg, const std::vector<std::vector<T2>>& linkMatr);
 template <typename T, typename T2>
-int linkMatr_2_p2pIn(std::vector<std::vector<T2> >& p2pIn,
-    const std::vector<std::vector<T> >& linkMatr);
+int linkMatr_2_p2p(std::vector<std::vector<T2>>& p2p,
+    const std::vector<std::vector<T>>& linkMatr);
+template <typename T, typename T2>
+int linkMatr_2_p2pIn(std::vector<std::vector<T2>>& p2pIn,
+    const std::vector<std::vector<T>>& linkMatr);
 int linkMatrC_2_p2p(VVNodeType& p2p, const VVChar& linkMatrC);
 
 int p2p_2_linkMatr(VVDistType& linkMatr, const VVNodeType& p2p);
@@ -113,8 +116,8 @@ int link_2_p2p_out(VVNodeType& p2p, const VNodeType& link, NodeType& nodeSize,
     const int dirFlag);
 int link_2_p2p_out_linkSize(VVNodeType& p2p, const VNodeType& link,
     NodeType& nodeSize, LinkType linkSize, const int dirFlag);
-int link_2_p2p_in(VVNodeType& p2pIn, const VNodeType& link, NodeType& nodeSize,
-    const int dirFlag);
+int link_2_p2p_in(VVNodeType& p2pIn, const VNodeType& link,
+    NodeType& nodeSize, const int dirFlag);
 int p2p_2_link(VNodeType& link, const VVNodeType& p2p, const int dirFlag);
 int vvweight_2_vvweightIn(VVWeightType& vvweightIn,
     const VVWeightType& vvweight, const VVNodeType& p2p);

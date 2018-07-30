@@ -35,11 +35,6 @@ int recommend_rankingScore(
 template <typename T>
 int recommend_rankingScore(const std::vector<T>& rk, const std::vector<T>& L0,
     const VNodeType& L, double& rs);
-template <typename T>
-int count_rankingScore(const VVDouble& rcm, const size_t NC, const size_t NP,
-    const std::vector<std::vector<T> >& mcp,
-    const std::vector<std::vector<T> >& mcp2, VDouble& rankingScore,
-    const char* name);
 
 // *******************************************************
 #endif // ACT_RECOMMEND

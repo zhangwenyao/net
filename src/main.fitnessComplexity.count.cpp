@@ -16,22 +16,23 @@ int main_fitness_complexity_count(int argc, char** argv)
   // const string methods[] = { "hybrid" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
 
-  VNodeType cIndex, pIndex;
-  VString gNames;
-  {
-    ERROR_TEST(common_read1_0(
-        (DIR_INFO + "country.index.export.not0.txt").c_str(), cIndex));
-    ERROR_TEST(common_read1_0(
-        (DIR_INFO + "product.index.export.not0.txt").c_str(), pIndex));
-    ERROR_TEST(common_read1_0(
-        (DIR_INFO + "country.namesFull.gdp.txt").c_str(), gNames));
-  }
-  const size_t NC = cIndex.size(), NP = pIndex.size(), NG = gNames.size();
-  cout << NC << "\t" << NP << "\t" << NG << endl;
+  VNodeType cIndex, pIndex, gIndex, cIndex0;
+  ERROR_TEST(common_read1_0(
+      (DIR_INFO + "country.namesFull.common.trade.index.not0.txt").c_str(),
+      cIndex));
+  ERROR_TEST(common_read1_0(
+      (DIR_INFO + "country.namesFull.common.gdp.index.not0.txt").c_str(),
+      gIndex));
+  ERROR_TEST(common_read1_0(
+      (DIR_INFO + "product.index.export.not0.txt").c_str(), pIndex));
+  ERROR_TEST(common_read1_0(
+      (DIR_INFO + "country.index.export.not0.txt").c_str(), cIndex0));
+  const size_t NG = gIndex.size(), NP = pIndex.size(), NC = cIndex0.size();
+  cout << NG << "\t" << NC << "\t" << NP << endl;
+
 
   for (size_t year = YEAR1; year < YEAR2; year++) {
-    INFORM(year);
-
+    cout << year << endl;
     VVNodeType mcp;
     VNodeType mcpDeg;
     VDouble pc;
@@ -56,8 +57,10 @@ int main_fitness_complexity_count(int argc, char** argv)
       continue;
     //**********************************************************
     // count 2 var
+
     VVNodeType mcp0;
     VNodeType mcpDeg0;
+
     {
       ERROR_TEST(common_read2_0(
           (DIR_DATA + to_string(year - 1) + ".mcp.txt").c_str(), mcp0));
@@ -85,6 +88,7 @@ int main_fitness_complexity_count(int argc, char** argv)
           mcpNewDeg, '\n');
     }
 
+
     for (size_t iMethod = 0; iMethod < NMETHOD; iMethod++) {
       string method = methods[iMethod];
       cout << "\t" << method << endl;
@@ -97,8 +101,8 @@ int main_fitness_complexity_count(int argc, char** argv)
       ERROR_TEST(net.recommend.rcm.size() != NC);
 
 
-    } // year
-  }   // method
+
+  } // year
 
   return 0;
 }

@@ -45,11 +45,25 @@ int save_rankScale(const char* dir, const VNodeType& rk,
 int save_rankScale2(const char* dir, const VVNodeType& rk,
     const VVNodeType& rkIndex, const VVNodeType& rkV2,
     const VVNodeType& rkV2Index, const VVDouble& rkScale);
+<<<<<<< HEAD
 int save_val_2_rankScale(const VDouble& pc, const char* dir);
+=======
+int save_rankScale_val(const char* dir, const VDouble& val);
+int save_rankScale2_val(const char* dir, const VVDouble& val);
+>>>>>>> ab9adcb4d0d5bdcd957d0aa60e7108f7fbed6a38
 int save_rankScale2_val_p(
     const char* dir, const VVDouble& val, const VVNodeType p);
 int save_rankScale2_val_mcp(const char* dir, const VVDouble& val,
     const VVNodeType& mcp0, const VVNodeType& mcp, const VVNodeType& mcpMcp);
+<<<<<<< HEAD
+=======
+
+template <typename T>
+int count_rankingScore(const VVDouble& rcm, const size_t NC, const size_t NP,
+    const std::vector<std::vector<T> >& mcp,
+    const std::vector<std::vector<T> >& mcp2, VDouble& rankingScore,
+    const char* name);
+>>>>>>> ab9adcb4d0d5bdcd957d0aa60e7108f7fbed6a38
 
 // 筛选进出口数据的国家和产品名
 int filter_trade_name(const char* tradeFilename, const char* countryFilename,

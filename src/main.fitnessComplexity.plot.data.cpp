@@ -32,6 +32,7 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
   cout << NG << "\t" << NC0 << "\t" << NP << endl;
   ERROR_TEST(NG != NC);
 
+
   VVLinkType gdps0;
   ERROR_TEST(
       common_read2_0((DIR_DATA0 + "2001-2014.gdps.txt").c_str(), gdps0));
@@ -39,8 +40,10 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
   ERROR_TEST(common_read2_0(
       (DIR_DATA0 + "2001-2016.gdpGrows.txt").c_str(), gdpGrows0));
 
+
   for (size_t year = YEAR1; year < YEAR2; year++) {
     cout << year << endl;
+
 
     VDouble pc;
     {
@@ -49,10 +52,12 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
           pc));
     }
 
+
     VLinkType gdp;
     VNodeType rk;
     VDouble gdpGrow, cf, cpcMean;
     VVNodeType mcp;
+
     VNodeType mcpDeg;
     {
       // gdp
@@ -121,15 +126,52 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
       for (size_t cc = 0, c; cc < NC; ++cc) {
         c = cIndex[cc];
         cpNew.push_back(cpNew0[c]);
+
       }
     }
 
     VVDouble rcm[NMETHOD];
+
+ 
     for (size_t i = 0; i < NMETHOD; i++) {
       string method = methods[i];
       common_read2_0(
           (DIR_DATA + to_string(year) + "." + method + ".rcm.txt").c_str(),
           rcm[i]);
+    }
+
+
+    {
+      VDouble rankingScore(NC, 0), rankingScoreDev(NC, 0);
+      VNodeType rk(NP, 0);
+      for (size_t c = 0; c < NC; c++) {
+        for (size_t p = 0; p < NP; p++)
+          rk[p] = p;
+        common_sort_p_val_less(&rk[0], &rk[NP], &pc[0]);
+        recommend_rankingScore(
+            rk, mcp0[c], mcp[c], rankingScore[c], rankingScoreDev[c]);
+      }
+      common_save1((DIR_COMMON + to_string(year)
+                       + ".country.product.complexity.new.rankingScore.txt")
+                       .c_str(),
+          rankingScore, '\n');
+      common_save1(
+          (DIR_COMMON + to_string(year)
+              + ".country.product.complexity.new.rankingScoreDev.txt")
+              .c_str(),
+          rankingScoreDev, '\n');
+    }
+
+
+    for (size_t i = 0; i < NMETHOD; i++) {
+      string method = methods[i];
+      VDouble rankingScore(NC, 0), rankingScoreDev(NC, 0);
+      VVDouble r;
+      for (size_t cc = 0, c; cc < NC; cc++) {
+        c = cIndex[cc];
+        r.push_back(rcm[i][c]);
+
+      }
     }
 
     {
@@ -153,7 +195,6 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
           rankingScoreDev, '\n');
     }
 
-    ;
     for (size_t i = 0; i < NMETHOD; i++) {
       string method = methods[i];
       VDouble rankingScore(NC, 0), rankingScoreDev(NC, 0);
@@ -162,6 +203,16 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
         c = cIndex[cc];
         r.push_back(rcm[i][c]);
       }
+      count_rankingScore(r, NC, NP, mcp0, mcp, rankingScore, rankingScoreDev);
+      common_save1((DIR_COMMON + to_string(year) + "." + method
+                       + +".country.product.complexity.new.rankingScore.txt")
+                       .c_str(),
+          rankingScore, '\n');
+      common_save1(
+          (DIR_COMMON + to_string(year) + "." + method
+              + ".country.product.complexity.new.rankingScoreDev.txt")
+              .c_str(),
+          rankingScoreDev, '\n');
     }
 
   } // year

@@ -39,8 +39,12 @@ template <typename T>
 int count_rankingScore(const VVDouble& rcm, const size_t NC, const size_t NP,
     const std::vector<std::vector<T> >& mcp,
     const std::vector<std::vector<T> >& mcp2, VDouble& rankingScore,
+<<<<<<< HEAD
     const char* name);
 
+=======
+    VDouble& rankingScoreDev);
+>>>>>>> ab9adcb4d0d5bdcd957d0aa60e7108f7fbed6a38
 
 // *******************************************************
 #include "ActRecommend.template.h"

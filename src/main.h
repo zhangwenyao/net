@@ -14,7 +14,11 @@
 //#define MAIN_FITNESS_COMPLEXITY_FILTER
 //#define MAIN_FITNESS_COMPLEXITY
 //#define MAIN_FITNESS_COMPLEXITY_RECOMMEND
+<<<<<<< HEAD
 //#define MAIN_FITNESS_COMPLEXITY_COUNT
+=======
+#define MAIN_FITNESS_COMPLEXITY_COUNT
+>>>>>>> ab9adcb4d0d5bdcd957d0aa60e7108f7fbed6a38
 #define MAIN_FITNESS_COMPLEXITY_PLOTDATA
 
 // *******************************************************

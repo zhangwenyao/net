@@ -188,6 +188,7 @@ int cal_val_2_rankScale(const VDouble& val, VNodeType& rk, VNodeType& rkIndex,
       rkScale[i] = (double)rkV2Index[i] / 2 / (N - 1);
   else
     rkScale.assign(N, 0.5);
+<<<<<<< HEAD
   return 0;
 }
 
@@ -201,6 +202,8 @@ int save_val_2_rankScale(const VDouble& pc, const char* dir)
   string s = dir;
   save_rankScale((s + ".rankLess").c_str(), pcRank, pcRankIndex, pcRankV2,
       pcRankV2Index, pcRankScale);
+=======
+>>>>>>> ab9adcb4d0d5bdcd957d0aa60e7108f7fbed6a38
   return 0;
 }
 
@@ -240,6 +243,30 @@ int save_rankScale2(const char* dir, const VVNodeType& rk,
   return 0;
 }
 
+<<<<<<< HEAD
+=======
+int save_rankScale_val(const char* dir, const VDouble& val)
+{
+  VNodeType rk, rkIndex, rkV2, rkV2Index;
+  VDouble rkScale;
+  cal_val_2_rankScale(val, rk, rkIndex, rkV2, rkV2Index, rkScale, val.size());
+  save_rankScale(dir, rk, rkIndex, rkV2, rkV2Index, rkScale);
+  return 0;
+}
+
+int save_rankScale2_val(const char* dir, const VVDouble& val)
+{
+  const size_t N = val.size();
+  VVNodeType rk(N), rkIndex(N), rkV2(N), rkV2Index(N);
+  VVDouble rkScale(N);
+  for (size_t i = 0; i < N; ++i)
+    cal_val_2_rankScale(val[i], rk[i], rkIndex[i], rkV2[i], rkV2Index[i],
+        rkScale[i], val[i].size());
+  save_rankScale2(dir, rk, rkIndex, rkV2, rkV2Index, rkScale);
+  return 0;
+}
+
+>>>>>>> ab9adcb4d0d5bdcd957d0aa60e7108f7fbed6a38
 int save_rankScale2_val_p(
     const char* dir, const VVDouble& val, const VVNodeType p)
 {

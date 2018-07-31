@@ -10,137 +10,157 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
 {
   const string DIR0 = "data/complexity/OEC.sitc_rev2/",
                DIR_DATA0 = DIR0 + "data0/", DIR_DATA = DIR0 + "data/",
-               DIR_INFO = DIR0 + "info/";
+               DIR_INFO = DIR0 + "info/", DIR_COMMON = DIR0 + "dataCommon/",
+               DIR_PLOT_DATA = DIR0 + "plotData/";
+  const size_t YEAR1 = 2001, YEAR2 = 2014 + 1;
   const string methods[] = { "mass", "heat", "hybrid" };
-  // const string methods[] = { "mass" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
-  const int YEAR1 = 2001, YEAR2 = 2014+1, NYEAR = YEAR2 - YEAR1 ;
 
-  const size_t NC = 237, NP = 1241;
-  for (int year = YEAR1; year < YEAR2; year++) {
-    VNodeType fullIndex;
-    common_read1_0(
-        (DIR0 + "1995-2010.info/GDP.1995-2010.full.index.txt").c_str(),
-        fullIndex);
-    const size_t NCF = fullIndex.size();
+  VNodeType cIndex, pIndex, gIndex, cIndex0;
+  ERROR_TEST(common_read1_0(
+      (DIR_INFO + "country.namesFull.common.trade.index.not0.txt").c_str(),
+      cIndex));
+  ERROR_TEST(common_read1_0(
+      (DIR_INFO + "country.namesFull.common.gdp.index.not0.txt").c_str(),
+      gIndex));
+  ERROR_TEST(common_read1_0(
+      (DIR_INFO + "product.index.export.not0.txt").c_str(), pIndex));
+  ERROR_TEST(common_read1_0(
+      (DIR_INFO + "country.index.export.not0.txt").c_str(), cIndex0));
+  const size_t NG = gIndex.size(), NC = cIndex.size(), NP = pIndex.size(),
+               NC0 = cIndex0.size();
+  cout << NG << "\t" << NC0 << "\t" << NP << endl;
+  ERROR_TEST(NG != NC);
 
-    VVDouble gdp;
-    common_read2_0(
-        (DIR0 + "1995-2010.info/GDP.1995-2010.full.val.txt").c_str(), gdp);
-    VNodeType rk;
-    {
-      VDouble g;
-      for (size_t c = 0; c < NCF; c++) {
-        g.push_back(gdp[c][year - YEAR1]);
-        rk.push_back(c);
-      }
-      common_sort_p_val_less(&rk[0], &rk[NCF], &g[0]);
-      common_save1((DIR_DATA + y1 + ".gdp.full.rank.txt").c_str(), rk, '\n');
-    }
+  VVLinkType gdps0;
+  ERROR_TEST(
+      common_read2_0((DIR_DATA0 + "2001-2014.gdps.txt").c_str(), gdps0));
+  VVDouble gdpGrows0;
+  ERROR_TEST(common_read2_0(
+      (DIR_DATA0 + "2001-2016.gdpGrows.txt").c_str(), gdpGrows0));
 
-    const size_t N = 10;
-    VVNodeType rks;
-    rks.resize(N);
-    for (size_t i = 0; i < NCF; i++) {
-      size_t j = int(1.0 * N * i / NCF);
-      rks[j].push_back(rk[i]);
-    }
-    common_save2((DIR_DATA + y1 + ".gdp.full.rank10.txt").c_str(), rks);
-
-    VVNodeType cpNew;
-    common_read2_0(
-        (DIR_DATA + y1 + ".country.product.new.txt").c_str(), cpNew);
-    cpNew.resize(NC);
-
-    VVDouble cpNewScale, newScale[NMETHOD];
-    common_read2_0((DIR_DATA + y1 + ".country.product.new.scale.txt").c_str(),
-        cpNewScale);
-    cpNewScale.resize(NC);
-    for (size_t i = 0; i < NMETHOD; i++) {
-      string method = methods[i];
-      common_read2_0(
-          (DIR_DATA + y1 + "." + method + ".new.scale.txt").c_str(),
-          newScale[i]);
-      newScale[i].resize(NC);
-    }
-    {
-      ofstream os((DIR_PLOT_DATA + "data/" + y1 + ".full.scale.txt").c_str());
-      for (size_t cc = 0, c; cc < NCF; cc++) {
-        c = fullIndex[cc];
-        for (size_t j = 0; j < cpNew[c].size(); j++) {
-          size_t p = cpNew[c][j];
-          os << c << '[t' << p << '\t' << cpNewScale[c][j];
-          for (size_t ii = 0; ii < NMETHOD; ii++) {
-            os << '[t' << newScale[ii][c][j];
-          }
-          os << '\n';
-        }
-      }
-      os.close();
-
-      for (size_t i = 0; i < N; i++) {
-        ss.clear();
-        ss.str("");
-        ss << DIR_PLOT_DATA << "data/" << y1 << ".full.scale.rank10." << i;
-        string s = ss.str();
-        ofstream os((s + ".txt").c_str());
-        for (size_t cc = 0, c; cc < rks[i].size(); cc++) {
-          c = rks[i][cc];
-          for (size_t j = 0; j < cpNew[c].size(); j++) {
-            size_t p = cpNew[c][j];
-            os << c << '[t' << p << '\t' << cpNewScale[c][j];
-            for (size_t ii = 0; ii < NMETHOD; ii++) {
-              os << '[t' << newScale[ii][c][j];
-            }
-            os << '\n';
-          }
-        }
-        os.close();
-      }
-    }
+  for (size_t year = YEAR1; year < YEAR2; year++) {
+    cout << year << endl;
 
     VDouble pc;
+    {
+      ERROR_TEST(common_read1_0(
+          (DIR_DATA + to_string(year) + ".product.complexity.txt").c_str(),
+          pc));
+    }
+
+    VLinkType gdp;
+    VNodeType rk;
+    VDouble gdpGrow, cf, cpcMean;
+    VVNodeType mcp;
+    VNodeType mcpDeg;
+    {
+      // gdp
+      for (size_t i = 0, g; i < NG; i++) {
+        g = gIndex[i];
+        gdp.push_back(gdps0[g][year - 2001]);
+        gdpGrow.push_back(gdpGrows0[g][year - 2001]);
+        rk.push_back(i);
+      }
+      ERROR_TEST(common_save1(
+          (DIR_COMMON + to_string(year) + ".gdp.txt").c_str(), gdp, '\n'));
+      ERROR_TEST(common_save1(
+          (DIR_COMMON + to_string(year) + ".gdpGrow.txt").c_str(), gdpGrow,
+          '\n'));
+      common_sort_p_val_less(&rk[0], &rk[NG], &gdp[0]);
+      ERROR_TEST(common_save1(
+          (DIR_COMMON + to_string(year) + ".gdp.rankLess.txt").c_str(), rk,
+          '\n'));
+
+      // cp, mcp
+      VDouble cf0;
+      VVNodeType mcp0, cpNew0;
+      VNodeType mcpDeg0;
+      ERROR_TEST(common_read1_0(
+          (DIR_DATA + to_string(year) + ".country.fitness.txt").c_str(),
+          cf0));
+      ERROR_TEST(common_read2_0(
+          (DIR_DATA + to_string(year) + ".mcp.txt").c_str(), mcp0));
+      ERROR_TEST(common_read1_0(
+          (DIR_DATA + to_string(year) + ".country.product.mcp.deg.txt")
+              .c_str(),
+          mcpDeg0));
+      for (size_t cc = 0, c; cc < NC; ++cc) {
+        c = cIndex[cc];
+        cf.push_back(cf0[c]);
+        mcpDeg.push_back(mcpDeg0[c]);
+      }
+      ERROR_TEST(common_save1(
+          (DIR_COMMON + to_string(year) + ".country.fitness.txt").c_str(), cf,
+          '\n'));
+      ERROR_TEST(common_save2(
+          (DIR_COMMON + to_string(year) + ".mcp.txt").c_str(), mcp));
+      ERROR_TEST(common_save1(
+          (DIR_COMMON + to_string(year) + ".country.product.mcp.deg.txt")
+              .c_str(),
+          mcpDeg));
+    }
+
+    if (year <= YEAR1)
+      continue;
+    // ************************************************************
+
+    VVNodeType mcp0;
+    {
+      ERROR_TEST(common_read2_0(
+          (DIR_COMMON + to_string(year - 1) + ".mcp.txt").c_str(), mcp0));
+    }
+
+    VVNodeType cpNew;
+    {
+      VVNodeType cpNew0;
+      ERROR_TEST(common_read2_0(
+          (DIR_DATA + to_string(year) + ".country.product.new.txt").c_str(),
+          cpNew0));
+
+      for (size_t cc = 0, c; cc < NC; ++cc) {
+        c = cIndex[cc];
+        cpNew.push_back(cpNew0[c]);
+      }
+    }
+
     VVDouble rcm[NMETHOD];
-    cpNew.resize(NC);
-    common_read1_0((DIR_DATA + y1 + ".product.complexity.txt").c_str(), pc);
     for (size_t i = 0; i < NMETHOD; i++) {
       string method = methods[i];
       common_read2_0(
-          (DIR_DATA + y1 + "." + method + ".rcm.txt").c_str(), rcm[i]);
+          (DIR_DATA + to_string(year) + "." + method + ".rcm.txt").c_str(),
+          rcm[i]);
     }
-    {
-      ofstream os((DIR_PLOT_DATA + "data/" + y1 + ".full.val.txt").c_str());
-      for (size_t cc = 0, c; cc < NCF; cc++) {
-        c = fullIndex[cc];
-        for (size_t j = 0; j < cpNew[c].size(); j++) {
-          size_t p = cpNew[c][j];
-          os << c << '\t' << p << '\t' << pc[p];
-          for (size_t ii = 0; ii < NMETHOD; ii++) {
-            os << '[t' << rcm[ii][c][p];
-          }
-          os << '\n';
-        }
-      }
-      os.close();
 
-      for (size_t i = 0; i < N; i++) {
-        ss.clear();
-        ss.str("");
-        ss << DIR_PLOT_DATA << "data/" << y1 << ".full.val.rank10." << i;
-        string s = ss.str();
-        ofstream os((s + ".txt").c_str());
-        for (size_t cc = 0, c; cc < rks[i].size(); cc++) {
-          c = rks[i][cc];
-          for (size_t j = 0; j < cpNew[c].size(); j++) {
-            size_t p = cpNew[c][j];
-            os << c << '\t' << p << '\t' << pc[p];
-            for (size_t ii = 0; ii < NMETHOD; ii++) {
-              os << '[t' << rcm[ii][c][p];
-            }
-            os << '\n';
-          }
-        }
-        os.close();
+    {
+      VDouble rankingScore(NC, 0), rankingScoreDev(NC, 0);
+      VNodeType rk(NP, 0);
+      for (size_t c = 0; c < NC; c++) {
+        for (size_t p = 0; p < NP; p++)
+          rk[p] = p;
+        common_sort_p_val_less(&rk[0], &rk[NP], &pc[0]);
+        recommend_rankingScore(
+            rk, mcp0[c], mcp[c], rankingScore[c], rankingScoreDev[c]);
+      }
+      common_save1((DIR_COMMON + to_string(year)
+                       + ".country.product.complexity.new.rankingScore.txt")
+                       .c_str(),
+          rankingScore, '\n');
+      common_save1(
+          (DIR_COMMON + to_string(year)
+              + ".country.product.complexity.new.rankingScoreDev.txt")
+              .c_str(),
+          rankingScoreDev, '\n');
+    }
+
+    ;
+    for (size_t i = 0; i < NMETHOD; i++) {
+      string method = methods[i];
+      VDouble rankingScore(NC, 0), rankingScoreDev(NC, 0);
+      VVDouble r;
+      for (size_t cc = 0, c; cc < NC; cc++) {
+        c = cIndex[cc];
+        r.push_back(rcm[i][c]);
       }
     }
 

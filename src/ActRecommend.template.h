@@ -14,7 +14,7 @@ template <typename T>
 int recommend_rankingScore(const VNodeType& rk, const std::vector<T>& L0,
     const std::vector<T>& L, double& rs, double& rsDev)
 {
-  rs = 0.5;
+  rs = 0;
   rsDev = 0;
   const size_t N = rk.size();
   ERROR_TEST(L0.size() < N || L.size() < N);
@@ -34,10 +34,10 @@ int recommend_rankingScore(const VNodeType& rk, const std::vector<T>& L0,
       n0++;
     }
   }
-  //INFORM(n0, "\t", n);
+  // INFORM(N, "\t", n0, "\t", n);
   if (n0 > 1 && n >= 1) {
     rs /= (n0 - 1.0) * n;
-    rsDev = sqrt(rsDev / n) / (n0 - 1.0);
+    rsDev = sqrt(rsDev / ((n0 - 1.0) * (n0 - 1.0) * n) - rs * rs);
   } else {
     rs = 0.5;
     rsDev = 0;
@@ -52,6 +52,7 @@ int count_rankingScore(const VVDouble& rcm, const size_t NC, const size_t NP,
     VDouble& rankingScoreDev)
 {
   rankingScore.assign(NC, 0);
+  rankingScoreDev.assign(NC, 0);
   VNodeType rk(NP, 0);
   for (size_t c = 0; c < NC; c++) {
     for (size_t p = 0; p < NP; p++)
@@ -59,7 +60,6 @@ int count_rankingScore(const VVDouble& rcm, const size_t NC, const size_t NP,
     common_sort_p_val_less(&rk[0], &rk[NP], &rcm[c][0]);
     recommend_rankingScore(
         rk, mcp[c], mcp2[c], rankingScore[c], rankingScoreDev[c]);
-    break;
   }
   return 0;
 }

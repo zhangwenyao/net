@@ -17,7 +17,7 @@ int main_fitness_complexity_recommend(int argc, char** argv)
 
   for (size_t iMethod = 0; iMethod < NMETHOD; iMethod++) {
     string method = methods[iMethod];
-    cout << method << endl;
+    INFORM(method);
 
     for (size_t year = YEAR1; year < YEAR2; year++) {
       VVDistType mcp;

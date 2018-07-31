@@ -182,12 +182,35 @@ int cal_val_2_rankScale(const VDouble& val, VNodeType& rk, VNodeType& rkIndex,
   common_get_index(rk.begin(), rk.end(), &rkIndex.front());
   common_sort_rankV2(&val.front(), rk.begin(), rk.end(), &rkV2.front());
   common_get_index_val(
-      rk.begin(), rk.end(), &rkV2Index.front(), &rkIndex.front());
+      rk.begin(), rk.end(), &rkV2Index.front(), &rkV2.front());
   if (N > 1)
     for (size_t i = 0; i < N; ++i)
       rkScale[i] = (double)rkV2Index[i] / 2 / (N - 1);
   else
     rkScale.assign(N, 0.5);
+  return 0;
+}
+
+int cal_val_2_rankScale(const VDouble& pc, VDouble& scale)
+{
+  const size_t NP = pc.size();
+  VNodeType pcRank(NP), pcRankIndex(NP), pcRankV2(NP), pcRankV2Index(NP);
+  scale.resize(NP);
+  cal_val_2_rankScale(
+      pc, pcRank, pcRankIndex, pcRankV2, pcRankV2Index, scale, NP);
+  return 0;
+}
+
+int save_val_2_rankScale(const VDouble& pc, const char* dir)
+{
+  const size_t NP = pc.size();
+  VNodeType pcRank(NP), pcRankIndex(NP), pcRankV2(NP), pcRankV2Index(NP);
+  VDouble pcRankScale(NP);
+  cal_val_2_rankScale(
+      pc, pcRank, pcRankIndex, pcRankV2, pcRankV2Index, pcRankScale, NP);
+  string s = dir;
+  save_rankScale((s + ".rankLess").c_str(), pcRank, pcRankIndex, pcRankV2,
+      pcRankV2Index, pcRankScale);
   return 0;
 }
 
@@ -593,7 +616,6 @@ int filter_sum_trade_OEC(const char* tradeFilename,
   VNodeType pVal(9999, 0);
   NodeType NP = 0;
   read_product_names(productFilename, NP, pVal);
-  INFORM(NC, "\t", NP);
 
   VVLinkType expts(NC, VLinkType(NP, 0));
   ifstream is(tradeFilename);
@@ -1151,7 +1173,6 @@ int filter_data_export(const char* exportDIR, const char* countryIndexFile,
   ERROR_TEST(common_read1_0(countryIndexFile, cIndex));
   ERROR_TEST(common_read1_0(productIndexFile, pIndex));
   for (NodeType year = YEAR1; year < YEAR2; ++year) {
-    INFORM(year);
     VVString epts;
     string s0 = exportDIR;
     ERROR_TEST(common_read2_0(

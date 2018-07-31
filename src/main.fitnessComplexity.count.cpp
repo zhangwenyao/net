@@ -37,8 +37,8 @@ int main_fitness_complexity_count(int argc, char** argv)
       (DIR_DATA0 + "2001-2016.gdpGrows.txt").c_str(), gdpGrows0));
 
   for (size_t year = YEAR1; year < YEAR2; year++) {
-    INFORM( year);
-    VVNodeType mcp;
+    INFORM(year);
+    VVNodeType mcp, mcpMcp;
     VNodeType mcpDeg;
     VDouble pc, cf, gdp, gdpGrow;
     {
@@ -73,13 +73,23 @@ int main_fitness_complexity_count(int argc, char** argv)
           pc, (DIR_DATA + to_string(year) + ".product.complexity").c_str());
       save_val_2_rankScale(
           cf, (DIR_DATA + to_string(year) + ".country.fitness").c_str());
+
+      mcpMcp.resize(NC);
+      for (size_t c = 0; c < NC; ++c) {
+        for (size_t p = 0; p < NP; ++p)
+          if (mcp[c][p] != 0)
+            mcpMcp[c].push_back(p);
+      }
+      ERROR_TEST(common_save2(
+          (DIR_DATA + to_string(year) + ".country.product.mcp.txt").c_str(),
+          mcpMcp));
     }
 
     if (year <= YEAR1)
       continue;
     //**********************************************************
     // count 2 var
-    VVNodeType mcp0;
+    VVNodeType mcp0, mcpNew(NC);
     VNodeType mcpDeg0;
     {
       ERROR_TEST(common_read2_0(
@@ -88,6 +98,18 @@ int main_fitness_complexity_count(int argc, char** argv)
           (DIR_DATA + to_string(year - 1) + ".country.product.mcp.deg.txt")
               .c_str(),
           mcpDeg0));
+
+      for (size_t c = 0; c < NC; c++) {
+        for (size_t i = 0, p; i < mcpMcp[c].size(); i++) {
+          p = mcpMcp[c][i];
+          if (mcp0[c][p] == 0)
+            mcpNew[c].push_back(p);
+        }
+      }
+      ERROR_TEST(common_save2(
+          (DIR_DATA + to_string(year) + ".country.product.new.txt").c_str(),
+          mcpNew));
+
       VDouble pcNewMean(NC, 0), pcNewMeanDev(NC, 0), pcMcpMean(NC, 0),
           pcMcpMeanDev(NC, 0);
       for (size_t c = 0; c < NC; c++) {
@@ -142,6 +164,10 @@ int main_fitness_complexity_count(int argc, char** argv)
       common_read2_0(
           (DIR_DATA + to_string(year) + "." + method + ".rcm.txt").c_str(),
           net.recommend.rcm);
+      if (net.recommend.rcm.size() != NC) {
+        INFORM(NC, '\t', net.recommend.rcm.size());
+        return -1;
+      }
       ERROR_TEST(net.recommend.rcm.size() != NC);
 
       VDouble rs, rsDev;
@@ -155,13 +181,26 @@ int main_fitness_complexity_count(int argc, char** argv)
                                   .c_str(),
           rsDev));
 
-      VVDouble rcmScale(NC);
-      for (size_t c = 0; c < NC; ++c)
-        cal_val_2_rankScale(net.recommend.rcm[c], rcmScale[c]);
+      VVDouble rcmNewScale(NC);
+      for (size_t c = 0; c < NC; ++c) {
+        VDouble val, scale;
+        VNodeType id;
+        for (size_t p = 0; p < NP; p++) {
+          if (mcp0[c][p] == 0) {
+            val.push_back(net.recommend.rcm[c][p]);
+            id.push_back(p);
+          }
+        }
+        cal_val_2_rankScale(val, scale);
+        rcmNewScale[c].assign(NP, 0.5);
+        for (size_t i = 0; i < id.size(); i++) {
+          rcmNewScale[c][id[i]] = scale[i];
+        }
+      }
       common_save2(
-          (DIR_DATA + to_string(year) + "." + method + ".rcm.scale.txt")
+          (DIR_DATA + to_string(year) + "." + method + ".rcm.newScale.txt")
               .c_str(),
-          rcmScale);
+          rcmNewScale);
     } // method
 
   } // year

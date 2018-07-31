@@ -40,11 +40,10 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
       (DIR_DATA0 + "2001-2016.gdpGrows.txt").c_str(), gdpGrows0));
 
   for (size_t year = YEAR1; year < YEAR2; year++) {
-    INFORM(year);
 
     VDouble gdp, gdpScale;
     VDouble gdpGrow, cf, cfScale, cpcMean;
-    VVNodeType mcp;
+    VVNodeType mcp, mcpMcp;
     VNodeType mcpDeg;
     VDouble pc, pcScale;
     {
@@ -68,7 +67,7 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
 
       // cp, mcp
       VDouble cf0, cfScale0;
-      VVNodeType mcp0;
+      VVNodeType mcp0, mcpMcp0;
       VNodeType mcpDeg0;
       ERROR_TEST(common_read1_0(
           (DIR_DATA + to_string(year) + ".country.fitness.txt").c_str(),
@@ -83,12 +82,16 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
           (DIR_DATA + to_string(year) + ".country.product.mcp.deg.txt")
               .c_str(),
           mcpDeg0));
+      ERROR_TEST(common_read2_0(
+          (DIR_DATA + to_string(year) + ".country.product.mcp.txt").c_str(),
+          mcpMcp0));
       for (size_t cc = 0, c; cc < NC; ++cc) {
         c = cIndex[cc];
         cf.push_back(cf0[c]);
         cfScale.push_back(cfScale0[c]);
         mcp.push_back(mcp0[c]);
         mcpDeg.push_back(mcpDeg0[c]);
+        mcpMcp.push_back(mcpMcp0[c]);
       }
       ERROR_TEST(common_save1(
           (DIR_COMMON + to_string(year) + ".country.fitness.txt").c_str(), cf,
@@ -103,6 +106,9 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
           (DIR_COMMON + to_string(year) + ".country.product.mcp.deg.txt")
               .c_str(),
           mcpDeg, '\n'));
+      ERROR_TEST(common_save2(
+          (DIR_COMMON + to_string(year) + ".country.product.mcp.txt").c_str(),
+          mcpMcp));
 
       ERROR_TEST(common_read1_0(
           (DIR_DATA + to_string(year) + ".product.complexity.txt").c_str(),
@@ -179,16 +185,16 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
           pcMcpMeanDev, '\n');
     }
 
-    VVDouble rcm[NMETHOD], rcmScale[NMETHOD];
+    VVDouble rcm0[NMETHOD], rcmNewScale0[NMETHOD];
     for (size_t i = 0; i < NMETHOD; i++) {
       string method = methods[i];
       common_read2_0(
           (DIR_DATA + to_string(year) + "." + method + ".rcm.txt").c_str(),
-          rcm[i]);
+          rcm0[i]);
       common_read2_0(
-          (DIR_DATA + to_string(year) + "." + method + ".rcm.scale.txt")
+          (DIR_DATA + to_string(year) + "." + method + ".rcm.newScale.txt")
               .c_str(),
-          rcmScale[i]);
+          rcmNewScale0[i]);
 
       VDouble rks, rksDev, rks0, rksDev0;
       ERROR_TEST(common_read1_0((DIR_DATA + to_string(year) + "." + method
@@ -219,18 +225,22 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
 
     {
       ofstream os((DIR_COMMON + to_string(year) + ".new.datas.txt").c_str());
-      os << "productId\trecRankMass\trecRankHeat\trecRankHydrid\t"
+      os << "year\tproductId\trecRankMass\trecRankHeat\trecRankHydrid\t"
             "complexity\tcomplexityRank\tcountryId\tfitness\tfitnessRank"
             "\tGDP\tGDPRank\n";
-      for (size_t c = 0; c < NC; c++) {
+      for (size_t c = 0, cc; c < NC; c++) {
         if (mcpNew[c].size() <= 0)
           continue;
-        for (size_t i = 0, p; i < mcpNew[c].size(); i++) {
+        for (size_t i = 0, p, mi = 0; i < mcpNew[c].size(); i++) {
           p = mcpNew[c][i];
-          os << p << '\t' << rcmScale[0][c][p] << '\t' << rcmScale[1][c][p]
-             << '\t' << rcmScale[2][c][p] << '\t' << pc[p] << '\t'
-             << pcScale[c] << '\t' << c << '\t' << cf[c] << '\t' << cfScale[c]
-             << '\t' << gdp[c] << '\t' << gdpScale[c] << '\n';
+          for (mi = 0; mcpMcp[c][mi] < p; ++mi)
+            continue;
+          cc = cIndex[c];
+          os << year << '\t' << p << '\t' << rcmNewScale0[0][cc][p] << '\t'
+             << rcmNewScale0[1][cc][p] << '\t' << rcmNewScale0[2][cc][p]
+             << '\t' << pc[p] << '\t' << pcScale[p] << '\t' << c << '\t'
+             << cf[c] << '\t' << cfScale[c] << '\t' << gdp[c] << '\t'
+             << gdpScale[c] << '\n';
         }
       }
       os.close();

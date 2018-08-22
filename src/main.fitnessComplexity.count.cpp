@@ -192,7 +192,7 @@ int main_fitness_complexity_count(int argc, char** argv)
           }
         }
         cal_val_2_rankScale(val, scale);
-        rcmNewScale[c].assign(NP, 0.5);
+        rcmNewScale[c].assign(NP, 3);
         for (size_t i = 0; i < id.size(); i++) {
           rcmNewScale[c][id[i]] = scale[i];
         }

@@ -223,7 +223,7 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
       }
     } // method
 
-    {
+    if (0) {
       ofstream os((DIR_COMMON + to_string(year) + ".new.datas.txt").c_str());
       os << "year\tproductId\trecRankMass\trecRankHeat\trecRankHydrid\t"
             "complexity\tcomplexityRank\tcountryId\tfitness\tfitnessRank"
@@ -238,13 +238,45 @@ int main_fitness_complexity_plotdata(int argc, char** argv)
           cc = cIndex[c];
           os << year << '\t' << p << '\t' << rcmNewScale0[0][cc][p] << '\t'
              << rcmNewScale0[1][cc][p] << '\t' << rcmNewScale0[2][cc][p]
-             << '\t' << pc[p] << '\t' << pcScale[p] << '\t' << c << '\t'
+             << '\t' << pc[p] << '\t' << pcScale[p] << '\t' << cc << '\t'
              << cf[c] << '\t' << cfScale[c] << '\t' << gdp[c] << '\t'
              << gdpScale[c] << '\n';
         }
       }
       os.close();
     }
+
+    {
+      const size_t RN = 20;
+      VNodeType rk[NMETHOD];
+      for (size_t m = 0; m < NMETHOD; ++m) {
+        string method = methods[m];
+        ofstream os((DIR_COMMON + to_string(year) + ".new.datas.r20." + method
+                        + ".txt")
+                        .c_str());
+        os << "year\tcountryId\tfitness\tfitnessRank"
+              "\trecommendId\tproductId\tcomplexity\tcomplexityRank\n";
+        for (size_t c = 0, cc; c < NC; c++) {
+          cc = cIndex[c];
+          rk[m].resize(NP);
+          for (size_t p = 0; p < NP; ++p)
+            rk[m][p] = p;
+          common_sort_p_val_greater(
+              rk[m].begin(), rk[m].end(), &rcmNewScale0[m][cc].front());
+          for (size_t i = 0, j = 0, p; i < RN && j < NP; j++) {
+            p = rk[m][j];
+            if (mcp0[c][p] == 0) {
+              os << year << '\t' << cc << '\t' << cf[c] << '\t' << cfScale[c]
+                 << '\t' << i << '\t' << p << '\t' << pc[p] << '\t'
+                 << pcScale[p] << '\n';
+              i++;
+            }
+          } // RN
+        }   // NC
+        os.close();
+      } // method
+    }
+
   } // year
 
   return 0;

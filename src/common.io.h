@@ -15,6 +15,8 @@ inline size_t common_itoa(
 int common_get_string(std::istream& is, std::string& s);
 
 // ********************* print, common_save ************************
+int common_check_filename(const char* const name=NULL);
+
 // 一维数组 a[n]
 template <typename T, const size_t n>
 int common_save(std::ostream& os, T (&a)[n], const char c = '\t');

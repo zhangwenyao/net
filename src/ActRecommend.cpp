@@ -230,7 +230,7 @@ int act_recommend_pagerank(const VVNodeType& p2p, VDouble& v)
 // *****************************************************
 int act_recommend_commonNeighbour_object(VVDouble& rcm, const VVNodeType& oo)
 {
-  ;
+  // TODO
   return 0;
 }
 

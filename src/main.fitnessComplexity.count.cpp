@@ -12,28 +12,28 @@ int main_fitness_complexity_count(int argc, char** argv)
                DIR_DATA0 = DIR0 + "data0/", DIR_DATA = DIR0 + "data/",
                DIR_INFO = DIR0 + "info/";
   const size_t YEAR1 = 2001, YEAR2 = 2014 + 1;
-  const string methods[] = { "mass", "heat", "hybrid" };
-  // const string methods[] = { "hybrid" };
+  //const string methods[] = { "mass", "heat", "hybrid", "proximity" };
+  const string methods[] = { "proximity" };
   const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
 
   VNodeType cIndex, pIndex;
   VString gNames;
   {
-    ERROR_TEST(common_read1_0(
+    _ERR(common_read1_0(
         (DIR_INFO + "country.index.export.not0.txt").c_str(), cIndex));
-    ERROR_TEST(common_read1_0(
+    _ERR(common_read1_0(
         (DIR_INFO + "product.index.export.not0.txt").c_str(), pIndex));
-    ERROR_TEST(common_read1_0(
+    _ERR(common_read1_0(
         (DIR_INFO + "country.namesFull.gdp.txt").c_str(), gNames));
   }
   const size_t NC = cIndex.size(), NP = pIndex.size(), NG = gNames.size();
   cout << NC << "\t" << NP << "\t" << NG << endl;
 
   VVLinkType gdps0;
-  ERROR_TEST(
+  _ERR(
       common_read2_0((DIR_DATA0 + "2001-2014.gdps.txt").c_str(), gdps0));
   VVDouble gdpGrows0;
-  ERROR_TEST(common_read2_0(
+  _ERR(common_read2_0(
       (DIR_DATA0 + "2001-2016.gdpGrows.txt").c_str(), gdpGrows0));
 
   for (size_t year = YEAR1; year < YEAR2; year++) {
@@ -42,28 +42,28 @@ int main_fitness_complexity_count(int argc, char** argv)
     VNodeType mcpDeg;
     VDouble pc, cf, gdp, gdpGrow;
     {
-      ERROR_TEST(common_read2_0(
+      _ERR(common_read2_0(
           (DIR_DATA + to_string(year) + ".mcp.txt").c_str(), mcp));
-      ERROR_TEST(mcp.size() != NC);
+      _ERR(mcp.size() != NC);
       for (NodeType c = 0; c < NC; c++)
-        ERROR_TEST(mcp[c].size() != NP);
-      ERROR_TEST(common_read1_0(
+        _ERR(mcp[c].size() != NP);
+      _ERR(common_read1_0(
           (DIR_DATA + to_string(year) + ".country.product.mcp.deg.txt")
               .c_str(),
           mcpDeg));
-      ERROR_TEST(common_read1_0(
+      _ERR(common_read1_0(
           (DIR_DATA + to_string(year) + ".product.complexity.txt").c_str(),
           pc));
-      ERROR_TEST(common_read1_0(
+      _ERR(common_read1_0(
           (DIR_DATA + to_string(year) + ".country.fitness.txt").c_str(), cf));
 
       for (size_t g = 0; g < NG; g++) {
         gdp.push_back(gdps0[g][year - 2001]);
         gdpGrow.push_back(gdpGrows0[g][year - 2001]);
       }
-      ERROR_TEST(common_save1(
+      _ERR(common_save1(
           (DIR_DATA + to_string(year) + ".gdp.txt").c_str(), gdp, '\n'));
-      ERROR_TEST(
+      _ERR(
           common_save1((DIR_DATA + to_string(year) + ".gdpGrow.txt").c_str(),
               gdpGrow, '\n'));
       save_val_2_rankScale(
@@ -80,7 +80,7 @@ int main_fitness_complexity_count(int argc, char** argv)
           if (mcp[c][p] != 0)
             mcpMcp[c].push_back(p);
       }
-      ERROR_TEST(common_save2(
+      _ERR(common_save2(
           (DIR_DATA + to_string(year) + ".country.product.mcp.txt").c_str(),
           mcpMcp));
     }
@@ -92,9 +92,9 @@ int main_fitness_complexity_count(int argc, char** argv)
     VVNodeType mcp0, mcpNew(NC);
     VNodeType mcpDeg0;
     {
-      ERROR_TEST(common_read2_0(
+      _ERR(common_read2_0(
           (DIR_DATA + to_string(year - 1) + ".mcp.txt").c_str(), mcp0));
-      ERROR_TEST(common_read1_0(
+      _ERR(common_read1_0(
           (DIR_DATA + to_string(year - 1) + ".country.product.mcp.deg.txt")
               .c_str(),
           mcpDeg0));
@@ -106,7 +106,7 @@ int main_fitness_complexity_count(int argc, char** argv)
             mcpNew[c].push_back(p);
         }
       }
-      ERROR_TEST(common_save2(
+      _ERR(common_save2(
           (DIR_DATA + to_string(year) + ".country.product.new.txt").c_str(),
           mcpNew));
 
@@ -168,15 +168,15 @@ int main_fitness_complexity_count(int argc, char** argv)
         INFORM(NC, '\t', net.recommend.rcm.size());
         return -1;
       }
-      ERROR_TEST(net.recommend.rcm.size() != NC);
+      _ERR(net.recommend.rcm.size() != NC);
 
       VDouble rs, rsDev;
       count_rankingScore(net.recommend.rcm, NC, NP, mcp0, mcp, rs, rsDev);
-      ERROR_TEST(common_save1((DIR_DATA + to_string(year) + "." + method
+      _ERR(common_save1((DIR_DATA + to_string(year) + "." + method
                                   + ".country.rankingScore.txt")
                                   .c_str(),
           rs));
-      ERROR_TEST(common_save1((DIR_DATA + to_string(year) + "." + method
+      _ERR(common_save1((DIR_DATA + to_string(year) + "." + method
                                   + ".country.rankingScoreDev.txt")
                                   .c_str(),
           rsDev));

@@ -5,6 +5,14 @@
 using namespace std;
 
 // *************************************************************
+int common_check_filename(const char* const name)
+{
+  if (name == NULL || name[0] == '\0')
+    return -1;
+  else
+    return 0;
+}
+
 int common_get_string(istream& is, string& s)
 {
   if (is >> s && !s.empty() && s[0] == '\"') {

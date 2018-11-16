@@ -26,6 +26,11 @@
 // *************************************************************
 template <typename Tp> struct Common_RangeP; // 范围结构
 
+template <typename T> bool common_find(const std::vector<T>& v, const T& t);
+template <typename T>
+void common_find_common(
+    const std::vector<T>& v1, const std::vector<T>& v2, std::vector<T>& v);
+
 // 按 val[p[i]] 大小对 p[i] 排序 [i<=i+1]
 template <typename Tp, typename T2>
 void common_sort_p_val_greater(Tp p, Tp p2, const T2* const val);
@@ -53,10 +58,10 @@ void common_cstring_swap(char* a, char* b);
 void common_cstring_reverse(char* a);
 
 template <typename T, typename T2>
-void common_change_type_vector(std::vector<T> v, std::vector<T2> v2);
+void common_change_type_vector(const std::vector<T> v, std::vector<T2>& v2);
 template <typename T, typename T2>
 void common_change_type_vector2(
-    std::vector<std::vector<T> > v, std::vector<std::vector<T2> > v2);
+    const std::vector<std::vector<T>> v, std::vector<std::vector<T2>>& v2);
 
 // *************************************************************
 // s += a[p[i]] for i..n
@@ -86,18 +91,18 @@ size_t common_vector_count_same_sort(
 template <typename T> T common_GCD(T a, T b); // 最大公约数
 
 template <typename T>
-int common_matrixCross(const std::vector<std::vector<T> >& a,
-    const std::vector<std::vector<T> >& b,
-    std::vector<std::vector<T> >& c); // c = a.b
+int common_matrixCross(const std::vector<std::vector<T>>& a,
+    const std::vector<std::vector<T>>& b,
+    std::vector<std::vector<T>>& c); // c = a.b
 
 template <typename T, typename T2>
-int common_matrixCross_p2p(const std::vector<std::vector<T2> >& p2p,
-    const std::vector<std::vector<T> >& a,
-    const std::vector<std::vector<T> >& b,
-    std::vector<std::vector<T> >& c); // c = a . p2p . b
+int common_matrixCross_p2p(const std::vector<std::vector<T2>>& p2p,
+    const std::vector<std::vector<T>>& a,
+    const std::vector<std::vector<T>>& b,
+    std::vector<std::vector<T>>& c); // c = a . p2p . b
 
 template <typename T, typename T2>
-int common_matrixCross1_p2p(const std::vector<std::vector<T2> >& p2p,
+int common_matrixCross1_p2p(const std::vector<std::vector<T2>>& p2p,
     const std::vector<T>& a, std::vector<T>& c); // c = p2p . a
 
 // *****************************************************

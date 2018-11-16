@@ -8,6 +8,10 @@ using namespace std;
 // ******************************************************
 Act_recommend::Act_recommend(void)
     : rcmP(&rcm)
+    , uu(&user_user)
+    , uo(&user_object)
+    , ou(&object_user)
+    , oo(&object_object)
     , uuP2p(&user_p_user)
     , uoP2p(&user_p_object)
     , ouP2p(&object_p_user)
@@ -108,6 +112,8 @@ Networks& Networks::act_recommend(std::string s, const char* name)
     status = act_recommend_pagerank(p2p, recommend.user);
   } else if (s == "commonNeighbour_object") {
     status = act_recommend_commonNeighbour_object(recommend.rcm, *recommend.ooP2p);
+  } else if (s == "proximity") {
+    status = act_recommend_proximity(recommend.rcm, recommend.user_object);
   } else {
     status = -1;
   }

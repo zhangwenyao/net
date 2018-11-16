@@ -47,6 +47,7 @@
  *                              hybird            物质扩散&热传导
  *                              pagerank          网页排名
  *                              commonNeighbour   共同邻居
+ *                              proximity         相似性
  * 传播           sis
  * 输出           print
  * 保存           save                        以种子值命名保存

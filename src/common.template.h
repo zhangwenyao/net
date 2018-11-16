@@ -17,12 +17,29 @@ template <typename Tp> struct Common_RangeP {
   Tp start, end;
 };
 
+template <typename T> bool common_find(const std::vector<T>& v, const T& t)
+{
+  return v.end() != find(v.begin(), v.end(), t);
+}
+
+template <typename T>
+void common_find_common(
+    const std::vector<T>& v1, const std::vector<T>& v2, std::vector<T>& v)
+{
+  typename std::vector<T>::const_iterator i1, i2;
+  for (i1 = v1.begin(); i1 != v1.end(); ++i1)
+    for (i2 = v2.begin(); i2 != v2.end(); ++i2)
+      if (*i1 == *i2)
+        v.push_back(*i1);
+  return;
+}
+
 template <typename Tp, typename T2>
 void common_sort_p_val_greater(Tp p, Tp p2, const T2* const val)
 {
   if (p + 1 >= p2)
     return;
-  std::stack<Common_RangeP<Tp> > st;
+  std::stack<Common_RangeP<Tp>> st;
   st.push(Common_RangeP<Tp>(p, p2 - 1));
   while (!st.empty()) {
     Common_RangeP<Tp> range = st.top();
@@ -61,7 +78,7 @@ void common_sort_p_val_less(Tp p, Tp p2, const T2* const val)
 {
   if (p + 1 >= p2)
     return;
-  std::stack<Common_RangeP<Tp> > st;
+  std::stack<Common_RangeP<Tp>> st;
   st.push(Common_RangeP<Tp>(p, p2 - 1));
   while (!st.empty()) {
     Common_RangeP<Tp> range = st.top();
@@ -139,7 +156,7 @@ void common_bool_2_index(const T* a, const size_t n, std::vector<T2>& id)
 }
 
 template <typename T, typename T2>
-void common_change_type_vector(std::vector<T> v, std::vector<T2> v2)
+void common_change_type_vector(const std::vector<T> v, std::vector<T2>& v2)
 {
   v2.resize(v.size());
   for (size_t i = 0; i < v.size(); ++i)
@@ -149,7 +166,7 @@ void common_change_type_vector(std::vector<T> v, std::vector<T2> v2)
 
 template <typename T, typename T2>
 void common_change_type_vector2(
-    std::vector<std::vector<T> > v, std::vector<std::vector<T2> > v2)
+    const std::vector<std::vector<T>> v, std::vector<std::vector<T2>>& v2)
 {
   v2.resize(v.size());
   for (size_t i = 0; i < v.size(); ++i)
@@ -274,8 +291,8 @@ size_t common_vector_count_same_sort(
 
 // c = a.b
 template <typename T>
-int common_matrixCross(const std::vector<std::vector<T> >& a,
-    const std::vector<std::vector<T> >& b, std::vector<std::vector<T> >& c)
+int common_matrixCross(const std::vector<std::vector<T>>& a,
+    const std::vector<std::vector<T>>& b, std::vector<std::vector<T>>& c)
 {
   const size_t NX = c.size(), NY = c[0].size();
   if (a.size() != NX || b.size() != NY) {
@@ -294,9 +311,9 @@ int common_matrixCross(const std::vector<std::vector<T> >& a,
 
 // c = a . p2p . b
 template <typename T, typename T2>
-int common_matrixCross_p2p(const std::vector<std::vector<T2> >& p2p,
-    const std::vector<std::vector<T> >& a,
-    const std::vector<std::vector<T> >& b, std::vector<std::vector<T> >& c)
+int common_matrixCross_p2p(const std::vector<std::vector<T2>>& p2p,
+    const std::vector<std::vector<T>>& a,
+    const std::vector<std::vector<T>>& b, std::vector<std::vector<T>>& c)
 {
   const size_t NX = c.size(), NY = c[0].size();
   if (p2p.size() < NX || a.size() < NX || b[0].size() < NY) {
@@ -317,7 +334,7 @@ int common_matrixCross_p2p(const std::vector<std::vector<T2> >& p2p,
 
 // c = p2p . a
 template <typename T, typename T2>
-int common_matrixCross1_p2p(const std::vector<std::vector<T2> >& p2p,
+int common_matrixCross1_p2p(const std::vector<std::vector<T2>>& p2p,
     const std::vector<T>& a, std::vector<T>& c)
 {
   const size_t NX = c.size();

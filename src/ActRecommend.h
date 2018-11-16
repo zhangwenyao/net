@@ -24,6 +24,9 @@ int act_recommend_pagerank(const VVNodeType& p2p, VDouble& v);
 int act_recommend_commonNeighbour_object(VVDouble& rcm, const VVNodeType& oo);
 int act_recommend_hybrid_matrix(VVDouble& rcm, const VVNodeType& uP2p,
     const VVNodeType& oP2p, const double lambda);
+template <typename T>
+int act_recommend_proximity(
+    VVDouble& rcm, const std::vector<std::vector<T> >& user_object, VVDouble* rcm_oo = NULL);
 
 int recommend_RAC(const VDouble& v0, const VDouble& v, double& r);
 int recommend_RMAE(const VDouble& v0, const VDouble& v, double& r);

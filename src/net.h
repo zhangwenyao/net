@@ -1,13 +1,13 @@
 #ifndef NET_H
 #define NET_H
 
-#include "net.type.h"
 #include <cfloat>
 #include <climits>
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
+#include "net.type.h"
 
 const std::string NET_VERSION = "net2.1: " __DATE__ ", " __TIME__;
 // *******************************************************

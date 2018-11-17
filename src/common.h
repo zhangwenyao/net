@@ -20,8 +20,8 @@
 #include <utility>
 #include <vector>
 
-//#define TOSTRING(x) TOSTRING1(x)
-//#define TOSTRING1(x) #x
+#define TOSTRING(x) _TOSTRING(x)
+#define _TOSTRING(x) #x
 
 // *************************************************************
 template <typename Tp> struct Common_RangeP; // 范围结构

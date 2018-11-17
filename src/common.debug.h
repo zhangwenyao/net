@@ -54,7 +54,7 @@ template <typename... Args> void DEBUG_INFO(Args... args);
 #endif // DBG
 
 #ifndef _ERR
-#define _ERR(x)                                                        \
+#define _ERR(x)                                                              \
   do {                                                                       \
     if ((x)) {                                                               \
       ERROR();                                                               \
@@ -64,10 +64,18 @@ template <typename... Args> void DEBUG_INFO(Args... args);
 #endif
 
 #ifndef _INF
-#define _INF(x)                                                       \
+#define _INF(x)                                                              \
   do {                                                                       \
     if ((x))                                                                 \
       INFORM();                                                              \
+  } while (0)
+#endif
+
+#ifndef _DBG
+#define _DBG(x)                                                              \
+  do {                                                                       \
+    if ((x))                                                                 \
+      DEBUG();                                                               \
   } while (0)
 #endif
 

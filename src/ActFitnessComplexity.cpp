@@ -339,8 +339,8 @@ int save_rankScale2_val_mcp(const char* dir, const VVDouble& val,
 }
 
 //*******************************************************
-int filter_trade_name(const char* tradeFilename, const char* countryFilename,
-    const char* productFilename)
+int fitness_complexity::trade_name(const char* tradeFilename,
+    const char* countryFilename, const char* productFilename)
 {
   FILE* fp = fopen(tradeFilename, "r");
   if (NULL == fp) {
@@ -374,9 +374,10 @@ int filter_trade_name(const char* tradeFilename, const char* countryFilename,
   return 0;
 }
 
-int filter_trade_name_OEC(const char* tradeFilename, const char* cIsoFile,
-    const char* cIso3cFile, const char* codeFile, const char* countryFilename,
-    const char* productFilename, const NodeType YEAR1, const NodeType YEAR2)
+int fitness_complexity::trade_name_OEC(const char* tradeFilename,
+    const char* cIsoFile, const char* cIso3cFile, const char* codeFile,
+    const char* countryFilename, const char* productFilename,
+    const NodeType YEAR1, const NodeType YEAR2)
 {
   ifstream is(tradeFilename);
   _ERR(!is);
@@ -425,7 +426,7 @@ int filter_trade_name_OEC(const char* tradeFilename, const char* cIsoFile,
 }
 
 // count world
-int filter_trade_name_NBERUN_wtf(const char* tradeFilename,
+int fitness_complexity::trade_name_NBERUN_wtf(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
     const char* countryFilename0, const char* productFilename0)
 {
@@ -473,7 +474,7 @@ int filter_trade_name_NBERUN_wtf(const char* tradeFilename,
 }
 
 // sum all country
-int filter_trade_name_NBERUN_wtf2(const char* tradeFilename,
+int fitness_complexity::trade_name_NBERUN_wtf2(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
     const char* countryFilename0, const char* productFilename0)
 {
@@ -520,7 +521,7 @@ int filter_trade_name_NBERUN_wtf2(const char* tradeFilename,
   return 0;
 }
 
-int read_country_names(
+int fitness_complexity::read_country_names(
     const char* countryFilename, NodeType& NC, VNodeType& cVal)
 {
   ifstream is(countryFilename);
@@ -535,7 +536,7 @@ int read_country_names(
   return 0;
 }
 
-int read_product_names(
+int fitness_complexity::read_product_names(
     const char* productFilename, NodeType& NP, VNodeType& pVal)
 {
   ifstream is(productFilename);
@@ -573,8 +574,9 @@ int save_export_data(const char* s, VVDouble expts)
   return 0;
 }
 
-int filter_sum_trade(const char* tradeFilename, const char* countryFilename,
-    const char* productFilename, const char* dirSave)
+int fitness_complexity::sum_trade(const char* tradeFilename,
+    const char* countryFilename, const char* productFilename,
+    const char* dirSave)
 {
   VNodeType cVal(26 * 26 * 26, 0);
   NodeType NC = 0;
@@ -622,7 +624,7 @@ int filter_sum_trade(const char* tradeFilename, const char* countryFilename,
   return 0;
 }
 
-int filter_sum_trade_OEC(const char* tradeFilename,
+int fitness_complexity::sum_trade_OEC(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
     const char* dirSave, const NodeType YEAR1, const NodeType YEAR2)
 {
@@ -668,7 +670,7 @@ int filter_sum_trade_OEC(const char* tradeFilename,
   return 0;
 }
 
-int filter_trade_gdp_country_code_OEC(
+int fitness_complexity::trade_gdp_country_code_OEC(
     const char* eCodeFile, const char* gCodeFile, const char* codeFile)
 {
   VNodeType eCode, gCode, code;
@@ -682,7 +684,7 @@ int filter_trade_gdp_country_code_OEC(
   return 0;
 }
 
-int filter_sum_trade_NBER_wtf(const char* tradeFilename,
+int fitness_complexity::sum_trade_NBER_wtf(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
     const char* saveName)
 {
@@ -723,7 +725,7 @@ int filter_sum_trade_NBER_wtf(const char* tradeFilename,
   return 0;
 }
 
-int filter_sum_trade_NBER_wtf2(const char* tradeFilename,
+int fitness_complexity::sum_trade_NBER_wtf2(const char* tradeFilename,
     const char* countryFilename, const char* productFilename,
     const char* saveName)
 {
@@ -755,7 +757,7 @@ int filter_sum_trade_NBER_wtf2(const char* tradeFilename,
   return 0;
 }
 
-int filter_export_gdp_country_name(const char* exportName,
+int fitness_complexity::export_gdp_country_name(const char* exportName,
     const char* gdpName, const char* commonName, const char* diffExportname,
     const char* diffGdpName)
 {
@@ -785,8 +787,8 @@ int filter_export_gdp_country_name(const char* exportName,
   return 0;
 }
 
-int filter_trade_gdp_country_code(const char* tradeName, const char* gdpName,
-    const char* commonName, const char* diffTradeName,
+int fitness_complexity::trade_gdp_country_code(const char* tradeName,
+    const char* gdpName, const char* commonName, const char* diffTradeName,
     const char* diffGdpName)
 {
   VUnsigned vept, vgdp, same, diffGdp, diffEpt;
@@ -818,7 +820,8 @@ int filter_trade_gdp_country_code(const char* tradeName, const char* gdpName,
   return 0;
 }
 
-int filter_index_same_all(const char* namesFull, const char* sameAll)
+int fitness_complexity::index_same_all(
+    const char* namesFull, const char* sameAll)
 {
   {
     VString vept, veptAll;
@@ -862,10 +865,11 @@ int filter_index_same_all(const char* namesFull, const char* sameAll)
   return 0;
 }
 
-int filter_index_same_all_OEC(const char* tradeName, const char* gdpName,
-    const char* sameName, const char* sameTradeName, const char* sameGdpName,
-    const char* sameTradeAllName, const char* sameGdpAllName,
-    const char* sameTradeAllIndexName, const char* sameGdpAllIndexName)
+int fitness_complexity::index_same_all_OEC(const char* tradeName,
+    const char* gdpName, const char* sameName, const char* sameTradeName,
+    const char* sameGdpName, const char* sameTradeAllName,
+    const char* sameGdpAllName, const char* sameTradeAllIndexName,
+    const char* sameGdpAllIndexName)
 {
   VString ept, gdp;
   _ERR(common_read_VString(tradeName, ept));
@@ -898,7 +902,7 @@ int filter_index_same_all_OEC(const char* tradeName, const char* gdpName,
   return 0;
 }
 
-int filter_index_same_not0_OEC(const char* sameTradeAllIndexName,
+int fitness_complexity::index_same_not0_OEC(const char* sameTradeAllIndexName,
     const char* sameGdpAllIndexName, const char* tradeNot0IndexName,
     const char* sameTradeNot0IndexName, const char* sameGdpNot0IndexName)
 {
@@ -920,7 +924,8 @@ int filter_index_same_not0_OEC(const char* sameTradeAllIndexName,
   return 0;
 }
 
-int filter_index_gdp_0(const char* gdpFile, const char* cIndexFile)
+int fitness_complexity::index_gdp_0(
+    const char* gdpFile, const char* cIndexFile)
 {
   VVString gdp;
   _ERR(common_read2_0(gdpFile, gdp));
@@ -937,11 +942,11 @@ int filter_index_gdp_0(const char* gdpFile, const char* cIndexFile)
   return -1;
 }
 
-int filter_export_gdp_0_OEC(const char* epDIR, const NodeType YEAR1,
-    const NodeType YEAR2, const char* p4dFile, const char* cCodeFile,
-    const char* c3cCodeFile, const char* gFile, const NodeType YEAR0,
-    const char* gCodeFile, const char* egCodeFile, const char* eg0CodeFile,
-    const char* eg0P4dFile)
+int fitness_complexity::export_gdp_0_OEC(const char* epDIR,
+    const NodeType YEAR1, const NodeType YEAR2, const char* p4dFile,
+    const char* cCodeFile, const char* c3cCodeFile, const char* gFile,
+    const NodeType YEAR0, const char* gCodeFile, const char* egCodeFile,
+    const char* eg0CodeFile, const char* eg0P4dFile, const LinkType filter)
 {
   const NodeType NYEAR = YEAR2 - YEAR1;
   VVLinkType epAll[NYEAR], gdpAll;
@@ -960,28 +965,36 @@ int filter_export_gdp_0_OEC(const char* epDIR, const NodeType YEAR1,
   _ERR(common_read1_0(egCodeFile, egCode));
 
   VNodeType cIndex;
-  // exclude: wld xx.  || gdp <= 0
+  // exclude: wld xx.
   for (NodeType ci = 0; ci < c3cCode.size(); ++ci) {
     if (!common_find(egCode, cCode[ci]))
       continue;
     if (c3cCode[ci] == "wld"
         || (c3cCode[ci][0] == 'x' && c3cCode[ci][1] == 'x'))
       continue;
-    auto gi = find(gCode.begin(), gCode.end(), cCode[ci]) - gCode.begin();
-    bool flag = true;
+    cIndex.push_back(ci);
+  }
+  //INFORM(cIndex.size());
+  // exclude: gdp <= 0
+  for (NodeType ci = 0; ci < cIndex.size();) {
+    bool flag0 = false;
+    NodeType c = cIndex[ci];
+    auto gi = find(gCode.begin(), gCode.end(), cCode[c]) - gCode.begin();
     for (NodeType yi = YEAR1 - YEAR0; yi < YEAR2 - YEAR0; ++yi) {
       if (gdpAll[gi][yi] <= 0) {
-        flag = false;
-        // INFORM(ci, " ", c3cCode[ci], " ", cCode[ci], "\t", gi, " ",
-        // gCode[gi],
-        //"[n", gdpAll[gi][yi]);
+        flag0 = true;
+        //INFORM(c, " ", c3cCode[c], " ", cCode[c], "\t", gi, " ", gCode[gi],
+        //"\n", gdpAll[gi][yi]);
         break;
       }
     }
-    if (flag)
-      cIndex.push_back(ci);
+    if (flag0) {
+      cIndex[ci] = cIndex.back();
+      cIndex.pop_back();
+    } else
+      ++ci;
   }
-  // INFORM(cIndex.size());
+  //INFORM(cIndex.size());
 
   VNodeType pIndex;
   // exclude: ...0
@@ -989,14 +1002,14 @@ int filter_export_gdp_0_OEC(const char* epDIR, const NodeType YEAR1,
     if (p4d[pi] % 10 != 0)
       pIndex.push_back(pi);
   }
-  // INFORM(pIndex.size());
+  //INFORM(pIndex.size());
 
   for (bool flag = true; flag;) {
     flag = false;
 
     for (NodeType ci = 0; ci < cIndex.size();) { // filter country
-      NodeType c = cIndex[ci];
       bool flag0 = false;
+      NodeType c = cIndex[ci];
       for (NodeType yi = 0; yi < NYEAR; ++yi) {
         flag0 = true;
         for (NodeType pi = 0; pi < pIndex.size(); ++pi) {
@@ -1020,19 +1033,17 @@ int filter_export_gdp_0_OEC(const char* epDIR, const NodeType YEAR1,
     }
 
     for (NodeType pi = 0; pi < pIndex.size();) { // filter product
-      NodeType p = pIndex[pi];
       bool flag0 = false;
+      NodeType p = pIndex[pi];
       for (NodeType yi = 0; yi < NYEAR; ++yi) {
-        flag0 = true;
+        LinkType s = 0;
         for (NodeType ci = 0; ci < cIndex.size(); ++ci) {
           NodeType c = cIndex[ci];
-          if (epAll[yi][c][p] > 0) {
-            flag0 = false;
-            break;
-          }
+          s += epAll[yi][c][p];
         }
-        if (flag0) {
-          // INFORM(yi, "\t", pIndex[pi], "\t", p4d[pIndex[pi]]);
+        if (s <= filter) {
+          flag0 = true;
+          //INFORM(yi, "\t", pIndex[pi], "\t", p4d[pIndex[pi]], "\t", s);
           break;
         }
       }
@@ -1057,9 +1068,9 @@ int filter_export_gdp_0_OEC(const char* epDIR, const NodeType YEAR1,
   return 0;
 }
 
-int filter_population_OEC(const char* pFile, const NodeType YEAR_FILTER,
-    const char* pIsoCodeFile, const char* c0IsoCodeFile,
-    const LinkType FILTER, const char* pfFile)
+int fitness_complexity::population_OEC(const char* pFile,
+    const NodeType YEAR_FILTER, const char* pIsoCodeFile,
+    const char* c0IsoCodeFile, const LinkType filter, const char* pfFile)
 {
   VVLinkType populations;
   VNodeType pIsoCode, c0IsoCode;
@@ -1070,22 +1081,22 @@ int filter_population_OEC(const char* pFile, const NodeType YEAR_FILTER,
   VNodeType cIndex;
   for (NodeType ci = 0; ci < NC; ++ci) {
     if (common_find(c0IsoCode, pIsoCode[ci])
-        && populations[ci][YEAR_FILTER] >= FILTER)
+        && populations[ci][YEAR_FILTER] >= filter)
       cIndex.push_back(ci);
 
     // if (common_find(c0IsoCode, pIsoCode[ci])
-    //&& populations[ci][2015-1950] >= FILTER)
+    //&& populations[ci][2015-1950] >= filter)
     // cIndex.push_back(ci);
 
     // LinkType p = 0;
     // for (NodeType yi = YEAR_FILTER - 2; yi <= YEAR_FILTER; ++yi)
     // p += populations[ci][yi];
-    // if (common_find(c0IsoCode, pIsoCode[ci]) && p >= FILTER * 3)
+    // if (common_find(c0IsoCode, pIsoCode[ci]) && p >= filter * 3)
     // pIndex.push_back(ci);
 
     // bool flag = true;
     // for (NodeType yi = YEAR_FILTER - 2; yi <= YEAR_FILTER; ++yi)
-    // if (populations[ci][yi] < FILTER) {
+    // if (populations[ci][yi] < filter) {
     // flag = false;
     // break;
     //}
@@ -1097,9 +1108,10 @@ int filter_population_OEC(const char* pFile, const NodeType YEAR_FILTER,
   return 0;
 }
 
-int filter_trade_OEC(const char* epDir, const NodeType YEAR_FILTER1,
-    const NodeType YEAR_FILTER2, const char* cIsoCodeFile,
-    const char* c0IsoCodeFile, const LinkType FILTER, const char* cfFile)
+int fitness_complexity::trade_OEC(const char* epDir,
+    const NodeType YEAR_FILTER1, const NodeType YEAR_FILTER2,
+    const char* cIsoCodeFile, const char* c0IsoCodeFile,
+    const LinkType filter, const char* cfFile)
 {
   const NodeType NY = YEAR_FILTER2 - YEAR_FILTER1 + 1;
   VVLinkType ep[NY];
@@ -1121,9 +1133,9 @@ int filter_trade_OEC(const char* epDir, const NodeType YEAR_FILTER1,
         e += ep[yi][ci][pi];
     }
     // 剔除进出口小于 1E6 的国家 & Iraq(368),Chad(148),Macau(446)
-    // if (e >= FILTER * NY && cIsoCode[ci] != 368 && cIsoCode[ci] != 148
+    // if (e >= filter * NY && cIsoCode[ci] != 368 && cIsoCode[ci] != 148
     //&& cIsoCode[ci] != 446)
-    if (e >= FILTER * NY)
+    if (e >= filter * NY)
       cIndex.push_back(ci);
   }
   _ERR(common_save1_p(cfFile, &cIsoCode[0], &cIndex[0], cIndex.size(), '\n'));
@@ -1131,9 +1143,10 @@ int filter_trade_OEC(const char* epDir, const NodeType YEAR_FILTER1,
   return 0;
 }
 
-int filter_index_export_0_OEC(const char* epDIR, const char* cIndexFile,
-    const char* pIndexFile, const char* countryFilename,
-    const char* productFilename, const NodeType YEAR1, const NodeType YEAR2)
+int fitness_complexity::index_export_0_OEC(const char* epDIR,
+    const char* cIndexFile, const char* pIndexFile,
+    const char* countryFilename, const char* productFilename,
+    const NodeType YEAR1, const NodeType YEAR2)
 {
   const NodeType NYEAR = YEAR2 - YEAR1;
   vector<VVLinkType> ep(NYEAR);
@@ -1275,9 +1288,9 @@ int filter_index_export_0_OEC(const char* epDIR, const char* cIndexFile,
   return 0;
 }
 
-int filter_index_export_0_NBER_wtf(const char* epDIR, const char* cIndexFile,
-    const char* pIndexFile, const char* pIndexFileAll, const NodeType YEAR1,
-    const NodeType YEAR2, const NodeType YEAR0)
+int fitness_complexity::index_export_0_NBER_wtf(const char* epDIR,
+    const char* cIndexFile, const char* pIndexFile, const char* pIndexFileAll,
+    const NodeType YEAR1, const NodeType YEAR2, const NodeType YEAR0)
 {
   const NodeType NYEAR = YEAR2 - YEAR1;
   _ERR(YEAR1 > YEAR0 || YEAR0 > YEAR2);
@@ -1377,7 +1390,7 @@ int filter_index_export_0_NBER_wtf(const char* epDIR, const char* cIndexFile,
   return 0;
 }
 
-int filter_index_export_gdp(const char* gdpIndexFile0,
+int fitness_complexity::index_export_gdp(const char* gdpIndexFile0,
     const char* gdpIndexFile, const char* gdpIndexFile2,
     const char* exportIndexFile0, const char* exportIndexFile,
     const char* exportIndexFile2)
@@ -1415,9 +1428,9 @@ int filter_index_export_gdp(const char* gdpIndexFile0,
   return 0;
 }
 
-int filter_data_export(const char* exportDIR, const char* countryIndexFile,
-    const char* productIndexFile, const char* DATA_DIR, const NodeType YEAR1,
-    const NodeType YEAR2)
+int fitness_complexity::data_export(const char* exportDIR,
+    const char* countryIndexFile, const char* productIndexFile,
+    const char* DATA_DIR, const NodeType YEAR1, const NodeType YEAR2)
 {
   VNodeType cIndex, pIndex;
   _ERR(common_read1_0(countryIndexFile, cIndex));
@@ -1437,7 +1450,7 @@ int filter_data_export(const char* exportDIR, const char* countryIndexFile,
   return 0;
 }
 
-int filter_data(const char* gdpFile, const char* gdpIndexFile,
+int fitness_complexity::data(const char* gdpFile, const char* gdpIndexFile,
     const char* exportDIR, const char* countryIndexFile,
     const char* productIndexFile, const char* DATA_DIR)
 {
@@ -1473,7 +1486,7 @@ int filter_data(const char* gdpFile, const char* gdpIndexFile,
 }
 
 // *******************************************************
-int filter_code2name(const char* nameFile, const char* codeFile,
+int fitness_complexity::code2name(const char* nameFile, const char* codeFile,
     const char* code0File, const char* name0File)
 {
   VString name, name0;
@@ -1497,10 +1510,33 @@ int filter_code2name(const char* nameFile, const char* codeFile,
   return 0;
 }
 
-int filter_data_export_OEC(const char* cp0DIR, const char* c0CodeFile,
-    const char* p4d0File, const char* cCodeFile, const char* p4dFile,
-    const NodeType YEAR1, const NodeType YEAR2, const char* cpDIR,
-    const char* cpName)
+int fitness_complexity::sum_export(const char* epDir, const char* epName,
+    const NodeType YEAR1, const NodeType YEAR2, const char* cFile,
+    const char* cName, const char* pFile, const char* pName)
+{
+  for (NodeType y = YEAR1; y < YEAR2; ++y) {
+    VVLinkType ep;
+    _ERR(common_read2_0((string(epDir) + to_string(y) + epName).c_str(), ep));
+    const NodeType NC = ep.size(), NP = ep[0].size();
+    VLinkType sc(NC, 0), sp(NP, 0);
+    for (NodeType i = 0; i < NC; ++i)
+      for (NodeType j = 0; j < NP; ++j) {
+        sc[i] += ep[i][j];
+        sp[j] += ep[i][j];
+      }
+    _ERR(common_save1(
+        (string(cFile) + to_string(y) + cName).c_str(), sc, '\n'));
+    _ERR(common_save1(
+        (string(pFile) + to_string(y) + pName).c_str(), sp, '\n'));
+  }
+
+  return 0;
+}
+
+int fitness_complexity::data_export_OEC(const char* cp0DIR,
+    const char* c0CodeFile, const char* p4d0File, const char* cCodeFile,
+    const char* p4dFile, const NodeType YEAR1, const NodeType YEAR2,
+    const char* cpDIR, const char* cpName)
 {
   VNodeType c0Code, p4d0, cCode, p4d, cIndex, pIndex;
   _ERR(common_read1_0(c0CodeFile, c0Code));

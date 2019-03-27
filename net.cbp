@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="net" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/net" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/net" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Linker>
+					<Add option="-O3" />
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+		</Compiler>
+		<Unit filename="src/ActFitnessComplexity.cc" />
+		<Unit filename="src/ActFitnessComplexity.h" />
+		<Unit filename="src/ActFitnessComplexity.template.h" />
+		<Unit filename="src/ActRecommend.cc" />
+		<Unit filename="src/ActRecommend.h" />
+		<Unit filename="src/ActRecommend.template.h" />
+		<Unit filename="src/ActSis.cc" />
+		<Unit filename="src/ActSis.h" />
+		<Unit filename="src/ActSpread.cc" />
+		<Unit filename="src/ActSpread.h" />
+		<Unit filename="src/NetActor.cc" />
+		<Unit filename="src/NetActor.h" />
+		<Unit filename="src/NetBA.cc" />
+		<Unit filename="src/NetBA.h" />
+		<Unit filename="src/NetDegree.cc" />
+		<Unit filename="src/NetDegree.h" />
+		<Unit filename="src/NetExtremum.cc" />
+		<Unit filename="src/NetExtremum.h" />
+		<Unit filename="src/NetFoodweb.cc" />
+		<Unit filename="src/NetFoodweb.h" />
+		<Unit filename="src/NetGrid.cc" />
+		<Unit filename="src/NetGrid.h" />
+		<Unit filename="src/NetRandom.cc" />
+		<Unit filename="src/NetRandom.h" />
+		<Unit filename="src/StatBetweenness.cc" />
+		<Unit filename="src/StatBetweenness.h" />
+		<Unit filename="src/StatCluster.cc" />
+		<Unit filename="src/StatCluster.h" />
+		<Unit filename="src/StatKendall.cc" />
+		<Unit filename="src/StatKendall.h" />
+		<Unit filename="src/StatModularity.cc" />
+		<Unit filename="src/StatModularity.h" />
+		<Unit filename="src/StatPearson.cc" />
+		<Unit filename="src/StatPearson.h" />
+		<Unit filename="src/StatSimilarity.cc" />
+		<Unit filename="src/StatSimilarity.h" />
+		<Unit filename="src/StatSpearman.cc" />
+		<Unit filename="src/StatSpearman.h" />
+		<Unit filename="src/common.cc" />
+		<Unit filename="src/common.debug.cc" />
+		<Unit filename="src/common.debug.h" />
+		<Unit filename="src/common.debug.template.h" />
+		<Unit filename="src/common.h" />
+		<Unit filename="src/common.io.cc" />
+		<Unit filename="src/common.io.h" />
+		<Unit filename="src/common.io.template.h" />
+		<Unit filename="src/common.random.cc" />
+		<Unit filename="src/common.random.h" />
+		<Unit filename="src/common.random.template.h" />
+		<Unit filename="src/common.template.h" />
+		<Unit filename="src/main.cc" />
+		<Unit filename="src/main.fitnessComplexity.cc" />
+		<Unit filename="src/main.fitnessComplexity.count.cc" />
+		<Unit filename="src/main.fitnessComplexity.filter.OEC.sitc_rev2.cc" />
+		<Unit filename="src/main.fitnessComplexity.plot.data.cc" />
+		<Unit filename="src/main.fitnessComplexity.recommend.cc" />
+		<Unit filename="src/main.h" />
+		<Unit filename="src/main.net_extremum.cc" />
+		<Unit filename="src/main.stat_betweenness.cc" />
+		<Unit filename="src/main.stat_lkk_extremum.cc" />
+		<Unit filename="src/main.stat_lkk_k.cc" />
+		<Unit filename="src/main.test.cc" />
+		<Unit filename="src/net.cc" />
+		<Unit filename="src/net.h" />
+		<Unit filename="src/net.template.h" />
+		<Unit filename="src/net.type.cc" />
+		<Unit filename="src/net.type.h" />
+		<Unit filename="src/network.cc" />
+		<Unit filename="src/network.h" />
+		<Unit filename="src/networkActFitnessComplexity.cc" />
+		<Unit filename="src/networkActFitnessComplexity.h" />
+		<Unit filename="src/networkActRecommend.cc" />
+		<Unit filename="src/networkActRecommend.h" />
+		<Unit filename="src/networkActSis.cc" />
+		<Unit filename="src/networkActSis.h" />
+		<Unit filename="src/networkActSpread.cc" />
+		<Unit filename="src/networkActSpread.h" />
+		<Unit filename="src/networkBA.cc" />
+		<Unit filename="src/networkBA.h" />
+		<Unit filename="src/networkDegree.cc" />
+		<Unit filename="src/networkDegree.h" />
+		<Unit filename="src/networkExtremum.cc" />
+		<Unit filename="src/networkExtremum.h" />
+		<Unit filename="src/networkGrid.cc" />
+		<Unit filename="src/networkGrid.h" />
+		<Unit filename="src/networkRandom.cc" />
+		<Unit filename="src/networkRandom.h" />
+		<Unit filename="src/networkStatBetweenness.cc" />
+		<Unit filename="src/networkStatBetweenness.h" />
+		<Unit filename="src/networkStatCluster.cc" />
+		<Unit filename="src/networkStatCluster.h" />
+		<Unit filename="src/networkStatKendall.cc" />
+		<Unit filename="src/networkStatKendall.h" />
+		<Unit filename="src/networkStatModularity.cc" />
+		<Unit filename="src/networkStatModularity.h" />
+		<Unit filename="src/networkStatPearson.cc" />
+		<Unit filename="src/networkStatPearson.h" />
+		<Unit filename="src/networkStatSimilarity.cc" />
+		<Unit filename="src/networkStatSimilarity.h" />
+		<Unit filename="src/networkStatSpearman.cc" />
+		<Unit filename="src/networkStatSpearman.h" />
+		<Unit filename="src/networks.cc" />
+		<Unit filename="src/networks.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

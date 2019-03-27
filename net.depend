@@ -1,0 +1,502 @@
+# depslib dependency file v1.0
+1537173573 source:c:\users\zhang\files\git\net\src\actrecommend.cpp
+	"ActRecommend.h"
+	"common.h"
+
+1537178276 c:\users\zhang\files\git\net\src\actrecommend.h
+	"net.h"
+	"ActRecommend.template.h"
+
+1532915187 c:\users\zhang\files\git\net\src\net.h
+	"net.type.h"
+	<cfloat>
+	<climits>
+	<iostream>
+	<map>
+	<string>
+	<vector>
+	"net.template.h"
+
+1526755324 c:\users\zhang\files\git\net\src\net.type.h
+	<cfloat>
+	<climits>
+	<map>
+	<string>
+	<vector>
+
+1532915015 c:\users\zhang\files\git\net\src\net.template.h
+	<algorithm>
+	<functional>
+	<random>
+	<vector>
+
+1537180123 c:\users\zhang\files\git\net\src\actrecommend.template.h
+	"ActRecommend.h"
+	"common.h"
+	"cstdlib"
+	<cstring>
+
+1537180079 c:\users\zhang\files\git\net\src\common.h
+	"common.debug.h"
+	"common.io.h"
+	"common.random.h"
+	<algorithm>
+	<cmath>
+	<cstdio>
+	<cstdlib>
+	<cstring>
+	<ctime>
+	<fstream>
+	<iostream>
+	<sstream>
+	<stack>
+	<string>
+	<utility>
+	<vector>
+	"common.template.h"
+
+1532862209 c:\users\zhang\files\git\net\src\common.debug.h
+	<cstdlib>
+	<ctime>
+	<iostream>
+	"common.debug.template.h"
+
+1528749980 c:\users\zhang\files\git\net\src\common.debug.template.h
+	"common.debug.h"
+	"common.io.h"
+	<cstdlib>
+	<iostream>
+
+1529367862 c:\users\zhang\files\git\net\src\common.io.h
+	<iostream>
+	<string>
+	<vector>
+	"common.io.template.h"
+
+1529446768 c:\users\zhang\files\git\net\src\common.io.template.h
+	"common.debug.h"
+	"common.io.h"
+	<fstream>
+	<iostream>
+	<sstream>
+	<string>
+	<vector>
+
+1526755322 c:\users\zhang\files\git\net\src\common.random.h
+	<cfloat>
+	<functional>
+	<random>
+	"common.random.template.h"
+
+1526760402 c:\users\zhang\files\git\net\src\common.random.template.h
+	"common.random.h"
+	<algorithm>
+	<functional>
+	<random>
+	<vector>
+
+1537180074 c:\users\zhang\files\git\net\src\common.template.h
+	"common.debug.h"
+	"common.h"
+	<algorithm>
+	<stack>
+	<vector>
+
+1526755326 source:c:\users\zhang\files\git\net\src\actsis.cpp
+	"ActSis.h"
+	"common.h"
+
+1526755324 c:\users\zhang\files\git\net\src\actsis.h
+	"net.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\actspread.cpp
+	"net.h"
+	"common.h"
+	"ActSpread.h"
+
+1526755324 c:\users\zhang\files\git\net\src\actspread.h
+	"net.h"
+
+1527366454 source:c:\users\zhang\files\git\net\src\common.cpp
+	"common.h"
+	<cstring>
+
+1528499326 source:c:\users\zhang\files\git\net\src\common.debug.cpp
+	<cstdlib>
+	<ctime>
+	<iostream>
+	"common.debug.h"
+
+1527287590 source:c:\users\zhang\files\git\net\src\common.io.cpp
+	"common.io.h"
+	"common.debug.h"
+	<iostream>
+	<string>
+
+1526753322 source:c:\users\zhang\files\git\net\src\common.random.cpp
+	"common.random.h"
+	<chrono>
+	<climits>
+	<iostream>
+	<random>
+
+1532762594 source:c:\users\zhang\files\git\net\src\main.cpp
+	"main.h"
+	"common.h"
+	"networks.h"
+
+1537344045 c:\users\zhang\files\git\net\src\main.h
+
+1526755326 c:\users\zhang\files\git\net\src\networks.h
+	"network.h"
+	"networkDegree.h"
+	"networkRandom.h"
+	"networkBA.h"
+	"networkGrid.h"
+	"networkExtremum.h"
+	"networkStatPearson.h"
+	"networkStatSpearman.h"
+	"networkStatKendall.h"
+	"networkStatBetweenness.h"
+	"networkStatModularity.h"
+	"networkStatCluster.h"
+	"networkStatSimilarity.h"
+	"networkActSis.h"
+	"networkActSpread.h"
+	"networkActFitnessComplexity.h"
+	"networkActRecommend.h"
+
+1537173026 c:\users\zhang\files\git\net\src\network.h
+	"net.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\networkdegree.h
+	"NetDegree.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\netdegree.h
+	"net.h"
+
+1526755324 c:\users\zhang\files\git\net\src\networkrandom.h
+	"NetRandom.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\netrandom.h
+	"net.h"
+
+1526755324 c:\users\zhang\files\git\net\src\networkba.h
+	"NetBA.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\netba.h
+	"net.h"
+
+1526755324 c:\users\zhang\files\git\net\src\networkgrid.h
+	"NetGrid.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\netgrid.h
+	"net.h"
+
+1526755324 c:\users\zhang\files\git\net\src\networkextremum.h
+	"networkExtremum.h"
+	<iostream>
+
+1526755326 c:\users\zhang\files\git\net\src\networkstatpearson.h
+	"StatPearson.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\statpearson.h
+	"net.h"
+
+1526755326 c:\users\zhang\files\git\net\src\networkstatspearman.h
+	"StatSpearman.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\statspearman.h
+	"net.h"
+
+1526755326 c:\users\zhang\files\git\net\src\networkstatkendall.h
+	"StatKendall.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\statkendall.h
+	"net.h"
+	<iostream>
+
+1526755326 c:\users\zhang\files\git\net\src\networkstatbetweenness.h
+	"StatBetweenness.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\statbetweenness.h
+	"net.h"
+
+1526755326 c:\users\zhang\files\git\net\src\networkstatmodularity.h
+	"StatModularity.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\statmodularity.h
+	"net.h"
+
+1526755326 c:\users\zhang\files\git\net\src\networkstatcluster.h
+	"StatCluster.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\statcluster.h
+	"net.h"
+
+1526755326 c:\users\zhang\files\git\net\src\networkstatsimilarity.h
+	"StatSimilarity.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\statsimilarity.h
+	"net.h"
+
+1526755324 c:\users\zhang\files\git\net\src\networkactsis.h
+	"ActSis.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\networkactspread.h
+	"ActSpread.h"
+	<iostream>
+
+1526755324 c:\users\zhang\files\git\net\src\networkactfitnesscomplexity.h
+	"ActFitnessComplexity.h"
+	<iostream>
+
+1537528907 c:\users\zhang\files\git\net\src\actfitnesscomplexity.h
+	"net.h"
+	"ActFitnessComplexity.template.h"
+
+1532977948 c:\users\zhang\files\git\net\src\actfitnesscomplexity.template.h
+	"ActFitnessComplexity.h"
+	"common.h"
+	"cstdlib"
+	<cstring>
+
+1537177615 c:\users\zhang\files\git\net\src\networkactrecommend.h
+	"ActRecommend.h"
+	<iostream>
+
+1537180643 source:c:\users\zhang\files\git\net\src\main.fitnesscomplexity.count.cpp
+	"main.h"
+	"common.h"
+	"networks.h"
+
+1537177121 source:c:\users\zhang\files\git\net\src\main.fitnesscomplexity.cpp
+	"main.h"
+	"common.h"
+	"networks.h"
+
+1537180836 source:c:\users\zhang\files\git\net\src\main.fitnesscomplexity.plot.data.cpp
+	"main.h"
+	"common.h"
+	"networks.h"
+
+1537180123 source:c:\users\zhang\files\git\net\src\main.fitnesscomplexity.recommend.cpp
+	"main.h"
+	"common.h"
+	"networks.h"
+
+1527900280 source:c:\users\zhang\files\git\net\src\main.net_extremum.cpp
+	"main.h"
+	"common.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\main.stat_betweenness.cpp
+	"main.h"
+	"common.h"
+	"networks.h"
+
+1527900280 source:c:\users\zhang\files\git\net\src\main.stat_lkk_extremum.cpp
+	"main.h"
+	"common.h"
+	"networks.h"
+
+1527900280 source:c:\users\zhang\files\git\net\src\main.stat_lkk_k.cpp
+	"main.h"
+	"common.h"
+	"networks.h"
+
+1527644734 source:c:\users\zhang\files\git\net\src\main.test.cpp
+	"main.h"
+	"common.h"
+	"networks.h"
+
+1526759482 source:c:\users\zhang\files\git\net\src\net.cpp
+	"net.h"
+	"common.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\net.type.cpp
+	"net.type.h"
+	"common.io.h"
+	<fstream>
+	<iostream>
+
+1526755326 source:c:\users\zhang\files\git\net\src\netactor.cpp
+	"NetActor.h"
+	<algorithm>
+	<fstream>
+	<iostream>
+	"common.h"
+
+1526755324 c:\users\zhang\files\git\net\src\netactor.h
+	"net.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\netba.cpp
+	"NetBA.h"
+	"common.h"
+
+1528719996 source:c:\users\zhang\files\git\net\src\netdegree.cpp
+	"NetDegree.h"
+	"common.h"
+	<cmath>
+	<random>
+
+1526755326 source:c:\users\zhang\files\git\net\src\netextremum.cpp
+	"NetExtremum.h"
+	"common.h"
+
+1526755324 c:\users\zhang\files\git\net\src\netextremum.h
+	"net.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\netfoodweb.cpp
+	"NetFoodweb.h"
+	<algorithm>
+	<fstream>
+	<iostream>
+	"common.h"
+
+1526755324 c:\users\zhang\files\git\net\src\netfoodweb.h
+	"net.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\netgrid.cpp
+	"NetGrid.h"
+	"common.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\netrandom.cpp
+	"NetRandom.h"
+	"common.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\network.cpp
+	"network.h"
+	"common.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkactfitnesscomplexity.cpp
+	"ActFitnessComplexity.h"
+	"common.h"
+	"networks.h"
+
+1537180123 source:c:\users\zhang\files\git\net\src\networkactrecommend.cpp
+	"ActRecommend.h"
+	"common.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkactsis.cpp
+	"networkActSis.h"
+	"common.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkactspread.cpp
+	"networkActSpread.h"
+	"networks.h"
+	<iostream>
+	<string>
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkba.cpp
+	"networkBA.h"
+	"common.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkdegree.cpp
+	"networkDegree.h"
+	"common.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkextremum.cpp
+	"net.h"
+	"NetExtremum.h"
+	"common.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkgrid.cpp
+	"networkGrid.h"
+	"common.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkrandom.cpp
+	"networkRandom.h"
+	"common.h"
+	"networks.h"
+
+1526755330 source:c:\users\zhang\files\git\net\src\networks.cpp
+	"networks.h"
+	"common.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkstatbetweenness.cpp
+	"StatBetweenness.h"
+	"common.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkstatcluster.cpp
+	"StatCluster.h"
+	"common.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkstatkendall.cpp
+	"net.h"
+	"common.h"
+	"StatKendall.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkstatmodularity.cpp
+	"StatModularity.h"
+	"common.h"
+	"networks.h"
+	"StatBetweenness.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkstatpearson.cpp
+	"networkStatPearson.h"
+	"common.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkstatsimilarity.cpp
+	"StatSimilarity.h"
+	"common.h"
+	"networks.h"
+
+1526755328 source:c:\users\zhang\files\git\net\src\networkstatspearman.cpp
+	"net.h"
+	"NetRandom.h"
+	"StatSpearman.h"
+	"common.h"
+	"networks.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\statbetweenness.cpp
+	"StatBetweenness.h"
+	"common.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\statcluster.cpp
+	"StatCluster.h"
+	"common.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\statkendall.cpp
+	"StatKendall.h"
+	"common.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\statmodularity.cpp
+	"StatModularity.h"
+	"common.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\statpearson.cpp
+	"StatPearson.h"
+	"common.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\statsimilarity.cpp
+	"StatSimilarity.h"
+	"common.h"
+
+1526755326 source:c:\users\zhang\files\git\net\src\statspearman.cpp
+	"StatSpearman.h"
+	"common.h"
+

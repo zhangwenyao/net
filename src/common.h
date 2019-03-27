@@ -64,6 +64,9 @@ void common_change_type_vector2(
     const std::vector<std::vector<T>> v, std::vector<std::vector<T2>>& v2);
 
 // *************************************************************
+template <typename T, typename T2>
+void common_total(const T* a, const size_t n, T2& s);
+
 // s += a[p[i]] for i..n
 template <typename T, typename T2, typename T3>
 void common_total_p(const T* a, const T2* p, const size_t n, T3& s);
@@ -77,6 +80,9 @@ void common_total_bool(const T* a, size_t n, T2& s);
 template <typename T, typename T2, typename T3>
 void common_total_p_bool(const T* a, const T2* p, size_t n, T3 s);
 
+template <typename T, typename T2>
+void common_sum_vector(
+    const std::vector<T>& a, std::vector<T2>& s, const int fix = 1);
 // *************************************************************
 template <typename T>
 bool common_compare_vector(const std::vector<T>& a, const std::vector<T>& b);
@@ -104,6 +110,17 @@ int common_matrixCross_p2p(const std::vector<std::vector<T2>>& p2p,
 template <typename T, typename T2>
 int common_matrixCross1_p2p(const std::vector<std::vector<T2>>& p2p,
     const std::vector<T>& a, std::vector<T>& c); // c = p2p . a
+
+// *****************************************************
+#ifdef _WIN32
+#include <direct.h>
+#include <io.h>
+#define common_mkdir(a) _mkdir((a))
+#else // _LINUX
+#include <stdarg.h>
+#include <sys/stat.h>
+#define common_mkdir(a) mkdir((a), 0755)
+#endif
 
 // *****************************************************
 #include "common.template.h"

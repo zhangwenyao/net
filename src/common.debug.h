@@ -8,6 +8,7 @@
 //#define DEBUG
 
 // ************* INFORM, DBG, ERROR, SHOW_TIME ****************
+std::string GET_TIME(void);
 void SHOW_TIME(std::ostream& os);
 
 void INFO(std::ostream& os);
@@ -20,8 +21,8 @@ template <typename... Args> void DEBUG_INFO(Args... args);
 #ifndef ERROR
 #define ERROR(...)                                                           \
   do {                                                                       \
-    std::cerr << "ERROR : " << __FILE__ << '\t' << __FUNCTION__ << " (Line " \
-              << __LINE__ << ")\t";                                          \
+    std::cerr << GET_TIME() << " ERROR: " << __FILE__ << '\t'                \
+              << __FUNCTION__ << " (Line " << __LINE__ << ")\t";             \
     ERROR_INFO(__VA_ARGS__);                                                 \
     std::cerr << std::endl;                                                  \
   } while (0)
@@ -30,8 +31,8 @@ template <typename... Args> void DEBUG_INFO(Args... args);
 #ifndef INFORM
 #define INFORM(...)                                                          \
   do {                                                                       \
-    std::cout << "INFORM: " << __FILE__ << '\t' << __FUNCTION__ << " (Line " \
-              << __LINE__ << ")\t";                                          \
+    std::cout << GET_TIME() << " INFORM: " << __FILE__ << '\t'               \
+              << __FUNCTION__ << " (Line " << __LINE__ << ")\t";             \
     INFORM_INFO(__VA_ARGS__);                                                \
     std::cout << std::endl;                                                  \
   } while (0)
@@ -41,8 +42,8 @@ template <typename... Args> void DEBUG_INFO(Args... args);
 #ifdef DEBUG
 #define DBG(...)                                                             \
   do {                                                                       \
-    std::cerr << "DEBUG : " << __FILE__ << '\t' << __FUNCTION__ << " (Line " \
-              << __LINE__ << ")\t";                                          \
+    std::cerr << GET_TIME() << " DEBUG: " << __FILE__ << '\t'                \
+              << __FUNCTION__ << " (Line " << __LINE__ << ")\t";             \
     DEBUG_INFO(__VA_ARGS__);                                                 \
     std::clog << std::endl;                                                  \
   } while (0)

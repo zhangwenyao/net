@@ -34,7 +34,9 @@ template <typename T> int random_new_randArrAll(T* a, const size_t n);
 template <typename T>
 int random_new_rankArr(T* a, const size_t n,
     const size_t m); // a[n]中，产生m个不同的随机数并排序
-
+size_t random_new_probSum(const double* a, const size_t s);
+size_t random_new_prob_sum(
+    const double* a, const size_t s, const double sum = 1);
 // ***********************************************************
 #include "common.random.template.h"
 #endif

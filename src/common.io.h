@@ -15,7 +15,7 @@ inline size_t common_itoa(
 int common_get_string(std::istream& is, std::string& s);
 
 // ********************* print, common_save ************************
-int common_check_filename(const char* const name=NULL);
+int common_check_filename(const char* const name = NULL);
 
 // 一维数组 a[n]
 template <typename T, const size_t n>
@@ -149,23 +149,23 @@ int common_read1_0(const char* name, std::vector<T>& v, unsigned n = 0);
 // vv
 template <typename T>
 std::ostream& operator<<(
-    std::ostream& os, const std::vector<const std::vector<T> >& v);
+    std::ostream& os, const std::vector<const std::vector<T>>& v);
 template <typename T>
-int common_save2(std::ostream& os, const std::vector<std::vector<T> >& v,
+int common_save2(std::ostream& os, const std::vector<std::vector<T>>& v,
     const char c = '\t');
 template <typename T>
-int common_save2(const char* name, const std::vector<std::vector<T> >& v,
+int common_save2(const char* name, const std::vector<std::vector<T>>& v,
     const char c = '\t');
 template <typename T>
-std::istream& operator>>(std::istream& is, std::vector<std::vector<T> >& v);
+std::istream& operator>>(std::istream& is, std::vector<std::vector<T>>& v);
 template <typename T>
-int common_read2(std::istream& is, std::vector<std::vector<T> >& v);
+int common_read2(std::istream& is, std::vector<std::vector<T>>& v);
 template <typename T>
-int common_read2(const char* name, std::vector<std::vector<T> >& v);
+int common_read2(const char* name, std::vector<std::vector<T>>& v);
 template <typename T>
-int common_read2_0(std::istream& is, std::vector<std::vector<T> >& v);
+int common_read2_0(std::istream& is, std::vector<std::vector<T>>& v);
 template <typename T>
-int common_read2_0(const char* name, std::vector<std::vector<T> >& v);
+int common_read2_0(const char* name, std::vector<std::vector<T>>& v);
 
 // VString
 int common_save_VString(std::ostream& os, const std::vector<std::string>& vs);

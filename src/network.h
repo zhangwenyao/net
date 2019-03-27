@@ -26,6 +26,7 @@
  *                              Max_lkk       最大度关联网络
  *                              Min           最小度关联网络
  *                              Min_lkk       最小度关联网络
+ *                              Min_lkk3       最小度关联网络
  *                              MinLkkP2p     min lkk -> p2p
  *                              MinLkkP2pFix  min lkk -> p2p fix
  *                              ER            ER随机网络
@@ -34,9 +35,9 @@
  *                              Grid          网格网络
  *                              Spearman      sp系数给定的网络
  * 修正           fix_p2p                     修正自环、重边、缺边
- *                fix_p2p_nodeDeg0            按p2p度排序重新映射节点，度为0在最后（剔除）
- * 连边矩阵       cal_extrLKK   lkk_max           lkk最强pearson同配
- *                              lkk_min           lkk最强pearson异配
+ *                fix_p2p_nodeDeg0
+ * 按p2p度排序重新映射节点，度为0在最后（剔除） 连边矩阵       cal_extrLKK
+ * lkk_max           lkk最强pearson同配 lkk_min           lkk最强pearson异配
  *                              lkk_maxN  countN  lkk最强pearson同配
  *                              lkk_minN  countN  lkk最强pearson异配
  *                              MinLkk            最小度关联网络
@@ -47,7 +48,9 @@
  *                              hybird            物质扩散&热传导
  *                              pagerank          网页排名
  *                              commonNeighbour   共同邻居
- *                              proximity         相似性
+ *                              proximity_wcp     相似性-比例
+ *                              proximity_phi     相似性-平均值
+ *                              proximity_phi     相似性-平均值
  * 传播           sis
  * 输出           print
  * 保存           save                        以种子值命名保存
@@ -60,11 +63,11 @@
 class Network {
   public:
   // variables
-  std::string argv;           // 参数
-  std::string saveName;       // 保存文件名前缀
-  std::string readName;       // 读取文件名前缀
-  int status;                 // 网络状态 0：空，1：正常p2p，2：lkk，-1：有错，-2：未连完
-  long seed;                  // 随机数种子值
+  std::string argv;     // 参数
+  std::string saveName; // 保存文件名前缀
+  std::string readName; // 读取文件名前缀
+  int status; // 网络状态 0：空，1：正常p2p，2：lkk，-1：有错，-2：未连完
+  long seed;  // 随机数种子值
   int dirFlag;                // 网络是否有向，0无向，非0有向
   int weightFlag;             // 网络是否有权，0无权，非0有权
   int distFlag;               //  网络距离是否01，0:01，非0:实数
@@ -77,9 +80,10 @@ class Network {
   int runStatus;
 
   // deg
-  VDouble degArrProb;   // [degSize]    度分布概率 p(k)
-  VNodeType degArrVal;  // [degSize]    度分布序列 k
-  VNodeType degArrSize; // [degSize]    各度节点数 n(k)
+  VDouble degArrProb, degArrProbSum; // [degSize]    度分布概率 p(k)
+  double degProbSum;
+  VNodeType degArrVal;               // [degSize]    度分布序列 k
+  VNodeType degArrSize;              // [degSize]    各度节点数 n(k)
   MNodeType degArrNo;   // [kMax+1]     度k在degArrVal中的位置
   VNodeType degArrSum;  // [degSize+1]  度分布累计序列
   VNodeType nodeDeg;    // [nodeSize]   各节点度
@@ -110,9 +114,12 @@ class Network {
 
   // lkk
   VVLinkType lkk, lkkOutIn;       // 不同度之间连边数目矩阵
-  VVLinkType lkkSum, lkkSumOutIn; // 同度点连向不同度的累计边数
+  VVLinkType lkkSum, lkkSumOutIn; // 同度点连向所有度的累计边数
   VVDouble lkkProb;               // [degSize]    连边的联合分布概率
   int lkk_saveType;
+  // lkk3
+  VLkk3LinkType lkk3, lkk3OutIn; // 不同度之间连边数目矩阵
+  VLkk3Double lkk3Prob;          // [degSize]    连边的联合分布概率
 
   Network(void);
   friend std::istream& operator>>(std::istream& is, Network& net);

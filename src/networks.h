@@ -60,7 +60,7 @@
 #endif
 
 #ifdef ACT_FITNESS_COMPLEXITY
-#include "networkActFitnessComplexity.h"
+#include "fitness_complexity_network.h"
 #endif
 
 #ifdef ACT_RECOMMEND
@@ -131,6 +131,7 @@ class Networks : public Network {
   Networks& net_Min(void);
   Networks& net_Min_new_lkk_p2p(const int fix = 1);
   Networks& net_Min_new_lkk(const int fix = 1);
+  Networks& net_Min_new_lkk3(void);
   Networks& net_extremum_lkk(const int extrMax, const unsigned countN = 3);
   Networks& extremum_cal_lkk(std::string& s, std::istream& is);
 #endif

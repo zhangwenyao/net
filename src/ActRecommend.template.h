@@ -10,47 +10,79 @@
 
 // *******************************************************
 template <typename T>
-int act_recommend_proximity(
-    VVDouble& rcm, const std::vector<std::vector<T> >& uo, VVDouble* rcm_oo)
+int cal_proximity_rca2phi(
+    const std::vector<std::vector<T>>& rca_uo, VVDouble& phi_oo)
 {
-  const size_t NC = uo.size(), NP = uo[0].size();
-  VVDouble rcm_oo_0;
-  if (rcm_oo == NULL)
-    rcm_oo = &rcm_oo_0;
-  VVDouble& rcm_oo_2 = *rcm_oo;
-  rcm_oo_2.assign(NP, VDouble(NP, 0));
-  rcm.assign(NC, VDouble(NP, 0));
-  for (size_t a = 0; a < NP; ++a) {
+  const size_t NU = rca_uo.size(), NO = rca_uo[0].size();
+  phi_oo.assign(NO, VDouble(NO, 1));
+  for (size_t a = 0; a < NO; ++a) {
     for (size_t b = 0; b < a; ++b) {
       double phi_ab, phi_ba;
       size_t nb = 0, nba = 0, na = 0, nab = 0;
-      for (size_t c = 0; c < NC; ++c) {
-        if (uo[c][a]) {
+      for (size_t c = 0; c < NU; ++c) {
+        if (rca_uo[c][a] >= 1) {
           na++;
-          if (uo[c][b])
+          if (rca_uo[c][b] >= 1)
             nab++;
         }
-        if (uo[c][b]) {
+        if (rca_uo[c][b] >= 1) {
           nb++;
-          if (uo[c][a])
+          if (rca_uo[c][a] >= 1)
             nba++;
         }
       }
       phi_ab = na > 0 ? (double)nab / na : 0;
       phi_ba = nb > 0 ? (double)nba / nb : 0;
-      rcm_oo_2[a][b] = rcm_oo_2[b][a] = phi_ab < phi_ba ? phi_ab : phi_ab;
+      phi_oo[a][b] = phi_oo[b][a] = phi_ab < phi_ba ? phi_ab : phi_ab;
     }
-    rcm_oo_2[a][a] = 1;
+  }
+  return 0;
+}
+
+template <typename T>
+int act_recommend_proximity_wcp(
+    VVDouble& rcm, const std::vector<std::vector<T>>& uo)
+{
+  const size_t NU = uo.size(), NO = uo[0].size();
+  rcm.assign(NU, VDouble(NO, 0));
+  VVDouble phi_oo;
+  cal_proximity_rca2phi(uo, phi_oo);
+
+  for (size_t c = 0; c < NU; ++c) {
+    for (size_t a = 0; a < NO; ++a) {
+      size_t k = 0;
+      double phiSum = 0, phi = 0;
+      for (size_t b = 0; b < NO; ++b) {
+        phiSum += phi_oo[a][b];
+        if (uo[c][b] >= 1) {
+          k++;
+          phi += phi_oo[a][b];
+        }
+      }
+      rcm[c][a] = k > 0 ? phi / phiSum : 0;
+    }
   }
 
-  for (size_t c = 0; c < NC; ++c) {
-    for (size_t a = 0; a < NP; ++a) {
+  return 0;
+}
+
+template <typename T>
+int act_recommend_proximity_phi(
+    VVDouble& rcm, const std::vector<std::vector<T>>& uo)
+{
+  const size_t NU = uo.size(), NO = uo[0].size();
+  rcm.assign(NU, VDouble(NO, 0));
+  VVDouble phi_oo;
+  cal_proximity_rca2phi(uo, phi_oo);
+
+  for (size_t c = 0; c < NU; ++c) {
+    for (size_t a = 0; a < NO; ++a) {
       size_t k = 0;
       double phi = 0;
-      for (size_t b = 0; b < NP; ++b) {
-        if (uo[c][b]) {
+      for (size_t b = 0; b < NO; ++b) {
+        if (uo[c][b] >= 1) {
           k++;
-          phi += rcm_oo_2[a][b];
+          phi += phi_oo[a][b];
         }
       }
       rcm[c][a] = k > 0 ? phi / k : 0;
@@ -99,8 +131,8 @@ int recommend_rankingScore(const VNodeType& rk, const std::vector<T>& L0,
 
 template <typename T>
 int count_rankingScore(const VVDouble& rcm, const size_t NC, const size_t NP,
-    const std::vector<std::vector<T> >& mcp,
-    const std::vector<std::vector<T> >& mcp2, VDouble& rankingScore,
+    const std::vector<std::vector<T>>& mcp,
+    const std::vector<std::vector<T>>& mcp2, VDouble& rankingScore,
     VDouble& rankingScoreDev)
 {
   rankingScore.assign(NC, 0);

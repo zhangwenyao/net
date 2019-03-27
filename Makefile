@@ -1,6 +1,6 @@
 
 TARGET	= net.exe
-SRCEXTS	= .c .cpp
+SRCEXTS	= .c .cc .cpp
 DIR_INC	= ./include
 DIR_SRC	= ./src
 DIR_OBJ	= ./obj
@@ -36,11 +36,17 @@ all:$(BIN_TARGET)
 ${DIR_OBJ}/%.d	:	${DIR_SRC}/%.c
 	@set -e; $(CC)  -MM $< $(CFLAGS) | sed 's,\($*\)\.o[ :]*,${DIR_OBJ}/\1.o $@ : ,g' > $@
 
+${DIR_OBJ}/%.d	:	${DIR_SRC}/%.cc
+	@set -e; $(CXX) -MM $< $(CXXFLAGS)| sed 's,\($*\)\.o[ :]*,${DIR_OBJ}/\1.o $@ : ,g' > $@
+
 ${DIR_OBJ}/%.d	:	${DIR_SRC}/%.cpp
 	@set -e; $(CXX) -MM $< $(CXXFLAGS)| sed 's,\($*\)\.o[ :]*,${DIR_OBJ}/\1.o $@ : ,g' > $@
 
 ${DIR_OBJ}/%.o	:	${DIR_SRC}/%.c
 	$(CC)  -o $@ -c $< $(CFLAGS)
+
+$(DIR_OBJ)/%.o	:	$(DIR_SRC)/%.cc
+	$(CXX) -o $@ -c $< $(CXXFLAGS)
 
 $(DIR_OBJ)/%.o	:	$(DIR_SRC)/%.cpp
 	$(CXX) -o $@ -c $< $(CXXFLAGS)

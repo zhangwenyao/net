@@ -175,6 +175,13 @@ void common_change_type_vector2(
 }
 
 // *************************************************************
+template <typename T, typename T2>
+void common_total(const T* a, const size_t n, T2& s)
+{
+  for (size_t i = 0; i < n; ++i)
+    s += *a++;
+}
+
 template <typename T, typename T2, typename T3>
 void common_total_p(const T* a, const T2* p, const size_t n, T3& s)
 {
@@ -207,6 +214,22 @@ void common_total_p_bool(const T* a, const T2* p, size_t n, T3 s) // 求和
       s++;
 }
 
+template <typename T, typename T2>
+void common_sum_vector(
+    const std::vector<T>& a, std::vector<T2>& s, const int fix)
+{
+  s.resize(a.size());
+  T2 sum = 0;
+  auto j = s.begin();
+  for (auto i = a.begin(); i != a.end(); ++i, ++j) {
+    sum += *i;
+    *j = sum;
+  }
+  if (fix and sum != 0) {
+    for (auto j = s.begin(); j != s.end(); ++j)
+      *j /= sum;
+  }
+}
 // *************************************************************
 template <typename T> T common_GCD(T a, T b)
 {

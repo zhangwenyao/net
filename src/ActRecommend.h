@@ -25,8 +25,14 @@ int act_recommend_commonNeighbour_object(VVDouble& rcm, const VVNodeType& oo);
 int act_recommend_hybrid_matrix(VVDouble& rcm, const VVNodeType& uP2p,
     const VVNodeType& oP2p, const double lambda);
 template <typename T>
-int act_recommend_proximity(
-    VVDouble& rcm, const std::vector<std::vector<T> >& user_object, VVDouble* rcm_oo = NULL);
+int cal_proximity_rca2phi(
+    const std::vector<std::vector<T>>& rca_uo, VVDouble& phi_oo);
+template <typename T>
+int act_recommend_proximity_wcp(
+    VVDouble& rcm, const std::vector<std::vector<T>>& uo);
+template <typename T>
+int act_recommend_proximity_phi(
+    VVDouble& rcm, const std::vector<std::vector<T> >& user_object);
 
 int recommend_RAC(const VDouble& v0, const VDouble& v, double& r);
 int recommend_RMAE(const VDouble& v0, const VDouble& v, double& r);

@@ -35,6 +35,11 @@ int net_degree::poisson_cal_degArrProb(const double p, VNodeType& degArrVal,
 }
 
 // *******************************************************************
+Double net_degree::power_prob(const NodeType n, const Double r)
+{
+  return pow(n, -r);
+};
+
 // 生成度分布概率
 int net_degree::power_cal_degArrProb(const double r, VNodeType& degArrVal,
     VDouble& degArrProb, const NodeType kMin, const NodeType kMax)
@@ -116,6 +121,74 @@ int net_degree::power_cal_deg_arr_func(const NodeType nodeSize,
     probSum -= prob;
   }
   if (degArrVal.size() <= 0 || degArrVal.front() != kMin
+      || degArrVal.back() != kMax)
+    ERROR();
+  return 0;
+}
+
+int net_degree::read_prob_sum(
+    const char* filename, VNodeType& degProbSumVal, VDouble& degProbSumArr)
+{
+  degProbSumVal.clear();
+  degProbSumArr.clear();
+  _ERR(filename == NULL || filename[0] == '\0');
+  string f = filename;
+  ifstream is(filename);
+  _ERR(!is);
+  NodeType i;
+  Double p;
+  while (is >> i >> p) {
+    degProbSumVal.push_back(i);
+    degProbSumArr.push_back(p);
+  }
+  is.close();
+  return 0;
+}
+
+// 生成度分布累计序列
+int net_degree::power_cal_deg_arr_prob_sum_arr(const NodeType nodeSize,
+    const NodeType kMin, const NodeType kMax,
+    std::function<Double(const NodeType)> prob_func,
+    const VNodeType& degProbSumVal, const VDouble& degProbSumArr,
+    VNodeType& degArrVal, VNodeType& degArrSize)
+{
+  degArrVal.clear();
+  degArrSize.clear();
+  if (kMin < 1 || kMin > kMax || nodeSize < 2) {
+    ERROR();
+    return -1;
+  }
+  if (kMax >= NodeType(1) << (degProbSumArr.size() + 1)) {
+    ERROR();
+    return -1;
+  }
+  NodeType size = nodeSize;
+  for (size_t n1 = 0; size > 0 && n1 < degProbSumArr.size(); ++n1) {
+    Double probSum = std::accumulate(
+        degProbSumArr.rbegin() + 1, degProbSumArr.rend() - n1, Double(0));
+    for (NodeType k = degProbSumVal[n1], km = degProbSumVal[n1 + 1];
+         size > 0 && probSum > 0 && k < km; ++k) {
+      Double prob = prob_func(k);
+      binomial_distribution<NodeType> bd(size, prob / probSum);
+      NodeType n = bd(rand2);
+      if (k == kMin && n <= 0)
+        n = 1;
+      if (size == 1) {
+        k = kMax;
+        n = size;
+        probSum = 0;
+      }
+      if (n == size && k < kMax)
+        --n;
+      if (n > 0) {
+        degArrVal.push_back(k);
+        degArrSize.push_back(n);
+        size -= n;
+      }
+      probSum -= prob;
+    }
+  }
+  if (size > 0 || degArrVal.size() <= 0 || degArrVal.front() != kMin
       || degArrVal.back() != kMax)
     ERROR();
   return 0;

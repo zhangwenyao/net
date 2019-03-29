@@ -9,11 +9,12 @@ using namespace std;
 int main_net_extremum(int argc, char** argv)
 {
   char name[200];
-  // e: max 44
-  for (int e = 45; e <= 60; ++e) {
+  // e: max 56
+  for (int e = 44; e <= 63; ++e) {
     cout << "e\t" << e << endl;
-    sprintf(name, "data/extremum/nature/2^%d/2^%d", e, e);
-    string data_dir = string("data/extremum/nature/2^") + to_string(e);
+    sprintf(name, "data/extremum/nature/2.5/data/2^%d/2^%d", e, e);
+    string data_dir
+        = string("data/extremum/nature/2.5/data/2^") + to_string(e);
     ::common_mkdir(data_dir.c_str());
     for (int seed = 1; seed <= 1; ++seed) {
       SHOW_TIME(cout); // 显示系统时间
@@ -40,12 +41,15 @@ int main_net_extremum(int argc, char** argv)
         break;
       }
 
-      if (0
-          != net_degree::power_nature_cutoff(net.kMax, net.nodeSize, net.kMin,
-                 net.degree.power_gamma)) { // 最大度
-        ERROR();
-        break;
-      }
+      // if (0
+      //!= net_degree::power_nature_cutoff(net.kMax, net.nodeSize, net.kMin,
+      // net.degree.power_gamma)) { // 最大度
+      // ERROR();
+      // break;
+      //}
+      _ERR(net_degree::read_prob_sum((data_dir + "/prob_sum.txt").c_str(),
+          net.degProbSumVal, net.degProbSumArr));
+      net.kMax = net.degProbSumVal.back() - 1;
 
       //功能模块
       if (0 != net.run().runStatus) {

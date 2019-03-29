@@ -249,15 +249,11 @@ Networks& Networks::degree_power_arr(void)
   // INFORM();
 
   // 生成度分布
-  degProbSum = 0;
-  for (NodeType k = kMin; k <= kMax; ++k)
-    degProbSum += net_degree::power_prob(k, degree.power_gamma);
-  INFORM(degProbSum);
   const auto& r = degree.power_gamma;
   std::function<double(const NodeType)> prob_func
       = [r](const NodeType n) { return net_degree::power_prob(n, r); };
-  net_degree::power_cal_deg_arr_func(
-      nodeSize, kMin, kMax, prob_func, degProbSum, degArrVal, degArrSize);
+  net_degree::power_cal_deg_arr_prob_sum_arr(nodeSize, kMin, kMax, prob_func,
+      degProbSumVal, degProbSumArr, degArrVal, degArrSize);
   INFORM(degArrVal.size(), "\t", degArrSize.size());
 
   // 修正度序列使总数为偶数

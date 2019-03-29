@@ -38,7 +38,8 @@ typedef double WeightSumType;         // 边权求和
 typedef double WeightSumSType;        // 边权求和
 const WeightType WeightMax = DBL_MAX; // 距离无穷大的值
 
-typedef std::vector<std::string> VString;
+typedef std::string String;
+typedef std::vector<String> VString;
 typedef std::vector<VString> VVString;
 typedef std::string* PString;
 typedef VString::iterator VStringItr;
@@ -46,7 +47,8 @@ typedef VString::const_iterator VStringCItr;
 typedef VVString::iterator VVStringItr;
 typedef VVString::const_iterator VVStringCItr;
 
-typedef std::vector<char> VChar;
+typedef char Char;
+typedef std::vector<Char> VChar;
 typedef std::vector<VChar> VVChar;
 typedef char* PChar;
 typedef VChar::iterator VCharItr;
@@ -54,7 +56,8 @@ typedef VChar::const_iterator VCharCItr;
 typedef VVChar::iterator VVCharItr;
 typedef VVChar::const_iterator VVCharCItr;
 
-typedef std::vector<bool> VBool;
+typedef bool Bool;
+typedef std::vector<Bool> VBool;
 typedef std::vector<VBool> VVBool;
 typedef bool* PBool;
 typedef VBool::iterator VBoolItr;
@@ -62,7 +65,8 @@ typedef VBool::const_iterator VBoolCItr;
 typedef VVBool::iterator VVBoolItr;
 typedef VVBool::const_iterator VVBoolCItr;
 
-typedef std::vector<short> VShort;
+typedef short Short;
+typedef std::vector<Short> VShort;
 typedef std::vector<VShort> VVShort;
 typedef short* PShort;
 typedef VShort::iterator VShortItr;
@@ -70,7 +74,8 @@ typedef VShort::const_iterator VShortCItr;
 typedef VVShort::iterator VVShortItr;
 typedef VVShort::const_iterator VVShortCItr;
 
-typedef std::vector<int> VInt;
+typedef int Int;
+typedef std::vector<Int> VInt;
 typedef std::vector<VInt> VVInt;
 typedef int* PInt;
 typedef VInt::iterator VIntItr;
@@ -78,7 +83,8 @@ typedef VInt::const_iterator VIntCItr;
 typedef VVInt::iterator VVIntItr;
 typedef VVInt::const_iterator VVIntCItr;
 
-typedef std::vector<unsigned> VUnsigned;
+typedef unsigned Unsigned;
+typedef std::vector<Unsigned> VUnsigned;
 typedef std::vector<VUnsigned> VVUnsigned;
 typedef unsigned* PUnsigned;
 typedef VUnsigned::iterator VUnsignedItr;
@@ -86,9 +92,10 @@ typedef VUnsigned::const_iterator VUnsignedCItr;
 typedef VVUnsigned::iterator VVUnsignedItr;
 typedef VVUnsigned::const_iterator VVUnsignedCItr;
 
-typedef std::vector<double> VDouble;
+typedef double Double;
+typedef std::vector<Double> VDouble;
 typedef std::vector<VDouble> VVDouble;
-typedef double* PDouble;
+typedef Double* PDouble;
 typedef VDouble::iterator VDoubleItr;
 typedef VDouble::const_iterator VDoubleCItr;
 typedef VVDouble::iterator VVDoubleItr;
@@ -155,7 +162,7 @@ typedef struct Struct3<NodeType, NodeType, NodeType> Lkk3NodeType;
 typedef Lkk3NodeType* PLkk3NodeType;
 typedef struct Struct3<NodeType, NodeType, LinkType> Lkk3LinkType;
 typedef Lkk3LinkType* PLkk3LinkType;
-typedef struct Struct3<NodeType, NodeType, double> Lkk3Double;
+typedef struct Struct3<NodeType, NodeType, Double> Lkk3Double;
 typedef Lkk3Double* PLkk3Double;
 
 typedef std::vector<Lkk3Double> VLkk3Double;

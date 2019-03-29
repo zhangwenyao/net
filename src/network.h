@@ -82,6 +82,8 @@ class Network {
   // deg
   VDouble degArrProb, degArrProbSum; // [degSize]    度分布概率 p(k)
   double degProbSum;
+  VDouble degProbSumArr;
+  VNodeType degProbSumVal;
   VNodeType degArrVal;               // [degSize]    度分布序列 k
   VNodeType degArrSize;              // [degSize]    各度节点数 n(k)
   MNodeType degArrNo;   // [kMax+1]     度k在degArrVal中的位置

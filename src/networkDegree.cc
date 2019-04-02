@@ -224,7 +224,7 @@ Networks& Networks::degree_power_arr(void)
       kMax = nodeSize - 1;
   }
 
-  INFORM(kMax);
+  // INFORM(kMax);
 
   //// 生成度分布概率
   //::power_cal_degArrProb(
@@ -254,23 +254,23 @@ Networks& Networks::degree_power_arr(void)
       = [r](const NodeType n) { return net_degree::power_prob(n, r); };
   net_degree::power_cal_deg_arr_prob_sum_arr(nodeSize, kMin, kMax, prob_func,
       degProbSumVal, degProbSumArr, degArrVal, degArrSize);
-  INFORM(degArrVal.size(), "\t", degArrSize.size());
+  // INFORM(degArrVal.size(), "\t", degArrSize.size());
 
   // 修正度序列使总数为偶数
   if (::degArr_2_linkSize(linkSize, degArrVal, degArrSize, dirFlag) != 0) {
-    INFORM(linkSize);
+    // INFORM(linkSize);
     net_degree::fix_degArr_linkSize_lkk3_fast(
         degArrVal, degArrSize, linkSize);
     linkSize /= 2;
   }
-  INFORM(linkSize);
+  // INFORM(linkSize);
 
   if (!degArrVal.empty() && 0 != fix_degArrSize_0(degArrSize, degArrVal)) {
     ERROR();
     runStatus = -1;
     return *this;
   }
-  INFORM(degArrVal.size(), "\t", degArrSize.size());
+  // INFORM(degArrVal.size(), "\t", degArrSize.size());
 
   degMean = nodeSize > 0 ? (double)linkSize / nodeSize : 0;
   if (!dirFlag)

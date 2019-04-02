@@ -15,6 +15,7 @@ extern std::uniform_real_distribution<double> dis_real; // [0,1)
 long rand_seed(long
         seed); // 随机数种子初始化，正数:直接初始化，0:采用系统微秒时间，负数:绝对值&系统时间
 
+
 // ***********************************************************
 template <typename T>
 int random_new_randKArr(T* a, const size_t n, const double* p,

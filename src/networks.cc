@@ -140,11 +140,8 @@ Networks& Networks::save_data(const char* name)
   stringstream ss;
   if (name != NULL && name[0] != '\0')
     fn = name;
-  else {
-    ss.clear();
-    ss << seed;
-    fn = saveName + '_' + ss.str();
-  }
+  else
+    fn = saveName + '_' + to_string(seed);
 
   Network::save_data(fn.c_str());
   if (0 != runStatus)
@@ -957,7 +954,7 @@ Networks& Networks::cal_p2p(const string& s)
       }
 #endif
 
-// TODO: lkk_2_p2p // lkk生成p2p
+      // TODO: lkk_2_p2p // lkk生成p2p
 
 #ifdef NET_RANDOM
       if (s == "ER") {
@@ -1094,8 +1091,8 @@ Networks& Networks::fix_p2p_nodeDeg0(void)
       &nodeDeg.front()); // 按度从大到小排
 
   // i -> net2.nodesName2[i]
-  common_sort_p_val(
-      net2.nodesName2.begin(), net2.nodesName2.end(), &net2.nodesName.front());
+  common_sort_p_val(net2.nodesName2.begin(), net2.nodesName2.end(),
+      &net2.nodesName.front());
 
   // 更新net2的连边信息net2.p2p
   net2.p2p.resize(net2.nodeSize);

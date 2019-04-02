@@ -9,16 +9,16 @@ using namespace std;
 int main_net_extremum(int argc, char** argv)
 {
   char name[200];
-  // e: max 56
-  for (int e = 44; e <= 63; ++e) {
+  // e: max 56 55:19h 40:7 41:9 42:17 43:27 44:48 45:76
+  for (int e = 46; e <= 60; ++e) {
     cout << "e\t" << e << endl;
     sprintf(name, "data/extremum/nature/2.5/data/2^%d/2^%d", e, e);
     string data_dir
-        = string("data/extremum/nature/2.5/data/2^") + to_string(e);
+        = string("data/extremum/nature/2.5/data/2^") + to_string(e) + "/";
     ::common_mkdir(data_dir.c_str());
     for (int seed = 1; seed <= 1; ++seed) {
       SHOW_TIME(cout); // 显示系统时间
-      cout << "seed\t" << seed << endl;
+      cout << "e\t" << e << "\nseed\t" << seed << endl;
       Networks net;
       net.saveName = net.readName = name;
       net.nodeSize = (NodeType)1 << e; // 节点数
@@ -47,7 +47,7 @@ int main_net_extremum(int argc, char** argv)
       // ERROR();
       // break;
       //}
-      _ERR(net_degree::read_prob_sum((data_dir + "/prob_sum.txt").c_str(),
+      _ERR(net_degree::read_prob_sum((data_dir + "prob_sum.txt").c_str(),
           net.degProbSumVal, net.degProbSumArr));
       net.kMax = net.degProbSumVal.back() - 1;
 
@@ -59,15 +59,11 @@ int main_net_extremum(int argc, char** argv)
         net.save();
         // break;
       } else {
-        net.save_deg();
-        net.save_params();
-        string fn;
-        stringstream ss;
-        ss.clear();
-        ss << seed;
-        fn = net.saveName + "_" + ss.str();
+        net.save_deg((data_dir + to_string(seed)).c_str());
+        net.save_params((data_dir + to_string(seed) + ".Min").c_str());
         // save_lkk_3((fn + ".Min.lkk3.txt").c_str(), net.lkk);
-        ::common_save1((fn + ".Min.lkk3.txt").c_str(), net.lkk3, '\n');
+        ::common_save1((data_dir + to_string(seed) + ".Min.lkk3.txt").c_str(),
+            net.lkk3, '\n');
       }
     }
   }

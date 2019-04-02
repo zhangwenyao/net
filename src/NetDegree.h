@@ -15,7 +15,10 @@ int poisson_cal_degArrProb(const double r, VNodeType& degArrVal,
     NodeType& nodeSize); // 计算度分布概率
 
 // ************* 幂律网络 type:deg_power ****************
-Double power_prob(const NodeType n, const Double r);
+inline Double power_prob(const NodeType n, const Double r)
+{
+  return pow(n, -r);
+}
 
 int power_cal_degArrProb(const double p, VNodeType& degArrVal,
     VDouble& degArrProb, const NodeType kMin,
@@ -30,6 +33,14 @@ int read_prob_sum(
 int power_cal_deg_arr_prob_sum_arr(const NodeType nodeSize,
     const NodeType kMin, const NodeType kMax,
     std::function<Double(const NodeType)> prob_func,
+    const VNodeType& degProbSumVal, const VDouble& degProbSumArr,
+    VNodeType& degArrVal, VNodeType& degArrSize);
+int power_cal_deg_arr_prob_sum_arr2(const NodeType nodeSize,
+    const NodeType kMinN, std::function<Double(const NodeType)> prob_func,
+    const VNodeType& degProbSumVal, const VDouble& degProbSumArr,
+    VNodeType& degArrVal, VNodeType& degArrSize);
+int power_cal_deg_arr_prob_sum_arr3(const NodeType nodeSize,
+    const NodeType kMinN, std::function<Double(const NodeType)> prob_func,
     const VNodeType& degProbSumVal, const VDouble& degProbSumArr,
     VNodeType& degArrVal, VNodeType& degArrSize);
 int fix_degArr_linkSize_lkk3_fast(

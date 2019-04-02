@@ -35,10 +35,6 @@ int net_degree::poisson_cal_degArrProb(const double p, VNodeType& degArrVal,
 }
 
 // *******************************************************************
-Double net_degree::power_prob(const NodeType n, const Double r)
-{
-  return pow(n, -r);
-};
 
 // 生成度分布概率
 int net_degree::power_cal_degArrProb(const double r, VNodeType& degArrVal,
@@ -162,12 +158,13 @@ int net_degree::power_cal_deg_arr_prob_sum_arr(const NodeType nodeSize,
     ERROR();
     return -1;
   }
-  NodeType size = nodeSize;
-  for (size_t n1 = 0; size > 0 && n1 < degProbSumArr.size(); ++n1) {
-    Double probSum = std::accumulate(
-        degProbSumArr.rbegin() + 1, degProbSumArr.rend() - n1, Double(0));
-    for (NodeType k = degProbSumVal[n1], km = degProbSumVal[n1 + 1];
-         size > 0 && probSum > 0 && k < km; ++k) {
+  NodeType size = nodeSize, n1 = 0;
+  for (; size > 0 && n1 + 1 < degProbSumArr.size(); ++n1) {
+    NodeType k = degProbSumVal[n1], km = degProbSumVal[n1 + 1];
+    Double probSum = degProbSumArr[n1], probSum2 = degProbSumArr[n1 + 1];
+    if (size * (probSum - probSum2) / probSum / (km - k) <= 1.0 / (1 << 2))
+      break;
+    for (; size > 0 && probSum > 0 && k < km; ++k) {
       Double prob = prob_func(k);
       binomial_distribution<NodeType> bd(size, prob / probSum);
       NodeType n = bd(rand2);
@@ -188,9 +185,121 @@ int net_degree::power_cal_deg_arr_prob_sum_arr(const NodeType nodeSize,
       probSum -= prob;
     }
   }
-  if (size > 0 || degArrVal.size() <= 0 || degArrVal.front() != kMin
-      || degArrVal.back() != kMax)
-    ERROR();
+  if (size)
+    _ERR(net_degree::power_cal_deg_arr_prob_sum_arr2(size, n1, prob_func,
+        degProbSumVal, degProbSumArr, degArrVal, degArrSize));
+  _ERR(degArrVal.size() <= 0 || degArrVal.front() != kMin
+      || degArrVal.back() != kMax);
+  return 0;
+}
+
+int net_degree::power_cal_deg_arr_prob_sum_arr2(const NodeType nodeSize,
+    const NodeType kMinN, std::function<Double(const NodeType)> prob_func,
+    const VNodeType& degProbSumVal, const VDouble& degProbSumArr,
+    VNodeType& degArrVal, VNodeType& degArrSize)
+{
+  NodeType kMaxN = degProbSumVal.size() - 2, kMax = degProbSumVal.back() - 1,
+           size = nodeSize, n1 = kMinN;
+  for (; size > 0 && n1 <= kMaxN; ++n1) {
+    NodeType k1 = degProbSumVal[n1], km = degProbSumVal[n1 + 1];
+    Double probSum = degProbSumArr[n1], probSum2 = degProbSumArr[n1 + 1],
+           p = (probSum - probSum2) / probSum;
+    if (size * p / (km - k1) <= 1.0 / (1 << 4))
+      break;
+    VNodeType degVal;
+    binomial_distribution<NodeType> bd(size, p);
+    NodeType n = bd(rand2);
+    if (n1 == kMaxN) {
+      degVal.push_back(kMax);
+      n = --size;
+    } else if (n <= 0)
+      continue;
+    else if (n == size)
+      --n;
+    const Double pMax = prob_func(k1);
+    uniform_int_distribution<NodeType> uid(k1, km - 1);
+    size -= n;
+    while (n > 0) {
+      const NodeType k = uid(rand2);
+      if (rand_double() * pMax <= prob_func(k)) {
+        degVal.push_back(k);
+        --n;
+      }
+    }
+    sort(degVal.begin(), degVal.end());
+    for (auto i = degVal.begin(); i != degVal.end(); ++i) {
+      NodeType k = *i, n = 1;
+      while (i + 1 != degVal.end() && k == *(i + 1)) {
+        ++i;
+        ++n;
+      }
+      degArrVal.push_back(k);
+      degArrSize.push_back(n);
+    }
+  }
+  if (size)
+    _ERR(net_degree::power_cal_deg_arr_prob_sum_arr3(size, n1, prob_func,
+        degProbSumVal, degProbSumArr, degArrVal, degArrSize));
+  _ERR(degArrVal.size() <= 0 || degArrVal.back() != degProbSumVal.back() - 1);
+  return 0;
+}
+
+int net_degree::power_cal_deg_arr_prob_sum_arr3(const NodeType nodeSize,
+    const NodeType kMinN, std::function<Double(const NodeType)> prob_func,
+    const VNodeType& degProbSumVal, const VDouble& degProbSumArr,
+    VNodeType& degArrVal, VNodeType& degArrSize)
+{
+  NodeType kMaxN = degProbSumVal.size() - 2, kMax = degProbSumVal.back() - 1,
+           size = nodeSize, n1 = kMinN;
+  for (; size > 0 && n1 <= kMaxN; ++n1) {
+    NodeType k = degProbSumVal[n1], km = degProbSumVal[n1 + 1];
+    Double probSum = degProbSumArr[n1], probSum2 = degProbSumArr[n1 + 1],
+           p_all = probSum - probSum2, p = p_all / probSum, r;
+    VNodeType degVal;
+    binomial_distribution<NodeType> bd(size, p);
+    NodeType n = bd(rand2);
+    if (n1 == kMaxN) {
+      degVal.push_back(kMax);
+      n = --size;
+    } else if (n <= 0)
+      continue;
+    else if (n == size)
+      --n;
+    size -= n;
+    VDouble deg_prob;
+    for (NodeType i = 0; i < n; ++i)
+      deg_prob.push_back(rand_double() * p_all);
+    sort(deg_prob.begin(), deg_prob.end());
+    r = deg_prob.front();
+    for (NodeType i = 0, im = deg_prob.size(); i < im; ++i) {
+      while (r > 0) {
+        r -= prob_func(k++);
+        if (k > km)
+          break;
+      }
+      degVal.push_back(k - 1);
+      while (i + 1 < im && r <= 0) {
+        r += deg_prob[i + 1] - deg_prob[i];
+        if (r <= 0) {
+          degVal.push_back(k - 1);
+          ++i;
+        } else
+          break;
+      }
+    }
+    sort(degVal.begin(), degVal.end());
+    for (auto i = degVal.begin(); i != degVal.end(); ++i) {
+      NodeType k = *i, n = 1;
+      while (i + 1 != degVal.end() && k == *(i + 1)) {
+        ++i;
+        ++n;
+      }
+      degArrVal.push_back(k);
+      degArrSize.push_back(n);
+    }
+  }
+  _ERR(size > 0 || degArrVal.size() <= 0
+      || degArrVal.back() != degProbSumVal.back() - 1);
   return 0;
 }
 

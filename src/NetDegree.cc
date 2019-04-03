@@ -204,8 +204,8 @@ int net_degree::power_cal_deg_arr_prob_sum_arr2(const NodeType nodeSize,
     NodeType k1 = degProbSumVal[n1], km = degProbSumVal[n1 + 1];
     Double probSum = degProbSumArr[n1], probSum2 = degProbSumArr[n1 + 1],
            p = (probSum - probSum2) / probSum;
-    if (size * p / (km - k1) <= 1.0 / (1 << 4))
-      break;
+    // if (size * p / (km - k1) <= 1.0 / (1 << 6))
+    // break;
     VNodeType degVal;
     binomial_distribution<NodeType> bd(size, p);
     NodeType n = bd(rand2);
@@ -237,10 +237,10 @@ int net_degree::power_cal_deg_arr_prob_sum_arr2(const NodeType nodeSize,
       degArrSize.push_back(n);
     }
   }
-  if (size)
-    _ERR(net_degree::power_cal_deg_arr_prob_sum_arr3(size, n1, prob_func,
-        degProbSumVal, degProbSumArr, degArrVal, degArrSize));
-  _ERR(degArrVal.size() <= 0 || degArrVal.back() != degProbSumVal.back() - 1);
+  // if (size)
+  //_ERR(net_degree::power_cal_deg_arr_prob_sum_arr3(size, n1, prob_func,
+  // degProbSumVal, degProbSumArr, degArrVal, degArrSize));
+  _ERR(size > 0 || degArrVal.size() <= 0 || degArrVal.back() != kMax);
   return 0;
 }
 
@@ -298,8 +298,7 @@ int net_degree::power_cal_deg_arr_prob_sum_arr3(const NodeType nodeSize,
       degArrSize.push_back(n);
     }
   }
-  _ERR(size > 0 || degArrVal.size() <= 0
-      || degArrVal.back() != degProbSumVal.back() - 1);
+  _ERR(size > 0 || degArrVal.size() <= 0 || degArrVal.back() != kMax);
   return 0;
 }
 

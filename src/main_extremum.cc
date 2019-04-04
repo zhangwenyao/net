@@ -8,20 +8,20 @@ using namespace std;
 //**//**************************************************//**//*
 int main_net_extremum(int argc, char** argv)
 {
-  // e: max 60
-  // 56:25  57:28   58:42   59:48     60:75
-  for (int e = 12; e <= 60; ++e) {
+  // e:12-60
+  // 56:25  57:28   58:50   59:70     60:86
+  for (int e = 20; e <= 20; ++e) {
     cout << "e\t" << e << endl;
     string data_dir = string("/media/yao/YAO2/net/")
         + "data/extremum/nature/2.5/data/2^" + to_string(e) + "/";
     // string data_dir
     //= string("data/extremum/nature/2.5/data/2^") + to_string(e) + "/";
     ::common_mkdir(data_dir.c_str());
-    for (int seed = 1; seed <= 100; ++seed) {
+    for (int seed = 1; seed <= 1; ++seed) {
       SHOW_TIME(cout); // 显示系统时间
       cout << "e\t" << e << "\nseed\t" << seed << endl;
       Networks net;
-      net.saveName = net.readName = data_dir + to_string(seed);
+      net.saveName = net.readName = data_dir + "kMin4";
       net.nodeSize = (NodeType)1 << e; // 节点数
       net.degree.power_gamma = 2.5;    // 度分布幂律分布的幂指数
       net.kMin = 4;                    // 最小度
@@ -58,12 +58,17 @@ int main_net_extremum(int argc, char** argv)
         // cerr << net << endl;
         net.saveName += "_error";
         net.save();
+        ::common_save1(
+            (net.saveName + "_" + to_string(seed) + ".Min.lkk3.txt").c_str(),
+            net.lkk3, '\n');
         // break;
       } else {
-        net.save_deg(net.saveName.c_str());
-        net.save_params((net.saveName + ".Min").c_str());
+        net.save_deg();
+        net.save_params(
+            (net.saveName + "_" + to_string(seed) + ".Min").c_str());
         ::common_save1(
-            (net.saveName + ".Min.lkk3.txt").c_str(), net.lkk3, '\n');
+            (net.saveName + "_" + to_string(seed) + ".Min.lkk3.txt").c_str(),
+            net.lkk3, '\n');
       }
     }
   }

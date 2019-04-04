@@ -14,6 +14,7 @@
 // typedef long LinkSType;
 // const NodeType NodeMax = UINT_MAX; // 最大编号节点、空节点，不用
 // const NodeType NodeNULL = UINT_MAX;
+// const LinkType LinkMax = ULONG_MAX;
 // typedef unsigned DistType;         // 节点间距离类型
 // typedef int DistSType;             // 节点间距离类型
 // const DistType DistMax = UINT_MAX; // 距离无穷大的值
@@ -28,6 +29,7 @@ typedef unsigned long long LinkType;
 typedef long long LinkSType;
 const NodeType NodeMax = ULONG_MAX; // 最大编号节点、空节点，不用
 const NodeType NodeNULL = ULONG_MAX;
+const LinkType LinkMax = ULLONG_MAX;
 typedef long unsigned DistType;     // 节点间距离类型
 typedef long int DistSType;         // 节点间距离类型
 const DistType DistMax = ULONG_MAX; // 距离无穷大的值

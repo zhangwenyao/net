@@ -569,8 +569,7 @@ int net_extremum::cal_Min_lkk3_mid2side(VLkk3LinkType& lkk3,
     L2 += vlink[i] = (LinkType)degArrSize[i] * degArrVal[i];
   }
   NodeType mid = 0, end = degSize - 1;
-  const LinkType linkSize = L2 / 2;
-  LinkType linkMid = linkSize;
+  LinkType linkMid = L2 / 2;
   while (vlink[mid] < linkMid)
     linkMid -= vlink[mid++];
 
@@ -602,8 +601,7 @@ int net_extremum::cal_Min_lkk3_mid2side(VLkk3LinkType& lkk3,
       }
     }
   }
-  if (linkMid > 0)
-    vlink[mid] -= linkMid;
+  _ERR(linkMid > 0);
 
   // i < mid <= j
   for (NodeType i = mid, j0 = mid; i > 0;) {
@@ -612,36 +610,23 @@ int net_extremum::cal_Min_lkk3_mid2side(VLkk3LinkType& lkk3,
       continue;
     while (j0 <= end && vlink[j0] <= 0)
       ++j0;
-    if (j0 > end) {
-      ERROR();
-      break;
-    }
+    _ERR(j0 > end);
 
     for (NodeType j = j0; vlink[i] > 0 && j <= end; ++j) {
       if (vlink[j] <= 0)
         continue;
-      LinkType l = (LinkType)degArrSize[i] * degArrSize[j];
-      if (l > vlink[i])
-        l = vlink[i];
-      if (l > vlink[j])
-        l = vlink[j];
+      LinkType vl = vlink[i] < vlink[j] ? vlink[i] : vlink[j];
+      LinkType l = (vl / degArrSize[i] >= degArrSize[j])
+          ? (LinkType)degArrSize[i] * degArrSize[j]
+          : vl;
       if (l > 0) {
         lkk3.push_back(Lkk3LinkType({ j, i, l }));
         vlink[i] -= l;
         vlink[j] -= l;
       }
     }
+    _ERR(vlink[i] > 0);
   }
-
-  if (linkMid > 0) {
-    ERROR();
-    return -1;
-  }
-  for (size_t i = 0; i <= end; ++i)
-    if (vlink[i] > 0) {
-      ERROR(i, "\t", vlink[i]);
-      return -1;
-    }
 
   return 0;
 }

@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-const std::string NET_VERSION = "net2.1: " __DATE__ ", " __TIME__;
+const std::string NET_VERSION = "net2.2: " __DATE__ ", " __TIME__;
 // *******************************************************
 #define NET_DEGREE // 节点度分布
 //#define DEG_POISSON // 泊松分布

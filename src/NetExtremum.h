@@ -16,6 +16,8 @@ int lkk_extreme_pearson(VVLinkType& lkk, const VNodeType& degArrVal,
 
 int cal_Max_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
     const VNodeType& degArrSize, const int fix = 1);
+int cal_Max_lkk3(const VNodeType& degArrVal, const VNodeType& degArrSize,
+    VLkk3LinkType& lkk3);
 
 int cal_Min_lkk_side2mid(VVLinkType& lkk, const VNodeType& degArrVal,
     const VNodeType& degArrSize, const int fix = 1);
@@ -33,6 +35,12 @@ int Max_new(VVNodeType& p2p, const VNodeType& nodeDeg,
     const VNodeType& degArrSum); // 最大相关网络，按度安排
 int Max_new_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
     const VNodeType& degArrSize, const int fix = 1);
+int Max_new_lkk3(const VNodeType& degArrVal, const VNodeType& degArrSize,
+    VLkk3LinkType& lkk3);
+int save_lkk3reverse(
+    const NodeType size, const VLkk3LinkType& lkk3, const char* filename);
+int read_lkk3reverse(
+    const NodeType size, const char* filename, VLkk3LinkType& lkk3);
 
 int Min_new(VVNodeType& p2p, const VNodeType& nodeDeg,
     const VNodeType& degArrVal, const VNodeType& degArrSize,

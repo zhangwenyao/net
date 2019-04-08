@@ -24,6 +24,7 @@
  *                              read_link     读取连边
  *                              Max           最大度关联网络
  *                              Max_lkk       最大度关联网络
+ *                              Max_lkk3      最大度关联网络
  *                              Min           最小度关联网络
  *                              Min_lkk       最小度关联网络
  *                              Min_lkk3       最小度关联网络
@@ -84,8 +85,8 @@ class Network {
   double degProbSum;
   VDouble degProbSumArr;
   VNodeType degProbSumVal;
-  VNodeType degArrVal;               // [degSize]    度分布序列 k
-  VNodeType degArrSize;              // [degSize]    各度节点数 n(k)
+  VNodeType degArrVal;  // [degSize]    度分布序列 k
+  VNodeType degArrSize; // [degSize]    各度节点数 n(k)
   MNodeType degArrNo;   // [kMax+1]     度k在degArrVal中的位置
   VNodeType degArrSum;  // [degSize+1]  度分布累计序列
   VNodeType nodeDeg;    // [nodeSize]   各节点度
@@ -120,8 +121,8 @@ class Network {
   VVDouble lkkProb;               // [degSize]    连边的联合分布概率
   int lkk_saveType;
   // lkk3
-  VLkk3LinkType lkk3, lkk3OutIn; // 不同度之间连边数目矩阵
-  VLkk3Double lkk3Prob;          // [degSize]    连边的联合分布概率
+  VLkk3LinkType lkk3, lkk3reverse, lkk3OutIn; // 不同度之间连边数目矩阵
+  VLkk3Double lkk3Prob; // [degSize]    连边的联合分布概率
 
   Network(void);
   friend std::istream& operator>>(std::istream& is, Network& net);

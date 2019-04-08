@@ -694,6 +694,81 @@ int net_extremum::cal_Max_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
   return 0;
 }
 
+int net_extremum::cal_Max_lkk3(const VNodeType& degArrVal,
+    const VNodeType& degArrSize, VLkk3LinkType& lkk3)
+{
+  const NodeType degSize = degArrVal.size();
+  lkk3.clear();
+  VLinkType vlink(degSize);
+  for (NodeType i = 0; i < degSize; i++)
+    vlink[i] = (LinkType)degArrSize[i] * degArrVal[i];
+
+  for (NodeType i = degSize - 1; 1;) {
+    while (vlink[i] <= 0 && i > 0)
+      --i;
+    if (vlink[i] <= 0)
+      break;
+
+    // j==i
+    NodeType si = degArrSize[i];
+    LinkType l;
+    if (si > 1 && vlink[i] / si < si - 1)
+      l = vlink[i];
+    else
+      l = (LinkType)si * (si - 1);
+    if (l % 2 != 0)
+      --l;
+    if (l >= 2) {
+      vlink[i] -= l;
+      lkk3.push_back({ i, i, l / 2 });
+    }
+    _ERR(i <= 0 && vlink[i] > 0);
+
+    // j<i
+    for (NodeType j = i - 1; vlink[i] > 0; --j) {
+      while (vlink[j] <= 0 && j > 1)
+        --j;
+      _ERR(vlink[j] <= 0);
+      NodeType sj = degArrSize[j];
+      LinkType l = vlink[i] <= vlink[j] ? vlink[i] : vlink[j];
+      if (l / sj >= si)
+        l = (LinkType)sj * si;
+      vlink[i] -= l;
+      vlink[j] -= l;
+      lkk3.push_back({ i, j, l });
+      if (j <= 0)
+        break;
+    }
+
+    _ERR(vlink[i] > 0);
+  }
+
+  return 0;
+}
+
+int net_extremum::save_lkk3reverse(
+    const NodeType size, const VLkk3LinkType& lkk3, const char* filename)
+{
+  ofstream os(filename);
+  _ERR(!os);
+  for (auto i : lkk3)
+    os << size - i.x << '\t' << size - i.y << '\t' << i.val << '\n';
+  os.close();
+  return 0;
+}
+
+int net_extremum::read_lkk3reverse(
+    const NodeType size, const char* filename, VLkk3LinkType& lkk3)
+{
+  ifstream is(filename);
+  _ERR(!is);
+  LinkType val;
+  for (NodeType x, y; is >> x >> y >> val;)
+    lkk3.push_back({ size - x, size - y, val });
+  is.close();
+  return 0;
+}
+
 // *******************************************************************
 int net_extremum::Max_new_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
     const VNodeType& degArrSize, const int fix)
@@ -706,6 +781,14 @@ int net_extremum::Max_new_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
     ERROR();
     return -1;
   }
+  return 0;
+}
+
+int net_extremum::Max_new_lkk3(const VNodeType& degArrVal,
+    const VNodeType& degArrSize, VLkk3LinkType& lkk3)
+{
+  _ERR(degArrSize.empty());
+  _ERR(cal_Max_lkk3(degArrVal, degArrSize, lkk3));
   return 0;
 }
 

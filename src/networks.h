@@ -128,6 +128,7 @@ class Networks : public Network {
 #ifdef NET_EXTREMUM
   Networks& net_Max(void);
   Networks& net_Max_new_lkk(const int fix = 1);
+  Networks& net_Max_new_lkk3();
   Networks& net_Min(void);
   Networks& net_Min_new_lkk_p2p(const int fix = 1);
   Networks& net_Min_new_lkk(const int fix = 1);

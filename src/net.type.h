@@ -148,18 +148,21 @@ template <typename T1, typename T2, typename T3> struct Struct3 {
   T2 y;
   T3 val;
 };
+
 template <typename T1, typename T2, typename T3>
 std::ostream& operator<<(std::ostream& os, const Struct3<T1, T2, T3>& r)
 {
   os << r.x << '\t' << r.y << '\t' << r.val;
   return os;
-}
+};
+
 template <typename T1, typename T2, typename T3>
 std::istream& operator>>(std::istream& is, const Struct3<T1, T2, T3>& r)
 {
   is >> r.x >> r.y >> r.val;
   return is;
-}
+};
+
 typedef struct Struct3<NodeType, NodeType, NodeType> Lkk3NodeType;
 typedef Lkk3NodeType* PLkk3NodeType;
 typedef struct Struct3<NodeType, NodeType, LinkType> Lkk3LinkType;

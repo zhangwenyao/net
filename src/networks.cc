@@ -909,6 +909,15 @@ Networks& Networks::cal_p2p(const string& s)
         status = 2;
         return *this;
       }
+      if (s == "Max_lkk3") {
+        net_Max_new_lkk3();
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
+        status = 2;
+        return *this;
+      }
 
       if (s == "Min") {
         net_Min();

@@ -1,13 +1,14 @@
-// g++ -o main.exe *.cpp -O3 -Wall -std=c++11
 #include "main.h"
-#include "common.h"
-#include "networks.h"
+#include "common/common.h"
 using namespace std;
 // **********************************************************
-
 int main(int argc, char** argv)
 {
-  SHOW_TIME(cout); // 显示系统时间
+  common::SHOW_TIME(cout); // 显示系统时间
+
+#ifdef MAIN_TEST
+  main_func::test(argc, argv);
+#endif
 
 #ifdef MAIN_NET_BA
   _ERR(main_net_ba(argc, argv));
@@ -37,6 +38,6 @@ int main(int argc, char** argv)
   _ERR(main_fitness_complexity_plotdata(argc, argv));
 #endif
 
-  SHOW_TIME(cout); // 显示系统时间
+  // common::SHOW_TIME(cout); // 显示系统时间
   return 0;
 }

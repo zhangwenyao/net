@@ -38,6 +38,6 @@ int main(int argc, char** argv)
   _ERR(main_fitness_complexity_plotdata(argc, argv));
 #endif
 
-  // common::SHOW_TIME(cout); // 显示系统时间
+  common::SHOW_TIME(cout); // 显示系统时间
   return 0;
 }

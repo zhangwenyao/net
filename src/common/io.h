@@ -68,14 +68,14 @@ template <typename T>
 int read2(const char* name, T* p, const size_t n1, const size_t n2);
 
 // a[n1][n2]
-template <typename T, const size_t n1, const size_t n2>
-std::ostream& operator<<(std::ostream& os, T (&a)[n1][n2]);
+// template <typename T, const size_t n1, const size_t n2>
+// std::ostream& operator<<(std::ostream& os, T (&a)[n1][n2]);
 template <typename T, const size_t n1, const size_t n2>
 int save2(std::ostream& os, T (&a)[n1][n2], const char c = '\t');
 template <typename T, const size_t n1, const size_t n2>
 int save2(const char* name, T (&a)[n1][n2], const char c = '\t');
-template <typename T, const size_t n1, const size_t n2>
-std::istream& operator>>(std::istream& is, T (&a)[n1][n2]);
+// template <typename T, const size_t n1, const size_t n2>
+// std::istream& operator>>(std::istream& is, T (&a)[n1][n2]);
 template <typename T, const size_t n1, const size_t n2>
 int read2(const char* name, T (&a)[n1][n2]);
 template <typename T, const size_t n1, const size_t n2>
@@ -126,14 +126,14 @@ template <typename T>
 int read2(const char* name, T** a, const size_t n1, const size_t n2);
 
 // vector<> v
-template <typename T>
-std::ostream& operator<<(std::ostream& os, const std::vector<T>& v);
+// template <typename T>
+// std::ostream& operator<<(std::ostream& os, const std::vector<T>& v);
 template <typename T>
 int save1(std::ostream& os, const std::vector<T>& v, const char c = '\t');
 template <typename T>
 int save1(const char* name, const std::vector<T>& v, const char c = '\t');
-template <typename T>
-std::istream& operator>>(std::istream& is, std::vector<T>& v);
+// template <typename T>
+// std::istream& operator>>(std::istream& is, std::vector<T>& v);
 template <typename T> int read1(std::istream& is, std::vector<T>& v);
 template <typename T> int read1(const char* name, std::vector<T>& v);
 template <typename T>
@@ -142,17 +142,17 @@ template <typename T>
 int read1_0(const char* name, std::vector<T>& v, unsigned n = 0);
 
 // vv
-template <typename T>
-std::ostream& operator<<(
-    std::ostream& os, const std::vector<const std::vector<T>>& v);
+// template <typename T>
+// std::ostream& operator<<(
+// std::ostream& os, const std::vector<const std::vector<T>>& v);
 template <typename T>
 int save2(std::ostream& os, const std::vector<std::vector<T>>& v,
     const char c = '\t');
 template <typename T>
 int save2(const char* name, const std::vector<std::vector<T>>& v,
     const char c = '\t');
-template <typename T>
-std::istream& operator>>(std::istream& is, std::vector<std::vector<T>>& v);
+// template <typename T>
+// std::istream& operator>>(std::istream& is, std::vector<std::vector<T>>& v);
 template <typename T>
 int read2(std::istream& is, std::vector<std::vector<T>>& v);
 template <typename T>

@@ -771,7 +771,7 @@ int common::read1_0(const char* name, std::vector<T>& v, unsigned n)
 // vv
 template <typename T>
 std::ostream& operator<<(
-    std::ostream& os, const std::vector<std::vector<T> >& v)
+    std::ostream& os, const std::vector<std::vector<T>>& v)
 {
   if (!os) {
     ERROR();
@@ -784,7 +784,7 @@ std::ostream& operator<<(
 
 template <typename T>
 int common::save2(
-    std::ostream& os, const std::vector<std::vector<T> >& v, const char c)
+    std::ostream& os, const std::vector<std::vector<T>>& v, const char c)
 {
   _ERR(!os);
   for (auto& i : v) {
@@ -796,7 +796,7 @@ int common::save2(
 
 template <typename T>
 int common::save2(
-    const char* name, const std::vector<std::vector<T> >& v, const char c)
+    const char* name, const std::vector<std::vector<T>>& v, const char c)
 {
   std::ofstream os(name);
   if (!os) {
@@ -809,7 +809,7 @@ int common::save2(
 }
 
 template <typename T>
-std::istream& operator>>(std::istream& is, std::vector<std::vector<T> >& v)
+std::istream& operator>>(std::istream& is, std::vector<std::vector<T>>& v)
 {
   if (!is) {
     ERROR();
@@ -821,7 +821,7 @@ std::istream& operator>>(std::istream& is, std::vector<std::vector<T> >& v)
 }
 
 template <typename T>
-int common::read2(std::istream& is, std::vector<std::vector<T> >& v)
+int common::read2(std::istream& is, std::vector<std::vector<T>>& v)
 {
   _ERR(!is);
   for (auto& i : v)
@@ -830,7 +830,7 @@ int common::read2(std::istream& is, std::vector<std::vector<T> >& v)
 }
 
 template <typename T>
-int common::read2(const char* name, std::vector<std::vector<T> >& v)
+int common::read2(const char* name, std::vector<std::vector<T>>& v)
 {
   std::ifstream is(name);
   if (!is) {
@@ -844,7 +844,7 @@ int common::read2(const char* name, std::vector<std::vector<T> >& v)
 }
 
 template <typename T>
-int common::read2_0(std::istream& is, std::vector<std::vector<T> >& v)
+int common::read2_0(std::istream& is, std::vector<std::vector<T>>& v)
 {
   _ERR(!is);
   std::string s;
@@ -865,7 +865,7 @@ int common::read2_0(std::istream& is, std::vector<std::vector<T> >& v)
 }
 
 template <typename T>
-int common::read2_0(const char* name, std::vector<std::vector<T> >& v)
+int common::read2_0(const char* name, std::vector<std::vector<T>>& v)
 {
   std::ifstream is(name);
   if (!is) {

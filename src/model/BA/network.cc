@@ -1,9 +1,11 @@
 #include "network.h"
 #ifdef NET_BA
 
-#include "common.h"
-#include "networks.h"
+#include "../../common/common.h"
+#include "../../network/networks.h"
 using namespace std;
+using namespace common;
+using namespace network;
 
 // ******************************************************
 // 参数：   M0  全连通子网络节点数目

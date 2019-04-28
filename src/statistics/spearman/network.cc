@@ -90,36 +90,36 @@ int network::spearman::Spearman::save_data(const char* name,
   int f = 0;
 
   // if(!deg2ArrVal.empty())
-  // f |= common_save1((fn + "_deg2ArrVal.txt").c_str(), deg2ArrVal, priChar);
-  // if(!nodeNeiAveDeg2.empty()) f |= common_save1((fn +
+  // f |= save1((fn + "_deg2ArrVal.txt").c_str(), deg2ArrVal, priChar);
+  // if(!nodeNeiAveDeg2.empty()) f |= save1((fn +
   // "_nodeNeiAveDeg2.txt").c_str(), nodeNeiAveDeg2, priChar);
-  // if(!neiAveDeg2.empty()) f |= common_save1((fn +
+  // if(!neiAveDeg2.empty()) f |= save1((fn +
   // "_neiAveDeg2.txt").c_str(), neiAveDeg2, priChar);
 
   // if(dirFlag){
-  // if(!deg2ArrValIn.empty()) f |= common_save1((fn +
+  // if(!deg2ArrValIn.empty()) f |= save1((fn +
   // "_deg2ArrValIn.txt").c_str(), deg2ArrValIn, priChar);
-  // if(!deg2ArrValOut.empty()) f |= common_save1((fn +
+  // if(!deg2ArrValOut.empty()) f |= save1((fn +
   // "_deg2ArrValOut.txt").c_str(), deg2ArrValOut, priChar);
-  // if(!nodeNeiAveDeg2In.empty()) f |= common_save1((fn +
+  // if(!nodeNeiAveDeg2In.empty()) f |= save1((fn +
   // "_nodeNeiAveDeg2In.txt").c_str(), nodeNeiAveDeg2In, priChar);
-  // if(!nodeNeiAveDeg2Out.empty()) f |= common_save1((fn +
+  // if(!nodeNeiAveDeg2Out.empty()) f |= save1((fn +
   // "_nodeNeiAveDeg2Out.txt").c_str(), nodeNeiAveDeg2Out, priChar);
-  // if(!neiAveDeg2InIn.empty()) f |= common_save1((fn +
+  // if(!neiAveDeg2InIn.empty()) f |= save1((fn +
   // "_neiAveDeg2InIn.txt").c_str(), neiAveDeg2InIn, priChar);
-  // if(!neiAveDeg2InOut.empty()) f |= common_save1((fn +
+  // if(!neiAveDeg2InOut.empty()) f |= save1((fn +
   // "_neiAveDeg2InOut.txt").c_str(), neiAveDeg2InOut, priChar);
-  // if(!neiAveDeg2OutIn.empty()) f |= common_save1((fn +
+  // if(!neiAveDeg2OutIn.empty()) f |= save1((fn +
   // "_neiAveDeg2OutIn.txt").c_str(), neiAveDeg2OutIn, priChar);
-  // if(!neiAveDeg2OutOut.empty()) f |= common_save1((fn +
+  // if(!neiAveDeg2OutOut.empty()) f |= save1((fn +
   // "_neiAveDeg2OutOut.txt").c_str(), neiAveDeg2OutOut, priChar);
   //}
 
 #ifdef MODEL_GAUSS
-// if(GaussS2.size() > 0) f |= common_save1((fn +
+// if(GaussS2.size() > 0) f |= save1((fn +
 // "_SGaussS2.txt").c_str(), GaussS2, priChar);
 // if (lkkProb.size() > 0)
-// f |= common_save2((fn + "_lkkProb.txt").c_str(), lkkProb, priChar);
+// f |= save2((fn + "_lkkProb.txt").c_str(), lkkProb, priChar);
 #endif // MODEL_GAUSS
 
   return f;
@@ -416,7 +416,7 @@ Networks& Networks::spearman_read_GaussS2(const char* name)
     runStatus = -1;
     return *this;
   }
-  if (0 != common_read1_0((fn + "_GaussS2.txt").c_str(), spearman.GaussS2)) {
+  if (0 != read1_0((fn + "_GaussS2.txt").c_str(), spearman.GaussS2)) {
     ERROR();
     runStatus = -1;
     return *this;
@@ -435,11 +435,11 @@ Networks& Networks::spearman_cal_lkkProb_gauss(void)
 
   spearman.GaussS2.resize(degSize);
   for (NodeType i = 0; i < degSize; i++) {
-    cal_lkkProb_gaussS2(spearman.GaussS2[i], spearman.deg2ArrVal, degArrVal,
+    network::spearman::cal_lkkProb_gaussS2(spearman.GaussS2[i], spearman.deg2ArrVal, degArrVal,
         degArrSize, i, spearman.r0);
   }
   lkkProb.resize(degSize, VDouble(degSize));
-  cal_lkkProb_gauss(
+  network::spearman::cal_lkkProb_gauss(
       lkkProb, spearman.GaussS2, spearman.deg2ArrVal, spearman.r0);
   return *this;
 }

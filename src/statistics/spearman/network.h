@@ -28,8 +28,8 @@ public:
     double deg2WeightMean, deg2WeightMeanOut, deg2WeightMeanIn;
 
     Spearman(void);
-    friend std::ostream& operator<<(
-        std::ostream& os, const Spearman& spearman);
+    // friend std::ostream& operator<<(
+    // std::ostream& os, const Spearman& spearman);
     int save_params(std::ostream& os, const int dirFlag = 0) const;
     int save_params(const char* name = NULL, const int dirFlag = 0) const;
     int save_data(const char* name = NULL, const int dirFlag = 0,

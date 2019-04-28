@@ -126,9 +126,9 @@ class Network {
   VLkk3Double lkk3Prob; // [degSize]    连边的联合分布概率
 
   Network(void);
-  //friend std::istream& operator>>(std::istream& is, network::Network& net);
+  // friend std::istream& operator>>(std::istream& is, network::Network& net);
   Network& read_params_1(std::string& s, std::istream& is);
-  //friend std::ostream& operator<<(std::ostream& os, network::Network& net);
+  // friend std::ostream& operator<<(std::ostream& os, network::Network& net);
   Network& save_params(std::ostream& os);
   Network& save_params(const char* name = NULL);
   Network& save_data(const char* name = NULL);
@@ -161,4 +161,5 @@ class Network {
 }
 std::istream& operator>>(std::istream& is, network::Network& net);
 std::ostream& operator<<(std::ostream& os, network::Network& net);
+
 #endif // NETWORK_H_

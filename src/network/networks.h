@@ -4,23 +4,23 @@
 #include "network.h"
 
 #ifdef NET_DEGREE
-#include "networkDegree.h"
+#include "../model/degree/network.h"
 #endif
 
 #ifdef NET_RANDOM
-#include "networkRandom.h"
+#include "../model/random/network.h"
 #endif
 
 #ifdef NET_BA
-#include "networkBA.h"
+#include "../model/BA/network.h"
 #endif
 
 #ifdef NET_GRID
-#include "networkGrid.h"
+#include "../model/grid/network.h"
 #endif
 
 #ifdef NET_EXTREMUM
-#include "networkExtremum.h"
+#include "../model/extremum/network.h"
 #endif
 
 #ifdef STAT_PEARSON
@@ -94,7 +94,7 @@ class Networks : public Network {
   Networks& fix_p2p_nodeDeg0(void);
 
 #ifdef NET_DEGREE
-  Net_degree degree;
+  network::degree::Degree degree;
 #ifdef DEG_POWER
   Networks& degree_power_arr(void);
   Networks& degree_power(void);
@@ -106,7 +106,7 @@ class Networks : public Network {
 #endif
 
 #ifdef NET_RANDOM
-  Net_random random;
+  network::random::Random random;
   Networks& net_random_clear(void);
   Networks& net_random_init(void);
   Networks& net_ER(void);
@@ -117,12 +117,12 @@ class Networks : public Network {
 #endif
 
 #ifdef NET_BA
-  Net_BA ba;
+  network::ba::Ba ba;
   Networks& net_BA(void);
 #endif
 
 #ifdef NET_GRID
-  Net_grid grid;
+  network::grid::Grid grid;
   Networks& net_grid(void);
 #endif
 

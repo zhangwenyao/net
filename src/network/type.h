@@ -199,7 +199,16 @@ bool cmp_RNodeType_end(const RNodeType& a, const RNodeType& b);
 
 // *******************************************************
 }
+
+template <typename T1, typename T2, typename T3>
+std::ostream& operator<<(
+    std::ostream& os, const network::Struct3<T1, T2, T3>& r);
+template <typename T1, typename T2, typename T3>
+std::istream& operator>>(
+    std::istream& is, const network::Struct3<T1, T2, T3>& r);
+
 std::ostream& operator<<(std::ostream& os, const network::RNodeType& r);
 std::istream& operator>>(std::istream& is, network::RNodeType& r);
+
 #include "type_template.h"
 #endif

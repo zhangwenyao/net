@@ -17,7 +17,7 @@ CUR_DEPS_CC	= $(CUR_OBJS_CC:%.o=%.d)
 
 .PHONY: all subdirs
 
-all:			$(CUR_OBJ_DIR) $(CUR_OBJS_C) $(CUR_OBJS_CC) subdirs
+all:			$(CUR_OBJ_DIR) $(CUR_DEPS_C) $(CUR_OBJS_C) $(CUR_DEPS_CC) $(CUR_OBJS_CC) subdirs
 
 subdirs:
 	@for subdir in $(SUB_DIRS) ; do make -C $$subdir ; done

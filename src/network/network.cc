@@ -3,10 +3,9 @@
 #include "../common/common.h"
 using namespace std;
 using namespace common;
-using namespace network;
 
 // ******************************************************
-Network::Network(void)
+network::Network::Network(void)
     : argv(".")
     , saveName("data/test")
     , readName("data/test")
@@ -61,7 +60,7 @@ istream& operator>>(istream& is, network::Network& net)
   return is;
 }
 
-Network& Network::read_params_1(string& s, istream& is)
+network::Network& network::Network::read_params_1(string& s, istream& is)
 {
   if (0 != runStatus) {
     ERROR();
@@ -210,14 +209,14 @@ ostream& operator<<(std::ostream& os, network::Network& net)
     net.runStatus = -1;
     return os;
   }
-  os << "--version\t" << NET_VERSION << "\n--saveName\t" << net.saveName
-     << "\n--readName\t" << net.readName << "\n--argv\t" << net.argv
-     << "\n--runStatus\t" << net.runStatus << "\n--status\t" << net.status
-     << "\n--seed\t" << net.seed << "\n--dirFlag\t" << net.dirFlag
-     << "\n--weightFlag\t" << net.weightFlag << "\n--nodeSize\t"
-     << net.nodeSize << "\n--kMin\t" << net.kMin << "\n--kMax\t" << net.kMax
-     << "\n--degSize\t" << net.degArrVal.size() << "\n--degMean\t"
-     << net.degMean << "\n--linkSize\t" << net.linkSize;
+  os << "--version\t" << network::NET_VERSION << "\n--saveName\t"
+     << net.saveName << "\n--readName\t" << net.readName << "\n--argv\t"
+     << net.argv << "\n--runStatus\t" << net.runStatus << "\n--status\t"
+     << net.status << "\n--seed\t" << net.seed << "\n--dirFlag\t"
+     << net.dirFlag << "\n--weightFlag\t" << net.weightFlag
+     << "\n--nodeSize\t" << net.nodeSize << "\n--kMin\t" << net.kMin
+     << "\n--kMax\t" << net.kMax << "\n--degSize\t" << net.degArrVal.size()
+     << "\n--degMean\t" << net.degMean << "\n--linkSize\t" << net.linkSize;
   if (net.lkk_saveType != 0)
     os << "\n--lkk_saveType\t" << net.lkk_saveType;
   if (net.weightFlag) {
@@ -256,7 +255,7 @@ ostream& operator<<(std::ostream& os, network::Network& net)
   return os;
 }
 
-Network& Network::save_params(ostream& os)
+network::Network& network::Network::save_params(ostream& os)
 {
   if (!os) {
     runStatus = -1;
@@ -267,7 +266,7 @@ Network& Network::save_params(ostream& os)
   return *this;
 }
 
-Network& Network::save_params(const char* name)
+network::Network& network::Network::save_params(const char* name)
 {
   string fn;
   if (name != NULL && name[0] != '\0')
@@ -288,7 +287,7 @@ Network& Network::save_params(const char* name)
   return *this;
 }
 
-Network& Network::save_data(const char* name)
+network::Network& network::Network::save_data(const char* name)
 {
   string fn;
   stringstream ss;
@@ -306,7 +305,7 @@ Network& Network::save_data(const char* name)
   return *this;
 }
 
-Network& Network::save(const char* name)
+network::Network& network::Network::save(const char* name)
 {
   if (0 != save_params(name).runStatus)
     ERROR();
@@ -316,7 +315,7 @@ Network& Network::save(const char* name)
 }
 
 // ******************************************************
-Network& Network::init_seed(const long s)
+network::Network& network::Network::init_seed(const long s)
 {
   if (runStatus != 0) {
     ERROR();
@@ -328,7 +327,7 @@ Network& Network::init_seed(const long s)
   return *this;
 }
 
-Network& Network::init_seed0(const long s)
+network::Network& network::Network::init_seed0(const long s)
 {
   if (runStatus != 0) {
     ERROR();
@@ -340,7 +339,7 @@ Network& Network::init_seed0(const long s)
 }
 
 // ******************************************************
-Network& Network::clear_deg(void)
+network::Network& network::Network::clear_deg(void)
 {
   if (0 != runStatus) {
     ERROR();
@@ -360,7 +359,7 @@ Network& Network::clear_deg(void)
   return *this;
 }
 
-Network& Network::save_deg(const char* name)
+network::Network& network::Network::save_deg(const char* name)
 {
   string fn;
   if (name != NULL && name[0] != '\0') {
@@ -522,7 +521,7 @@ Network& Network::save_deg(const char* name)
 }
 
 // *************************************************************
-Network& Network::clear_p2p(void)
+network::Network& network::Network::clear_p2p(void)
 {
   if (0 != runStatus) {
     ERROR();
@@ -549,7 +548,7 @@ Network& Network::clear_p2p(void)
   return *this;
 }
 
-Network& Network::save_p2p(const char* name)
+network::Network& network::Network::save_p2p(const char* name)
 {
   string fn;
   if (name != NULL && name[0] != '\0') {
@@ -638,7 +637,7 @@ Network& Network::save_p2p(const char* name)
 }
 
 // ******************************************************
-Network& Network::clear_lkk(void)
+network::Network& network::Network::clear_lkk(void)
 {
   if (0 != runStatus) {
     ERROR();
@@ -655,7 +654,7 @@ Network& Network::clear_lkk(void)
 }
 
 // ******************************************************
-Network& Network::clear(void)
+network::Network& network::Network::clear(void)
 {
   status = 0;
   runStatus = 0;
@@ -666,7 +665,7 @@ Network& Network::clear(void)
 }
 
 // ******************************************************
-Network& Network::read_nodeDeg(const char* name)
+network::Network& network::Network::read_nodeDeg(const char* name)
 {
   if (0 != runStatus) {
     ERROR();
@@ -694,7 +693,7 @@ Network& Network::read_nodeDeg(const char* name)
   return *this;
 }
 
-Network& Network::read_degArr(const char* name)
+network::Network& network::Network::read_degArr(const char* name)
 {
   if (0 != runStatus) {
     ERROR();
@@ -772,7 +771,7 @@ Network& Network::read_degArr(const char* name)
   return *this;
 }
 
-Network& Network::read_lkk(const char* name)
+network::Network& network::Network::read_lkk(const char* name)
 {
   if (0 != runStatus) {
     ERROR();
@@ -805,7 +804,7 @@ Network& Network::read_lkk(const char* name)
 }
 
 // ******************************************************
-Network& Network::read_link_0(const char* name)
+network::Network& network::Network::read_link_0(const char* name)
 {
   if (0 != runStatus) {
     ERROR();
@@ -827,7 +826,7 @@ Network& Network::read_link_0(const char* name)
   return *this;
 }
 
-Network& Network::read_link(const char* name)
+network::Network& network::Network::read_link(const char* name)
 {
   if (0 != runStatus) {
     ERROR();
@@ -839,7 +838,7 @@ Network& Network::read_link(const char* name)
   else
     fn = readName + ".link.txt";
 
-  if (0 != ::read_link(link, fn.c_str())) {
+  if (0 != network::read_link(link, fn.c_str())) {
     runStatus = -1;
     ERROR();
     return *this;
@@ -849,7 +848,7 @@ Network& Network::read_link(const char* name)
   return *this;
 }
 
-Network& Network::read_weight_link(const char* name)
+network::Network& network::Network::read_weight_link(const char* name)
 {
   if (0 != runStatus) {
     ERROR();
@@ -867,7 +866,7 @@ Network& Network::read_weight_link(const char* name)
     return *this;
   }
   if (0
-      != ::read_weight_link(vvweight, vvweightIn, linkSize, fn.c_str(),
+      != network::read_weight_link(vvweight, vvweightIn, linkSize, fn.c_str(),
              weight_m, weight_n, dirFlag)) {
     runStatus = -1;
     ERROR();
@@ -877,7 +876,7 @@ Network& Network::read_weight_link(const char* name)
   return *this;
 }
 
-Network& Network::read_link_weight(const char* name)
+network::Network& network::Network::read_link_weight(const char* name)
 {
   if (0 != runStatus) {
     ERROR();
@@ -905,7 +904,7 @@ Network& Network::read_link_weight(const char* name)
   return *this;
 }
 
-Network& Network::read_p2p(const char* name)
+network::Network& network::Network::read_p2p(const char* name)
 {
   if (0 != runStatus) {
     ERROR();
@@ -928,7 +927,7 @@ Network& Network::read_p2p(const char* name)
   return *this;
 }
 
-Network& Network::read_linkMatr(const char* name)
+network::Network& network::Network::read_linkMatr(const char* name)
 {
   if (0 != runStatus) {
     ERROR();
@@ -953,7 +952,7 @@ Network& Network::read_linkMatr(const char* name)
   return *this;
 }
 
-Network& Network::read_weightMatr(const char* name)
+network::Network& network::Network::read_weightMatr(const char* name)
 {
   if (0 != runStatus) {
     ERROR();
@@ -980,7 +979,7 @@ Network& Network::read_weightMatr(const char* name)
 }
 
 // ******************************************************
-Network& Network::lkk_2_degArr(void)
+network::Network& network::Network::lkk_2_degArr(void)
 {
   if (0 != runStatus) {
     ERROR();
@@ -1023,7 +1022,7 @@ Network& Network::lkk_2_degArr(void)
   return *this;
 }
 
-Network& Network::p2p_2_degArr(void)
+network::Network& network::Network::p2p_2_degArr(void)
 {
   if (0 != runStatus) {
     ERROR();

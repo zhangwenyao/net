@@ -2,17 +2,19 @@
 #ifdef MAIN_TEST
 
 #include "common/common.h"
+#include "network/networks.h"
 #include <iostream>
 #include <vector>
 
 using namespace std;
+using namespace network;
 
 // ******************************************************
 int main_func::test(int argc, char** argv)
 {
-  vector<int> a(3, 2);
   cout << "test" << endl;
-  cout << a << endl;
+  Networks net;
+  cout << net << endl;
   return 0;
 }
 

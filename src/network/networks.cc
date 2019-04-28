@@ -3,17 +3,16 @@
 #include "../common/common.h"
 using namespace std;
 using namespace common;
-using namespace network;
 
 // ******************************************************
-Networks::Networks(void)
+network::Networks::Networks(void)
     : net2(NULL)
 {
 }
 
-// Networks::~Networks(void) {}
+// network::Networks::~Networks(void) {}
 
-Networks& Networks::clear(void)
+network::Networks& network::Networks::clear(void)
 {
   Network::clear();
 
@@ -106,7 +105,7 @@ ostream& operator<<(ostream& os, network::Networks& net)
   return os;
 }
 
-Networks& Networks::save_params(std::ostream& os)
+network::Networks& network::Networks::save_params(std::ostream& os)
 {
   if (!os) {
     runStatus = 1;
@@ -116,7 +115,7 @@ Networks& Networks::save_params(std::ostream& os)
   return *this;
 }
 
-Networks& Networks::save_params(const char* name)
+network::Networks& network::Networks::save_params(const char* name)
 {
   string fn;
   if (name != NULL && name[0] != '\0')
@@ -136,7 +135,7 @@ Networks& Networks::save_params(const char* name)
   return *this;
 }
 
-Networks& Networks::save_data(const char* name)
+network::Networks& network::Networks::save_data(const char* name)
 {
   string fn;
   stringstream ss;
@@ -217,7 +216,7 @@ Networks& Networks::save_data(const char* name)
   return *this;
 }
 
-Networks& Networks::save(const char* name)
+network::Networks& network::Networks::save(const char* name)
 {
   if (0 != save_params(name).runStatus)
     ERROR();
@@ -245,7 +244,7 @@ std::istream& operator>>(std::istream& is, network::Networks& net)
   return is;
 }
 
-Networks& Networks::read_params_1(string& s, istream& is)
+network::Networks& network::Networks::read_params_1(string& s, istream& is)
 {
   if (0 != runStatus) {
     ERROR();
@@ -398,7 +397,7 @@ Networks& Networks::read_params_1(string& s, istream& is)
   return *this;
 }
 
-Networks& Networks::read_params(const char* name)
+network::Networks& network::Networks::read_params(const char* name)
 {
   if (0 != runStatus) {
     ERROR();
@@ -427,7 +426,7 @@ Networks& Networks::read_params(const char* name)
   return *this;
 }
 
-Networks& Networks::read_params(int argc, char** argv)
+network::Networks& network::Networks::read_params(int argc, char** argv)
 {
   string s;
   for (int i = 0; i < argc; i++)
@@ -438,7 +437,7 @@ Networks& Networks::read_params(int argc, char** argv)
 }
 
 // ******************************************************
-Networks& Networks::run(const string argv2)
+network::Networks& network::Networks::run(const string argv2)
 {
   if (0 != runStatus) {
     ERROR();
@@ -498,7 +497,7 @@ Networks& Networks::run(const string argv2)
     }
 
     if (s == "--fix_p2p") {
-      if (0 != ::fix_p2p(p2p, dirFlag)) {
+      if (0 != fix_p2p(p2p, dirFlag)) {
         ERROR();
         runStatus = -1;
         return *this;
@@ -601,7 +600,7 @@ Networks& Networks::run(const string argv2)
 }
 
 // **************************************************************
-Networks& Networks::stat(void)
+network::Networks& network::Networks::stat(void)
 {
   if (runStatus != 0) {
     ERROR();
@@ -683,7 +682,7 @@ Networks& Networks::stat(void)
 }
 
 // ******************************************************
-Networks& Networks::cal_params(const string& s)
+network::Networks& network::Networks::cal_params(const string& s)
 {
   if (runStatus != 0) {
     ERROR();
@@ -718,7 +717,7 @@ Networks& Networks::cal_params(const string& s)
 }
 
 // ******************************************************
-Networks& Networks::cal_nodeDeg(const string& s)
+network::Networks& network::Networks::cal_nodeDeg(const string& s)
 {
   if (runStatus != 0) {
     ERROR();
@@ -787,7 +786,7 @@ Networks& Networks::cal_nodeDeg(const string& s)
 }
 
 // ******************************************************
-Networks& Networks::cal_p2p(const string& s)
+network::Networks& network::Networks::cal_p2p(const string& s)
 {
   cout << "\t" << s << '\n';
   if (runStatus != 0) {
@@ -871,17 +870,17 @@ Networks& Networks::cal_p2p(const string& s)
           // break;
         }
         if (!linkMatr.empty()) {
-          if (0 != ::linkMatr_2_p2p(p2p, linkMatr))
+          if (0 != linkMatr_2_p2p(p2p, linkMatr))
             ERROR();
           break;
         }
         if (!linkMatrC.empty()) {
-          if (0 != ::linkMatrC_2_p2p(p2p, linkMatrC))
+          if (0 != linkMatrC_2_p2p(p2p, linkMatrC))
             ERROR();
           break;
         }
         if (!link.empty()) {
-          if (0 != ::link_2_p2p(p2p, link, p2pIn, nodeSize, dirFlag)) {
+          if (0 != link_2_p2p(p2p, link, p2pIn, nodeSize, dirFlag)) {
             ERROR();
             runStatus = -1;
             return *this;
@@ -1066,7 +1065,7 @@ Networks& Networks::cal_p2p(const string& s)
 
 // ******************************************************
 // 节点按度排序 net->net2 剔除度为0的点
-Networks& Networks::fix_p2p_nodeDeg0(void)
+network::Networks& network::Networks::fix_p2p_nodeDeg0(void)
 {
   if (status < 0 || p2p.empty()
       || (degArrVal.empty() && 0 != p2p_2_degArr().runStatus)) {

@@ -24,31 +24,31 @@
 #endif
 
 #ifdef STAT_PEARSON
-#include "networkStatPearson.h"
+#include "../statistics/pearson/network.h"
 #endif
 
 #ifdef STAT_SPEARMAN
-#include "networkStatSpearman.h"
+#include "../statistics/spearman/network.h"
 #endif
 
 #ifdef STAT_KENDALL
-#include "networkStatKendall.h"
+#include "../statistics/kendall/network.h"
 #endif
 
 #ifdef STAT_BETWEENNESS
-#include "networkStatBetweenness.h"
+#include "../statistics/betweenness/network.h"
 #endif
 
 #ifdef STAT_MODULARITY
-#include "networkStatModularity.h"
+#include "../statistics/modularity/network.h"
 #endif
 
 #ifdef STAT_CLUSTER
-#include "networkStatCluster.h"
+#include "../statistics/cluster/network.h"
 #endif
 
 #ifdef STAT_SIMILARITY
-#include "networkStatSimilarity.h"
+#include "../statistics/similarity/network.h"
 #endif
 
 #ifdef ACT_SIS
@@ -139,12 +139,12 @@ class Networks : public Network {
 #endif
 
 #ifdef STAT_PEARSON
-  Stat_pearson pearson;
+  network::pearson::Pearson pearson;
   Networks& stat_pearson(void);
 #endif
 
 #ifdef STAT_SPEARMAN
-  Stat_spearman spearman;
+  network::spearman::Spearman spearman;
   Networks& stat_spearman(void);
   Networks& spearman_degArr_2_deg2ArrVal_weight(void);
 #ifdef MODEL_GAUSS
@@ -156,17 +156,17 @@ class Networks : public Network {
 #endif
 
 #ifdef STAT_KENDALL
-  Stat_kendall kendall;
+  network::kendall::Kendall kendall;
   Networks& stat_kendall(void);
 #endif
 
 #ifdef STAT_BETWEENNESS
-  Stat_betweenness betweenness;
+  network::betweenness::Betweenness betweenness;
   Networks& stat_betweenness(void);
 #endif
 
 #ifdef STAT_MODULARITY
-  Stat_modularity modularity;
+  network::modularity::Modularity modularity;
   Networks& cal_modularity(void);
   Networks& stat_modularity(void);
 #ifdef STAT_BETWEENNESS
@@ -175,12 +175,12 @@ class Networks : public Network {
 #endif
 
 #ifdef STAT_SIMILARITY
-  Stat_similarity similarity;
+  network::similarity::Similarity similarity;
   Networks& stat_similarity(Networks& net2);
 #endif
 
 #ifdef STAT_CLUSTER
-  Stat_cluster cluster;
+  network::cluster::Cluster cluster;
   Networks& stat_cluster(void);
 #endif
 

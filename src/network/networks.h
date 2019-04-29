@@ -52,19 +52,19 @@
 #endif
 
 #ifdef ACT_SIS
-#include "networkActSis.h"
+#include "../dynamics/sis/network.h"
 #endif
 
 #ifdef ACT_SPREAD
-#include "networkActSpread.h"
+#include "../dynamics/spread/network.h"
 #endif
 
 #ifdef ACT_FITNESS_COMPLEXITY
-#include "fitness_complexity_network.h"
+#include "../dynamics/fitness_complexity/network.h"
 #endif
 
 #ifdef ACT_RECOMMEND
-#include "networkActRecommend.h"
+#include "../dynamics/recommend/network.h"
 #endif
 
 // **************************************************************
@@ -185,12 +185,12 @@ class Networks : public Network {
 #endif
 
 #ifdef ACT_SPREAD
-  Act_spread spread;
+  network::spread::Spread spread;
   Networks& stat_spread(void);
 #endif
 
 #ifdef ACT_SIS
-  Act_sis sis;
+  network::sis::Sis sis;
   Networks& act_sis(void);
   Networks& act_sis_tau(void);
 #endif
@@ -199,7 +199,7 @@ class Networks : public Network {
 #endif
 
 #ifdef ACT_RECOMMEND
-  Act_recommend recommend;
+  network::recommend::Recommend recommend;
   Networks& act_recommend(std::string s = "mass", const char* name = NULL);
 #endif
 };

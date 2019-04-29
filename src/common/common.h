@@ -40,15 +40,20 @@ void sort_p_val_greater(Tp p, Tp p2, const T2* const val);
 template <typename Tp, typename T2>
 void sort_p_val_less(Tp p, Tp p2, const T2* const val);
 
-#ifndef sort_p_val
-#define sort_p_val sort_p_val_greater
-#endif
+//#ifndef sort_p_val
+//#define sort_p_val sort_p_val_greater
+//#endif
+template <typename... Args>
+auto sort_p_val(Args&&... args)
+    -> decltype(sort_p_val_greater(std::forward<Args>(args)...))
+{
+  return sort_p_val_greater(std::forward<Args>(args)...);
+}
 
 template <typename T, typename T2, typename T3>
 int sort_rankV2(const T* const ranks, const T2 b, const T2 e, T3* v2);
 
-template <typename T, typename T2>
-int get_index(T b, const T e, T2* index);
+template <typename T, typename T2> int get_index(T b, const T e, T2* index);
 template <typename T, typename T2, typename T3>
 int get_index_val(T b, const T e, T2* index, const T3* val);
 
@@ -89,8 +94,7 @@ template <typename T>
 bool compare_vector(const std::vector<T>& a, const std::vector<T>& b);
 
 template <typename T>
-size_t vector_count_same(
-    const std::vector<T>& a, const std::vector<T>& b);
+size_t vector_count_same(const std::vector<T>& a, const std::vector<T>& b);
 template <typename T>
 size_t vector_count_same_sort(
     const std::vector<T>& a, const std::vector<T>& b);

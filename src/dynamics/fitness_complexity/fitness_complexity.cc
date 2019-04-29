@@ -2,6 +2,7 @@
 #ifdef ACT_FITNESS_COMPLEXITY
 
 #include "../../common/common.h"
+#include <iomanip>
 using namespace std;
 using namespace common;
 using namespace network;
@@ -187,8 +188,7 @@ int network::fitness_complexity::cal_val_2_rankScale(const VDouble& val,
   sort_p_val_less(rk.begin(), rk.end(), &val.front());
   get_index(rk.begin(), rk.end(), &rkIndex.front());
   sort_rankV2(&val.front(), rk.begin(), rk.end(), &rkV2.front());
-  get_index_val(
-      rk.begin(), rk.end(), &rkV2Index.front(), &rkV2.front());
+  get_index_val(rk.begin(), rk.end(), &rkV2Index.front(), &rkV2.front());
   if (N > 1)
     for (size_t i = 0; i < N; ++i)
       rkScale[i] = (double)rkV2Index[i] / 2 / (N - 1);
@@ -1459,8 +1459,7 @@ int network::fitness_complexity::data_export(const char* exportDIR,
     for (NodeType ci = 0; ci < cIndex.size(); ++ci)
       for (NodeType pi = 0; pi < pIndex.size(); ++pi)
         epts2[ci].push_back(epts[cIndex[ci]][pIndex[pi]]);
-    _ERR(save2(
-        (string(DATA_DIR) + to_string(year) + ".txt").c_str(), epts2));
+    _ERR(save2((string(DATA_DIR) + to_string(year) + ".txt").c_str(), epts2));
   }
   return 0;
 }
@@ -1541,10 +1540,8 @@ int network::fitness_complexity::sum_export(const char* epDir,
         sc[i] += ep[i][j];
         sp[j] += ep[i][j];
       }
-    _ERR(save1(
-        (string(cFile) + to_string(y) + cName).c_str(), sc, '\n'));
-    _ERR(save1(
-        (string(pFile) + to_string(y) + pName).c_str(), sp, '\n'));
+    _ERR(save1((string(cFile) + to_string(y) + cName).c_str(), sc, '\n'));
+    _ERR(save1((string(pFile) + to_string(y) + pName).c_str(), sp, '\n'));
   }
 
   return 0;
@@ -1570,14 +1567,12 @@ int network::fitness_complexity::data_export_OEC(const char* cp0DIR,
   for (NodeType year = YEAR1; year < YEAR2; ++year) {
     VVString epts;
     string s0 = cp0DIR;
-    _ERR(read2_0(
-        (string(cp0DIR) + to_string(year) + ".txt").c_str(), epts));
+    _ERR(read2_0((string(cp0DIR) + to_string(year) + ".txt").c_str(), epts));
     VVString epts2(cCode.size());
     for (NodeType ci = 0; ci < cIndex.size(); ++ci)
       for (NodeType pi = 0; pi < pIndex.size(); ++pi)
         epts2[ci].push_back(epts[cIndex[ci]][pIndex[pi]]);
-    _ERR(save2(
-        (string(cpDIR) + to_string(year) + cpName).c_str(), epts2));
+    _ERR(save2((string(cpDIR) + to_string(year) + cpName).c_str(), epts2));
   }
   return 0;
 }

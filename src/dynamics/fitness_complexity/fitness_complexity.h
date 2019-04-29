@@ -49,6 +49,8 @@ namespace fitness_complexity {
   int save_rankScale2(const char* dir, const VVNodeType& rk,
       const VVNodeType& rkIndex, const VVNodeType& rkV2,
       const VVNodeType& rkV2Index, const VVDouble& rkScale);
+  int save_rankScale_val(const char* dir, const VDouble& val);
+  int save_rankScale2_val(const char* dir, const VVDouble& val);
   int cal_val_2_rankScale(const VDouble& pc, VDouble& scale);
   int save_val_2_rankScale(const VDouble& pc, const char* dir);
   int save_rankScale2_val_p(
@@ -74,6 +76,7 @@ namespace fitness_complexity {
       const char* countryFilename, NodeType& NC, VNodeType& cVal);
   int read_product_names(
       const char* productFilename, NodeType& NP, VNodeType& pVal);
+  int save_export_data(const char* s, VVDouble expts);
   int sum_trade(const char* tradeFilename, const char* countryFilename,
       const char* productFilename, const char* dirSave);
   int sum_trade_NBER_wtf(const char* tradeFilename,

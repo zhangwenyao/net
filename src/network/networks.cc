@@ -102,8 +102,20 @@ ostream& operator<<(ostream& os, network::Networks& net)
   os << net.cluster;
 #endif
 
+#ifdef ACT_SPREAD
+  os << net.spread;
+#endif
+
 #ifdef ACT_SIS
   os << net.sis;
+#endif
+
+#ifdef ACT_FITNESS_COMPLEXITY
+  // os << net.fitness_complexity;
+#endif
+
+#ifdef ACT_RECOMMEND
+  os << net.recommend;
 #endif
 
   return os;

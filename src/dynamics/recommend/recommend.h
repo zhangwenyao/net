@@ -36,7 +36,7 @@ namespace recommend {
   int act_recommend_proximity_phi(
       VVDouble& rcm, const std::vector<std::vector<T>>& user_object);
 
-  int recommend_RAC(const VDouble& v0, const VDouble& v, double& r);
+  int recommend_MAE(const VDouble& v0, const VDouble& v, double& r);
   int recommend_RMAE(const VDouble& v0, const VDouble& v, double& r);
   int recommend_NMAE(const VDouble& v0, const VDouble& v, double& r);
   int recommend_F(const VNodeType& v0, const VNodeType& v, double& recall,

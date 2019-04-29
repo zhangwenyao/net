@@ -79,8 +79,7 @@ int network::recommend::linkMatr_2_objectP2p(
 }
 
 // *******************************************************
-int network::recommend::act_recommend_mass_sum(
-    const VNodeType& p2p, const double t, VDouble& v)
+int act_recommend_mass_sum(const VNodeType& p2p, const double t, VDouble& v)
 {
   for (VNodeTypeCItr p = p2p.begin(); p != p2p.end(); p++)
     v[*p] += t;
@@ -127,7 +126,7 @@ int network::recommend::act_recommend_mass(
 }
 
 // *******************************************************
-int network::recommend::act_recommend_heat_sum(
+int act_recommend_heat_sum(
     const VNodeType& p2p1, const VVNodeType& p2p2, const double t, VDouble& v)
 {
   for (VNodeTypeCItr p = p2p1.begin(); p != p2p1.end(); p++) {

@@ -20,8 +20,8 @@ const std::string NET_VERSION = "net3.0: " __DATE__ ", " __TIME__;
 #define NET_RANDOM   // 随机网络
 #define NET_BA       // BA网络
 #define NET_GRID     // 网格网络
-                     //#define NET_ACTOR
-                     //#define NET_FOODWEB
+#define NET_ACTOR    // 演员关系网络
+#define NET_FOODWEB  // 食物链网络
 
 const bool STAT_TYPE_DIRAA = 0; // 0:OutIn, 1: OutIn OutOut InOut InIn
 #define STAT_PEARSON
@@ -35,9 +35,9 @@ const bool STAT_TYPE_DIRAA = 0; // 0:OutIn, 1: OutIn OutOut InOut InIn
 #define STAT_SIMILARITY
 
 #define ACT_SIS
-//#define ACT_SPREAD
-//#define ACT_FITNESS_COMPLEXITY
-//#define ACT_RECOMMEND
+#define ACT_SPREAD
+#define ACT_FITNESS_COMPLEXITY
+#define ACT_RECOMMEND
 
 // *******************************************************
 int nodeDeg_update_nodeMap(VNodeType& nodeDeg, const VRNodeType& nodeMap);

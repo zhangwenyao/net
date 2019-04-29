@@ -31,13 +31,13 @@ ostream& operator<<(
   return os;
 }
 
-int network::spread::Recommend::save_params(std::ostream& os) const
+int network::recommend::Recommend::save_params(std::ostream& os) const
 {
   os << *this;
   return 0;
 }
 
-int network::spread::Recommend::save_params(const char* name) const
+int network::recommend::Recommend::save_params(const char* name) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -53,7 +53,7 @@ int network::spread::Recommend::save_params(const char* name) const
   return 0;
 }
 
-int network::spread::Recommend::save_data(
+int network::recommend::Recommend::save_data(
     const char* name, const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
@@ -61,11 +61,11 @@ int network::spread::Recommend::save_data(
     return -1;
   }
   string fn = name;
-  common_save2((fn + ".rcm.txt").c_str(), rcm, priChar2);
+  save2((fn + ".rcm.txt").c_str(), rcm, priChar2);
   return 0;
 }
 
-int network::spread::Recommend::save(
+int network::recommend::Recommend::save(
     const char* name, const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
@@ -84,12 +84,12 @@ int network::spread::Recommend::save(
   return 0;
 }
 
-int network::spread::Recommend::read_params_1(string& s, istream& is)
+int network::recommend::Recommend::read_params_1(string& s, istream& is)
 {
   return 0;
 }
 
-Recommend& Recommend::clear(void)
+network::recommend::Recommend& network::recommend::Recommend::clear(void)
 {
   user.clear();
   object.clear();
@@ -106,25 +106,25 @@ Networks& Networks::act_recommend(std::string s, const char* name)
     fn = saveName;
 
   if (s == "mass") {
-    status = ::act_recommend_mass(
+    status = network::recommend::act_recommend_mass(
         recommend.rcm, *recommend.uoP2p, *recommend.ouP2p);
   } else if (s == "heat") {
-    status = act_recommend_heat(
+    status = network::recommend::act_recommend_heat(
         recommend.rcm, *recommend.uoP2p, *recommend.ouP2p);
   } else if (s == "hybrid") {
-    status = act_recommend_hybrid_matrix(
+    status = network::recommend::act_recommend_hybrid_matrix(
         recommend.rcm, *recommend.uoP2p, *recommend.ouP2p, recommend.lambda);
   } else if (s == "pagerank") {
-    status = act_recommend_pagerank(p2p, recommend.user);
+    status = network::recommend::act_recommend_pagerank(p2p, recommend.user);
   } else if (s == "commonNeighbour_object") {
-    status = act_recommend_commonNeighbour_object(
+    status = network::recommend::act_recommend_commonNeighbour_object(
         recommend.rcm, *recommend.ooP2p);
   } else if (s == "proximity_wcp") {
-    status
-        = act_recommend_proximity_wcp(recommend.rcm, recommend.user_object);
+    status = network::recommend::act_recommend_proximity_wcp(
+        recommend.rcm, recommend.user_object);
   } else if (s == "proximity_phi") {
-    status
-        = act_recommend_proximity_phi(recommend.rcm, recommend.user_object);
+    status = network::recommend::act_recommend_proximity_phi(
+        recommend.rcm, recommend.user_object);
   } else {
     status = -1;
   }

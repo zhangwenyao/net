@@ -28,11 +28,11 @@ const bool STAT_TYPE_DIRAA = 0; // 0:OutIn, 1: OutIn OutOut InOut InIn
 #define STAT_SPEARMAN
 #define MODEL_GAUSS
 #define MODEL_EXP
-//#define STAT_KENDALL
-//#define STAT_BETWEENNESS
-//#define STAT_MODULARITY
-//#define STAT_CLUSTER
-//#define STAT_SIMILARITY
+#define STAT_KENDALL
+#define STAT_BETWEENNESS
+#define STAT_MODULARITY
+#define STAT_CLUSTER
+#define STAT_SIMILARITY
 
 //#define ACT_SIS
 //#define ACT_SPREAD

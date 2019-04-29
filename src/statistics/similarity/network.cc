@@ -8,7 +8,7 @@ using namespace common;
 using namespace network;
 
 // ******************************************************
-network::similarity::Similarity(void)
+network::similarity::Similarity::Similarity(void)
     : nodeCoef(0)
     , edgeCoef(0)
 {
@@ -22,7 +22,7 @@ ostream& operator<<(
     return os;
   }
   // os << "--similarity.nodeCoef\t" << similarity.nodeCoef
-  //<< "--\nsimilarity.edgeCoef\t" << similarity.edgeCoef << '\n';
+  //<< "\n--similarity.edgeCoef\t" << similarity.edgeCoef << '\n';
   return os;
 }
 
@@ -132,7 +132,7 @@ Networks& Networks::stat_similarity(Networks& net2)
     p2p_2_link(net2.link, net2.p2p, net2.dirFlag);
   similarity.nodeCoef.resize(nodeSize);
   similarity.nodeCoef[0].resize(net2.nodeSize);
-  runStatus = cal_similarity(
+  runStatus = network::similarity::cal_similarity(
       similarity.nodeCoef, similarity.edgeCoef, link, net2.link, dirFlag);
   if (0 != runStatus)
     ERROR();

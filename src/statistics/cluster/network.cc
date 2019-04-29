@@ -8,9 +8,13 @@ using namespace common;
 using namespace network;
 
 // ******************************************************
-network::cluster::Cluster::Cluster(void) : coef(0) {}
+network::cluster::Cluster::Cluster(void)
+    : coef(0)
+{
+}
 
-ostream& operator<<(ostream& os, const network::cluster::Cluster& cluster) {
+ostream& operator<<(ostream& os, const network::cluster::Cluster& cluster)
+{
   if (!os) {
     ERROR();
     return os;
@@ -19,7 +23,8 @@ ostream& operator<<(ostream& os, const network::cluster::Cluster& cluster) {
   return os;
 }
 
-int network::cluster::Cluster::save_params(ostream& os) const {
+int network::cluster::Cluster::save_params(ostream& os) const
+{
   if (!os) {
     ERROR();
     return -1;
@@ -28,7 +33,8 @@ int network::cluster::Cluster::save_params(ostream& os) const {
   return 0;
 }
 
-int network::cluster::Cluster::save_params(const char* name) const {
+int network::cluster::Cluster::save_params(const char* name) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -43,7 +49,9 @@ int network::cluster::Cluster::save_params(const char* name) const {
   return 0;
 }
 
-int network::cluster::Cluster::save_data(const char* name, const char priChar, const char priChar2) const {
+int network::cluster::Cluster::save_data(
+    const char* name, const char priChar, const char priChar2) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -51,8 +59,9 @@ int network::cluster::Cluster::save_data(const char* name, const char priChar, c
   return 0;
 }
 
-int network::cluster::Cluster::save(const char* name, const char priChar,
-                       const char priChar2) const {
+int network::cluster::Cluster::save(
+    const char* name, const char priChar, const char priChar2) const
+{
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -69,7 +78,8 @@ int network::cluster::Cluster::save(const char* name, const char priChar,
   return 0;
 }
 
-int network::cluster::Cluster::read_params_1(string& s, istream& is) {
+int network::cluster::Cluster::read_params_1(string& s, istream& is)
+{
   if (!is) {
     ERROR();
     return -1;
@@ -83,18 +93,21 @@ int network::cluster::Cluster::read_params_1(string& s, istream& is) {
     }
     flag = 0;
   } while (0);
-  if (flag) s.clear();
+  if (flag)
+    s.clear();
   return 0;
 }
 
-network::cluster::Cluster& network::cluster::Cluster::clear(void) {
+network::cluster::Cluster& network::cluster::Cluster::clear(void)
+{
   coef = 0;
   Node.clear();
   return *this;
 }
 
 // ******************************************************
-Networks& Networks::stat_cluster(void) {
+Networks& Networks::stat_cluster(void)
+{
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -108,14 +121,15 @@ Networks& Networks::stat_cluster(void) {
     weightMatr_2_linkMatr(linkMatr, weightMatr);
   }
   if (weightFlag)
-    runStatus = cal_cluster_directed_weight(cluster.coef, cluster.Node,
-                                            weightMatr, linkMatr);
+    runStatus = network::cluster::cal_cluster_directed_weight(
+        cluster.coef, cluster.Node, weightMatr, linkMatr);
   else
-    runStatus =
-        cal_cluster_directed_unweight(cluster.coef, cluster.Node, linkMatr);
-  if (0 != runStatus) ERROR();
+    runStatus = network::cluster::cal_cluster_directed_unweight(
+        cluster.coef, cluster.Node, linkMatr);
+  if (0 != runStatus)
+    ERROR();
   return *this;
 }
 
 // ******************************************************
-#endif  // STAT_CLUSTER
+#endif // STAT_CLUSTER

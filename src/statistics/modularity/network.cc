@@ -139,13 +139,15 @@ Networks& Networks::stat_modularity(void)
     return *this;
   }
   int f = 0;
-  f = ::cal_modularity(modularity.Val, modularity.Stk, modularity.Num,
-      modularity.Range, p2p, p2pIn, dirFlag);
-  f |= moduStk_sort(modularity.Stk, modularity.Range, modularity.Num);
-  f |= cal_moduLKK(
+  f = network::modularity::cal_modularity(modularity.Val, modularity.Stk,
+      modularity.Num, modularity.Range, p2p, p2pIn, dirFlag);
+  f |= network::modularity::moduStk_sort(
+      modularity.Stk, modularity.Range, modularity.Num);
+  f |= network::modularity::cal_moduLKK(
       modularity.LKK, modularity.Range.size(), modularity.Val, p2p, dirFlag);
-  f |= cal_moduCoef(modularity.coef, modularity.LKK, dirFlag);
-  f |= cal_moduNodeCoef(
+  f |= network::modularity::cal_moduCoef(
+      modularity.coef, modularity.LKK, dirFlag);
+  f |= network::modularity::cal_moduNodeCoef(
       modularity.NodeCoef, modularity.Range.size(), modularity.Val, p2p);
   runStatus = f;
   if (0 != runStatus)
@@ -159,8 +161,8 @@ Networks& Networks::cal_modularity(void)
     ERROR();
     return *this;
   }
-  runStatus = ::cal_modularity(modularity.Val, modularity.Stk, modularity.Num,
-      modularity.Range, p2p, p2pIn, dirFlag);
+  runStatus = network::modularity::cal_modularity(modularity.Val,
+      modularity.Stk, modularity.Num, modularity.Range, p2p, p2pIn, dirFlag);
   if (0 != runStatus)
     ERROR();
   return *this;
@@ -168,7 +170,7 @@ Networks& Networks::cal_modularity(void)
 
 // ******************************************************
 #ifdef STAT_BETWEENNESS
-#include "StatBetweenness.h"
+#include "../betweenness/betweenness.h"
 Networks& Networks::stat_modularity_newman(double& qMax, NodeType mSize)
 {
   if (0 != runStatus) {
@@ -199,12 +201,15 @@ Networks& Networks::stat_modularity_newman(double& qMax, NodeType mSize)
     sort_link_betwEdge(link, betweenness.betwEdge, l--); // 按介数排序边link
     del_pij(link[l * 2], link[l * 2 + 1], p2p, p2pIn,
         dirFlag); // 删除连边p2p中介数最大的边
-    ::cal_modularity(modularity.Val, modularity.Stk, modularity.Num,
-        modularity.Range, p2p, p2pIn, dirFlag);
-    moduStk_sort(modularity.Stk, modularity.Range, modularity.Num);
-    cal_moduLKK(modularity.LKK, modularity.Range.size(), modularity.Val, p2p,
+    network::modularity::cal_modularity(modularity.Val, modularity.Stk,
+        modularity.Num, modularity.Range, p2p, p2pIn, dirFlag);
+    network::modularity::moduStk_sort(
+        modularity.Stk, modularity.Range, modularity.Num);
+    network::modularity::cal_moduLKK(modularity.LKK, modularity.Range.size(),
+        modularity.Val, p2p,
         dirFlag); // 统计原网络在新分组下的不同组之间的连边数
-    cal_moduCoef(modularity.coef, modularity.LKK, dirFlag); // 新分组系数
+    network::modularity::cal_moduCoef(
+        modularity.coef, modularity.LKK, dirFlag); // 新分组系数
     if (modularity.coef > qMax)
       qMax = modularity.coef;
   }

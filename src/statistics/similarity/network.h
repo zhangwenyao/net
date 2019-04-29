@@ -6,7 +6,7 @@
 #include <iostream>
 
 namespace network {
-namespace betweenness {
+namespace similarity {
   // ******************************************************
   class Similarity {
 public:
@@ -25,9 +25,12 @@ public:
     int read_params_1(std::string& s, std::istream& is);
     Similarity& clear(void);
   };
-  std::ostream& operator<<(
-      std::ostream& os, const network::similarity::Similarity& similarity);
+}
+}
 
 // ******************************************************
+std::ostream& operator<<(
+    std::ostream& os, const network::similarity::Similarity& similarity);
+
 #endif // STAT_SIMILARITY
 #endif // NETWORK_STAT_SIMILARITH_H

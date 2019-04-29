@@ -74,18 +74,6 @@ ostream& operator<<(ostream& os, network::Networks& net)
   os << net.grid;
 #endif
 
-#ifdef STAT_BETWEENNESS
-  os << net.betweenness;
-#endif
-
-#ifdef STAT_MODULARITY
-  os << net.modularity;
-#endif
-
-#ifdef STAT_CLUSTER
-  os << net.cluster;
-#endif
-
 #ifdef STAT_PEARSON
   os << net.pearson;
 #endif
@@ -96,6 +84,22 @@ ostream& operator<<(ostream& os, network::Networks& net)
 
 #ifdef STAT_KENDALL
   os << net.kendall;
+#endif
+
+#ifdef STAT_BETWEENNESS
+  os << net.betweenness;
+#endif
+
+#ifdef STAT_MODULARITY
+  os << net.modularity;
+#endif
+
+#ifdef STAT_SIMILARITY
+  os << net.similarity;
+#endif
+
+#ifdef STAT_CLUSTER
+  os << net.cluster;
 #endif
 
 #ifdef ACT_SIS

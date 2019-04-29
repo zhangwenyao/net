@@ -66,11 +66,9 @@ int network::betweenness::Betweenness::save_data(
   if (!betwEdge.empty())
     f |= save2((fn + ".betwEdge.txt").c_str(), betwEdge, priChar2);
   if (!minDistMatr.empty())
-    f |= save2(
-        (fn + ".minDistMatr.txt").c_str(), minDistMatr, priChar2);
+    f |= save2((fn + ".minDistMatr.txt").c_str(), minDistMatr, priChar2);
   if (!minDistMean.empty())
-    f |= save1(
-        (fn + ".minDistMean.txt").c_str(), minDistMean, priChar);
+    f |= save1((fn + ".minDistMean.txt").c_str(), minDistMean, priChar);
   if (0 != f)
     ERROR();
   return f;
@@ -152,22 +150,24 @@ Networks& Networks::stat_betweenness(void)
 
   if (distFlag) {
     if (dirFlag)
-      runStatus = cal_betweenness(betweenness.betwNode, betweenness.betwEdge,
-          betweenness.meanNode, betweenness.meanEdge, betweenness.minDistMatr,
-          betweenness.minDistMean, p2p, p2pIn, linkMatr);
+      runStatus = network::betweenness::cal_betweenness(betweenness.betwNode,
+          betweenness.betwEdge, betweenness.meanNode, betweenness.meanEdge,
+          betweenness.minDistMatr, betweenness.minDistMean, p2p, p2pIn,
+          linkMatr);
     else
-      runStatus = cal_betweenness(betweenness.betwNode, betweenness.betwEdge,
-          betweenness.meanNode, betweenness.meanEdge, betweenness.minDistMatr,
-          betweenness.minDistMean, p2p, p2p, linkMatr);
+      runStatus = network::betweenness::cal_betweenness(betweenness.betwNode,
+          betweenness.betwEdge, betweenness.meanNode, betweenness.meanEdge,
+          betweenness.minDistMatr, betweenness.minDistMean, p2p, p2p,
+          linkMatr);
   } else {
     if (dirFlag)
-      runStatus = cal_betweenness0(betweenness.betwNode, betweenness.betwEdge,
-          betweenness.meanNode, betweenness.meanEdge, betweenness.minDistMatr,
-          betweenness.minDistMean, p2p, p2pIn);
+      runStatus = network::betweenness::cal_betweenness0(betweenness.betwNode,
+          betweenness.betwEdge, betweenness.meanNode, betweenness.meanEdge,
+          betweenness.minDistMatr, betweenness.minDistMean, p2p, p2pIn);
     else
-      runStatus = cal_betweenness0(betweenness.betwNode, betweenness.betwEdge,
-          betweenness.meanNode, betweenness.meanEdge, betweenness.minDistMatr,
-          betweenness.minDistMean, p2p, p2p);
+      runStatus = network::betweenness::cal_betweenness0(betweenness.betwNode,
+          betweenness.betwEdge, betweenness.meanNode, betweenness.meanEdge,
+          betweenness.minDistMatr, betweenness.minDistMean, p2p, p2p);
   }
   if (0 != runStatus)
     ERROR();

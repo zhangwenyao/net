@@ -7,7 +7,9 @@ using namespace common;
 using namespace network;
 
 // ******************************************************
-int network::pearson::cal_nodeNeiAveDeg(VDouble& nodeNeiAveDeg, const VVNodeType& p2p) {
+int network::pearson::cal_nodeNeiAveDeg(
+    VDouble& nodeNeiAveDeg, const VVNodeType& p2p)
+{
   if (p2p.empty() || !nodeNeiAveDeg.empty()) {
     ERROR();
     return -1;
@@ -15,7 +17,8 @@ int network::pearson::cal_nodeNeiAveDeg(VDouble& nodeNeiAveDeg, const VVNodeType
   const NodeType nodeSize = p2p.size();
   nodeNeiAveDeg.assign(nodeSize, 0);
   for (NodeType i = 0; i < nodeSize; i++) {
-    if (p2p[i].size() <= 0) continue;
+    if (p2p[i].size() <= 0)
+      continue;
     LinkType l = 0;
     for (VNodeTypeCItr n = p2p[i].begin(); n != p2p[i].end(); n++)
       l += p2p[*n].size();
@@ -24,8 +27,9 @@ int network::pearson::cal_nodeNeiAveDeg(VDouble& nodeNeiAveDeg, const VVNodeType
   return 0;
 }
 
-int network::pearson::cal_nodeNeiAveDeg_nodeDeg(VDouble& nodeNeiAveDeg, const VVNodeType& p2p,
-                              const VNodeType& nodeDegIn) {
+int network::pearson::cal_nodeNeiAveDeg_nodeDeg(
+    VDouble& nodeNeiAveDeg, const VVNodeType& p2p, const VNodeType& nodeDegIn)
+{
   if (p2p.empty() || !nodeNeiAveDeg.empty()) {
     ERROR();
     return -1;
@@ -33,7 +37,8 @@ int network::pearson::cal_nodeNeiAveDeg_nodeDeg(VDouble& nodeNeiAveDeg, const VV
   const NodeType nodeSize = p2p.size();
   nodeNeiAveDeg.assign(nodeSize, 0);
   for (NodeType i = 0; i < nodeSize; i++) {
-    if (p2p[i].size() <= 0) continue;
+    if (p2p[i].size() <= 0)
+      continue;
     LinkType l = 0;
     for (VNodeTypeCItr j = p2p[i].begin(); j != p2p[i].end(); j++)
       l += nodeDegIn[*j];
@@ -42,21 +47,23 @@ int network::pearson::cal_nodeNeiAveDeg_nodeDeg(VDouble& nodeNeiAveDeg, const VV
   return 0;
 }
 
-int network::pearson::cal_nodeNeiAveDeg_weight(VDouble& nodeNeiAveDeg, const VVNodeType& p2p,
-                             const VNodeType& nodeDegIn,
-                             const VVWeightType& vvweight,
-                             const VWeightType& nodeWeightOut,
-                             const int weightFlag) {
+int network::pearson::cal_nodeNeiAveDeg_weight(VDouble& nodeNeiAveDeg,
+    const VVNodeType& p2p, const VNodeType& nodeDegIn,
+    const VVWeightType& vvweight, const VWeightType& nodeWeightOut,
+    const int weightFlag)
+{
   if (!weightFlag)
     return cal_nodeNeiAveDeg_nodeDeg(nodeNeiAveDeg, p2p, nodeDegIn);
-  if (p2p.empty() || !nodeNeiAveDeg.empty() || vvweight.size() != p2p.size()) {
+  if (p2p.empty() || !nodeNeiAveDeg.empty()
+      || vvweight.size() != p2p.size()) {
     ERROR();
     return -1;
   }
   const NodeType nodeSize = p2p.size();
   nodeNeiAveDeg.assign(nodeSize, 0);
   for (NodeType i = 0; i < nodeSize; i++) {
-    if (p2p[i].size() <= 0) continue;
+    if (p2p[i].size() <= 0)
+      continue;
     double l = 0;
     for (NodeType j = 0; j < p2p[i].size(); j++)
       l += (double)vvweight[i][j] * nodeDegIn[p2p[i][j]];
@@ -66,34 +73,38 @@ int network::pearson::cal_nodeNeiAveDeg_weight(VDouble& nodeNeiAveDeg, const VVN
 }
 
 int network::pearson::cal_nodeNeiAveDeg_AllAll_weight(VDouble& nodeNeiAveDeg,
-                                    const VVNodeType& p2p,
-                                    const VNodeType& nodeDeg,
-                                    const VVWeightType& vvweight,
-                                    const VWeightType& nodeWeight,
-                                    const int weightFlag) {
+    const VVNodeType& p2p, const VNodeType& nodeDeg,
+    const VVWeightType& vvweight, const VWeightType& nodeWeight,
+    const int weightFlag)
+{
   if (!weightFlag)
     return cal_nodeNeiAveDeg_nodeDeg(nodeNeiAveDeg, p2p, nodeDeg);
-  if (p2p.empty() || !nodeNeiAveDeg.empty() || vvweight.size() != p2p.size()) {
+  if (p2p.empty() || !nodeNeiAveDeg.empty()
+      || vvweight.size() != p2p.size()) {
     ERROR();
     return -1;
   }
   const NodeType nodeSize = p2p.size();
   nodeNeiAveDeg.assign(nodeSize, 0);
   for (NodeType i = 0; i < nodeSize; i++) {
-    if (p2p[i].size() <= 0) continue;
+    if (p2p[i].size() <= 0)
+      continue;
     for (NodeType j = 0; j < p2p[i].size(); j++) {
       nodeNeiAveDeg[i] += (double)vvweight[i][j] * nodeDeg[p2p[i][j]];
       nodeNeiAveDeg[p2p[i][j]] += (double)vvweight[i][j] * nodeDeg[i];
     }
   }
   for (NodeType i = 0; i < nodeSize; i++)
-    if (nodeDeg[i] > 0) nodeNeiAveDeg[i] /= nodeWeight[i];
+    if (nodeDeg[i] > 0)
+      nodeNeiAveDeg[i] /= nodeWeight[i];
   return 0;
 }
 
-int network::pearson::cal_neiAveDeg(VDouble& neiAveDeg, const VDouble& nodeNeiAveDeg,
-                  const VNodeType& nodeDeg, const VNodeType& degArrSize,
-                  MNodeType& degArrNo, const VNodeType& degArrVal) {
+int network::pearson::cal_neiAveDeg(VDouble& neiAveDeg,
+    const VDouble& nodeNeiAveDeg, const VNodeType& nodeDeg,
+    const VNodeType& degArrSize, MNodeType& degArrNo,
+    const VNodeType& degArrVal)
+{
   if (nodeDeg.empty() || !neiAveDeg.empty() || degArrSize.empty()) {
     ERROR();
     return -1;
@@ -101,20 +112,23 @@ int network::pearson::cal_neiAveDeg(VDouble& neiAveDeg, const VDouble& nodeNeiAv
   const NodeType nodeSize = nodeDeg.size(), degSize = degArrSize.size();
   neiAveDeg.assign(degSize, 0);
   for (NodeType i = 0; i < nodeSize; i++)
-    if (nodeDeg[i] > 0) neiAveDeg[degArrNo[nodeDeg[i]]] += nodeNeiAveDeg[i];
+    if (nodeDeg[i] > 0)
+      neiAveDeg[degArrNo[nodeDeg[i]]] += nodeNeiAveDeg[i];
   for (NodeType i = 0; i < degSize; i++)
-    if (degArrSize[i] > 0 && degArrVal[i] > 0) neiAveDeg[i] /= degArrSize[i];
+    if (degArrSize[i] > 0 && degArrVal[i] > 0)
+      neiAveDeg[i] /= degArrSize[i];
   return 0;
 }
 
-int network::pearson::cal_neiAveDeg_weight(VDouble& neiAveDeg, const VDouble& nodeNeiAveDeg,
-                         const VNodeType& nodeDeg, const VNodeType& degArrSize,
-                         MNodeType& degArrNo, const VNodeType& degArrVal,
-                         const VWeightSumType& degArrWeight,
-                         const VWeightType& nodeWeight, const int weightFlag) {
+int network::pearson::cal_neiAveDeg_weight(VDouble& neiAveDeg,
+    const VDouble& nodeNeiAveDeg, const VNodeType& nodeDeg,
+    const VNodeType& degArrSize, MNodeType& degArrNo,
+    const VNodeType& degArrVal, const VWeightSumType& degArrWeight,
+    const VWeightType& nodeWeight, const int weightFlag)
+{
   if (!weightFlag)
-    return cal_neiAveDeg(neiAveDeg, nodeNeiAveDeg, nodeDeg, degArrSize,
-                         degArrNo, degArrVal);
+    return cal_neiAveDeg(
+        neiAveDeg, nodeNeiAveDeg, nodeDeg, degArrSize, degArrNo, degArrVal);
   if (nodeDeg.empty() || !neiAveDeg.empty() || degArrSize.empty()) {
     ERROR();
     return -1;
@@ -125,11 +139,14 @@ int network::pearson::cal_neiAveDeg_weight(VDouble& neiAveDeg, const VDouble& no
     if (nodeDeg[i] > 0)
       neiAveDeg[degArrNo[nodeDeg[i]]] += nodeNeiAveDeg[i] * nodeWeight[i];
   for (NodeType i = 0; i < degSize; i++)
-    if (degArrSize[i] > 0 && degArrVal[i] > 0) neiAveDeg[i] /= degArrWeight[i];
+    if (degArrSize[i] > 0 && degArrVal[i] > 0)
+      neiAveDeg[i] /= degArrWeight[i];
   return 0;
 }
 
-int network::pearson::cal_nodeNeiAveNo(VDouble& nodeNeiAveNo, const VVNodeType& p2p) {
+int network::pearson::cal_nodeNeiAveNo(
+    VDouble& nodeNeiAveNo, const VVNodeType& p2p)
+{
   if (p2p.empty() || !nodeNeiAveNo.empty()) {
     ERROR();
     return -1;
@@ -137,24 +154,32 @@ int network::pearson::cal_nodeNeiAveNo(VDouble& nodeNeiAveNo, const VVNodeType& 
   const NodeType nodeSize = p2p.size();
   nodeNeiAveNo.assign(nodeSize, 0);
   for (NodeType i = 0; i < nodeSize; i++) {
-    if (p2p[i].size() <= 0) continue;
+    if (p2p[i].size() <= 0)
+      continue;
     LinkType l = 0;
-    for (VNodeTypeCItr n = p2p[i].begin(); n != p2p[i].end(); n++) l += *n;
+    for (VNodeTypeCItr n = p2p[i].begin(); n != p2p[i].end(); n++)
+      l += *n;
     nodeNeiAveNo[i] = (double)l / p2p[i].size();
   }
   return 0;
 }
 
 int network::pearson::cal_pearson_lkk(double& pearson, const VVLinkType& lkk,
-                    const VNodeType& degArrVal, const LinkType& linkSize) {
-  double sx = 0., sxx = 0., sxy = 0.;
+    const VNodeType& degArrVal, const LinkType& linkSize)
+{
   const NodeType degSize = degArrVal.size();
+  if (degSize <= 1) {
+    pearson = 0;
+    return 0;
+  }
+  double sx = 0., sxx = 0., sxy = 0.;
   for (NodeType i = 0, ki; i < degSize; i++) {
     ki = degArrVal[i];
     const double ki2 = (double)ki * ki;
     for (NodeType j = 0; j <= i; j++) {
       const double l = lkk[i][j], kj = degArrVal[j];
-      if (l <= 0) continue;
+      if (l <= 0)
+        continue;
       sx += l * (ki + kj);
       sxx += l * (ki2 + kj * kj);
       sxy += 2 * l * ki * kj;
@@ -168,12 +193,41 @@ int network::pearson::cal_pearson_lkk(double& pearson, const VVLinkType& lkk,
   return 0;
 }
 
-int network::pearson::cal_pearson(double& pearson, const VVNodeType& p2p,
-                const LinkType linkSize) {
+int network::pearson::cal_pearson_lkk3(double& pearson,
+    const VLkk3LinkType& lkk3, const VNodeType& degArrVal,
+    const LinkType& linkSize)
+{
+  const NodeType degSize = degArrVal.size();
+  if (degSize <= 1) {
+    pearson = 0;
+    return 0;
+  }
+  double sx = 0., sxx = 0., sxy = 0.;
+  for (auto& li : lkk3) {
+    if (li.val <= 0)
+      continue;
+    const NodeType i = li.x, j = li.y, ki = degArrVal[i], kj = degArrVal[j];
+    const double l = li.val, ki2 = (double)ki * ki, kj2 = (double)kj * kj;
+    sx += l * (ki + kj);
+    sxx += l * (ki2 + kj2);
+    sxy += 2 * l * ki * kj;
+  }
+  const LinkType n = linkSize * 2;
+  if (n * sxx - sx * sx == 0)
+    pearson = 0;
+  else
+    pearson = (n * sxy - sx * sx) / (n * sxx - sx * sx);
+  return 0;
+}
+
+int network::pearson::cal_pearson(
+    double& pearson, const VVNodeType& p2p, const LinkType linkSize)
+{
   const LinkType n = linkSize * 2;
   double sx = 0., sxx = 0., sxy = 0.;
   for (NodeType i = 0, k; i < p2p.size(); i++) {
-    if ((k = p2p[i].size()) <= 0) continue;
+    if ((k = p2p[i].size()) <= 0)
+      continue;
     const double k2 = (double)k * k;
     for (NodeType j = 0; j < k; j++) {
       sx += k;
@@ -188,12 +242,14 @@ int network::pearson::cal_pearson(double& pearson, const VVNodeType& p2p,
   return 0;
 }
 
-int network::pearson::cal_pearson_dir(double& pearson, double& rho, const VVNodeType& p2p,
-                    const LinkType linkSize, const VNodeType& nodeDegOut,
-                    const VNodeType& nodeDegIn) {
+int network::pearson::cal_pearson_dir(double& pearson, double& rho,
+    const VVNodeType& p2p, const LinkType linkSize,
+    const VNodeType& nodeDegOut, const VNodeType& nodeDegIn)
+{
   double sx = 0., sxx = 0., sy = 0., syy = 0., sxy = 0.;
   for (NodeType i = 0; i < p2p.size(); i++) {
-    if (p2p[i].empty()) continue;
+    if (p2p[i].empty())
+      continue;
     const NodeType ki = nodeDegOut[i];
     const double ki2 = (double)ki * ki;
     for (VNodeTypeCItr j = p2p[i].begin(); j != p2p[i].end(); j++) {
@@ -211,26 +267,29 @@ int network::pearson::cal_pearson_dir(double& pearson, double& rho, const VVNode
     if (linkSize * syy - sy * sy == 0)
       pearson = 0;
     else
-      pearson = (linkSize * sxy - sx * sy) /
-                sqrt((linkSize * sxx - sx * sx) * (linkSize * syy - sy * sy));
+      pearson = (linkSize * sxy - sx * sy)
+          / sqrt((linkSize * sxx - sx * sx) * (linkSize * syy - sy * sy));
     rho = (linkSize * sxy - sx * sy) / (linkSize * sxx - sx * sx);
   }
   return 0;
 }
 
-int network::pearson::cal_pearson_dir_weight(double& pearson, double& rho, const VVNodeType& p2p,
-                           const VVWeightType& vvweight,
-                           const WeightSumType netWeight,
-                           const VNodeType& nodeDegOut,
-                           const VNodeType& nodeDegIn, const int weightFlag) {
+int network::pearson::cal_pearson_dir_weight(double& pearson, double& rho,
+    const VVNodeType& p2p, const VVWeightType& vvweight,
+    const WeightSumType netWeight, const VNodeType& nodeDegOut,
+    const VNodeType& nodeDegIn, const int weightFlag)
+{
   if (!weightFlag)
-    return cal_pearson_dir(pearson, rho, p2p, netWeight, nodeDegOut, nodeDegIn);
+    return cal_pearson_dir(
+        pearson, rho, p2p, netWeight, nodeDegOut, nodeDegIn);
   double sx = 0., sxx = 0., sy = 0., syy = 0., sxy = 0.;
   for (NodeType i = 0; i < p2p.size(); i++) {
-    if (p2p[i].empty()) continue;
+    if (p2p[i].empty())
+      continue;
     const double ki = nodeDegOut[i], ki2 = ki * ki;
     for (NodeType j = 0; j < p2p[i].size(); j++) {
-      const double kj = nodeDegIn[p2p[i][j]], kj2 = kj * kj, w = vvweight[i][j];
+      const double kj = nodeDegIn[p2p[i][j]], kj2 = kj * kj,
+                   w = vvweight[i][j];
       sx += w * ki;
       sxx += w * ki2;
       sy += w * kj;
@@ -244,15 +303,16 @@ int network::pearson::cal_pearson_dir_weight(double& pearson, double& rho, const
     if (netWeight * syy - sy * sy == 0)
       pearson = 0;
     else
-      pearson = (netWeight * sxy - sx * sy) /
-                sqrt((netWeight * sxx - sx * sx) * (netWeight * syy - sy * sy));
+      pearson = (netWeight * sxy - sx * sy)
+          / sqrt((netWeight * sxx - sx * sx) * (netWeight * syy - sy * sy));
     rho = (netWeight * sxy - sx * sy) / (netWeight * sxx - sx * sx);
   }
   return 0;
 }
 
-int network::pearson::cal_pearson_link(double& pearson, const VNodeType& link,
-                     const VNodeType& nodeDeg) {
+int network::pearson::cal_pearson_link(
+    double& pearson, const VNodeType& link, const VNodeType& nodeDeg)
+{
   const LinkType n = link.size();
   double sx = 0., sxx = 0., sxy = 0.;
   for (LinkType i = 0; i < n; i += 2) {
@@ -268,12 +328,15 @@ int network::pearson::cal_pearson_link(double& pearson, const VNodeType& link,
   return 0;
 }
 
-int network::pearson::cal_No(double& No, const VVNodeType& p2p, const LinkType linkSize) {
+int network::pearson::cal_No(
+    double& No, const VVNodeType& p2p, const LinkType linkSize)
+{
   const LinkType n = linkSize * 2;
   const NodeType nodeSize = p2p.size();
   double sx = 0., sxx = 0., sxy = 0.;
   for (NodeType i = 0, k; i < nodeSize; i++) {
-    if ((k = p2p[i].size()) <= 0) continue;
+    if ((k = p2p[i].size()) <= 0)
+      continue;
     double i2 = (double)i * i;
     for (NodeType j = 0; j < k; j++) {
       sx += i;
@@ -288,7 +351,8 @@ int network::pearson::cal_No(double& No, const VVNodeType& p2p, const LinkType l
   return 0;
 }
 
-int network::pearson::cal_No_link(double& No, const VNodeType& link) {
+int network::pearson::cal_No_link(double& No, const VNodeType& link)
+{
   const LinkType n = link.size();
   double sx = 0., sxx = 0., sxy = 0.;
   for (LinkType i = 0; i < n; i += 2) {
@@ -305,4 +369,4 @@ int network::pearson::cal_No_link(double& No, const VNodeType& link) {
 }
 
 // ******************************************************
-#endif  // STAT_PEARSON
+#endif // STAT_PEARSON

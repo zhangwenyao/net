@@ -12,32 +12,33 @@
 namespace network {
 const std::string NET_VERSION = "net3.0: " __DATE__ ", " __TIME__;
 // *******************************************************
-#define NET_DEGREE  // 节点度分布
-#define DEG_POISSON // 泊松分布
-#define DEG_POWER 幂律分布
+#define NET_DEGREE //节点度分布
+//#define DEG_POISSON //泊松分布
+#define DEG_POWER //幂律分布
 
 #define NET_EXTREMUM // 特例网络
-#define NET_RANDOM   // 随机网络
-#define NET_BA       // BA网络
-#define NET_GRID     // 网格网络
-#define NET_ACTOR    // 演员关系网络
-#define NET_FOODWEB  // 食物链网络
+
+//#define NET_RANDOM   // 随机网络
+//#define NET_BA       // BA网络
+//#define NET_GRID     // 网格网络
+//#define NET_ACTOR    // 演员关系网络
+//#define NET_FOODWEB  // 食物链网络
 
 const bool STAT_TYPE_DIRAA = 0; // 0:OutIn, 1: OutIn OutOut InOut InIn
 #define STAT_PEARSON
 #define STAT_SPEARMAN
-#define MODEL_GAUSS
-#define MODEL_EXP
-#define STAT_KENDALL
-#define STAT_BETWEENNESS
-#define STAT_MODULARITY
-#define STAT_CLUSTER
-#define STAT_SIMILARITY
+//#define MODEL_GAUSS
+//#define MODEL_EXP
+//#define STAT_KENDALL
+//#define STAT_BETWEENNESS
+//#define STAT_MODULARITY
+//#define STAT_CLUSTER
+//#define STAT_SIMILARITY
 
-#define ACT_SIS
-#define ACT_SPREAD
-#define ACT_FITNESS_COMPLEXITY
-#define ACT_RECOMMEND
+//#define ACT_SIS
+//#define ACT_SPREAD
+//#define ACT_FITNESS_COMPLEXITY
+//#define ACT_RECOMMEND
 
 // *******************************************************
 int nodeDeg_update_nodeMap(VNodeType& nodeDeg, const VRNodeType& nodeMap);
@@ -272,6 +273,13 @@ int read_lkk_3(const char* name, VVLinkType& lkk, const NodeType degSize = 0,
 int save_lkk_3(std::ostream& os, const VVLinkType& lkk, const int rv = 0,
     const char pri2 = '\t', const char pri = '\n');
 int save_lkk_3(const char* name, const VVLinkType& lkk, const int rv = 0,
+    const char pri2 = '\t', const char pri = '\n');
+
+int read_lkk3(std::istream& is, VLkk3LinkType& lkk3);
+int read_lkk3(const char* name, VLkk3LinkType& lkk3);
+int save_lkk3(std::ostream& os, const VLkk3LinkType& lkk3,
+    const char pri2 = '\t', const char pri = '\n');
+int save_lkk3(const char* name, const VLkk3LinkType& lkk3,
     const char pri2 = '\t', const char pri = '\n');
 
 // *******************************************************

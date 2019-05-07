@@ -1,6 +1,7 @@
 #ifndef NETWORK__TYPE_H_
 #define NETWORK__TYPE_H_
 
+#include "../common/common.h"
 #include <cfloat>
 #include <climits>
 #include <map>
@@ -144,22 +145,12 @@ typedef VWeightSumType::const_iterator VWeightSumTypeCItr;
 typedef VVWeightSumType::iterator VVWeightSumTypeItr;
 typedef VVWeightSumType::const_iterator VVWeightSumTypeCItr;
 
-template <typename T1, typename T2, typename T3> struct Struct3 {
-  T1 x;
-  T2 y;
-  T3 val;
-};
-
-typedef struct Struct3<NodeType, NodeType, NodeType> Lkk3NodeType;
+typedef struct common::Struct3<NodeType, NodeType, NodeType> Lkk3NodeType;
 typedef Lkk3NodeType* PLkk3NodeType;
-typedef struct Struct3<NodeType, NodeType, LinkType> Lkk3LinkType;
+typedef struct common::Struct3<NodeType, NodeType, LinkType> Lkk3LinkType;
 typedef Lkk3LinkType* PLkk3LinkType;
-typedef struct Struct3<NodeType, NodeType, Double> Lkk3Double;
+typedef struct common::Struct3<NodeType, NodeType, Double> Lkk3Double;
 typedef Lkk3Double* PLkk3Double;
-
-typedef std::vector<Lkk3Double> VLkk3Double;
-typedef VLkk3Double::iterator VLkk3DoubleItr;
-typedef VLkk3Double::const_iterator VLkk3DoubleCItr;
 
 typedef std::vector<Lkk3NodeType> VLkk3NodeType;
 typedef VLkk3NodeType::iterator VLkk3NodeTypeItr;
@@ -169,14 +160,11 @@ typedef std::vector<Lkk3LinkType> VLkk3LinkType;
 typedef VLkk3LinkType::iterator VLkk3LinkTypeItr;
 typedef VLkk3LinkType::const_iterator VLkk3LinkTypeCItr;
 
-struct RNodeType {
-  explicit RNodeType(NodeType s = 0, NodeType e = 0)
-      : start(s)
-      , end(e)
-  {
-  }
-  NodeType start, end;
-};
+typedef std::vector<Lkk3Double> VLkk3Double;
+typedef VLkk3Double::iterator VLkk3DoubleItr;
+typedef VLkk3Double::const_iterator VLkk3DoubleCItr;
+
+typedef common::Range<NodeType> RNodeType;
 typedef std::vector<RNodeType> VRNodeType;
 typedef RNodeType* PRNodeType;
 typedef VRNodeType::iterator VRNodeTypeItr;
@@ -196,19 +184,7 @@ int save_VRNodeType_end(
 
 bool cmp_RNodeType_start(const RNodeType& a, const RNodeType& b);
 bool cmp_RNodeType_end(const RNodeType& a, const RNodeType& b);
-
-// *******************************************************
 }
 
-template <typename T1, typename T2, typename T3>
-std::ostream& operator<<(
-    std::ostream& os, const network::Struct3<T1, T2, T3>& r);
-template <typename T1, typename T2, typename T3>
-std::istream& operator>>(
-    std::istream& is, const network::Struct3<T1, T2, T3>& r);
-
-std::ostream& operator<<(std::ostream& os, const network::RNodeType& r);
-std::istream& operator>>(std::istream& is, network::RNodeType& r);
-
-#include "type_template.h"
+// *******************************************************
 #endif

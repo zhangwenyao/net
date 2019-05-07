@@ -1,6 +1,7 @@
 #ifndef COMMON__COMMON_IO_H_
 #define COMMON__COMMON_IO_H_
 
+#include "common.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -168,7 +169,29 @@ int save_VString(const char* name, const std::vector<std::string>& vs);
 int read_VString(std::istream& is, std::vector<std::string>& vs);
 int read_VString(const char* name, std::vector<std::string>& vs);
 
-// *************************************************************
 } // end namespace common
+
+// *************************************************************
+template <typename T, const size_t n1, const size_t n2>
+std::ostream& operator<<(std::ostream& os, const T (&a)[n1][n2]);
+template <typename T, const size_t n1, const size_t n2>
+std::istream& operator>>(std::istream& is, T (&a)[n1][n2]);
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& v);
+template <typename T>
+std::istream& operator>>(std::istream& is, std::vector<T>& v);
+
+template <typename T>
+std::ostream& operator<<(
+    std::ostream& os, const std::vector<const std::vector<T>>& v);
+template <typename T>
+std::istream& operator>>(std::istream& is, std::vector<std::vector<T>>& v);
+
+template <typename T1, typename T2, typename T3>
+std::ostream& operator<<(
+    std::ostream& os, const std::vector<common::Struct3<T1, T2, T3>>& vs);
+
+// *************************************************************
 #include "io_template.h"
 #endif //_H

@@ -238,6 +238,11 @@ Networks& Networks::stat_spearman(void)
             spearman.spearman, lkk, spearman.deg2ArrVal, linkSize);
         break;
       }
+      if (!lkk3.empty() && !weightFlag) {
+        network::spearman::cal_spearman_lkk3(
+            spearman.spearman, lkk3, spearman.deg2ArrVal, linkSize);
+        break;
+      }
       if (!p2p.empty()) {
         network::spearman::cal_nodeNeiAveDeg2_weight(spearman.nodeNeiAveDeg2,
             p2p, nodeDeg, spearman.deg2ArrVal, degArrNo, vvweight, nodeWeight,
@@ -435,8 +440,8 @@ Networks& Networks::spearman_cal_lkkProb_gauss(void)
 
   spearman.GaussS2.resize(degSize);
   for (NodeType i = 0; i < degSize; i++) {
-    network::spearman::cal_lkkProb_gaussS2(spearman.GaussS2[i], spearman.deg2ArrVal, degArrVal,
-        degArrSize, i, spearman.r0);
+    network::spearman::cal_lkkProb_gaussS2(spearman.GaussS2[i],
+        spearman.deg2ArrVal, degArrVal, degArrSize, i, spearman.r0);
   }
   lkkProb.resize(degSize, VDouble(degSize));
   network::spearman::cal_lkkProb_gauss(

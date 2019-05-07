@@ -294,7 +294,7 @@ int common::read2(const char* name, T* p, const size_t n1, const size_t n2)
 
 // 二维数组 a[n1][n2]
 template <typename T, const size_t n1, const size_t n2>
-std::ostream& operator<<(std::ostream& os, T (&a)[n1][n2])
+std::ostream& operator<<(std::ostream& os, const T (&a)[n1][n2])
 {
   if (!os) {
     ERROR();
@@ -875,6 +875,16 @@ int common::read2_0(const char* name, std::vector<std::vector<T>>& v)
   int status = common::read2_0(is, v);
   is.close();
   return status;
+}
+
+// *************************************************************
+template <typename T1, typename T2, typename T3>
+std::ostream& operator<<(
+    std::ostream& os, const std::vector<common::Struct3<T1, T2, T3>>& vs)
+{
+  for (auto& i : vs)
+    os << i << '\n';
+  return os;
 }
 
 // *************************************************************

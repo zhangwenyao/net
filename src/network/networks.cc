@@ -623,27 +623,30 @@ network::Networks& network::Networks::stat(void)
     return *this;
   }
 
-  if (lkk.empty() && p2p.empty()) {
+  if (lkk.empty() && lkk3.empty() && p2p.empty()) {
     ERROR();
     runStatus = -1;
     return *this;
   }
-  if (!p2p.empty()) {
-    if (0 != p2p_2_degArr().runStatus) {
-      ERROR();
-      runStatus = -1;
-      return *this;
+  if (degArrSize.empty() || degArrVal.empty()) {
+    if (!p2p.empty()) {
+      if (0 != p2p_2_degArr().runStatus) {
+        ERROR();
+        runStatus = -1;
+        return *this;
+      }
+    } else if (!lkk.empty() || !lkk3.empty()) {
+      if (0 != lkk_2_degArr().runStatus) {
+        ERROR();
+        runStatus = -1;
+        return *this;
+      }
     }
-  } else if (0 != lkk_2_degArr().runStatus) {
-    ERROR();
-    runStatus = -1;
-    return *this;
   }
 
 #ifdef STAT_PEARSON
   cout << "\tpearson\n";
-  stat_pearson();
-  if (0 != runStatus) {
+  if (0 != stat_pearson().runStatus) {
     ERROR();
     return *this;
   }
@@ -709,6 +712,10 @@ network::Networks& network::Networks::cal_params(const string& s)
   while (ss >> t) {
     if (t.size() <= 0)
       continue;
+    if (t == "read") {
+      read_params();
+      continue;
+    }
     if (t == "dirFlag") {
       dirFlag = 1;
       continue;
@@ -764,12 +771,6 @@ network::Networks& network::Networks::cal_nodeDeg(const string& s)
 
   if (s == "read_degArr") {
     if (0 != read_degArr().runStatus)
-      ERROR();
-    return *this;
-  }
-
-  if (s == "read_lkk") {
-    if (0 != read_lkk().runStatus)
       ERROR();
     return *this;
   }
@@ -846,6 +847,19 @@ network::Networks& network::Networks::cal_p2p(const string& s)
       }
       if (s == "read_link_0" || s == "read_link_0_fix") {
         if (!link.empty() || 0 != read_link().runStatus) {
+          ERROR();
+          runStatus = -1;
+          return *this;
+        }
+      }
+
+      if (s == "read_lkk") {
+        if (0 != read_lkk().runStatus)
+          ERROR();
+        return *this;
+      }
+      if (s == "read_lkk3") {
+        if (0 != read_lkk3().runStatus) {
           ERROR();
           runStatus = -1;
           return *this;

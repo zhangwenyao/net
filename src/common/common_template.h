@@ -3,11 +3,57 @@
 
 #include "common.h"
 #include "debug.h"
+#include "io.h"
 #include <algorithm>
 #include <stack>
 #include <vector>
 
+// **********************************************************
+template <typename T1, typename T2, typename T3> struct common::Struct3 {
+  T1 x;
+  T2 y;
+  T3 val;
+};
+
+template <typename T1, typename T2, typename T3>
+std::ostream& operator<<(
+    std::ostream& os, const common::Struct3<T1, T2, T3>& r)
+{
+  os << r.x << '\t' << r.y << '\t' << r.val;
+  return os;
+};
+
+template <typename T1, typename T2, typename T3>
+std::istream& operator>>(std::istream& is, common::Struct3<T1, T2, T3>& r)
+{
+  is >> r.x >> r.y >> r.val;
+  return is;
+};
+
 // *************************************************************
+template <typename T> struct common::Range {
+  explicit Range(T s = 0, T e = 0)
+      : start(s)
+      , end(e)
+  {
+  }
+  T start, end;
+};
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const common::Range<T>& r)
+{
+  os << r.start << '\t' << r.end;
+  return os;
+};
+
+template <typename T>
+std::istream& operator>>(std::istream& is, common::Range<T>& r)
+{
+  is >> r.x >> r.y;
+  return is;
+};
+
 template <typename Tp> struct common::RangeP {
   explicit RangeP(Tp s = NULL, Tp e = NULL)
       : start(s)

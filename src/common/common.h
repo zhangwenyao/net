@@ -3,9 +3,6 @@
 
 // g++ -std=c++11
 
-#include "debug.h"
-#include "io.h"
-#include "random.h"
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
@@ -25,6 +22,9 @@
 
 namespace common {
 // *************************************************************
+template <typename T1, typename T2, typename T3> struct Struct3;
+
+template <typename T> struct Range;   // 范围结构
 template <typename Tp> struct RangeP; // 范围结构
 
 template <typename T> bool find(const std::vector<T>& v, const T& t);
@@ -119,6 +119,18 @@ int matrixCross1_p2p(const std::vector<std::vector<T2>>& p2p,
 } // end namespace common
 
 // *****************************************************
+template <typename T1, typename T2, typename T3>
+std::ostream& operator<<(
+    std::ostream& os, const common::Struct3<T1, T2, T3>& r);
+template <typename T1, typename T2, typename T3>
+std::istream& operator>>(std::istream& is, common::Struct3<T1, T2, T3>& r);
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const common::Range<T>& r);
+template <typename T>
+std::istream& operator>>(std::istream& is, common::Range<T>& r);
+
+// *****************************************************
 #ifdef _WIN32
 #include <direct.h>
 #include <io.h>
@@ -129,6 +141,10 @@ int matrixCross1_p2p(const std::vector<std::vector<T2>>& p2p,
 #define MKDIR(a) mkdir((a), 0755)
 #endif
 
+// *****************************************************
+#include "debug.h"
+#include "io.h"
+#include "random.h"
 // *****************************************************
 #include "common_template.h"
 #endif

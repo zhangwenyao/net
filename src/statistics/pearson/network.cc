@@ -219,6 +219,11 @@ Networks& Networks::stat_pearson(void)
             pearson.pearson, lkk, degArrVal, linkSize);
         break;
       }
+      if (!lkk3.empty() && !weightFlag) {
+        network::pearson::cal_pearson_lkk3(
+            pearson.pearson, lkk3, degArrVal, linkSize);
+        break;
+      }
       if (!p2p.empty()) {
         network::pearson::cal_nodeNeiAveDeg_weight(pearson.nodeNeiAveDeg, p2p,
             nodeDeg, vvweight, nodeWeight, weightFlag);

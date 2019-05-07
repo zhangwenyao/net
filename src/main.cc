@@ -1,21 +1,24 @@
 #include "main.h"
 #include "common/common.h"
+
 using namespace std;
+using namespace main_func;
+
 // **********************************************************
 int main(int argc, char** argv)
 {
   common::SHOW_TIME(cout); // 显示系统时间
 
 #ifdef MAIN_TEST
-  main_func::test(argc, argv);
+  test(argc, argv);
 #endif
 
 #ifdef MAIN_NET_BA
   _ERR(main_net_ba(argc, argv));
 #endif
 
-#ifdef MAIN_NET_EXTREMUM
-  _ERR(main_net_extremum(argc, argv));
+#ifdef MAIN_EXTREMUM
+  _ERR(main_extremum(argc, argv));
 #endif
 
 #ifdef FITNESS_COMPLEXITY_MAIN_FILTER

@@ -1,25 +1,13 @@
 #include "type.h"
-#include "../common/io.h"
+
+#include "../common/common.h"
 #include <fstream>
 #include <iostream>
-
 using namespace std;
 using namespace common;
 using namespace network;
 
 // ******************************************************
-ostream& operator<<(ostream& os, const RNodeType& r)
-{
-  os << r.start << '\t' << r.end;
-  return os;
-}
-
-istream& operator>>(istream& is, RNodeType& r)
-{
-  is >> r.start >> r.end;
-  return is;
-}
-
 int network::save_VRNodeType_start(
     ostream& os, const VRNodeType& v, const char c)
 {

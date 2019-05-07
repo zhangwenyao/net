@@ -2863,4 +2863,57 @@ int network::save_lkk_3(const char* name, const VVLinkType& lkk, const int rv,
   return flag;
 }
 
+int network::read_lkk3(istream& is, VLkk3LinkType& lkk3)
+{
+  LinkType n;
+  for (NodeType i, j; is >> i >> j >> n;) {
+    lkk3.push_back({ i, j, n });
+  }
+  return 0;
+}
+
+int network::read_lkk3(const char* name, VLkk3LinkType& lkk3)
+{
+  if (!name || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ifstream is(name);
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  int flag = read_lkk3(is, lkk3);
+  is.close();
+  return flag;
+}
+
+int network::save_lkk3(
+    ostream& os, const VLkk3LinkType& lkk3, const char pri2, const char pri)
+{
+  if (!os) {
+    ERROR();
+    return 0;
+  }
+  for (auto& i : lkk3)
+    os << i.x << pri2 << i.y << pri2 << i.val << pri;
+  return 0;
+}
+
+int network::save_lkk3(const char* name, const VLkk3LinkType& lkk3,
+    const char pri2, const char pri)
+{
+  if (!name || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  int flag = save_lkk3(os, lkk3, pri2, pri);
+  os.close();
+  return flag;
+}
 // *************************************************************

@@ -803,6 +803,38 @@ network::Network& network::Network::read_lkk(const char* name)
   return *this;
 }
 
+network::Network& network::Network::read_lkk3(const char* name)
+{
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (!lkk3.empty()) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = readName;
+
+  if (0 != read_degArr(name).runStatus) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+  if (0 != common::read2_0((fn + ".lkk3.txt").c_str(), lkk)) {
+    runStatus = -1;
+    ERROR();
+    return *this;
+  }
+
+  return *this;
+}
+
 // ******************************************************
 network::Network& network::Network::read_link_0(const char* name)
 {

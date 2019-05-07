@@ -31,6 +31,8 @@ namespace pearson {
 
   int cal_pearson_lkk(double& pearson, const VVLinkType& lkk,
       const VNodeType& degArrVal, const LinkType& linkSize);
+  int cal_pearson_lkk3(double& pearson, const VLkk3LinkType& lkk3,
+      const VNodeType& degArrVal, const LinkType& linkSize);
   int cal_pearson(
       double& pearson, const VVNodeType& p2p, const LinkType linkSize);
   int cal_pearson_dir(double& pearson, double& rho, const VVNodeType& p2p,

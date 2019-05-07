@@ -701,6 +701,7 @@ int network::extremum::cal_Max_lkk3(const VNodeType& degArrVal,
 {
   const NodeType degSize = degArrVal.size();
   lkk3.clear();
+  lkk3.reserve(600000000);
   VLinkType vlink(degSize);
   for (NodeType i = 0; i < degSize; i++)
     vlink[i] = (LinkType)degArrSize[i] * degArrVal[i];

@@ -418,6 +418,34 @@ int network::spearman::cal_spearman_lkk(double& spearman,
   return 0;
 }
 
+int network::spearman::cal_spearman_lkk3(double& spearman,
+    const VLkk3LinkType& lkk3, const VDouble& deg2ArrVal,
+    const LinkType linkSize)
+{
+  const NodeType degSize = deg2ArrVal.size();
+  if (degSize <= 1) {
+    spearman = 0;
+    return 0;
+  }
+  double sx = 0., sxx = 0., sxy = 0.;
+  for (auto& li : lkk3) {
+    if (li.val <= 0)
+      continue;
+    const NodeType i = li.x, j = li.y;
+    const double xi = deg2ArrVal[i], xj = deg2ArrVal[j], l = li.val,
+                 xi2 = xi * xi, xj2 = xj * xj;
+    sx += l * (xi + xj);
+    sxx += l * (xi2 + xj2);
+    sxy += 2 * l * xi * xj;
+  }
+  const LinkType n = linkSize * 2;
+  if (n * sxx - sx * sx == 0)
+    spearman = 0;
+  else
+    spearman = (n * sxy - sx * sx) / (n * sxx - sx * sx);
+  return 0;
+}
+
 int network::spearman::cal_spearman(double& spearman, const VVNodeType& p2p,
     const VDouble& deg2ArrVal, MNodeType& degArrNo, const LinkType linkSize)
 {

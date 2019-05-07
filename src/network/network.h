@@ -7,13 +7,13 @@
 // *******************************************************************
 /*
  *                net_run       argv          options
- * 参数           cal_params    dirFlag !dirFlag        是否有向
- *                              weightFlag !weightFlag  是否带权重
+ * 参数           cal_params    read          读取参数
+ *                              dirFlag     !dirFlag      是否有向
+ *                              weightFlag  !weightFlag   是否带权重
  * 随机数种子     init_seed                   仅首次初始化
  *                init_seed0                  重新初始化种子
  * 度分布         cal_deg       read_deg      读取度序列
  *                              read_degArr   读取度分布
- *                              read_lkk      读取连边分布
  *                              lkk_power     度序列幂律的联合分布矩阵lkk
  *                              power         度序列幂律分布
  *                              power_arr     度序列幂律分布
@@ -22,12 +22,14 @@
  *                              read_p2p      读取连边链接表
  *                              read_linkMatr 读取连边矩阵
  *                              read_link     读取连边
+ *                              read_lkk      读取连边分布
+ *                              read_lkk3     读取lkk3
  *                              Max           最大度关联网络
  *                              Max_lkk       最大度关联网络
  *                              Max_lkk3      最大度关联网络
  *                              Min           最小度关联网络
  *                              Min_lkk       最小度关联网络
- *                              Min_lkk3       最小度关联网络
+ *                              Min_lkk3      最小度关联网络
  *                              MinLkkP2p     min lkk -> p2p
  *                              MinLkkP2pFix  min lkk -> p2p fix
  *                              ER            ER随机网络
@@ -36,9 +38,10 @@
  *                              Grid          网格网络
  *                              Spearman      sp系数给定的网络
  * 修正           fix_p2p                     修正自环、重边、缺边
- *                fix_p2p_nodeDeg0
- * 按p2p度排序重新映射节点，度为0在最后（剔除） 连边矩阵       cal_extrLKK
- * lkk_max           lkk最强pearson同配 lkk_min           lkk最强pearson异配
+ *                fix_p2p_nodeDeg0            按p2p度排序重新映射节点，
+ *                                            度为0在最后（剔除）
+ * 连边矩阵       cal_extrLKK   lkk_max           lkk最强pearson同配
+ *                              lkk_min           lkk最强pearson异配
  *                              lkk_maxN  countN  lkk最强pearson同配
  *                              lkk_minN  countN  lkk最强pearson异配
  *                              MinLkk            最小度关联网络
@@ -145,9 +148,10 @@ class Network {
 
   Network& read_nodeDeg(const char* name = NULL);
   Network& read_degArr(const char* name = NULL);
-  Network& read_lkk(const char* name = NULL);
   Network& read_link_0(const char* name = NULL);
   Network& read_link(const char* name = NULL);
+  Network& read_lkk(const char* name = NULL);
+  Network& read_lkk3(const char* name = NULL);
   Network& read_weight_link(const char* name = NULL);
   Network& read_link_weight(const char* name = NULL);
   Network& read_p2p(const char* name = NULL);

@@ -5,10 +5,10 @@
 #include <string>
 
 // *******************************************************
-#define MAIN_TEST
+//#define MAIN_TEST
 
 //#define MAIN_NET_BA
-//#define MAIN_NET_EXTREMUM
+#define MAIN_EXTREMUM
 
 //#define MAIN_STAT_LKK_K
 //#define MAIN_STAT_LKK_EXTREMUM
@@ -21,21 +21,6 @@
 //#define FITNESS_COMPLEXITY_MAIN_PLOTDATA
 
 // *******************************************************
-//namespace main_vars {
-////#define MAIN_FILTER 0
-//#define MAIN_FILTER 1E9
-//const int YEAR1 = 2001, YEAR2 = 2014; // YEAR_FILTER = 2008;
-//const std::string DIR0 = "data/complexity/OEC.sitc_rev2/",
-                  //DIR_DATA0 = DIR0 + "data0/", DIR_INFO = DIR0 + "info/",
-                  //DIR_DATA = DIR0 + "data/" + TOSTRING(MAIN_FILTER) + "/",
-                  //DIR_COMMON = DIR0 + "dataCommon/", ep_dir2 = ".export.txt",
-                  //mcp_dir2 = ".mcp.txt", rcm_dir2 = ".rcm.txt";
-//// const string methods[] = { "mass", "heat", "hybrid", "proximity" };
-//const std::string methods[] = { "proximity_wcp", "proximity_phi" };
-//const size_t NMETHOD = sizeof(methods) / sizeof(methods[0]);
-//}
-
-// *******************************************************
 #ifdef MAIN_TEST
 #include "test.h"
 #endif
@@ -44,8 +29,8 @@
 int main_net_ba(int argc, char** argv);
 #endif
 
-#ifdef MAIN_NET_EXTREMUM
-int main_net_extremum(int argc, char** argv);
+#ifdef MAIN_EXTREMUM
+#include "main_func/extremum/main.h"
 #endif
 
 #ifdef FITNESS_COMPLEXITY_MAIN_FILTER
@@ -68,5 +53,8 @@ int main_fitness_complexity_count(int argc, char** argv);
 int main_fitness_complexity_plotdata(int argc, char** argv);
 #endif
 
+// *******************************************************
+namespace main_func {
+}
 // *******************************************************
 #endif

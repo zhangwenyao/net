@@ -53,6 +53,8 @@ namespace spearman {
 
   int cal_spearman_lkk(double& spearman, const VVLinkType& lkk,
       const VDouble& deg2ArrVal, const LinkType linkSize);
+  int cal_spearman_lkk3(double& spearman, const VLkk3LinkType& lkk3,
+      const VDouble& deg2ArrVal, const LinkType linkSize);
   int cal_spearman(double& spearman, const VVNodeType& p2p,
       const VDouble& deg2ArrVal, MNodeType& degArrNo,
       const LinkType linkSize);

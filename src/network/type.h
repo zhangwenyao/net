@@ -184,7 +184,29 @@ int save_VRNodeType_end(
 
 bool cmp_RNodeType_start(const RNodeType& a, const RNodeType& b);
 bool cmp_RNodeType_end(const RNodeType& a, const RNodeType& b);
-}
+
+// lkk var,save
+enum Lkk_type {
+  lkk_type_null = 0,
+  lkk_lkk = 11,
+  lkk_lkk3 = 13,
+  lkk_lkk3reverse = 14,
+  lkk3_lkk = 31,
+  lkk3_lkk3 = 33,
+  lkk3_lkk3reverse = 34
+};
+
+const std::map<Lkk_type, std::string> kLkkTypeString
+    = { { lkk_type_null, "NULL" }, { lkk_lkk, "lkk_lkk" },
+        { lkk_lkk3, "lkk_lkk3" }, { lkk_lkk3reverse, "lkk_lkk3reverse" },
+        { lkk3_lkk, "lkk3_lkk" }, { lkk3_lkk3, "lkk3_lkk3" },
+        { lkk3_lkk3reverse, "lkk3_lkk3reverse" } };
+
+} // end namespace network
+
+// *******************************************************
+std::istream& operator>>(std::istream& is, network::Lkk_type& lkk_type);
+std::ostream& operator<<(std::ostream& os, const network::Lkk_type& lkk_type);
 
 // *******************************************************
 #endif

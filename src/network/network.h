@@ -57,8 +57,8 @@
  *                              proximity_phi     相似性-平均值
  * 传播           sis
  * 输出           print
- * 保存           save                        以种子值命名保存
- *                save0                       无种子值保存
+ * 保存           save_seed                       以种子值命名保存
+ *                save                            无种子值保存
  * 清理           clear
  * 结束           exit
  */ /**/
@@ -120,10 +120,10 @@ class Network {
   double degWeightMean, degWeightMeanOut, degWeightMeanIn;
 
   // lkk
+  Lkk_type lkk_type;
   VVLinkType lkk, lkkOutIn;       // 不同度之间连边数目矩阵
   VVLinkType lkkSum, lkkSumOutIn; // 同度点连向所有度的累计边数
   VVDouble lkkProb;               // [degSize]    连边的联合分布概率
-  int lkk_saveType;
   // lkk3
   VLkk3LinkType lkk3, lkk3reverse, lkk3OutIn; // 不同度之间连边数目矩阵
   VLkk3Double lkk3Prob; // [degSize]    连边的联合分布概率
@@ -141,17 +141,17 @@ class Network {
   Network& init_seed(const long s);
   Network& clear_deg(void);
   Network& save_deg(const char* name = NULL);
+  Network& clear_lkk(void);
+  Network& save_lkk(const char* name = NULL);
   Network& clear_p2p(void);
   Network& save_p2p(const char* name = NULL);
-  Network& clear_lkk(void);
   Network& clear(void);
 
   Network& read_nodeDeg(const char* name = NULL);
   Network& read_degArr(const char* name = NULL);
   Network& read_link_0(const char* name = NULL);
   Network& read_link(const char* name = NULL);
-  Network& read_lkk(const char* name = NULL);
-  Network& read_lkk3(const char* name = NULL);
+  Network& read_lkk(const char* name = NULL, Lkk_type lkk_t = lkk_type_null);
   Network& read_weight_link(const char* name = NULL);
   Network& read_link_weight(const char* name = NULL);
   Network& read_p2p(const char* name = NULL);

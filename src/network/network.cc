@@ -37,7 +37,7 @@ network::Network::Network(void)
     , degWeightMean(0)
     , degWeightMeanOut(0)
     , degWeightMeanIn(0)
-    , lkk_saveType(0)
+    , lkk_type(lkk_type_null)
 {
 }
 
@@ -73,7 +73,7 @@ network::Network& network::Network::read_params_1(string& s, istream& is)
     if (s == "--version") {
       string v;
       getline(is, v);
-      cout << s << '\t' << v << endl;
+      cout << s << ' ' << v << endl;
       break;
     }
     if (s == "--argv") {
@@ -81,14 +81,14 @@ network::Network& network::Network::read_params_1(string& s, istream& is)
       cout << s << '\t' << argv << endl;
       break;
     }
-    if (s == "--saveName") {
-      is >> saveName;
-      cout << s << '\t' << saveName << endl;
-      break;
-    }
     if (s == "--readName") {
       is >> readName;
       cout << s << '\t' << readName << endl;
+      break;
+    }
+    if (s == "--saveName") {
+      is >> saveName;
+      cout << s << '\t' << saveName << endl;
       break;
     }
     if (s == "--status") {
@@ -158,13 +158,10 @@ network::Network& network::Network::read_params_1(string& s, istream& is)
       cout << s << '\t' << st << endl;
       break;
     }
-    if (s == "--paramsInt2") {
-      vector<int>::size_type st = 0;
-      is >> st;
-      if (paramsInt.size() < st)
-        paramsInt.resize(st);
-      is >> paramsInt[st];
-      cout << s << '\t' << st << "\t" << paramsInt[st] << endl;
+    if (s == "--paramsInts") {
+      for (auto& iter : paramsInt)
+        is >> iter;
+      cout << s << '\t' << paramsInt << endl;
       break;
     }
     if (s == "--paramsDouble") {
@@ -179,18 +176,15 @@ network::Network& network::Network::read_params_1(string& s, istream& is)
       cout << s << '\t' << st << endl;
       break;
     }
-    if (s == "--paramsDouble2") {
-      vector<double>::size_type st = 0;
-      is >> st;
-      if (paramsDouble.size() < st)
-        paramsDouble.resize(st);
-      is >> paramsDouble[st];
-      cout << s << '\t' << st << "\t" << paramsDouble[st] << endl;
+    if (s == "--paramsDoubles") {
+      for (auto& iter : paramsDouble)
+        is >> iter;
+      cout << s << '\t' << paramsDouble << endl;
       break;
     }
-    if (s == "--lkk_saveType") {
-      is >> lkk_saveType;
-      cout << s << '\t' << lkk_saveType << endl;
+    if (s == "--lkk_type") {
+      is >> lkk_type;
+      cout << s << '\t' << lkk_type << endl;
       break;
     }
     flag = 0;
@@ -209,16 +203,16 @@ ostream& operator<<(std::ostream& os, network::Network& net)
     net.runStatus = -1;
     return os;
   }
-  os << "--version\t" << network::NET_VERSION << "\n--saveName\t"
-     << net.saveName << "\n--readName\t" << net.readName << "\n--argv\t"
+  os << "--version\t" << network::NET_VERSION << "\n--readName\t"
+     << net.readName << "\n--saveName\t" << net.saveName << "\n--argv\t"
      << net.argv << "\n--runStatus\t" << net.runStatus << "\n--status\t"
      << net.status << "\n--seed\t" << net.seed << "\n--dirFlag\t"
      << net.dirFlag << "\n--weightFlag\t" << net.weightFlag
      << "\n--nodeSize\t" << net.nodeSize << "\n--kMin\t" << net.kMin
      << "\n--kMax\t" << net.kMax << "\n--degSize\t" << net.degArrVal.size()
      << "\n--degMean\t" << net.degMean << "\n--linkSize\t" << net.linkSize;
-  if (net.lkk_saveType != 0)
-    os << "\n--lkk_saveType\t" << net.lkk_saveType;
+  if (net.lkk_type != network::lkk_type_null)
+    os << "\n--lkk_type\t" << net.lkk_type;
   if (net.weightFlag) {
     os << "\n--netWeight\t" << net.netWeight << "\n--degWeightMean\t"
        << net.degWeightMean;
@@ -271,11 +265,8 @@ network::Network& network::Network::save_params(const char* name)
   string fn;
   if (name != NULL && name[0] != '\0')
     fn = name;
-  else {
-    stringstream ss;
-    ss << seed;
-    fn = saveName + '_' + ss.str();
-  }
+  else
+    fn = saveName;
   ofstream os((fn + ".params.txt").c_str());
   if (!os) {
     runStatus = -1;
@@ -290,14 +281,10 @@ network::Network& network::Network::save_params(const char* name)
 network::Network& network::Network::save_data(const char* name)
 {
   string fn;
-  stringstream ss;
   if (name != NULL && name[0] != '\0')
     fn = name;
-  else {
-    ss.clear();
-    ss << seed;
-    fn = saveName + '_' + ss.str();
-  }
+  else
+    fn = saveName;
   if (0 != save_deg(fn.c_str()).runStatus)
     ERROR();
   if (0 != save_p2p(fn.c_str()).runStatus)
@@ -362,14 +349,10 @@ network::Network& network::Network::clear_deg(void)
 network::Network& network::Network::save_deg(const char* name)
 {
   string fn;
-  if (name != NULL && name[0] != '\0') {
+  if (name != NULL && name[0] != '\0')
     fn = name;
-  } else {
-    stringstream ss;
-    ss.clear();
-    ss << seed;
-    fn = saveName + '_' + ss.str();
-  }
+  else
+    fn = saveName;
 
   if (!nodeDeg.empty())
     if (0 != common::save1((fn + ".nodeDeg.txt").c_str(), nodeDeg, priChar)) {
@@ -521,12 +504,92 @@ network::Network& network::Network::save_deg(const char* name)
 }
 
 // *************************************************************
+network::Network& network::Network::clear_lkk(void)
+{
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  // lkk
+  for (VVLinkTypeItr i = lkk.begin(); i != lkk.end(); i++)
+    i->clear();
+  lkk.clear();
+  for (VVDoubleItr i = lkkProb.begin(); i != lkkProb.end(); i++)
+    i->clear();
+  lkkProb.clear();
+
+  lkk3.clear();
+  return *this;
+}
+
+// ******************************************************
+network::Network& network::Network::save_lkk(const char* name)
+{
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (lkk.empty() && lkk3.empty())
+    return *this;
+
+  string fn = name;
+  switch (lkk_type) {
+  case lkk_lkk:
+    if (!lkk.empty())
+      if (0 != common::save2((fn + ".lkk.txt").c_str(), lkk, priChar2)) {
+        ERROR();
+        runStatus = -1;
+      }
+    break;
+  case lkk_lkk3:
+    if (!lkk.empty())
+      if (0
+          != save_lkk_3((fn + ".lkk3.txt").c_str(), lkk, priChar2, priChar)) {
+        ERROR();
+        runStatus = -1;
+      }
+    break;
+  case lkk_lkk3reverse:
+    // TODO
+    ERROR();
+    break;
+  case lkk3_lkk:
+    // TODO
+    ERROR();
+    break;
+  case lkk3_lkk3:
+    if (!lkk3.empty())
+      if (0
+          != save_lkk3((fn + ".lkk3.txt").c_str(), lkk3, priChar2, priChar)) {
+        ERROR();
+        runStatus = -1;
+      }
+    break;
+  case lkk3_lkk3reverse:
+    if (!lkk3.empty())
+      if (0
+          != save_lkk3reverse((fn + ".lkk3reverse.txt").c_str(), lkk3,
+                 degArrVal.size() - 1, priChar2, priChar)) {
+        ERROR();
+        runStatus = -1;
+      }
+    break;
+  default:
+    ERROR();
+    runStatus = -1;
+    break;
+  }
+  return *this;
+}
+
+// *************************************************************
 network::Network& network::Network::clear_p2p(void)
 {
   if (0 != runStatus) {
     ERROR();
     return *this;
   }
+  clear_lkk();
   // link
   link.clear(); // [nodeSize]   ÍøÂçÁ¬±ß
   p2pSize.clear();
@@ -551,27 +614,13 @@ network::Network& network::Network::clear_p2p(void)
 network::Network& network::Network::save_p2p(const char* name)
 {
   string fn;
-  if (name != NULL && name[0] != '\0') {
+  if (name != NULL && name[0] != '\0')
     fn = name;
-  } else {
-    stringstream ss;
-    ss.clear();
-    ss << seed;
-    fn = saveName + '_' + ss.str();
-  }
+  else
+    fn = saveName;
 
-  if (!lkk.empty()) {
-    if (lkk_saveType == 3) {
-      if (0
-          != save_lkk_3((fn + ".lkk3.txt").c_str(), lkk, priChar2, priChar)) {
-        ERROR();
-        runStatus = -1;
-      }
-    } else if (0 != common::save2((fn + ".lkk.txt").c_str(), lkk, priChar2)) {
-      ERROR();
-      runStatus = -1;
-    }
-  }
+  if (!lkk.empty() || !lkk3.empty())
+    save_lkk(fn.c_str());
 
   if (!p2p.empty()
       && 0 != common::save2((fn + ".p2p.txt").c_str(), p2p, priChar2)) {
@@ -637,30 +686,12 @@ network::Network& network::Network::save_p2p(const char* name)
 }
 
 // ******************************************************
-network::Network& network::Network::clear_lkk(void)
-{
-  if (0 != runStatus) {
-    ERROR();
-    return *this;
-  }
-  // lkk
-  for (VVLinkTypeItr i = lkk.begin(); i != lkk.end(); i++)
-    i->clear();
-  lkk.clear();
-  for (VVDoubleItr i = lkkProb.begin(); i != lkkProb.end(); i++)
-    i->clear();
-  lkkProb.clear();
-  return *this;
-}
-
-// ******************************************************
 network::Network& network::Network::clear(void)
 {
   status = 0;
   runStatus = 0;
   clear_deg();
   clear_p2p();
-  clear_lkk();
   return *this;
 }
 
@@ -705,30 +736,30 @@ network::Network& network::Network::read_degArr(const char* name)
     return *this;
   }
 
-  string fn;
+  string fn, fn_full;
   if (name != NULL && name[0] != '\0')
     fn = name;
   else
     fn = readName;
 
   if (degArrVal.empty()) {
-    if (0 != common::read1_0((fn + ".degArrVal.txt").c_str(), degArrVal, 0)) {
+    fn_full = fn + ".degArrVal.txt";
+    if (0 != common::read1_0(fn_full.c_str(), degArrVal, 0)) {
       runStatus = -1;
       ERROR();
       return *this;
     }
-    cout << '\t' << fn << ".degArrVal.txt\tsize:\t" << degArrVal.size()
-         << '\n';
+    cout << '\t' << fn_full << "\tsize:\t" << degArrVal.size() << '\n';
   }
   if (degArrSize.empty()) {
-    if (0 != common::read1_0((fn + ".degArrSize.txt").c_str(), degArrSize, 0)
+    fn_full = fn + ".degArrSize.txt";
+    if (0 != common::read1_0(fn_full.c_str(), degArrSize, 0)
         || degArrSize.size() != degArrVal.size()) {
       runStatus = -1;
       ERROR();
       return *this;
     }
-    cout << '\t' << fn << ".degArrSize.txt\tsize:\t" << degArrVal.size()
-         << '\n';
+    cout << '\t' << fn_full << "\tsize:\t" << degArrVal.size() << '\n';
   }
   if (degArrSum.empty())
     degArrSize_2_degArrSum(degArrSum, degArrSize);
@@ -771,13 +802,13 @@ network::Network& network::Network::read_degArr(const char* name)
   return *this;
 }
 
-network::Network& network::Network::read_lkk(const char* name)
+network::Network& network::Network::read_lkk(const char* name, Lkk_type lkk_t)
 {
   if (0 != runStatus) {
     ERROR();
     return *this;
   }
-  if (!lkk.empty()) {
+  if (!lkk.empty() && !lkk3.empty()) {
     runStatus = -1;
     ERROR();
     return *this;
@@ -789,47 +820,59 @@ network::Network& network::Network::read_lkk(const char* name)
   else
     fn = readName;
 
-  if (0 != read_degArr(name).runStatus) {
-    runStatus = -1;
-    ERROR();
-    return *this;
-  }
-  if (0 != common::read2_0((fn + ".lkk.txt").c_str(), lkk)) {
-    runStatus = -1;
-    ERROR();
-    return *this;
+  if (lkk_t == lkk_type_null)
+    lkk_t = lkk_type;
+
+  if (degArrVal.empty() || degArrSize.empty()) {
+    INFORM();
+    if (0 != read_degArr(fn.c_str()).runStatus) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
   }
 
-  return *this;
-}
-
-network::Network& network::Network::read_lkk3(const char* name)
-{
-  if (0 != runStatus) {
-    ERROR();
-    return *this;
-  }
-  if (!lkk3.empty()) {
+  switch (lkk_t) {
+  case lkk_lkk:
+    if (0 != common::read2_0((fn + ".lkk.txt").c_str(), lkk)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+    break;
+  case lkk_lkk3:
+    // TODO
+    INFORM();
+    break;
+  case lkk_lkk3reverse:
+    // TODO
+    INFORM();
+    break;
+  case lkk3_lkk:
+    // TODO
+    INFORM();
+    break;
+  case lkk3_lkk3:
+    if (0 != common::read1_0((fn + ".lkk3.txt").c_str(), lkk3)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+    break;
+  case lkk3_lkk3reverse:
+    if (0
+        != read_lkk3reverse((fn + ".lkk3reverse.txt").c_str(),
+               degArrVal.size() - 1, lkk3)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+    break;
+  default:
     runStatus = -1;
     ERROR();
     return *this;
-  }
-
-  string fn;
-  if (name != NULL && name[0] != '\0')
-    fn = name;
-  else
-    fn = readName;
-
-  if (0 != read_degArr(name).runStatus) {
-    runStatus = -1;
-    ERROR();
-    return *this;
-  }
-  if (0 != common::read2_0((fn + ".lkk3.txt").c_str(), lkk)) {
-    runStatus = -1;
-    ERROR();
-    return *this;
+    break;
   }
 
   return *this;

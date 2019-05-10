@@ -136,11 +136,8 @@ network::Networks& network::Networks::save_params(const char* name)
   string fn;
   if (name != NULL && name[0] != '\0')
     fn = name;
-  else {
-    stringstream ss;
-    ss << seed;
-    fn = saveName + '_' + ss.str();
-  }
+  else
+    fn = saveName;
   ofstream os((fn + ".params.txt").c_str());
   if (!os) {
     ERROR();
@@ -154,11 +151,10 @@ network::Networks& network::Networks::save_params(const char* name)
 network::Networks& network::Networks::save_data(const char* name)
 {
   string fn;
-  stringstream ss;
   if (name != NULL && name[0] != '\0')
     fn = name;
   else
-    fn = saveName + '_' + to_string(seed);
+    fn = saveName;
 
   Network::save_data(fn.c_str());
   if (0 != runStatus)
@@ -590,8 +586,8 @@ network::Networks& network::Networks::run(const string argv2)
       }
       continue;
     }
-    if (s == "--save0") {
-      if (0 != save(saveName.c_str()).runStatus) {
+    if (s == "--save_seed") {
+      if (0 != save((saveName + "_" + to_string(seed)).c_str()).runStatus) {
         ERROR();
         runStatus = -1;
         return *this;
@@ -857,13 +853,6 @@ network::Networks& network::Networks::cal_p2p(const string& s)
         if (0 != read_lkk().runStatus)
           ERROR();
         return *this;
-      }
-      if (s == "read_lkk3") {
-        if (0 != read_lkk3().runStatus) {
-          ERROR();
-          runStatus = -1;
-          return *this;
-        }
       }
 
       if (s == "read_weightMatr") {

@@ -129,8 +129,7 @@ int network::degree::Degree::read_params_1(string& s, istream& is)
 // Poisson度分布参数
 //      poisson_p    连接概率p
 //      nodeSize    网络节点数目
-Networks& Networks::degree_poisson(
-    void) // 生成度序列 各点均按概率取任意度
+Networks& Networks::degree_poisson(void) // 生成度序列 各点均按概率取任意度
 {
   if (0 != runStatus) {
     ERROR();
@@ -140,8 +139,7 @@ Networks& Networks::degree_poisson(
   network::degree::poisson_cal_degArrProb(
       degree.poisson_p, degArrVal, degArrProb, kMin, kMax, nodeSize);
   nodeDeg.resize(nodeSize);
-  new_randKArr(&nodeDeg[0], (size_t)nodeSize, &degArrProb[0],
-      &degArrVal[0],
+  new_randKArr(&nodeDeg[0], (size_t)nodeSize, &degArrProb[0], &degArrVal[0],
       degArrVal.size()); // 调用通用随机函数
   // 修正度序列使总数为偶数
   if (nodeDeg_2_linkSize(linkSize, nodeDeg) != 0) {
@@ -187,8 +185,8 @@ Networks& Networks::degree_power(void)
   network::degree::power_cal_degArrProb(
       degree.power_gamma, degArrVal, degArrProb, kMin, kMax);
   nodeDeg.resize(nodeSize);
-  new_randKArr(&nodeDeg[0], (size_t)nodeSize, &degArrProb[0],
-      &degArrVal[0], degArrVal.size()); // 调用通用随机函数
+  new_randKArr(&nodeDeg[0], (size_t)nodeSize, &degArrProb[0], &degArrVal[0],
+      degArrVal.size()); // 调用通用随机函数
   // 修正度序列使总数为偶数
   if (nodeDeg_2_linkSize(linkSize, nodeDeg) != 0) {
     fix_nodeDeg(nodeDeg, degArrProb, degArrVal, linkSize);
@@ -214,7 +212,7 @@ Networks& Networks::degree_power_arr(void)
     return *this;
   }
 
-  if (kMax <= 0 || kMax >= nodeSize) {
+  if (kMax <= 0) {
     if (0
         != network::degree::power_nature_cutoff(
                kMax, nodeSize, kMin, degree.power_gamma)) { // 最大度
@@ -222,58 +220,50 @@ Networks& Networks::degree_power_arr(void)
       runStatus = -1;
       return *this;
     }
+  } else if (kMax >= nodeSize)
+    kMax = nodeSize - 1;
+
+  if (!degProbSumVal.empty()) {
+    // 生成度分布
+    const auto& gamma = degree.power_gamma;
+    std::function<double(const NodeType)> prob_func
+        = [gamma](const NodeType n) {
+            return network::degree::power_prob(n, gamma);
+          };
+    network::degree::power_cal_deg_arr_prob_sum_arr(nodeSize, kMin, kMax,
+        prob_func, degProbSumVal, degProbSumArr, degArrVal, degArrSize);
+
+    // 修正度序列使总数为偶数
+    if (degArr_2_linkSize(linkSize, degArrVal, degArrSize, dirFlag) != 0) {
+      network::degree::fix_degArr_linkSize_lkk3_fast(
+          degArrVal, degArrSize, linkSize);
+      linkSize /= 2;
+    }
   } else {
-    if (kMax >= nodeSize)
-      kMax = nodeSize - 1;
+    // 生成度分布概率
+    degree::power_cal_degArrProb(
+        degree.power_gamma, degArrVal, degArrProb, kMin, kMax);
+
+    //生成度分布
+    degree::power_cal_deg_arr(degArrSize, degArrVal, degArrProb, nodeSize);
+    fix_degArr_kExtremum(degArrSize, degArrVal, degArrProb); // 去除0
+
+    // 修正度序列使总数为偶数
+    if (::degArr_2_linkSize(linkSize, degArrVal, degArrSize, dirFlag) != 0) {
+      //::fix_degArr_linkSize(degArrSize, degArrVal, degArrProb, linkSize);
+      //::common_sum_vector(degArrProb, degArrProbSum);
+      //::fix_degArr_linkSize2(degArrSize, degArrVal, degArrProbSum,
+      // linkSize);
+      fix_degArr_linkSize3(degArrSize, degArrVal, degArrProb, linkSize);
+      linkSize /= 2;
+    }
   }
-
-  // INFORM(kMax);
-
-  //// 生成度分布概率
-  //::power_cal_degArrProb(
-  // degree.power_gamma, degArrVal, degArrProb, kMin, kMax);
-  // INFORM();
-
-  // 生成度分布
-  //::power_cal_deg_arr(degArrSize, degArrVal, degArrProb, nodeSize);
-  // INFORM();
-  //::fix_degArr_kExtremum(degArrSize, degArrVal, degArrProb); // 去除0
-  // INFORM();
-
-  //// 修正度序列使总数为偶数
-  // if (::degArr_2_linkSize(linkSize, degArrVal, degArrSize, dirFlag) != 0) {
-  // INFORM();
-  ////::fix_degArr_linkSize(degArrSize, degArrVal, degArrProb, linkSize);
-  ////::common_sum_vector(degArrProb, degArrProbSum);
-  ////::fix_degArr_linkSize2(degArrSize, degArrVal, degArrProbSum, linkSize);
-  //::fix_degArr_linkSize3(degArrSize, degArrVal, degArrProb, linkSize);
-  // linkSize /= 2;
-  //}
-  // INFORM();
-
-  // 生成度分布
-  const auto& r = degree.power_gamma;
-  std::function<double(const NodeType)> prob_func
-      = [r](const NodeType n) { return network::degree::power_prob(n, r); };
-  network::degree::power_cal_deg_arr_prob_sum_arr(nodeSize, kMin, kMax,
-      prob_func, degProbSumVal, degProbSumArr, degArrVal, degArrSize);
-  // INFORM(degArrVal.size(), "\t", degArrSize.size());
-
-  // 修正度序列使总数为偶数
-  if (degArr_2_linkSize(linkSize, degArrVal, degArrSize, dirFlag) != 0) {
-    // INFORM(linkSize);
-    network::degree::fix_degArr_linkSize_lkk3_fast(
-        degArrVal, degArrSize, linkSize);
-    linkSize /= 2;
-  }
-  // INFORM(linkSize);
 
   if (!degArrVal.empty() && 0 != fix_degArrSize_0(degArrSize, degArrVal)) {
     ERROR();
     runStatus = -1;
     return *this;
   }
-  // INFORM(degArrVal.size(), "\t", degArrSize.size());
 
   degMean = nodeSize > 0 ? (double)linkSize / nodeSize : 0;
   if (!dirFlag)

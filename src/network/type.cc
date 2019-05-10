@@ -63,3 +63,26 @@ int network::save_VRNodeType_end(
 }
 
 // ******************************************************
+std::istream& operator>>(std::istream& is, network::Lkk_type& lkk_type)
+{
+  string s;
+  if (is >> s) {
+    for (auto& i : network::kLkkTypeString) {
+      if (s == i.second) {
+        lkk_type = i.first;
+        break;
+      }
+    }
+  }
+  return is;
+}
+
+std::ostream& operator<<(std::ostream& os, const network::Lkk_type& lkk_type)
+{
+  auto iter = network::kLkkTypeString.find(lkk_type);
+  if (iter != network::kLkkTypeString.end())
+    os << iter->second;
+  else
+    ERROR();
+  return os;
+}

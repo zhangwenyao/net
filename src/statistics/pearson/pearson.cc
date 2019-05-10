@@ -213,7 +213,7 @@ int network::pearson::cal_pearson_lkk3(double& pearson,
     sxy += 2 * l * ki * kj;
   }
   const LinkType n = linkSize * 2;
-  if (n * sxx - sx * sx == 0)
+  if (n * sxx == sx * sx)
     pearson = 0;
   else
     pearson = (n * sxy - sx * sx) / (n * sxx - sx * sx);

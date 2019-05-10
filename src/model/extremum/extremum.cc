@@ -629,6 +629,7 @@ int network::extremum::cal_Min_lkk3_mid2side(VLkk3LinkType& lkk3,
     }
     _ERR(vlink[i] > 0);
   }
+  INFORM();
 
   return 0;
 }
@@ -701,7 +702,7 @@ int network::extremum::cal_Max_lkk3(const VNodeType& degArrVal,
 {
   const NodeType degSize = degArrVal.size();
   lkk3.clear();
-  lkk3.reserve(600000000);
+  // lkk3.reserve(600000000);
   VLinkType vlink(degSize);
   for (NodeType i = 0; i < degSize; i++)
     vlink[i] = (LinkType)degArrSize[i] * degArrVal[i];
@@ -746,29 +747,6 @@ int network::extremum::cal_Max_lkk3(const VNodeType& degArrVal,
     _ERR(vlink[i] > 0);
   }
 
-  return 0;
-}
-
-int network::extremum::save_lkk3reverse(
-    const NodeType size, const VLkk3LinkType& lkk3, const char* filename)
-{
-  ofstream os(filename);
-  _ERR(!os);
-  for (auto i : lkk3)
-    os << size - i.x << '\t' << size - i.y << '\t' << i.val << '\n';
-  os.close();
-  return 0;
-}
-
-int network::extremum::read_lkk3reverse(
-    const NodeType size, const char* filename, VLkk3LinkType& lkk3)
-{
-  ifstream is(filename);
-  _ERR(!is);
-  LinkType val;
-  for (NodeType x, y; is >> x >> y >> val;)
-    lkk3.push_back({ size - x, size - y, val });
-  is.close();
   return 0;
 }
 

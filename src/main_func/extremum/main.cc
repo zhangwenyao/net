@@ -8,12 +8,24 @@ using namespace common;
 // **********************************************************
 int main_func::main_extremum(int argc, char** argv)
 {
-#ifdef MAIN_EXTREMUM_NEW
-  _ERR(extremum_new(argc, argv));
+#ifdef MAIN_EXTREMUM_NEW_DEG_ARR
+  _ERR(extremum::new_deg_arr(argc, argv));
 #endif
 
-#ifdef MAIN_EXTREMUM_STAT
-  _ERR(extremum_stat(argc, argv));
+#ifdef MAIN_EXTREMUM_NEW_MINIMAL
+  _ERR(extremum::new_minimal(argc, argv));
+#endif
+
+#ifdef MAIN_EXTREMUM_NEW_MAXIMAL
+  _ERR(extremum::new_maximal(argc, argv));
+#endif
+
+#ifdef MAIN_EXTREMUM_STAT_MINIMAL
+  _ERR(extremum::stat_minimal(argc, argv));
+#endif
+
+#ifdef MAIN_EXTREMUM_STAT_MAXIMAL
+  _ERR(extremum::stat_maximal(argc, argv));
 #endif
 
   return 0;

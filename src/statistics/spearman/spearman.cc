@@ -439,7 +439,7 @@ int network::spearman::cal_spearman_lkk3(double& spearman,
     sxy += 2 * l * xi * xj;
   }
   const LinkType n = linkSize * 2;
-  if (n * sxx - sx * sx == 0)
+  if (n * sxx == sx * sx)
     spearman = 0;
   else
     spearman = (n * sxy - sx * sx) / (n * sxx - sx * sx);

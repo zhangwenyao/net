@@ -37,10 +37,6 @@ namespace extremum {
       const VNodeType& degArrSize, const int fix = 1);
   int Max_new_lkk3(const VNodeType& degArrVal, const VNodeType& degArrSize,
       VLkk3LinkType& lkk3);
-  int save_lkk3reverse(
-      const NodeType size, const VLkk3LinkType& lkk3, const char* filename);
-  int read_lkk3reverse(
-      const NodeType size, const char* filename, VLkk3LinkType& lkk3);
 
   int Min_new(VVNodeType& p2p, const VNodeType& nodeDeg,
       const VNodeType& degArrVal, const VNodeType& degArrSize,

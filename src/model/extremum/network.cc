@@ -25,7 +25,7 @@ Networks& Networks::net_Max_new_lkk(const int fix)
     runStatus = -1;
     status = -1;
   } else
-    status = 1;
+    status = 2;
   return *this;
 }
 
@@ -40,7 +40,7 @@ Networks& Networks::net_Max_new_lkk3()
     runStatus = -1;
     status = -1;
   } else
-    status = 1;
+    status = 2;
   return *this;
 }
 
@@ -56,8 +56,8 @@ Networks& Networks::net_Max(void)
     ERROR();
     runStatus = -1;
     status = -1;
-  } else
-    status = 1;
+  }
+  status = 1;
   return *this;
 }
 
@@ -107,7 +107,7 @@ Networks& Networks::net_Min_new_lkk(const int fix)
     runStatus = -1;
     status = -1;
   } else
-    status = 1;
+    status = 2;
   return *this;
 }
 
@@ -122,7 +122,7 @@ Networks& Networks::net_Min_new_lkk3(void)
     runStatus = -1;
     status = -1;
   } else
-    status = 1;
+    status = 2;
   return *this;
 }
 
@@ -137,7 +137,9 @@ Networks& Networks::net_extremum_lkk(const int extrMax, const unsigned countN)
              lkk, degArrVal, degArrSize, extrMax, countN)) {
     ERROR();
     runStatus = -1;
-  }
+    status = -1;
+  } else
+    status = 2;
   return *this;
 }
 

@@ -3,25 +3,29 @@
 #include "../../main.h"
 #ifdef MAIN_EXTREMUM
 
-#define MAIN_EXTREMUM_NEW_DEG_ARR
+//#define MAIN_EXTREMUM_NEW_DEG_ARR
 #define MAIN_EXTREMUM_NEW_MINIMAL
-#define MAIN_EXTREMUM_NEW_MAXIMAL
-#define MAIN_EXTREMUM_STAT_MINIMAL
-#define MAIN_EXTREMUM_STAT_MAXIMAL
+//#define MAIN_EXTREMUM_NEW_MAXIMAL
+//#define MAIN_EXTREMUM_STAT_MINIMAL
+//#define MAIN_EXTREMUM_STAT_MAXIMAL
+//#define MAIN_EXTREMUM_STAT_ALL
 
 #include <string>
 // ******************************************************
 namespace main_func {
 int main_extremum(int argc, char** argv);
 namespace extremum {
-  const double kGamma = 2.7;
-  const std::string kDataDir = "data/extremum/nature/2.7/data/";
-  const std::string kStatDir = "data/extremum/nature/2.7/stat/";
+  // const double kGamma = 2.7;
+  // const std::string kDataDir = "data/extremum/nature/2.7/data/";
+  // const std::string kStatDir = "data/extremum/nature/2.7/stat/";
 
-  // const double kGamma = 2.5;
-  // const std::string kDataDir
-  //= "/media/yao/Server1T/net/data/extremum/nature/2.5_4/";
-  // const std::string kStatDir = "data/extremum/nature/2.5/stat/";
+  const double kGamma = 2.5;
+  const std::string kDataDir
+      = "/media/yao/Server1T/net/data/extremum/nature/2.5_4/";
+  const std::string kStatDir
+      = "/media/yao/Server1T/net/data/extremum/nature/2.5_4/stat/";
+
+  const int kEMin = 35, kEMax = 60, kSeedMin = 1, kSeedMax = 100;
 }
 }
 
@@ -44,6 +48,10 @@ namespace extremum {
 
 #ifdef MAIN_EXTREMUM_STAT_MAXIMAL
 #include "stat_maximal.h"
+#endif
+
+#ifdef MAIN_EXTREMUM_STAT_ALL
+#include "stat_all.h"
 #endif
 
 // ******************************************************

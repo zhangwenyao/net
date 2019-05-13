@@ -13,13 +13,13 @@ using namespace network::extremum;
 int main_func::extremum::stat_maximal(int argc, char** argv)
 {
   MKDIR(kStatDir.c_str());
-  for (int e = 12; e <= 12; ++e) {
+  for (int e = kEMin; e <= kEMax; ++e) {
     cout << "e\t" << e << endl;
     string data_dir = kDataDir + "2^" + to_string(e) + "/",
            stat_dir = kStatDir + "2^" + to_string(e) + "/";
     MKDIR(stat_dir.c_str());
 
-    for (int seed = 1; seed <= 1; ++seed) {
+    for (int seed = kSeedMin; seed <= kSeedMax; ++seed) {
       cout << "e\t" << e << "\tseed\t" << seed << endl;
       Networks net;
       string fn_full = data_dir + "kMin4_" + to_string(seed) + ".Max";

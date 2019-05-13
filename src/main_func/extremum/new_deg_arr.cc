@@ -12,11 +12,11 @@ using namespace network::extremum;
 //**//**************************************************//**//*
 int main_func::extremum::new_deg_arr(int argc, char** argv)
 {
-  for (int e = 12; e <= 12; ++e) {
+  for (int e = kEMin; e <= kEMax; ++e) {
     cout << "e\t" << e << endl;
     string data_dir = kDataDir + "2^" + to_string(e) + "/", fn_full;
 
-    for (int seed = 1; seed <= 1; ++seed) {
+    for (int seed = kSeedMin; seed <= kSeedMax; ++seed) {
       SHOW_TIME(cout); // 显示系统时间
       cout << "e\t" << e << "\nseed\t" << seed << endl;
       Networks net;
@@ -26,10 +26,10 @@ int main_func::extremum::new_deg_arr(int argc, char** argv)
       net.kMin = 4;                    // 最小度
       net.readName = data_dir + "kMin" + to_string(net.kMin);
       net.saveName = net.readName;
-      net.argv = "--init_seed0"
-                 " --cal_deg power_arr"
-                 " --save_seed"
-                 " --print";
+      net.argv = "--init_seed0 "
+                 "--cal_deg power_arr "
+                 "--save_seed "
+                 "--print";
 
       fn_full = net.readName + ".probSum.txt";
       _ERR(degree::read_prob_sum(

@@ -28,6 +28,10 @@ int main_func::main_extremum(int argc, char** argv)
   _ERR(extremum::stat_maximal(argc, argv));
 #endif
 
+#ifdef MAIN_EXTREMUM_STAT_ALL
+  _ERR(extremum::stat_all(argc, argv));
+#endif
+
   return 0;
 }
 

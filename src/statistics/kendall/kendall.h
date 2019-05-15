@@ -6,11 +6,11 @@
 namespace network {
 namespace kendall {
   // ******************************************************
-  int cal_kendallTau_lkk(double& tau, const VVLinkType& lkk,
+  int cal_kendall_lkk(double& tau, const VVLinkType& lkk,
       const LinkType linkSize, const int dir);
-  int cal_kendallTau_lkkSum(double& tau, const VVLinkType& lkk,
+  int cal_kendall_lkkSum(double& tau, const VVLinkType& lkk,
       const VVLinkType& lkkSum, const int dir);
-  int cal_kendallTau_p2p(double tau, const VVNodeType& p2p,
+  int cal_kendall_p2p(double tau, const VVNodeType& p2p,
       const VNodeType& nodeDegOut, const VNodeType& nodeDegIn,
       const LinkType linkSize, const int dir);
 }

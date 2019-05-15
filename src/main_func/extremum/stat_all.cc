@@ -23,9 +23,9 @@ int main_func::extremum::stat_all(int argc, char** argv)
     if (!os) {
       ERROR();
     } else {
-      double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
-      unsigned n = 0;
       for (int e = kEMin; e <= kEMax; ++e) {
+        double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
+        unsigned n = 0;
         cout << "\te\t" << e << endl;
         string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
                sufname = ".Min.params.txt",
@@ -50,9 +50,9 @@ int main_func::extremum::stat_all(int argc, char** argv)
     if (!os) {
       ERROR();
     } else {
-      double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
-      unsigned n = 0;
       for (int e = kEMin; e <= kEMax; ++e) {
+        double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
+        unsigned n = 0;
         cout << "\te\t" << e << endl;
         string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
                sufname = ".Max.params.txt",
@@ -80,9 +80,9 @@ int main_func::extremum::stat_all(int argc, char** argv)
     if (!os) {
       ERROR();
     } else {
-      double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
-      unsigned n = 0;
       for (int e = kEMin; e <= kEMax; ++e) {
+        double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
+        unsigned n = 0;
         cout << "\te\t" << e << endl;
         string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
                sufname = ".Min.params.txt",
@@ -107,13 +107,72 @@ int main_func::extremum::stat_all(int argc, char** argv)
     if (!os) {
       ERROR();
     } else {
-      double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
-      unsigned n = 0;
       for (int e = kEMin; e <= kEMax; ++e) {
+        double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
+        unsigned n = 0;
         cout << "\te\t" << e << endl;
         string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
                sufname = ".Max.params.txt",
                coefficient_string = "--spearman.spearman";
+        statistics::sum(prename.c_str(), sufname.c_str(), 1, 100,
+            coefficient_string.c_str(), sx, sxx, n);
+        if (n > 0) {
+          x_mean = sx / n;
+          x_sigma = sqrt(sxx / n - x_mean * x_mean);
+          os << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma << endl;
+        }
+      }
+      os.close();
+    }
+  }
+#endif
+#endif
+
+#ifdef STAT_RELATIVITY
+#ifdef MAIN_EXTREMUM_STAT_MINIMAL
+  {
+    cout << "statistics relativity minimal" << endl;
+    string save_fullname
+        = save_prename + ".relativity" + alpha_string + ".minimal.txt";
+    ofstream os(save_fullname.c_str());
+    if (!os) {
+      ERROR();
+    } else {
+      for (int e = kEMin; e <= kEMax; ++e) {
+        double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
+        unsigned n = 0;
+        cout << "\te\t" << e << endl;
+        string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
+               sufname = ".Min.params.txt",
+               coefficient_string = "--relativity.relativity";
+        statistics::sum(prename.c_str(), sufname.c_str(), 1, 100,
+            coefficient_string.c_str(), sx, sxx, n);
+        if (n > 0) {
+          x_mean = sx / n;
+          x_sigma = sqrt(sxx / n - x_mean * x_mean);
+          os << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma << endl;
+        }
+      }
+      os.close();
+    }
+  }
+#endif
+#ifdef MAIN_EXTREMUM_STAT_MAXIMAL
+  {
+    cout << "statistics relativity maximal" << endl;
+    string save_fullname
+        = save_prename + ".relativity" + alpha_string + ".maximal.txt";
+    ofstream os(save_fullname.c_str());
+    if (!os) {
+      ERROR();
+    } else {
+      for (int e = kEMin; e <= kEMax; ++e) {
+        double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
+        unsigned n = 0;
+        cout << "\te\t" << e << endl;
+        string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
+               sufname = ".Max.params.txt",
+               coefficient_string = "--relativity.relativity";
         statistics::sum(prename.c_str(), sufname.c_str(), 1, 100,
             coefficient_string.c_str(), sx, sxx, n);
         if (n > 0) {

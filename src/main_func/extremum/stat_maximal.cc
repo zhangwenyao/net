@@ -20,14 +20,20 @@ int main_func::extremum::stat_maximal(int argc, char** argv)
     MKDIR(stat_dir.c_str());
 
     for (int seed = kSeedMin; seed <= kSeedMax; ++seed) {
+      SHOW_TIME(cout); // 显示系统时间
       cout << "e\t" << e << "\tseed\t" << seed << endl;
       Networks net;
-      string fn_full = data_dir + "kMin4_" + to_string(seed) + ".Max";
+      string fn_full0 = data_dir + "kMin4_" + to_string(seed),
+             fn_full = fn_full0 + ".Max";
       net.readName = fn_full;
       _ERR(0 != net.read_params().runStatus);
+      net.readName = fn_full;
       _ERR(argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus);
-      _ERR(0 != net.read_degArr().runStatus);
-      _ERR(0 != net.read_lkk(net.saveName.c_str()).runStatus);
+      _ERR(0 != net.read_degArr(fn_full0.c_str()).runStatus);
+      _ERR(0 != net.read_lkk().runStatus);
+#ifdef STAT_RELATIVITY
+      net.relativity.alpha = relativity_alpha;
+#endif
       _ERR(0 != net.stat().runStatus);
       net.saveName = stat_dir + "kMin4_" + to_string(seed) + ".Max";
       net.save_params();

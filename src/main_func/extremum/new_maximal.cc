@@ -13,12 +13,11 @@ using namespace network::extremum;
 int main_func::extremum::new_maximal(int argc, char** argv)
 {
   for (int e = kEMin; e <= kEMax; ++e) {
-    cout << "e\t" << e << endl;
     string data_dir = kDataDir + "2^" + to_string(e) + "/", fn_full;
 
     for (int seed = kSeedMin; seed <= kSeedMax; ++seed) {
       SHOW_TIME(cout); // 显示系统时间
-      cout << "e\t" << e << "\tseed\t" << seed << endl;
+      cout << "e\t" << e << "\nseed\t" << seed << endl;
       Networks net;
       fn_full = data_dir + "kMin4_" + to_string(seed);
       net.readName = fn_full;

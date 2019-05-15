@@ -7,7 +7,7 @@ using namespace common;
 using namespace network;
 
 // ******************************************************
-int network::kendall::cal_kendallTau_lkk(double& tau, const VVLinkType& lkk,
+int network::kendall::cal_kendall_lkk(double& tau, const VVLinkType& lkk,
                        const LinkType linkSize, const int dir) {
   const NodeType degSize = lkk.size();
   if (degSize == 0 || lkk[0].empty() || linkSize <= 1) {
@@ -61,7 +61,7 @@ int network::kendall::cal_kendallTau_lkk(double& tau, const VVLinkType& lkk,
   return 0;
 }
 
-int network::kendall::cal_kendallTau_lkkSum(double& tau, const VVLinkType& lkk,
+int network::kendall::cal_kendall_lkkSum(double& tau, const VVLinkType& lkk,
                           const VVLinkType& lkkSum, const int dir) {
   const NodeType degSize = lkkSum.size(), degEnd = degSize - 1;
   const LinkType linkSize = lkkSum.back().back();
@@ -134,7 +134,7 @@ int network::kendall::cal_kendallTau_lkkSum(double& tau, const VVLinkType& lkk,
   return 0;
 }
 
-int network::kendall::cal_kendallTau_p2p(double tau, const VVNodeType& p2p,
+int network::kendall::cal_kendall_p2p(double tau, const VVNodeType& p2p,
                        const VNodeType& nodeDegOut, const VNodeType& nodeDegIn,
                        const LinkType linkSize, const int dir) {
   if (p2p.empty() || nodeDegOut.empty()) {

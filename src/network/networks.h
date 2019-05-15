@@ -35,6 +35,10 @@
 #include "../statistics/kendall/network.h"
 #endif
 
+#ifdef STAT_RELATIVITY
+#include "../statistics/relativity/network.h"
+#endif
+
 #ifdef STAT_BETWEENNESS
 #include "../statistics/betweenness/network.h"
 #endif
@@ -158,6 +162,11 @@ class Networks : public Network {
 #ifdef STAT_KENDALL
   network::kendall::Kendall kendall;
   Networks& stat_kendall(void);
+#endif
+
+#ifdef STAT_RELATIVITY
+  network::relativity::Relativity relativity;
+  Networks& stat_relativity(void);
 #endif
 
 #ifdef STAT_BETWEENNESS

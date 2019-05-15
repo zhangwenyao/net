@@ -15,8 +15,8 @@ int main_func::extremum::new_minimal(int argc, char** argv)
   for (int e = kEMin; e <= kEMax; ++e) {
     string data_dir = kDataDir + "2^" + to_string(e) + "/", fn_full;
 
-    SHOW_TIME(cout); // 显示系统时间
     for (int seed = kSeedMin; seed <= kSeedMax; ++seed) {
+      SHOW_TIME(cout); // 显示系统时间
       cout << "e\t" << e << "\nseed\t" << seed << endl;
       Networks net;
       fn_full = data_dir + "kMin4_" + to_string(seed);

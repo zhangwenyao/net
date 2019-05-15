@@ -20,12 +20,14 @@ int main_func::main_extremum(int argc, char** argv)
   _ERR(extremum::new_maximal(argc, argv));
 #endif
 
+#ifndef MAIN_EXTREMUM_STAT_ALL_COLLECT
 #ifdef MAIN_EXTREMUM_STAT_MINIMAL
   _ERR(extremum::stat_minimal(argc, argv));
 #endif
 
 #ifdef MAIN_EXTREMUM_STAT_MAXIMAL
   _ERR(extremum::stat_maximal(argc, argv));
+#endif
 #endif
 
 #ifdef MAIN_EXTREMUM_STAT_ALL

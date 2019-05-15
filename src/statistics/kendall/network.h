@@ -10,7 +10,7 @@ namespace kendall {
   // ******************************************************
   class Kendall {
 public:
-    double tau, OutIn;
+    double kendall, OutIn;
 
     Kendall(void);
     //friend std::ostream& operator<<(std::ostream& os, const Kendall& kendall);

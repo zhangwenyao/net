@@ -9,7 +9,7 @@ using namespace network;
 
 // ******************************************************
 network::kendall::Kendall::Kendall(void)
-    : tau(0)
+    : kendall(0)
     , OutIn(0)
 {
 }
@@ -20,7 +20,7 @@ ostream& operator<<(ostream& os, const network::kendall::Kendall& kendall)
     ERROR();
     return os;
   }
-  os << "--kendall.tau\t" << kendall.tau << '\n';
+  os << "--kendall.kendall\t" << kendall.kendall << '\n';
   return os;
 }
 
@@ -87,9 +87,9 @@ int network::kendall::Kendall::read_params_1(string& s, istream& is)
   }
   int flag = 1;
   do {
-    if (s == "--kendall.tau") {
-      is >> tau;
-      cout << s << '\t' << tau << endl;
+    if (s == "--kendall.kendall") {
+      is >> kendall;
+      cout << s << '\t' << kendall << endl;
       break;
     }
     flag = 0;
@@ -101,7 +101,7 @@ int network::kendall::Kendall::read_params_1(string& s, istream& is)
 
 network::kendall::Kendall& network::kendall::Kendall::clear(void)
 {
-  tau = 0;
+  kendall = 0;
   return *this;
 }
 
@@ -123,81 +123,38 @@ Networks& Networks::stat_kendall(void)
   // TODO
   // if (weightFlag)
   // runStatus = network::kendall::cal_kendall_directed_weight(
-  // kendall.tau, weightMatr, linkMatr);
+  // kendall.kendall, weightMatr, linkMatr);
   // else
   // runStatus = network::kendall::cal_kendall_directed_unweight(
-  // kendall.tau, linkMatr);
+  // kendall.kendall, linkMatr);
   if (0 != runStatus)
     ERROR();
   return *this;
 }
 
 // ******************************************************
-int net_clear_kendallTau(Networks& net) { return 0; }
-
-// ******************************************************
-int net_cal_kendallTau(Networks& net)
+int net_cal_kendall(Networks& net)
 {
   if (net.lkkSum.empty()
       && 0 != lkk_2_lkkSum(net.lkkSum, net.lkk, net.dirFlag)) {
     ERROR();
     return -1;
   }
-  network::kendall::cal_kendallTau_lkkSum(
-      net.kendall.tau, net.lkk, net.lkkSum, net.dirFlag);
-  // network::kendall::cal_kendallTau_lkk(params_kendall.tau, lkk, linkSize,
-  // dirFlag);
+  network::kendall::cal_kendall_lkkSum(
+      net.kendall.kendall, net.lkk, net.lkkSum, net.dirFlag);
+  // network::kendall::cal_kendall_lkk(params_kendall.kendall, lkk,
+  // linkSize, dirFlag);
   if (net.dirFlag) {
     if (net.lkkSumOutIn.empty()
         && 0 != lkk_2_lkkSum(net.lkkSumOutIn, net.lkkOutIn, net.dirFlag)) {
       ERROR();
       return -1;
     }
-    network::kendall::cal_kendallTau_lkkSum(
+    network::kendall::cal_kendall_lkkSum(
         net.kendall.OutIn, net.lkkOutIn, net.lkkSumOutIn, net.dirFlag);
   }
   return 0;
 }
 
-// ******************************************************
-int net_read_params_kendallTau(istream& is, Networks& net)
-{
-  for (string s; is >> s;) {
-    if (s == "--params_kendall.tau") {
-      is >> net.kendall.tau;
-      cout << s << '\t' << net.kendall.tau << endl;
-      continue;
-    }
-    if (s == "--params_kendall.OutIn") {
-      is >> net.kendall.OutIn;
-      cout << s << '\t' << net.kendall.OutIn << endl;
-      continue;
-    }
-  }
-  return 0;
-}
-
-int net_save_params_kendallTau(ostream& os, const Networks& net)
-{
-  if (!os)
-    return -1;
-  os << "--params_kendall.tau\t" << net.kendall.tau << '\n';
-  if (net.dirFlag)
-    os << "--params_kendall.OutIn\t" << net.kendall.OutIn << '\n';
-  return 0;
-}
-
-int net_save_kendallTau(const Networks& net, const char* name)
-{
-  // string fn;
-  // if(name != NULL && name[0] != '\0') fn = name;
-  // else{
-  // stringstream ss;
-  // ss << seed;
-  // fn = saveName + '_' + ss.str();
-  //}
-  int f = 0;
-  return f;
-}
 // ******************************************************
 #endif // STAT_KENDALL

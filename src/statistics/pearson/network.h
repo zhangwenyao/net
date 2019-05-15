@@ -25,7 +25,8 @@ public:
         neiAveNoOutOut; // [degSize]    各度的邻居编号平均值
 
     Pearson(void);
-    //friend std::ostream& operator<<(std::ostream& os, const Pearson& pearson);
+    // friend std::ostream& operator<<(std::ostream& os, const Pearson&
+    // pearson);
     int save_params(std::ostream& os, const int dirFlag = 0) const;
     int save_params(const char* name = NULL, const int dirFlag = 0) const;
     int save_data(const char* name = NULL, const int dirFlag = 0,
@@ -42,5 +43,5 @@ public:
 std::ostream& operator<<(
     std::ostream& os, const network::pearson::Pearson& pearson);
 
-#endif // STAT_KENDALL
-#endif // NETWORK_STAT_KENDALL_H
+#endif //
+#endif // _H_

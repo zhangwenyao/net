@@ -24,8 +24,12 @@ network::Networks& network::Networks::clear(void)
   spearman.clear();
 #endif
 
-#ifdef STAT_KELDALLTAU
-  kendallTau.clear();
+#ifdef STAT_KELDALL
+  kendall.clear();
+#endif
+
+#ifdef STAT_RELATIVITY
+  relativity.clear();
 #endif
 
 #ifdef STAT_BETWEENNESS
@@ -84,6 +88,10 @@ ostream& operator<<(ostream& os, network::Networks& net)
 
 #ifdef STAT_KENDALL
   os << net.kendall;
+#endif
+
+#ifdef STAT_RELATIVITY
+  os << net.relativity;
 #endif
 
 #ifdef STAT_BETWEENNESS
@@ -188,6 +196,13 @@ network::Networks& network::Networks::save_data(const char* name)
 
 #ifdef STAT_KENDALL
   runStatus = kendall.save_data((fn + ".kendall").c_str(), priChar, priChar2);
+  if (0 != runStatus)
+    ERROR();
+#endif
+
+#ifdef STAT_RELATIVITY
+  runStatus
+      = relativity.save_data((fn + ".relativity").c_str(), priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
@@ -660,6 +675,15 @@ network::Networks& network::Networks::stat(void)
 #ifdef STAT_KENDALL
   cout << "\tkendall\n";
   stat_kendall();
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+#endif
+
+#ifdef STAT_RELATIVITY
+  cout << "\trelativity\n";
+  stat_relativity();
   if (0 != runStatus) {
     ERROR();
     return *this;

@@ -15,7 +15,7 @@ int network::statistics::sum(const char* prename, const char* sufname,
     fn_full = fn0 + to_string(seed) + sufname;
     ifstream is(fn_full.c_str());
     if (!is) {
-      ERROR();
+      ERROR(fn_full);
       continue;
     }
     while (is >> s) {

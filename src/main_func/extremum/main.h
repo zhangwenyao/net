@@ -3,12 +3,13 @@
 #include "../../main.h"
 #ifdef MAIN_EXTREMUM
 
+#include "../../network/net.h"
 //#define MAIN_EXTREMUM_NEW_DEG_ARR
 //#define MAIN_EXTREMUM_NEW_MINIMAL
 //#define MAIN_EXTREMUM_NEW_MAXIMAL
 #define MAIN_EXTREMUM_STAT_MINIMAL
-#define MAIN_EXTREMUM_STAT_MAXIMAL
-#define MAIN_EXTREMUM_STAT_ALL
+//#define MAIN_EXTREMUM_STAT_MAXIMAL
+//#define MAIN_EXTREMUM_STAT_ALL
 //#define MAIN_EXTREMUM_STAT_ALL_COLLECT
 
 #include <string>
@@ -16,17 +17,32 @@
 namespace main_func {
 int main_extremum(int argc, char** argv);
 namespace extremum {
-  const int kEMin = 12, kEMax = 30, kSeedMin = 1, kSeedMax = 100;
+  const int kEMin = 51, kEMax = 56, kSeedMin = 1, kSeedMax = 100;
   const double kGamma = 2.5;
   const std::string kGammaString = "2.5";
-  const std::string kDataDir
-      = std::string("/media/yao/Server1T/net/data/extremum/nature/")
-      + kGammaString + "_4/";
+  // const std::string kDataDir
   //= std::string("data/extremum/nature/") + kGammaString + "_4/data/";
+  // const std::string kDataDir
+  //= std::string("/media/yao/Server1T/net/data/extremum/nature/")
+  //+ kGammaString + "_4/";
+  const std::string kDataDir
+      = std::string("/media/yao/YAO2/") + kGammaString + "_4/";
+#ifndef STAT_RELATIVITY
   const std::string kStatDir = std::string("data/extremum/nature/")
-      + kGammaString + "_4/stat/relativity/";
-  const double relativity_alpha = -0.5;
-  const std::string alpha_string = "-0.5";
+      + kGammaString + "_4/stat/pearson_spearman/";
+#else
+  const double relativity_alphas[] = { 2, 1 / 2.0, 1 / 3.0, 1 / 4.0, 1 / 6.0,
+    -1 / 4.0, -1 / 2.0, -1, -1.5, -2 };
+  const std::string alpha_strings[] = { "2", "1d2", "1d3", "1d4", "1d6",
+    "-1d4", "-1d2", "-1", "-1.5", "-2" };
+  const size_t alpha_len
+      = sizeof(relativity_alphas) / sizeof(relativity_alphas[0]);
+  extern double relativity_alpha;
+  extern std::string alpha_string, kStatDir;
+#define main_func_extremum_kStatDir0                                         \
+  (std::string("data/extremum/nature/") + main_func::extremum::kGammaString  \
+      + "_4/stat/relativity/" + main_func::extremum::alpha_string + "/")
+#endif
 }
 }
 

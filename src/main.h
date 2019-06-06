@@ -8,7 +8,8 @@
 //#define MAIN_TEST
 
 //#define MAIN_NET_BA
-#define MAIN_EXTREMUM
+//#define MAIN_EXTREMUM
+#define MAIN_CORRELATION2
 
 //#define MAIN_STAT_LKK_K
 //#define MAIN_STAT_LKK_EXTREMUM
@@ -31,6 +32,10 @@ int main_net_ba(int argc, char** argv);
 
 #ifdef MAIN_EXTREMUM
 #include "main_func/extremum/main.h"
+#endif
+
+#ifdef MAIN_CORRELATION2
+#include "main_func/correlation2/main.h"
 #endif
 
 #ifdef FITNESS_COMPLEXITY_MAIN_FILTER

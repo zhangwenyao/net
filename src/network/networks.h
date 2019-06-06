@@ -39,6 +39,10 @@
 #include "../statistics/relativity/network.h"
 #endif
 
+#ifdef STAT_CORRELATION2
+#include "../statistics/correlation2/network.h"
+#endif
+
 #ifdef STAT_BETWEENNESS
 #include "../statistics/betweenness/network.h"
 #endif
@@ -167,6 +171,11 @@ class Networks : public Network {
 #ifdef STAT_RELATIVITY
   network::relativity::Relativity relativity;
   Networks& stat_relativity(void);
+#endif
+
+#ifdef STAT_CORRELATION2
+  network::correlation2::Correlation2 correlation2;
+  Networks& stat_correlation2(void);
 #endif
 
 #ifdef STAT_BETWEENNESS

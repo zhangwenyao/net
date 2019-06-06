@@ -32,6 +32,10 @@ network::Networks& network::Networks::clear(void)
   relativity.clear();
 #endif
 
+#ifdef STAT_CORRELATION2
+  correlation2.clear();
+#endif
+
 #ifdef STAT_BETWEENNESS
   betweenness.clear();
 #endif
@@ -92,6 +96,10 @@ ostream& operator<<(ostream& os, network::Networks& net)
 
 #ifdef STAT_RELATIVITY
   os << net.relativity;
+#endif
+
+#ifdef STAT_CORRELATION2
+  os << net.correlation2;
 #endif
 
 #ifdef STAT_BETWEENNESS
@@ -203,6 +211,13 @@ network::Networks& network::Networks::save_data(const char* name)
 #ifdef STAT_RELATIVITY
   runStatus
       = relativity.save_data((fn + ".relativity").c_str(), priChar, priChar2);
+  if (0 != runStatus)
+    ERROR();
+#endif
+
+#ifdef STAT_CORRELATION2
+  runStatus = correlation2.save_data(
+      (fn + ".correlation2").c_str(), priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
@@ -369,6 +384,26 @@ network::Networks& network::Networks::read_params_1(string& s, istream& is)
 
 #ifdef STAT_KENDALL
     if (0 != kendall.read_params_1(s, is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0)
+      break;
+#endif
+
+#ifdef STAT_RELATIVITY
+    if (0 != relativity.read_params_1(s, is)) {
+      ERROR();
+      runStatus = -1;
+      return *this;
+    }
+    if (s.size() <= 0)
+      break;
+#endif
+
+#ifdef STAT_CORRELATION2
+    if (0 != correlation2.read_params_1(s, is)) {
       ERROR();
       runStatus = -1;
       return *this;
@@ -684,6 +719,15 @@ network::Networks& network::Networks::stat(void)
 #ifdef STAT_RELATIVITY
   cout << "\trelativity\n";
   stat_relativity();
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+#endif
+
+#ifdef STAT_CORRELATION2
+  cout << "\tcorrelation2\n";
+  stat_correlation2();
   if (0 != runStatus) {
     ERROR();
     return *this;

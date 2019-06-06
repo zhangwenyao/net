@@ -575,8 +575,6 @@ network::Network& network::Network::save_lkk(const char* name)
       }
     break;
   default:
-    ERROR();
-    runStatus = -1;
     break;
   }
   return *this;
@@ -997,7 +995,7 @@ network::Network& network::Network::read_p2p(const char* name)
     ERROR();
     return *this;
   }
-  cout << fn << "\tsize:\t" << p2p.size() << '\n';
+  cout << "\t" << fn << "\tsize:\t" << p2p.size() << '\n';
 
   return *this;
 }

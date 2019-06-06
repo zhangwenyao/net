@@ -9,15 +9,15 @@
 //#define MAIN_EXTREMUM_NEW_MAXIMAL
 #define MAIN_EXTREMUM_STAT_MINIMAL
 //#define MAIN_EXTREMUM_STAT_MAXIMAL
-//#define MAIN_EXTREMUM_STAT_ALL
-//#define MAIN_EXTREMUM_STAT_ALL_COLLECT
+#define MAIN_EXTREMUM_STAT_ALL
+#define MAIN_EXTREMUM_STAT_ALL_COLLECT
 
 #include <string>
 // ******************************************************
 namespace main_func {
 int main_extremum(int argc, char** argv);
 namespace extremum {
-  const int kEMin = 51, kEMax = 56, kSeedMin = 1, kSeedMax = 100;
+  const int kEMin = 12, kEMax = 53, kSeedMin = 1, kSeedMax = 100;
   const double kGamma = 2.5;
   const std::string kGammaString = "2.5";
   // const std::string kDataDir

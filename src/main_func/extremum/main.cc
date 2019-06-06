@@ -9,8 +9,10 @@ using namespace network;
 using namespace main_func::extremum;
 
 // **********************************************************
+#ifdef STAT_RELATIVITY
 double main_func::extremum::relativity_alpha;
-std::string main_func::extremum::alpha_string, main_func::extremum::kStatDir;
+string main_func::extremum::alpha_string, main_func::extremum::kStatDir;
+#endif
 
 int main_func::main_extremum(int argc, char** argv)
 {

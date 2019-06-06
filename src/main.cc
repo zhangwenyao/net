@@ -21,6 +21,10 @@ int main(int argc, char** argv)
   _ERR(main_extremum(argc, argv));
 #endif
 
+#ifdef MAIN_CORRELATION2
+  _ERR(main_correlation2(argc, argv));
+#endif
+
 #ifdef FITNESS_COMPLEXITY_MAIN_FILTER
   _ERR(main_fitness_complexity_filter(argc, argv));
 #endif

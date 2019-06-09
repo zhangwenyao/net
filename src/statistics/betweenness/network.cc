@@ -52,8 +52,8 @@ int network::betweenness::Betweenness::save_params(const char* name) const
   return 0;
 }
 
-int network::betweenness::Betweenness::save_data(
-    const char* name, const char priChar, const char priChar2) const
+int network::betweenness::Betweenness::save_data(const char* name,
+    const int dirFlag, const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -74,8 +74,8 @@ int network::betweenness::Betweenness::save_data(
   return f;
 }
 
-int network::betweenness::Betweenness::save(
-    const char* name, const char priChar, const char priChar2) const
+int network::betweenness::Betweenness::save(const char* name,
+    const int dirFlag, const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -86,7 +86,9 @@ int network::betweenness::Betweenness::save(
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + ".betweenness").c_str(), priChar, priChar2)) {
+  if (0
+      != save_data(
+             (fn + ".betweenness").c_str(), dirFlag, priChar, priChar2)) {
     ERROR();
     return -1;
   }

@@ -53,7 +53,8 @@ int network::similarity::Similarity::save_params(const char* name) const
 }
 
 int network::similarity::Similarity::save_data(
-    const char* name, const char priChar, const char priChar2) const
+    const char* name, const int dirFlag,
+    const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -69,7 +70,8 @@ int network::similarity::Similarity::save_data(
 }
 
 int network::similarity::Similarity::save(
-    const char* name, const char priChar, const char priChar2) const
+    const char* name,const int dirFlag,
+     const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -80,7 +82,7 @@ int network::similarity::Similarity::save(
     ERROR();
     return -1;
   }
-  if (0 != save_data(fn.c_str(), priChar, priChar2)) {
+  if (0 != save_data(fn.c_str(), dirFlag, priChar, priChar2)) {
     ERROR();
     return -1;
   }

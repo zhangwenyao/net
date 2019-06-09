@@ -51,7 +51,8 @@ int network::kendall::Kendall::save_params(const char* name) const
 }
 
 int network::kendall::Kendall::save_data(
-    const char* name, const char priChar, const char priChar2) const
+    const char* name, const int dirFlag ,
+        const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -60,8 +61,8 @@ int network::kendall::Kendall::save_data(
   return 0;
 }
 
-int network::kendall::Kendall::save(
-    const char* name, const char priChar, const char priChar2) const
+int network::kendall::Kendall::save(const char* name, const int dirFlag,
+    const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -72,7 +73,7 @@ int network::kendall::Kendall::save(
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + ".kendall").c_str(), priChar, priChar2)) {
+  if (0 != save_data((fn + ".kendall").c_str(), dirFlag, priChar, priChar2)) {
     ERROR();
     return -1;
   }

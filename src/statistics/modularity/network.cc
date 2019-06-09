@@ -51,8 +51,8 @@ int network::modularity::Modularity::save_params(const char* name) const
   return 0;
 }
 
-int network::modularity::Modularity::save_data(
-    const char* name, const char priChar, const char priChar2) const
+int network::modularity::Modularity::save_data(const char* name,
+    const int dirFlag, const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -79,8 +79,8 @@ int network::modularity::Modularity::save_Stk(
   return save_moduStk(Stk, Range, name, priChar2);
 }
 
-int network::modularity::Modularity::save(
-    const char* name, const char priChar, const char priChar2) const
+int network::modularity::Modularity::save(const char* name, const int dirFlag,
+    const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -91,7 +91,9 @@ int network::modularity::Modularity::save(
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + ".modularity").c_str(), priChar, priChar2)) {
+  if (0
+      != save_data(
+             (fn + ".modularity").c_str(), dirFlag, priChar, priChar2)) {
     ERROR();
     return -1;
   }

@@ -177,13 +177,13 @@ network::Networks& network::Networks::save_data(const char* name)
     ERROR();
 
 #ifdef NET_DEGREE
-  runStatus = degree.save_data((fn + ".degree").c_str());
+  runStatus = degree.save_data((fn + ".degree").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
 
 #ifdef NET_BA
-  runStatus = ba.save_data((fn + ".ba").c_str());
+  runStatus = ba.save_data((fn + ".ba").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
@@ -203,54 +203,54 @@ network::Networks& network::Networks::save_data(const char* name)
 #endif
 
 #ifdef STAT_KENDALL
-  runStatus = kendall.save_data((fn + ".kendall").c_str(), priChar, priChar2);
+  runStatus = kendall.save_data((fn + ".kendall").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
 
 #ifdef STAT_RELATIVITY
-  runStatus
-      = relativity.save_data((fn + ".relativity").c_str(), priChar, priChar2);
+  runStatus = relativity.save_data(
+      (fn + ".relativity").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
 
 #ifdef STAT_CORRELATION2
   runStatus = correlation2.save_data(
-      (fn + ".correlation2").c_str(), priChar, priChar2);
+      (fn + ".correlation2").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
 
 #ifdef STAT_BETWEENNESS
   runStatus = betweenness.save_data(
-      (fn + ".betweenness").c_str(), priChar, priChar2);
+      (fn + ".betweenness").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
 
 #ifdef STAT_MODULARITY
   runStatus
-      = modularity.save_data((fn + ".modularity").c_str(), priChar, priChar2);
+      = modularity.save_data((fn + ".modularity").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
 
 #ifdef STAT_SIMILARITY
   runStatus
-      = similarity.save_data((fn + ".similarity").c_str(), priChar, priChar2);
+      = similarity.save_data((fn + ".similarity").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
 
 #ifdef STAT_CLUSTER
-  runStatus = cluster.save_data((fn + ".cluster").c_str(), priChar, priChar2);
+  runStatus = cluster.save_data((fn + ".cluster").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
 
 #ifdef ACT_SIS
-  runStatus = sis.save_data((fn + ".sis").c_str());
+  runStatus = sis.save_data((fn + ".sis").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif

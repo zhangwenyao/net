@@ -853,7 +853,7 @@ int network::sort_p2p(VVNodeType& p2p)
 
 int network::fix_p2p(VVNodeType& p2p, const int dirFlag)
 {
-  LinkType self = 0, multi = 0, lack = 0;
+  LinkType self = 0, multi = 0, miss = 0;
   for (NodeType i = 0; i < p2p.size(); i++) {
     // 自环
     if (p2p[i].empty())
@@ -899,7 +899,7 @@ int network::fix_p2p(VVNodeType& p2p, const int dirFlag)
           if (*jItr == i)
             break;
         if (jItr >= j->end()) {
-          lack++;
+          miss++;
           j->push_back(i);
         }
       }
@@ -907,8 +907,8 @@ int network::fix_p2p(VVNodeType& p2p, const int dirFlag)
     for (VVNodeTypeItr i = p2p.begin(); i != p2p.end(); i++)
       sort(i->begin(), i->end()); // 从小到大排序
   }
-  cout << "fix_p2p\tself\t" << self << "\n\tmulti\t" << multi << "\n\tlack\t"
-       << lack << '\n';
+  cout << "fix_p2p\tself\t" << self << "\n\tmulti\t" << multi << "\n\tmiss\t"
+       << miss << '\n';
   return 0;
 }
 

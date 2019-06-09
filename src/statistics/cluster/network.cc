@@ -49,8 +49,8 @@ int network::cluster::Cluster::save_params(const char* name) const
   return 0;
 }
 
-int network::cluster::Cluster::save_data(
-    const char* name, const char priChar, const char priChar2) const
+int network::cluster::Cluster::save_data(const char* name, const int dirFlag,
+    const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -59,8 +59,8 @@ int network::cluster::Cluster::save_data(
   return 0;
 }
 
-int network::cluster::Cluster::save(
-    const char* name, const char priChar, const char priChar2) const
+int network::cluster::Cluster::save(const char* name, const int dirFlag,
+    const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -71,7 +71,7 @@ int network::cluster::Cluster::save(
     ERROR();
     return -1;
   }
-  if (0 != save_data((fn + ".cluster").c_str(), priChar, priChar2)) {
+  if (0 != save_data((fn + ".cluster").c_str(), dirFlag, priChar, priChar2)) {
     ERROR();
     return -1;
   }

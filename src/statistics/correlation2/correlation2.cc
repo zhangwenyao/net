@@ -2,40 +2,126 @@
 #ifdef STAT_CORRELATION2
 
 #include "../../common/common.h"
+#include <map>
+#include <set>
 using namespace std;
 using namespace common;
 using namespace network;
 
 // ******************************************************
-int correlation2::cal_correlation2(
-    double& correlation2, const VVNodeType& p2p)
+int correlation2::cal_correlation2_node(double& node, const VVNodeType& p2p)
 {
   double sxy = 0, sx = 0, sx2 = 0;
   LinkType l = 0;
-  correlation2 = 0;
-  for (size_t i = 0; i < p2p.size(); ++i) {
-    double id = i;
-    for (size_t ii = 0; ii < p2p[i].size(); ++ii) {
-      auto j = p2p[i][ii];
-      for (size_t ji = 0; ji < p2p[j].size(); ++ji) {
-        NodeType k = p2p[j][ji], ki = 0;
-        if (k <= i)
+  node = 0;
+  set<NodeType> nnodes;
+  const NodeType degSize = p2p.size();
+  for (NodeType i = 0; i < degSize; ++i) {
+    if (i % 10000 == 0)
+      cout << i << "\t/ " << p2p.size() << endl;
+    nnodes.clear();
+    for (auto j : p2p[i])
+      if (j > i)
+        nnodes.insert(j);
+    const double x = p2p[i].size(), x2 = x * x, x2p = x * 2.0;
+    for (auto const j : p2p[i]) {
+      for (auto const k : p2p[j]) {
+        if (k <= i || nnodes.find(k) != nnodes.end())
           continue;
-        for (; ki < p2p[k].size(); ++ki) {
-          if (p2p[k][ki] == i)
-            break;
-        }
-        if (ki < p2p[k].size())
-          continue;
-        sxy += 2.0 * id * k;
-        sx += id + k;
-        sx2 += id * id + (double)k * k;
+        nnodes.insert(k);
+        const double y = p2p[k].size();
+        sxy += x2p * y;
+        sx += x + y;
+        sx2 += x2 + y * y;
         ++l;
       }
     }
   }
   if (l > 0)
-    correlation2 = (2.0 * l * sxy - sx * sx) / (2.0 * l * sx2 - sx * sx);
+    node = (2.0 * l * sxy - sx * sx) / (2.0 * l * sx2 - sx * sx);
+  return 0;
+}
+
+int correlation2::cal_correlation2_link(double& link, const VVNodeType& p2p)
+{
+  double sxy = 0, sx = 0, sx2 = 0;
+  LinkType l = 0;
+  link = 0;
+  const NodeType degSize = p2p.size();
+  vector<set<NodeType>> nodess(degSize);
+  for (NodeType i = 0; i < degSize; ++i) {
+    for (auto j : p2p[i])
+      nodess[i].insert(j);
+  }
+  for (NodeType i = 0; i < degSize; ++i) {
+    if (i % 10000 == 0)
+      cout << i << "\t/ " << degSize << endl;
+    const NodeType deg_i = p2p[i].size();
+    for (NodeType ij = 0; ij < deg_i; ++ij) {
+      const NodeType j = p2p[i][ij];
+      auto& nodes = nodess[j];
+      const double x = p2p[j].size(), x2 = x * x, x2p = 2.0 * x;
+      for (NodeType ik = ij + 1; ik < deg_i; ++ik) {
+        const NodeType k = p2p[i][ik];
+        if (k == j || nodes.find(k) != nodes.end())
+          continue;
+        const double y = p2p[k].size();
+        sxy += x2p * y;
+        sx += x + y;
+        sx2 += x2 + y * y;
+        ++l;
+      }
+    }
+  }
+  if (l > 0)
+    link = (2.0 * l * sxy - sx * sx) / (2.0 * l * sx2 - sx * sx);
+  return 0;
+}
+
+// ******************************************************
+int correlation2::cal_correlation2_node_k(VDouble& node_correlation2,
+    VLinkType& node_correlation2_size, const VVNodeType& p2p,
+    const VNodeType& degArrVal)
+{
+  const NodeType degSize = p2p.size();
+  VDouble sxy, sx, sx2;
+  node_correlation2.assign(degSize, 0);
+  sxy.assign(degSize, 0);
+  sx.assign(degSize, 0);
+  sx2.assign(degSize, 0);
+  node_correlation2_size.assign(degSize, 0);
+  map<NodeType, NodeType> degArrVal_map_no;
+  for (NodeType i = 0; i < degSize; ++i)
+    degArrVal_map_no[degArrVal[i]] = i;
+  set<NodeType> nnodes;
+  for (NodeType i = 0; i < degSize; ++i) {
+    if (i % 10000 == 0)
+      cout << i << "\t/ " << p2p.size() << endl;
+    nnodes.clear();
+    for (auto j : p2p[i])
+      if (j > i)
+        nnodes.insert(j);
+    const double x = p2p[i].size(), x2 = x * x, x2p = x * 2.0;
+    for (auto const j : p2p[i]) {
+      const NodeType deg_j = p2p[j].size(), j_no = degArrVal_map_no[deg_j];
+      for (auto const k : p2p[j]) {
+        if (k <= i || nnodes.find(k) != nnodes.end())
+          continue;
+        nnodes.insert(k);
+        const double y = p2p[k].size();
+        sxy[j_no] += x2p * y;
+        sx[j_no] += x + y;
+        sx2[j_no] += x2 + y * y;
+        ++node_correlation2_size[j_no];
+      }
+    }
+  }
+  for (NodeType i = 0; i < degSize; ++i) {
+    if (node_correlation2_size[i] > 0)
+      node_correlation2[i]
+          = (2.0 * node_correlation2_size[i] * sxy[i] - sx[i] * sx[i])
+          / (2.0 * node_correlation2_size[i] * sx2[i] - sx[i] * sx[i]);
+  }
   return 0;
 }
 

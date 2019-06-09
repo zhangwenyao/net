@@ -9,7 +9,8 @@ using namespace network;
 
 // ******************************************************
 network::correlation2::Correlation2::Correlation2(void)
-    : correlation2(0)
+    : node(0)
+    , link(0)
     , No(0)
     , NoInIn(0)
     , NoInOut(0)
@@ -39,9 +40,10 @@ int network::correlation2::Correlation2::save_params(
     return -1;
   }
   if (!dirFlag) {
-    os << "--correlation2.correlation2\t" << correlation2 << '\n';
+    os << "--correlation2.node\t" << node << "\n--correlation2.link\t" << link
+       << '\n';
   } else {
-    os << "--correlation2.correlation2\t" << correlation2
+    os << "--correlation2.node\t" << node << "\n--correlation2.link\t" << link
        << "\n--correlation2.rho\t" << rho << "\n--correlation2.OutIn\t"
        << OutIn << "\n--correlation2.rhoOutIn\t" << rhoOutIn << '\n';
     if (STAT_TYPE_DIRAA) {
@@ -81,6 +83,12 @@ int network::correlation2::Correlation2::save_data(const char* name,
   }
   string fn = name;
   int f = 0;
+  if (!node_correlation2.empty())
+    f |= save1(
+        (fn + ".node_correlation2.txt").c_str(), node_correlation2, priChar);
+  if (!node_correlation2_size.empty())
+    f |= save1((fn + ".node_correlation2_size.txt").c_str(),
+        node_correlation2_size, priChar);
   if (!nodeNeiAveDeg.empty())
     f |= save1((fn + ".nodeNeiAveDeg.txt").c_str(), nodeNeiAveDeg, priChar);
   if (!neiAveDeg.empty())
@@ -135,9 +143,14 @@ int network::correlation2::Correlation2::read_params_1(string& s, istream& is)
   }
   int flag = 1;
   do {
-    if (s == "--correlation2.correlation2") {
-      is >> correlation2;
-      cout << s << '\t' << correlation2 << endl;
+    if (s == "--correlation2.node") {
+      is >> node;
+      cout << s << '\t' << node << endl;
+      break;
+    }
+    if (s == "--correlation2.link") {
+      is >> link;
+      cout << s << '\t' << link << endl;
       break;
     }
     if (s == "--correlation2.InIn") {
@@ -170,7 +183,8 @@ int network::correlation2::Correlation2::read_params_1(string& s, istream& is)
 network::correlation2::Correlation2&
 network::correlation2::Correlation2::clear(void)
 {
-  correlation2 = 0;
+  node = 0;
+  link = 0;
   InIn = 0;
   InOut = 0;
   OutIn = 0;
@@ -186,6 +200,8 @@ network::correlation2::Correlation2::clear(void)
   rhoOutIn = 0;
   rhoOutOut = 0;
 
+  node_correlation2.clear();
+  node_correlation2_size.clear();
   nodeNeiAveDeg.clear();
   nodeNeiAveDegIn.clear();
   nodeNeiAveDegOut.clear();
@@ -217,7 +233,11 @@ Networks& Networks::stat_correlation2(void)
   }
   do {
     if (!dirFlag && !weightFlag && !p2p.empty()) {
-      network::correlation2::cal_correlation2(correlation2.correlation2, p2p);
+      network::correlation2::cal_correlation2_node(correlation2.node, p2p);
+      network::correlation2::cal_correlation2_link(correlation2.link, p2p);
+      network::correlation2::cal_correlation2_node_k(
+          correlation2.node_correlation2, correlation2.node_correlation2_size,
+          p2p, degArrVal);
     } else {
       // TODO
       ERROR();

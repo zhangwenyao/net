@@ -25,10 +25,10 @@ int main_func::extremum::new_minimal(int argc, char** argv)
       net.readName = fn_full;
       net.saveName = fn_full + ".Min";
       net.lkk_type = lkk3_lkk3;
-      net.argv = "--init_seed0"
-                 " --cal_deg read_degArr"
-                 " --cal_p2p Min_lkk3"
-                 " --print";
+      net.argv = "--init_seed0 "
+                 "--cal_deg read_degArr "
+                 "--cal_p2p Min_lkk3 "
+                 "--print";
 
       // 带参数运行
       if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {

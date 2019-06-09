@@ -20,6 +20,7 @@
  *                              poisson       度序列泊松分布
  * 连边           cal_p2p       p2p           利用已有数组转化
  *                              read_p2p      读取连边链接表
+ *                              read_p2p_fix  读取连边链接表
  *                              read_linkMatr 读取连边矩阵
  *                              read_link     读取连边
  *                              read_lkk      读取连边分布

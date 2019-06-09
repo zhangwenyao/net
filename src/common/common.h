@@ -89,6 +89,7 @@ void total_p_bool(const T* a, const T2* p, size_t n, T3 s);
 template <typename T, typename T2>
 void sum_vector(
     const std::vector<T>& a, std::vector<T2>& s, const int fix = 1);
+
 // *************************************************************
 template <typename T>
 bool compare_vector(const std::vector<T>& a, const std::vector<T>& b);
@@ -116,6 +117,8 @@ template <typename T, typename T2>
 int matrixCross1_p2p(const std::vector<std::vector<T2>>& p2p,
     const std::vector<T>& a, std::vector<T>& c); // c = p2p . a
 
+// *************************************************************
+int mkdirs(const char* dirname = NULL);
 } // end namespace common
 
 // *****************************************************
@@ -129,17 +132,6 @@ template <typename T>
 std::ostream& operator<<(std::ostream& os, const common::Range<T>& r);
 template <typename T>
 std::istream& operator>>(std::istream& is, common::Range<T>& r);
-
-// *****************************************************
-#ifdef _WIN32
-#include <direct.h>
-#include <io.h>
-#define MKDIR(a) _mkdir((a))
-#else // _LINUX
-#include <stdarg.h>
-#include <sys/stat.h>
-#define MKDIR(a) mkdir((a), 0755)
-#endif
 
 // *****************************************************
 #include "debug.h"

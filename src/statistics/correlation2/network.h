@@ -10,9 +10,11 @@ namespace correlation2 {
   // ******************************************************
   class Correlation2 {
 public:
-    double correlation2, InIn, InOut, OutIn, OutOut;
+    double node, link, InIn, InOut, OutIn, OutOut;
     double No, NoInIn, NoInOut, NoOutIn, NoOutOut;
     double rho, rhoInIn, rhoInOut, rhoOutIn, rhoOutOut;
+    VDouble node_correlation2;
+    VLinkType node_correlation2_size;
 
     VDouble nodeNeiAveDeg, nodeNeiAveDegIn,
         nodeNeiAveDegOut; // [nodeSize]   各点的邻居平均度
@@ -40,8 +42,8 @@ public:
 }
 
 // ******************************************************
-std::ostream& operator<<(
-    std::ostream& os, const network::correlation2::Correlation2& correlation2);
+std::ostream& operator<<(std::ostream& os,
+    const network::correlation2::Correlation2& correlation2);
 
 #endif //
 #endif // _H_

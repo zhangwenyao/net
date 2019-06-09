@@ -1124,8 +1124,7 @@ network::Network& network::Network::p2p_2_degArr(void)
       return *this;
     }
     if (degArrVal.empty()
-        && nodeDeg_2_degArr(nodeDeg, degArrVal, degArrSize,
-               degArrSum)
+        && nodeDeg_2_degArr(nodeDeg, degArrVal, degArrSize, degArrSum)
             != 0) { // degArr
       runStatus = -1;
       ERROR();

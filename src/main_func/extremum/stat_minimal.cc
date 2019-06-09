@@ -12,12 +12,12 @@ using namespace network::extremum;
 //**//****************************************************//*
 int main_func::extremum::stat_minimal(int argc, char** argv)
 {
-  MKDIR(kStatDir.c_str());
+  mkdirs(kStatDir.c_str());
   for (int e = kEMin; e <= kEMax; ++e) {
     cout << "e\t" << e << endl;
     string data_dir = kDataDir + "2^" + to_string(e) + "/",
            stat_dir = kStatDir + "2^" + to_string(e) + "/";
-    MKDIR(stat_dir.c_str());
+    mkdirs(stat_dir.c_str());
 
     for (int seed = kSeedMin; seed <= kSeedMax; ++seed) {
       SHOW_TIME(cout); // 显示系统时间

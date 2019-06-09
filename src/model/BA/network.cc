@@ -113,6 +113,10 @@ Networks& Networks::net_BA(void)
     ERROR();
     return *this;
   }
+  if (ba.M > 0 && ba.M0 <= 0)
+    ba.M0 = ba.M + 1;
+  else if (ba.M0 > 1 && ba.M <= 0)
+    ba.M = ba.M0 - 1;
   if (0 != network::ba::BA_new(ba.M, ba.M0, nodeSize, p2p, kMin, kMax)) {
     runStatus = -1;
     status = -1;

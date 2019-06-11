@@ -11,7 +11,7 @@ using namespace common;
 using namespace network;
 
 // ******************************************************
-int main_func::test(int argc, char** argv)
+int main_func::main_test(int argc, char** argv)
 {
   cout << "test" << endl;
   Networks net;

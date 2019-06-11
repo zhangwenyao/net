@@ -89,37 +89,43 @@ int network::spearman::Spearman::save_data(const char* name,
   string fn = name;
   int f = 0;
 
-  // if(!deg2ArrVal.empty())
-  // f |= save1((fn + "_deg2ArrVal.txt").c_str(), deg2ArrVal, priChar);
-  // if(!nodeNeiAveDeg2.empty()) f |= save1((fn +
-  // "_nodeNeiAveDeg2.txt").c_str(), nodeNeiAveDeg2, priChar);
-  // if(!neiAveDeg2.empty()) f |= save1((fn +
-  // "_neiAveDeg2.txt").c_str(), neiAveDeg2, priChar);
+  if (!deg2ArrVal.empty())
+    f |= save1((fn + "_deg2ArrVal.txt").c_str(), deg2ArrVal, priChar);
+  if (!nodeNeiAveDeg2.empty())
+    f |= save1((fn + "_nodeNeiAveDeg2.txt").c_str(), nodeNeiAveDeg2, priChar);
+  if (!neiAveDeg2.empty())
+    f |= save1((fn + "_neiAveDeg2.txt").c_str(), neiAveDeg2, priChar);
 
-  // if(dirFlag){
-  // if(!deg2ArrValIn.empty()) f |= save1((fn +
-  // "_deg2ArrValIn.txt").c_str(), deg2ArrValIn, priChar);
-  // if(!deg2ArrValOut.empty()) f |= save1((fn +
-  // "_deg2ArrValOut.txt").c_str(), deg2ArrValOut, priChar);
-  // if(!nodeNeiAveDeg2In.empty()) f |= save1((fn +
-  // "_nodeNeiAveDeg2In.txt").c_str(), nodeNeiAveDeg2In, priChar);
-  // if(!nodeNeiAveDeg2Out.empty()) f |= save1((fn +
-  // "_nodeNeiAveDeg2Out.txt").c_str(), nodeNeiAveDeg2Out, priChar);
-  // if(!neiAveDeg2InIn.empty()) f |= save1((fn +
-  // "_neiAveDeg2InIn.txt").c_str(), neiAveDeg2InIn, priChar);
-  // if(!neiAveDeg2InOut.empty()) f |= save1((fn +
-  // "_neiAveDeg2InOut.txt").c_str(), neiAveDeg2InOut, priChar);
-  // if(!neiAveDeg2OutIn.empty()) f |= save1((fn +
-  // "_neiAveDeg2OutIn.txt").c_str(), neiAveDeg2OutIn, priChar);
-  // if(!neiAveDeg2OutOut.empty()) f |= save1((fn +
-  // "_neiAveDeg2OutOut.txt").c_str(), neiAveDeg2OutOut, priChar);
-  //}
+  if (dirFlag) {
+    if (!deg2ArrValIn.empty())
+      f |= save1((fn + "_deg2ArrValIn.txt").c_str(), deg2ArrValIn, priChar);
+    if (!deg2ArrValOut.empty())
+      f |= save1((fn + "_deg2ArrValOut.txt").c_str(), deg2ArrValOut, priChar);
+    if (!nodeNeiAveDeg2In.empty())
+      f |= save1(
+          (fn + "_nodeNeiAveDeg2In.txt").c_str(), nodeNeiAveDeg2In, priChar);
+    if (!nodeNeiAveDeg2Out.empty())
+      f |= save1((fn + "_nodeNeiAveDeg2Out.txt").c_str(), nodeNeiAveDeg2Out,
+          priChar);
+    if (!neiAveDeg2InIn.empty())
+      f |= save1(
+          (fn + "_neiAveDeg2InIn.txt").c_str(), neiAveDeg2InIn, priChar);
+    if (!neiAveDeg2InOut.empty())
+      f |= save1(
+          (fn + "_neiAveDeg2InOut.txt").c_str(), neiAveDeg2InOut, priChar);
+    if (!neiAveDeg2OutIn.empty())
+      f |= save1(
+          (fn + "_neiAveDeg2OutIn.txt").c_str(), neiAveDeg2OutIn, priChar);
+    if (!neiAveDeg2OutOut.empty())
+      f |= save1(
+          (fn + "_neiAveDeg2OutOut.txt").c_str(), neiAveDeg2OutOut, priChar);
+  }
 
 #ifdef MODEL_GAUSS
-// if(GaussS2.size() > 0) f |= save1((fn +
-// "_SGaussS2.txt").c_str(), GaussS2, priChar);
-// if (lkkProb.size() > 0)
-// f |= save2((fn + "_lkkProb.txt").c_str(), lkkProb, priChar);
+  // if (GaussS2.size() > 0)
+  // f |= save1((fn + "_SGaussS2.txt").c_str(), GaussS2, priChar);
+  // if (lkkProb.size() > 0)
+  // f |= save2((fn + "_lkkProb.txt").c_str(), lkkProb, priChar);
 #endif // MODEL_GAUSS
 
   return f;

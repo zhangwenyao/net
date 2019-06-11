@@ -7,7 +7,11 @@ namespace network {
 namespace correlation2 {
   // ******************************************************
   int cal_correlation2_node(double& node, const VVNodeType& p2p);
+  int cal_correlation2_node_spearman(double& node, const VVNodeType& p2p,
+      const VNodeType& degArrVal, const VDouble& deg2ArrVal);
   int cal_correlation2_link(double& link, const VVNodeType& p2p);
+  int cal_correlation2_link_spearman(double& link, const VVNodeType& p2p,
+      const VNodeType& degArrVal, const VDouble& deg2ArrVal);
   int cal_correlation2_node_k(VDouble& node_correlation2,
       VLinkType& node_correlation2_size, const VVNodeType& p2p,
       const VNodeType& degArrVal);

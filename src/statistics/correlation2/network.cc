@@ -234,7 +234,11 @@ Networks& Networks::stat_correlation2(void)
   do {
     if (!dirFlag && !weightFlag && !p2p.empty()) {
       network::correlation2::cal_correlation2_node(correlation2.node, p2p);
-      network::correlation2::cal_correlation2_link(correlation2.link, p2p);
+      network::correlation2::cal_correlation2_node_spearman(
+          correlation2.node, p2p, degArrVal, spearman.deg2ArrVal);
+      // network::correlation2::cal_correlation2_link(correlation2.link, p2p);
+      // network::correlation2::cal_correlation2_link_spearman(correlation2.link,
+      // p2p,degArrVal,spearman.deg2ArrVal);
       network::correlation2::cal_correlation2_node_k(
           correlation2.node_correlation2, correlation2.node_correlation2_size,
           p2p, degArrVal);

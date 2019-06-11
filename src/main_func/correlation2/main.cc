@@ -15,7 +15,6 @@ int main_func::main_correlation2(int argc, char** argv)
 {
   for (auto& name_i : names) {
     name = name_i;
-    // name = "BA";
     dirData = dirData0;
     dirStat = dirStat0;
     mkdirs(dirData.c_str());
@@ -29,10 +28,11 @@ int main_func::main_correlation2(int argc, char** argv)
                  "--save "
                  "--print";
       // net.seed = 0;
-      // net.nodeSize = (NodeType)1 << 17;
-      // net.random.p = 10.0 / net.nodeSize; // ER
-      // net.ba.M = 5; // BA
+      // net.nodeSize = (NodeType)1 << 15;
+      // net.random.p = 6.0 / net.nodeSize; // ER
+      // net.ba.M = 6; // BA
       // net.argv = "--init_seed0 "
+      //"--cal_p2p ER "
       //"--cal_p2p BA "
       //"--stat "
       //"--save "

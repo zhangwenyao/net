@@ -8,54 +8,39 @@
 //#define MAIN_TEST
 
 //#define MAIN_NET_BA
+//#define MAIN_NET_ER
 //#define MAIN_EXTREMUM
 #define MAIN_CORRELATION2
+//#define MAIN_FITNESS_COMPLEXITY
 
 //#define MAIN_STAT_LKK_K
 //#define MAIN_STAT_LKK_EXTREMUM
 //#define MAIN_STAT_BETWEENNESS
 
-//#define FITNESS_COMPLEXITY_MAIN_FILTER
-//#define FITNESS_COMPLEXITY_MAIN
-//#define FITNESS_COMPLEXITY_MAIN_RECOMMEND
-//#define FITNESS_COMPLEXITY_MAIN_COUNT
-//#define FITNESS_COMPLEXITY_MAIN_PLOTDATA
-
 // *******************************************************
 #ifdef MAIN_TEST
 #include "test.h"
+#define MAIN_FUNC main_test
 #endif
 
 #ifdef MAIN_NET_BA
-int main_net_ba(int argc, char** argv);
+#include "main_func/ba/main.h"
+#define MAIN_FUNC main_ba
 #endif
 
 #ifdef MAIN_EXTREMUM
 #include "main_func/extremum/main.h"
+#define MAIN_FUNC main_extremum
 #endif
 
 #ifdef MAIN_CORRELATION2
 #include "main_func/correlation2/main.h"
+#define MAIN_FUNC main_correlation2
 #endif
 
-#ifdef FITNESS_COMPLEXITY_MAIN_FILTER
-int main_fitness_complexity_filter(int argc, char** argv);
-#endif
-
-#ifdef FITNESS_COMPLEXITY_MAIN
-int main_fitness_complexity(int argc, char** argv);
-#endif
-
-#ifdef FITNESS_COMPLEXITY_MAIN_RECOMMEND
-int main_fitness_complexity_recommend(int argc, char** argv);
-#endif
-
-#ifdef FITNESS_COMPLEXITY_MAIN_COUNT
-int main_fitness_complexity_count(int argc, char** argv);
-#endif
-
-#ifdef FITNESS_COMPLEXITY_MAIN_PLOTDATA
-int main_fitness_complexity_plotdata(int argc, char** argv);
+#ifdef MAIN_FITNESS_COMPLEXITY
+#include "main_func/fitness_complexity/main.h"
+#define MAIN_FUNC main_fitness_complexity
 #endif
 
 // *******************************************************

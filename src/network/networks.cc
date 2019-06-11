@@ -177,7 +177,7 @@ network::Networks& network::Networks::save_data(const char* name)
     ERROR();
 
 #ifdef NET_DEGREE
-  runStatus = degree.save_data((fn + ".degree").c_str(), dirFlag, priChar, priChar2);
+  runStatus = degree.save_data((fn + ".degree").c_str());
   if (0 != runStatus)
     ERROR();
 #endif
@@ -203,7 +203,8 @@ network::Networks& network::Networks::save_data(const char* name)
 #endif
 
 #ifdef STAT_KENDALL
-  runStatus = kendall.save_data((fn + ".kendall").c_str(), dirFlag, priChar, priChar2);
+  runStatus = kendall.save_data(
+      (fn + ".kendall").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
@@ -230,27 +231,29 @@ network::Networks& network::Networks::save_data(const char* name)
 #endif
 
 #ifdef STAT_MODULARITY
-  runStatus
-      = modularity.save_data((fn + ".modularity").c_str(), dirFlag, priChar, priChar2);
+  runStatus = modularity.save_data(
+      (fn + ".modularity").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
 
 #ifdef STAT_SIMILARITY
-  runStatus
-      = similarity.save_data((fn + ".similarity").c_str(), dirFlag, priChar, priChar2);
+  runStatus = similarity.save_data(
+      (fn + ".similarity").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
 
 #ifdef STAT_CLUSTER
-  runStatus = cluster.save_data((fn + ".cluster").c_str(), dirFlag, priChar, priChar2);
+  runStatus = cluster.save_data(
+      (fn + ".cluster").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif
 
 #ifdef ACT_SIS
-  runStatus = sis.save_data((fn + ".sis").c_str(), dirFlag, priChar, priChar2);
+  runStatus
+      = sis.save_data((fn + ".sis").c_str(), dirFlag, priChar, priChar2);
   if (0 != runStatus)
     ERROR();
 #endif

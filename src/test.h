@@ -5,7 +5,7 @@
 
 namespace main_func{
 // *******************************************************
-int test(int argc, char** argv);
+int main_test(int argc, char** argv);
 
 // *******************************************************
 }

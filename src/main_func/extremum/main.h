@@ -8,7 +8,7 @@
 //#define MAIN_EXTREMUM_NEW_MINIMAL
 //#define MAIN_EXTREMUM_NEW_MAXIMAL
 #define MAIN_EXTREMUM_STAT_MINIMAL
-#define MAIN_EXTREMUM_STAT_MAXIMAL
+//#define MAIN_EXTREMUM_STAT_MAXIMAL
 //#define MAIN_EXTREMUM_STAT_ALL
 //#define MAIN_EXTREMUM_STAT_ALL_COLLECT
 
@@ -17,16 +17,16 @@
 namespace main_func {
 int main_extremum(int argc, char** argv);
 namespace extremum {
-  const int kEMin = 16, kEMax = 30, kSeedMin = 1, kSeedMax = 100;
-  const double kGamma = 2.3;
-  const std::string kGammaString = "2.3";
+  const int kEMin = 54, kEMax = 55, kSeedMin = 1, kSeedMax = 100;
+  const double kGamma = 2.5;
+  const std::string kGammaString = "2.5";
   // const std::string kDataDir
   //= std::string("data/extremum/nature/") + kGammaString + "_4/data/";
-  const std::string kDataDir
-      = std::string("/media/yao/Server1T/net/data/extremum/nature/")
-      + kGammaString + "_4/";
   // const std::string kDataDir
-  //= std::string("/media/yao/YAO2/") + kGammaString + "_4/";
+  //= std::string("/media/yao/Server1T/net/data/extremum/nature/")
+  //+ kGammaString + "_4/";
+  const std::string kDataDir
+      = std::string("/media/yao/data/") + kGammaString + "_4/";
 #ifndef STAT_RELATIVITY
   const std::string kStatDir = std::string("data/extremum/nature/")
       + kGammaString + "_4/stat/pearson_spearman/";
@@ -37,11 +37,11 @@ namespace extremum {
   //-kGamma_2, -kGamma_2 * 2 };
   // const std::string alpha_strings[]
   //= { "2", "3d2", "1", "3d4", "1d2", "1d4", "-1d2", "-1", "-2" };
-  // const double relativity_alphas[]
-  //= { kGamma_2 * 2, -kGamma_2 * 3 / 2, kGamma_2 * 3 / 4, kGamma_2 / 4 };
-  // const std::string alpha_strings[] = { "2", "3d2", "3d4", "1d4" };
-  const double relativity_alphas[] = { -kGamma_2, -kGamma_2 * 2 };
-  const std::string alpha_strings[] = { "-1", "-2" };
+  // const double relativity_alphas[] = { kGamma_2 / 2, kGamma_2 / 4,
+  //-kGamma_2 / 2, -kGamma_2, -kGamma_2 * 2 };
+  // const std::string alpha_strings[] = { "1d2", "1d4", "-1d2", "-1", "-2" };
+  const double relativity_alphas[] = { kGamma_2 * 3 / 2 };
+  const std::string alpha_strings[] = { "3d2" };
   const size_t alpha_len
       = sizeof(relativity_alphas) / sizeof(relativity_alphas[0]);
   extern double relativity_alpha;

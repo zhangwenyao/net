@@ -54,7 +54,8 @@ int network::ba::Ba::save_params(const char* name) const
   return 0;
 }
 
-int network::ba::Ba::save_data(const char* name) const
+int network::ba::Ba::save_data(const char* name, const int dirFlag,
+    const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();
@@ -63,7 +64,8 @@ int network::ba::Ba::save_data(const char* name) const
   return 0;
 }
 
-int network::ba::Ba::save(const char* name) const
+int network::ba::Ba::save(const char* name, const int dirFlag,
+    const char priChar, const char priChar2) const
 {
   if (name == NULL || name[0] == '\0') {
     ERROR();

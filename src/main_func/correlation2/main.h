@@ -10,12 +10,11 @@
 namespace main_func {
 int main_correlation2(int argc, char** argv);
 namespace correlation2 {
-  const std::string names[] = { "www" };
-  // const std::string names[] = { "adjnoun", "as-22july06",
-  // "CElegansMetabolic", "dolphins", "email", "football", "jazz", "karate",
-  //"PGPgiantcompo", "polbooks", "power", "Protein", "www" };
+   const std::string names[] = { "BA" };
+  //const std::string names[] = { "adjnoun", "as-22july06", "CElegansMetabolic",
+    //"dolphins", "email", "football", "jazz", "karate", "PGPgiantcompo",
+    //"polbooks", "power", "Protein", "www", "actor" };
 #define dirData0 ("data/DataSet/0undirected_unweight/" + name + "/")
-//#define dirStat0 ("data/DataSet/0undirected_unweight/")
 #define dirStat0 ("data/DataSet/0undirected_unweight/" + name + "/")
   extern std::string name, dirData, dirStat;
 }

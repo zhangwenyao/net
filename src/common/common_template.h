@@ -422,4 +422,101 @@ int common::matrixCross1_p2p(const std::vector<std::vector<T2>>& p2p,
 }
 
 // *************************************************************
+template <typename T1, typename T2, typename T3, typename T4>
+int common::histogram(std::vector<double>& val, std::vector<double>& mean,
+    std::vector<double>& deviation, std::vector<T1>& size,
+    const std::vector<T2>& val_count, const std::vector<T3>& val0,
+    const std::vector<T4>& size0, const double val_min, const double val_max,
+    const size_t val_n)
+{
+  if (val_n <= 0 || val_min >= val_max)
+    return -1;
+  val.resize(val_n);
+  mean.assign(val_n, 0);
+  deviation.assign(val_n, 0);
+  size.assign(val_n, 0);
+  const double len = (val_max - val_min) / val_n;
+  for (size_t i = 0; i < val_n; ++i)
+    val[i] = val_min + len * (i + 0.5);
+  size_t data_size = val0.size();
+  if (data_size != size0.size() || data_size != val_count.size())
+    return -1;
+  if (data_size <= 0)
+    return 0;
+  for (size_t i = 0; i < data_size; ++i) {
+    const T3 v = val0[i];
+    if (val_min > v || v > val_max)
+      continue;
+    size_t n = (v - val_min) / len;
+    if (n >= val_n)
+      --n;
+    const T4 s = size0[i];
+    const double x = val_count[i];
+    mean[n] += x * s;
+    deviation[n] += x * x * s;
+    size[n] += s;
+  }
+  for (size_t i = 0; i < val_n; ++i) {
+    if (size[i] > 0) {
+      mean[i] /= size[i];
+      deviation[i] = deviation[i] / size[i] - mean[i] * mean[i];
+      if (deviation[i] <= 0)
+        deviation[i] = 0;
+      else
+        deviation[i] = sqrt(deviation[i]);
+    }
+  }
+  return 0;
+}
+
+template <typename T1, typename T2, typename T3, typename T4>
+int common::histogram_lg2(std::vector<double>& val, std::vector<double>& mean,
+    std::vector<double>& deviation, std::vector<T1>& size,
+    const std::vector<T2>& val_count, const std::vector<T3>& val0,
+    const std::vector<T4>& size0)
+{
+  val.clear();
+  mean.clear();
+  deviation.clear();
+  size.clear();
+  size_t data_size = val0.size();
+  if (data_size != size0.size() || data_size != val_count.size())
+    return -1;
+  if (data_size <= 0)
+    return 0;
+  size_t len = 1;
+  T3 v0 = val0[0], v_max = v0 + len - 1;
+  double sum = 0, sum2 = 0;
+  size_t size_i = 0;
+  for (size_t i = 0; i < data_size; ++i) {
+    const T3 v = val0[i];
+    const T4 s = size0[i];
+    const double x = val_count[i];
+    if (v <= v_max) {
+      sum += x * s;
+      sum2 += x * x * s;
+      size_i += s;
+    }
+    if (v >= v_max || i + 1 >= data_size) {
+      if (size_i > 0) {
+        sum /= size_i;
+        sum2 = sum2 / size_i - sum * sum;
+        sum2 = sum2 <= 0 ? 0 : sqrt(sum2);
+      }
+      val.push_back(sqrt(double(v0) * v_max));
+      mean.push_back(sum);
+      deviation.push_back(sum2);
+      size.push_back(size_i);
+      v0 += len;
+      len *= 2;
+      v_max = v0 + len - 1;
+      sum = 0;
+      sum2 = 0;
+      size_i = 0;
+    }
+  }
+  return 0;
+}
+
+// *************************************************************
 #endif //_H

@@ -5,12 +5,18 @@
 
 #include "../../network/net.h"
 #include <string>
+#define MAIN_FUNC main_func::main_fitness_complexity
 
 //#define FITNESS_COMPLEXITY_MAIN_FILTER
 //#define FITNESS_COMPLEXITY_MAIN
 //#define FITNESS_COMPLEXITY_MAIN_RECOMMEND
 //#define FITNESS_COMPLEXITY_MAIN_COUNT
 //#define FITNESS_COMPLEXITY_MAIN_PLOTDATA
+
+//#define MAIN_FITNESS_COMPLEXITY
+//#define MAIN_STAT_LKK_K
+//#define MAIN_STAT_LKK_EXTREMUM
+//#define MAIN_STAT_BETWEENNESS
 
 // ******************************************************
 namespace main_func {

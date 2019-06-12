@@ -118,6 +118,19 @@ int matrixCross1_p2p(const std::vector<std::vector<T2>>& p2p,
     const std::vector<T>& a, std::vector<T>& c); // c = p2p . a
 
 // *************************************************************
+template <typename T1, typename T2, typename T3, typename T4>
+int histogram(std::vector<double>& val, std::vector<double>& mean,
+    std::vector<double>& deviation, std::vector<T1>& size,
+    const std::vector<T2>& val_count, const std::vector<T3>& val0,
+    const std::vector<T4>& size0, const double val_min, const double val_max,
+    const size_t val_n);
+template <typename T1, typename T2, typename T3, typename T4>
+int histogram_lg2(std::vector<double>& val, std::vector<double>& mean,
+    std::vector<double>& deviation, std::vector<T1>& size,
+    const std::vector<T2>& val_count, const std::vector<T3>& val0,
+    const std::vector<T4>& size0);
+
+// *************************************************************
 int mkdirs(const char* dirname = NULL);
 } // end namespace common
 

@@ -23,20 +23,20 @@ int main_func::main_correlation2(int argc, char** argv)
       Networks net;
       net.readName = dirData + name;
       net.saveName = dirStat + name;
-      net.argv = "--cal_p2p read_p2p_fix "
-                 "--stat "
-                 "--save "
-                 "--print";
-      // net.seed = 0;
-      // net.nodeSize = (NodeType)1 << 15;
-      // net.random.p = 6.0 / net.nodeSize; // ER
-      // net.ba.M = 6; // BA
-      // net.argv = "--init_seed0 "
-      //"--cal_p2p ER "
-      //"--cal_p2p BA "
-      //"--stat "
-      //"--save "
-      //"--print";
+       net.argv = "--cal_p2p read_p2p_fix "
+      "--stat "
+      "--save "
+      "--print";
+      //net.seed = 0;
+      //net.nodeSize = (NodeType)1 << 15;
+       //net.random.p = 6.0 / net.nodeSize; // ER
+      //net.ba.M = 6; // BA
+      //net.argv = "--init_seed0 "
+                 //"--cal_p2p ER "
+                 //"--cal_p2p BA "
+                 //"--stat "
+                 //"--save "
+                 //"--print";
 
       // 带参数运行
       if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {
@@ -51,7 +51,8 @@ int main_func::main_correlation2(int argc, char** argv)
         net.saveName += "_error";
         net.save_params();
       } else {
-        // net.save_params();
+        //net.saveName += "_origin";
+        //net.save_params();
       }
     } while (0);
   }

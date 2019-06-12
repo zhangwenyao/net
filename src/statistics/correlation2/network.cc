@@ -10,7 +10,9 @@ using namespace network;
 // ******************************************************
 network::correlation2::Correlation2::Correlation2(void)
     : node(0)
+    , node_spearman(0)
     , link(0)
+    , link_spearman(0)
     , No(0)
     , NoInIn(0)
     , NoInOut(0)
@@ -40,12 +42,21 @@ int network::correlation2::Correlation2::save_params(
     return -1;
   }
   if (!dirFlag) {
-    os << "--correlation2.node\t" << node << "\n--correlation2.link\t" << link
-       << '\n';
+    os << "--correlation2.node\t" << node
+       << "\n--correlation2.node_spearman\t" << node_spearman << '\n';
+#ifdef STAT_CORRELATION2_LINK
+    os << "--correlation2.link\t" << link
+       << "\n--correlation2.link_spearman\t" << link_spearman << '\n';
+#endif
   } else {
-    os << "--correlation2.node\t" << node << "\n--correlation2.link\t" << link
-       << "\n--correlation2.rho\t" << rho << "\n--correlation2.OutIn\t"
-       << OutIn << "\n--correlation2.rhoOutIn\t" << rhoOutIn << '\n';
+    os << "--correlation2.node\t" << node
+       << "\n--correlation2.node_spearman\t" << node_spearman << "\n";
+#ifdef STAT_CORRELATION2_LINK
+    os << "--correlation2.link\t" << link
+       << "\n--correlation2.link_spearman\t" << link_spearman << '\n';
+#endif
+    os << "--correlation2.rho\t" << rho << "\n--correlation2.OutIn\t" << OutIn
+       << "\n--correlation2.rhoOutIn\t" << rhoOutIn << '\n';
     if (STAT_TYPE_DIRAA) {
       os << "--correlation2.OutOut\t" << OutOut
          << "\n--correlation2.rhoOutOut\t" << rhoOutOut
@@ -89,6 +100,43 @@ int network::correlation2::Correlation2::save_data(const char* name,
   if (!node_correlation2_size.empty())
     f |= save1((fn + ".node_correlation2_size.txt").c_str(),
         node_correlation2_size, priChar);
+  if (!node_correlation2_spearman.empty())
+    f |= save1((fn + ".node_correlation2_spearman.txt").c_str(),
+        node_correlation2_spearman, priChar);
+  if (!histogram_val.empty())
+    f |= save1((fn + ".histogram_val.txt").c_str(), histogram_val, priChar);
+  if (!histogram_mean.empty())
+    f |= save1((fn + ".histogram_mean.txt").c_str(), histogram_mean, priChar);
+  if (!histogram_deviation.empty())
+    f |= save1((fn + ".histogram_deviation.txt").c_str(), histogram_deviation,
+        priChar);
+  if (!histogram_size.empty())
+    f |= save1((fn + ".histogram_size.txt").c_str(), histogram_size, priChar);
+  if (!histogram_val_spearman0.empty())
+    f |= save1((fn + ".histogram_val_spearman0.txt").c_str(),
+        histogram_val_spearman0, priChar);
+  if (!histogram_mean_spearman0.empty())
+    f |= save1((fn + ".histogram_mean_spearman0.txt").c_str(),
+        histogram_mean_spearman0, priChar);
+  if (!histogram_deviation_spearman0.empty())
+    f |= save1((fn + ".histogram_deviation_spearman0.txt").c_str(),
+        histogram_deviation_spearman0, priChar);
+  if (!histogram_size_spearman0.empty())
+    f |= save1((fn + ".histogram_size_spearman0.txt").c_str(),
+        histogram_size_spearman0, priChar);
+  if (!histogram_val_spearman.empty())
+    f |= save1((fn + ".histogram_val_spearman.txt").c_str(),
+        histogram_val_spearman, priChar);
+  if (!histogram_mean_spearman.empty())
+    f |= save1((fn + ".histogram_mean_spearman.txt").c_str(),
+        histogram_mean_spearman, priChar);
+  if (!histogram_deviation_spearman.empty())
+    f |= save1((fn + ".histogram_deviation_spearman.txt").c_str(),
+        histogram_deviation_spearman, priChar);
+  if (!histogram_size_spearman.empty())
+    f |= save1((fn + ".histogram_size_spearman.txt").c_str(),
+        histogram_size_spearman, priChar);
+
   if (!nodeNeiAveDeg.empty())
     f |= save1((fn + ".nodeNeiAveDeg.txt").c_str(), nodeNeiAveDeg, priChar);
   if (!neiAveDeg.empty())
@@ -148,9 +196,19 @@ int network::correlation2::Correlation2::read_params_1(string& s, istream& is)
       cout << s << '\t' << node << endl;
       break;
     }
+    if (s == "--correlation2.node_spearman") {
+      is >> node_spearman;
+      cout << s << '\t' << node_spearman << endl;
+      break;
+    }
     if (s == "--correlation2.link") {
       is >> link;
       cout << s << '\t' << link << endl;
+      break;
+    }
+    if (s == "--correlation2.link_spearman") {
+      is >> link_spearman;
+      cout << s << '\t' << link_spearman << endl;
       break;
     }
     if (s == "--correlation2.InIn") {
@@ -184,7 +242,9 @@ network::correlation2::Correlation2&
 network::correlation2::Correlation2::clear(void)
 {
   node = 0;
+  node_spearman = 0;
   link = 0;
+  link_spearman = 0;
   InIn = 0;
   InOut = 0;
   OutIn = 0;
@@ -201,7 +261,21 @@ network::correlation2::Correlation2::clear(void)
   rhoOutOut = 0;
 
   node_correlation2.clear();
+  node_correlation2_spearman.clear();
   node_correlation2_size.clear();
+  histogram_val.clear();
+  histogram_mean.clear();
+  histogram_deviation.clear();
+  histogram_size.clear();
+  histogram_val_spearman0.clear();
+  histogram_mean_spearman0.clear();
+  histogram_deviation_spearman0.clear();
+  histogram_size_spearman0.clear();
+  histogram_val_spearman.clear();
+  histogram_mean_spearman.clear();
+  histogram_deviation_spearman.clear();
+  histogram_size_spearman.clear();
+
   nodeNeiAveDeg.clear();
   nodeNeiAveDegIn.clear();
   nodeNeiAveDegOut.clear();
@@ -235,13 +309,35 @@ Networks& Networks::stat_correlation2(void)
     if (!dirFlag && !weightFlag && !p2p.empty()) {
       network::correlation2::cal_correlation2_node(correlation2.node, p2p);
       network::correlation2::cal_correlation2_node_spearman(
-          correlation2.node, p2p, degArrVal, spearman.deg2ArrVal);
-      // network::correlation2::cal_correlation2_link(correlation2.link, p2p);
-      // network::correlation2::cal_correlation2_link_spearman(correlation2.link,
-      // p2p,degArrVal,spearman.deg2ArrVal);
+          correlation2.node_spearman, p2p, degArrVal, spearman.deg2ArrVal);
+#ifdef STAT_CORRELATION2_LINK
+      network::correlation2::cal_correlation2_link(correlation2.link, p2p);
+      network::correlation2::cal_correlation2_link_spearman(
+          correlation2.link_spearman, p2p, degArrVal, spearman.deg2ArrVal);
+#endif
       network::correlation2::cal_correlation2_node_k(
           correlation2.node_correlation2, correlation2.node_correlation2_size,
           p2p, degArrVal);
+      network::correlation2::cal_correlation2_node_spearman_k(
+          correlation2.node_correlation2_spearman,
+          correlation2.node_correlation2_size, p2p, degArrVal,
+          spearman.deg2ArrVal);
+      histogram_lg2(correlation2.histogram_val, correlation2.histogram_mean,
+          correlation2.histogram_deviation, correlation2.histogram_size,
+          correlation2.node_correlation2, degArrVal,
+          correlation2.node_correlation2_size);
+      histogram_lg2(correlation2.histogram_val_spearman0,
+          correlation2.histogram_mean_spearman0,
+          correlation2.histogram_deviation_spearman0,
+          correlation2.histogram_size_spearman0,
+          correlation2.node_correlation2_spearman, degArrVal,
+          correlation2.node_correlation2_size);
+      histogram(correlation2.histogram_val_spearman,
+          correlation2.histogram_mean_spearman,
+          correlation2.histogram_deviation_spearman,
+          correlation2.histogram_size_spearman,
+          correlation2.node_correlation2_spearman, spearman.deg2ArrVal,
+          correlation2.node_correlation2_size, 0, 1, 10);
     } else {
       // TODO
       ERROR();

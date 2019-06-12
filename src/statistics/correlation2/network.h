@@ -10,11 +10,20 @@ namespace correlation2 {
   // ******************************************************
   class Correlation2 {
 public:
-    double node, link, InIn, InOut, OutIn, OutOut;
+    double node, node_spearman, link, link_spearman;
+    double InIn, InOut, OutIn, OutOut;
     double No, NoInIn, NoInOut, NoOutIn, NoOutOut;
     double rho, rhoInIn, rhoInOut, rhoOutIn, rhoOutOut;
-    VDouble node_correlation2;
+    VDouble node_correlation2, node_correlation2_spearman;
     VLinkType node_correlation2_size;
+    VDouble histogram_val, histogram_mean, histogram_deviation;
+    VLinkType histogram_size;
+    VDouble histogram_val_spearman0, histogram_mean_spearman0,
+        histogram_deviation_spearman0;
+    VLinkType histogram_size_spearman0;
+    VDouble histogram_val_spearman, histogram_mean_spearman,
+        histogram_deviation_spearman;
+    VLinkType histogram_size_spearman;
 
     VDouble nodeNeiAveDeg, nodeNeiAveDegIn,
         nodeNeiAveDegOut; // [nodeSize]   各点的邻居平均度

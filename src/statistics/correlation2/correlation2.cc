@@ -42,13 +42,13 @@ int correlation2::cal_correlation2_node(double& node, const VVNodeType& p2p)
   return 0;
 }
 
-int correlation2::cal_correlation2_node_spearman(double& node,
+int correlation2::cal_correlation2_node_spearman(double& node_spearman,
     const VVNodeType& p2p, const VNodeType& degArrVal,
     const VDouble& deg2ArrVal)
 {
   double sxy = 0, sx = 0, sx2 = 0;
   LinkType l = 0;
-  node = 0;
+  node_spearman = 0;
   set<NodeType> nnodes;
   const NodeType nodeSize = p2p.size(), degSize = degArrVal.size();
   map<NodeType, NodeType> degArrVal_map_no;
@@ -77,7 +77,7 @@ int correlation2::cal_correlation2_node_spearman(double& node,
       INFORM(i + 1, "\t/ ", nodeSize);
   }
   if (l > 0)
-    node = (2.0 * l * sxy - sx * sx) / (2.0 * l * sx2 - sx * sx);
+    node_spearman = (2.0 * l * sxy - sx * sx) / (2.0 * l * sx2 - sx * sx);
   return 0;
 }
 
@@ -117,13 +117,13 @@ int correlation2::cal_correlation2_link(double& link, const VVNodeType& p2p)
   return 0;
 }
 
-int correlation2::cal_correlation2_link_spearman(double& link,
+int correlation2::cal_correlation2_link_spearman(double& link_spearman,
     const VVNodeType& p2p, const VNodeType& degArrVal,
     const VDouble& deg2ArrVal)
 {
   double sxy = 0, sx = 0, sx2 = 0;
   LinkType l = 0;
-  link = 0;
+  link_spearman = 0;
   const NodeType nodeSize = p2p.size(), degSize = degArrVal.size();
   vector<set<NodeType>> nodess(nodeSize);
   map<NodeType, NodeType> degArrVal_map_no;
@@ -155,7 +155,7 @@ int correlation2::cal_correlation2_link_spearman(double& link,
       INFORM(i + 1, "\t/ ", nodeSize);
   }
   if (l > 0)
-    link = (2.0 * l * sxy - sx * sx) / (2.0 * l * sx2 - sx * sx);
+    link_spearman = (2.0 * l * sxy - sx * sx) / (2.0 * l * sx2 - sx * sx);
   return 0;
 }
 
@@ -200,6 +200,54 @@ int correlation2::cal_correlation2_node_k(VDouble& node_correlation2,
   for (NodeType i = 0; i < degSize; ++i) {
     if (node_correlation2_size[i] > 0)
       node_correlation2[i]
+          = (2.0 * node_correlation2_size[i] * sxy[i] - sx[i] * sx[i])
+          / (2.0 * node_correlation2_size[i] * sx2[i] - sx[i] * sx[i]);
+  }
+  return 0;
+}
+
+int correlation2::cal_correlation2_node_spearman_k(
+    VDouble& node_correlation2_spearman, VLinkType& node_correlation2_size,
+    const VVNodeType& p2p, const VNodeType& degArrVal,
+    const VDouble& deg2ArrVal)
+{
+  const NodeType degSize = degArrVal.size(), nodeSize = p2p.size();
+  VDouble sxy, sx, sx2;
+  node_correlation2_spearman.assign(degSize, 0);
+  node_correlation2_size.assign(degSize, 0);
+  sxy.assign(degSize, 0);
+  sx.assign(degSize, 0);
+  sx2.assign(degSize, 0);
+  map<NodeType, NodeType> degArrVal_map_no;
+  for (NodeType i = 0; i < degSize; ++i)
+    degArrVal_map_no[degArrVal[i]] = i;
+  set<NodeType> nnodes;
+  for (NodeType i = 0; i < nodeSize; ++i) {
+    nnodes.clear();
+    for (auto j : p2p[i])
+      if (j > i)
+        nnodes.insert(j);
+    const double x = deg2ArrVal[degArrVal_map_no[p2p[i].size()]], x2 = x * x,
+                 x2p = x * 2.0;
+    for (auto const j : p2p[i]) {
+      const NodeType deg_j = p2p[j].size(), j_no = degArrVal_map_no[deg_j];
+      for (auto const k : p2p[j]) {
+        if (k <= i || nnodes.find(k) != nnodes.end())
+          continue;
+        nnodes.insert(k);
+        const double y = deg2ArrVal[degArrVal_map_no[p2p[k].size()]];
+        sxy[j_no] += x2p * y;
+        sx[j_no] += x + y;
+        sx2[j_no] += x2 + y * y;
+        ++node_correlation2_size[j_no];
+      }
+    }
+    if (i % 10000 == 9999)
+      INFORM(i + 1, "\t/ ", nodeSize);
+  }
+  for (NodeType i = 0; i < degSize; ++i) {
+    if (node_correlation2_size[i] > 0)
+      node_correlation2_spearman[i]
           = (2.0 * node_correlation2_size[i] * sxy[i] - sx[i] * sx[i])
           / (2.0 * node_correlation2_size[i] * sx2[i] - sx[i] * sx[i]);
   }

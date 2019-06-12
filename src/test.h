@@ -3,6 +3,7 @@
 #include "main.h"
 #ifdef MAIN_TEST
 
+#define MAIN_FUNC main_func::main_test
 namespace main_func{
 // *******************************************************
 int main_test(int argc, char** argv);

@@ -7,36 +7,16 @@ using namespace common;
 using namespace network;
 
 // ******************************************************
-int network::ba::BA_new(const NodeType M, const NodeType M0,
-    const NodeType nodeSize, VVNodeType& p2p, NodeType& kMin, NodeType& kMax)
+// 添加 [n,nodeize) 号节点，按度概率舍选
+int add_node_prob(VVNodeType& p2p, NodeType& kMax, const NodeType M,
+    const NodeType n, const NodeType nodeSize)
 {
-  if (M <= 0 || M0 < M || nodeSize < M0)
+  if (nodeSize > p2p.size() || n >= nodeSize)
     return -1;
-  p2p.resize(nodeSize);
-
-  // 全连通子网络
-  VVNodeTypeItr itr = p2p.begin();
-  for (NodeType i = 0; i < M0; i++, itr++) {
-    itr->resize(0);
-    itr->reserve(M0 - 1);
-  }
-  for (NodeType i = M0; i < nodeSize; i++, itr++) {
-    itr->resize(0);
-    itr->reserve(M);
-  }
-  for (NodeType i = 1; i < M0; i++) {
-    for (NodeType j = 0; j < i; j++) {
-      p2p[i].push_back(j);
-      p2p[j].push_back(i);
-    }
-  }
-
-  kMin = M;
-  kMax = M0 - 1;
-  VNodeType tmp(nodeSize);
+  VNodeType tmp(nodeSize); // 已连边的节点编号
   for (NodeType i = 0; i < nodeSize; i++)
-    tmp[i] = i;                              // 已连边的节点编号
-  for (NodeType i = M0; i < nodeSize; i++) { // 按正比于度大小的概率随机连边
+    tmp[i] = i;
+  for (NodeType i = n; i < nodeSize; i++) { // 按正比于度大小的概率随机连边
     for (NodeType j = 0; j < M; j++) {
       NodeType k, t;
       std::uniform_int_distribution<NodeType> dis(j, i - 1);
@@ -54,6 +34,69 @@ int network::ba::BA_new(const NodeType M, const NodeType M0,
         kMax = p2p[t].size();
     }
   }
+  return 0;
+}
+
+// 添加 [n,nodeize) 号节点，随机选点的随机邻居
+int add_node_choice(VVNodeType& p2p, NodeType& kMax, const NodeType M,
+    const NodeType n, const NodeType nodeSize)
+{
+  if (nodeSize > p2p.size() || n >= nodeSize)
+    return -1;
+  VNodeType tmp(nodeSize), loc(nodeSize); // 已连边的节点编号、位置
+  for (NodeType i = 0; i < nodeSize; i++) {
+    tmp[i] = i;
+    loc[i] = i;
+  }
+  for (NodeType i = n; i < nodeSize; i++) { // 按正比于度大小的概率随机连边
+    for (NodeType j = 0; j < M; j++) {
+      NodeType k, t;
+      std::uniform_int_distribution<NodeType> dis(j, i - 1);
+      k = dis(rand2); // 抽中前面第k个位置的节点
+      t = tmp[k];     // 第k个位置节点的编号为t
+      std::uniform_int_distribution<NodeType> dis2(0, p2p[t].size() - 1);
+      k = dis2(rand2); // 选中t的第k个邻居
+      t = p2p[t][k];   // 邻居的编号
+      p2p[i].push_back(t);
+      p2p[t].push_back(i);
+      if (p2p[t].size() > kMax)
+        kMax = p2p[t].size();
+      k = loc[t];   // 邻居的位置
+      if (k != j) { // j、k位置节点互换
+        tmp[k] = tmp[j];
+        loc[tmp[j]] = k;
+        tmp[j] = t;
+        loc[t] = j;
+      }
+    }
+  }
+  return 0;
+}
+
+int network::ba::BA_new(const NodeType M, const NodeType M0,
+    const NodeType nodeSize, VVNodeType& p2p, NodeType& kMin, NodeType& kMax)
+{
+  if (M <= 0 || M0 < M || nodeSize < M0)
+    return -1;
+  p2p.resize(nodeSize);
+
+  // 全连通子网络
+  VVNodeTypeItr itr = p2p.begin();
+  for (NodeType i = 0; i < M0; i++, itr++) {
+    itr->clear();
+    itr->reserve(M0 - 1);
+  }
+  for (NodeType i = M0; i < nodeSize; i++, itr++) {
+    itr->clear();
+    itr->reserve(M);
+  }
+  addLink_p2p_full(p2p, M0);
+
+  kMin = M;
+  kMax = M0 - 1;
+  //_ERR(add_node_prob(p2p, kMax, M, M0, nodeSize));
+  _ERR(add_node_choice(p2p, kMax, M, M0, nodeSize));
+
   return 0;
 }
 

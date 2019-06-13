@@ -309,19 +309,19 @@ Networks& Networks::stat_correlation2(void)
     if (!dirFlag && !weightFlag && !p2p.empty()) {
       network::correlation2::cal_correlation2_node(correlation2.node, p2p);
       network::correlation2::cal_correlation2_node_spearman(
-          correlation2.node_spearman, p2p, degArrVal, spearman.deg2ArrVal);
+          correlation2.node_spearman, p2p, spearman.deg2ArrVal, degArrNo);
 #ifdef STAT_CORRELATION2_LINK
       network::correlation2::cal_correlation2_link(correlation2.link, p2p);
       network::correlation2::cal_correlation2_link_spearman(
-          correlation2.link_spearman, p2p, degArrVal, spearman.deg2ArrVal);
+          correlation2.link_spearman, p2p, spearman.deg2ArrVal, degArrNo);
 #endif
       network::correlation2::cal_correlation2_node_k(
           correlation2.node_correlation2, correlation2.node_correlation2_size,
-          p2p, degArrVal);
+          p2p, degArrVal, degArrNo);
       network::correlation2::cal_correlation2_node_spearman_k(
           correlation2.node_correlation2_spearman,
           correlation2.node_correlation2_size, p2p, degArrVal,
-          spearman.deg2ArrVal);
+          spearman.deg2ArrVal, degArrNo);
       histogram_lg2(correlation2.histogram_val, correlation2.histogram_mean,
           correlation2.histogram_deviation, correlation2.histogram_size,
           correlation2.node_correlation2, degArrVal,

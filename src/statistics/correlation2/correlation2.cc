@@ -18,12 +18,12 @@ int correlation2::cal_correlation2_node(double& node, const VVNodeType& p2p)
   const NodeType nodeSize = p2p.size();
   for (NodeType i = 0; i < nodeSize; ++i) {
     nnodes.clear();
-    for (auto j : p2p[i])
+    for (const auto j : p2p[i])
       if (j > i)
         nnodes.insert(j);
     const double x = p2p[i].size(), x2 = x * x, x2p = x * 2.0;
-    for (auto const j : p2p[i]) {
-      for (auto const k : p2p[j]) {
+    for (const auto j : p2p[i]) {
+      for (const auto k : p2p[j]) {
         if (k <= i || nnodes.find(k) != nnodes.end())
           continue;
         nnodes.insert(k);
@@ -43,30 +43,27 @@ int correlation2::cal_correlation2_node(double& node, const VVNodeType& p2p)
 }
 
 int correlation2::cal_correlation2_node_spearman(double& node_spearman,
-    const VVNodeType& p2p, const VNodeType& degArrVal,
-    const VDouble& deg2ArrVal)
+    const VVNodeType& p2p, const VDouble& deg2ArrVal,
+    const MNodeType& degArrNo)
 {
   double sxy = 0, sx = 0, sx2 = 0;
   LinkType l = 0;
   node_spearman = 0;
   set<NodeType> nnodes;
-  const NodeType nodeSize = p2p.size(), degSize = degArrVal.size();
-  map<NodeType, NodeType> degArrVal_map_no;
-  for (NodeType i = 0; i < degSize; ++i)
-    degArrVal_map_no[degArrVal[i]] = i;
+  const NodeType nodeSize = p2p.size();
   for (NodeType i = 0; i < nodeSize; ++i) {
     nnodes.clear();
-    for (auto j : p2p[i])
+    for (const auto j : p2p[i])
       if (j > i)
         nnodes.insert(j);
-    const double x = deg2ArrVal[degArrVal_map_no[p2p[i].size()]], x2 = x * x,
+    const double x = deg2ArrVal[degArrNo.at(p2p[i].size())], x2 = x * x,
                  x2p = x * 2.0;
-    for (auto const j : p2p[i]) {
-      for (auto const k : p2p[j]) {
+    for (const auto j : p2p[i]) {
+      for (const auto k : p2p[j]) {
         if (k <= i || nnodes.find(k) != nnodes.end())
           continue;
         nnodes.insert(k);
-        const double y = deg2ArrVal[degArrVal_map_no[p2p[k].size()]];
+        const double y = deg2ArrVal[degArrNo.at(p2p[k].size())];
         sxy += x2p * y;
         sx += x + y;
         sx2 += x2 + y * y;
@@ -118,17 +115,14 @@ int correlation2::cal_correlation2_link(double& link, const VVNodeType& p2p)
 }
 
 int correlation2::cal_correlation2_link_spearman(double& link_spearman,
-    const VVNodeType& p2p, const VNodeType& degArrVal,
-    const VDouble& deg2ArrVal)
+    const VVNodeType& p2p, const VDouble& deg2ArrVal,
+    const MNodeType& degArrNo)
 {
   double sxy = 0, sx = 0, sx2 = 0;
   LinkType l = 0;
   link_spearman = 0;
-  const NodeType nodeSize = p2p.size(), degSize = degArrVal.size();
+  const NodeType nodeSize = p2p.size();
   vector<set<NodeType>> nodess(nodeSize);
-  map<NodeType, NodeType> degArrVal_map_no;
-  for (NodeType i = 0; i < degSize; ++i)
-    degArrVal_map_no[degArrVal[i]] = i;
   for (NodeType i = 0; i < nodeSize; ++i) {
     for (auto j : p2p[i])
       nodess[i].insert(j);
@@ -138,13 +132,13 @@ int correlation2::cal_correlation2_link_spearman(double& link_spearman,
     for (NodeType ij = 0; ij < deg_i; ++ij) {
       const NodeType j = p2p[i][ij];
       auto& nodes = nodess[j];
-      const double x = deg2ArrVal[degArrVal_map_no[p2p[j].size()]],
-                   x2 = x * x, x2p = x * 2.0;
+      const double x = deg2ArrVal[degArrNo.at(p2p[j].size())], x2 = x * x,
+                   x2p = x * 2.0;
       for (NodeType ik = ij + 1; ik < deg_i; ++ik) {
         const NodeType k = p2p[i][ik];
         if (k == j || nodes.find(k) != nodes.end())
           continue;
-        const double y = deg2ArrVal[degArrVal_map_no[p2p[k].size()]];
+        const double y = deg2ArrVal[degArrNo.at(p2p[k].size())];
         sxy += x2p * y;
         sx += x + y;
         sx2 += x2 + y * y;
@@ -162,7 +156,7 @@ int correlation2::cal_correlation2_link_spearman(double& link_spearman,
 // ******************************************************
 int correlation2::cal_correlation2_node_k(VDouble& node_correlation2,
     VLinkType& node_correlation2_size, const VVNodeType& p2p,
-    const VNodeType& degArrVal)
+    const VNodeType& degArrVal, const MNodeType& degArrNo)
 {
   const NodeType degSize = degArrVal.size(), nodeSize = p2p.size();
   VDouble sxy, sx, sx2;
@@ -171,19 +165,16 @@ int correlation2::cal_correlation2_node_k(VDouble& node_correlation2,
   sxy.assign(degSize, 0);
   sx.assign(degSize, 0);
   sx2.assign(degSize, 0);
-  map<NodeType, NodeType> degArrVal_map_no;
-  for (NodeType i = 0; i < degSize; ++i)
-    degArrVal_map_no[degArrVal[i]] = i;
   set<NodeType> nnodes;
   for (NodeType i = 0; i < nodeSize; ++i) {
     nnodes.clear();
-    for (auto j : p2p[i])
+    for (const auto j : p2p[i])
       if (j > i)
         nnodes.insert(j);
     const double x = p2p[i].size(), x2 = x * x, x2p = x * 2.0;
-    for (auto const j : p2p[i]) {
-      const NodeType deg_j = p2p[j].size(), j_no = degArrVal_map_no[deg_j];
-      for (auto const k : p2p[j]) {
+    for (const auto j : p2p[i]) {
+      const NodeType deg_j = p2p[j].size(), j_no = degArrNo.at(deg_j);
+      for (const auto k : p2p[j]) {
         if (k <= i || nnodes.find(k) != nnodes.end())
           continue;
         nnodes.insert(k);
@@ -209,7 +200,7 @@ int correlation2::cal_correlation2_node_k(VDouble& node_correlation2,
 int correlation2::cal_correlation2_node_spearman_k(
     VDouble& node_correlation2_spearman, VLinkType& node_correlation2_size,
     const VVNodeType& p2p, const VNodeType& degArrVal,
-    const VDouble& deg2ArrVal)
+    const VDouble& deg2ArrVal, const MNodeType& degArrNo)
 {
   const NodeType degSize = degArrVal.size(), nodeSize = p2p.size();
   VDouble sxy, sx, sx2;
@@ -218,24 +209,21 @@ int correlation2::cal_correlation2_node_spearman_k(
   sxy.assign(degSize, 0);
   sx.assign(degSize, 0);
   sx2.assign(degSize, 0);
-  map<NodeType, NodeType> degArrVal_map_no;
-  for (NodeType i = 0; i < degSize; ++i)
-    degArrVal_map_no[degArrVal[i]] = i;
   set<NodeType> nnodes;
   for (NodeType i = 0; i < nodeSize; ++i) {
     nnodes.clear();
-    for (auto j : p2p[i])
+    for (const auto j : p2p[i])
       if (j > i)
         nnodes.insert(j);
-    const double x = deg2ArrVal[degArrVal_map_no[p2p[i].size()]], x2 = x * x,
+    const double x = deg2ArrVal[degArrNo.at(p2p[i].size())], x2 = x * x,
                  x2p = x * 2.0;
-    for (auto const j : p2p[i]) {
-      const NodeType deg_j = p2p[j].size(), j_no = degArrVal_map_no[deg_j];
-      for (auto const k : p2p[j]) {
+    for (const auto j : p2p[i]) {
+      const NodeType deg_j = p2p[j].size(), j_no = degArrNo.at(deg_j);
+      for (const auto k : p2p[j]) {
         if (k <= i || nnodes.find(k) != nnodes.end())
           continue;
         nnodes.insert(k);
-        const double y = deg2ArrVal[degArrVal_map_no[p2p[k].size()]];
+        const double y = deg2ArrVal[degArrNo.at(p2p[k].size())];
         sxy[j_no] += x2p * y;
         sx[j_no] += x + y;
         sx2[j_no] += x2 + y * y;

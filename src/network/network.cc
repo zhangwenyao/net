@@ -781,11 +781,6 @@ network::Network& network::Network::read_degArr(const char* name)
   // return *this;
   //}
   //}
-  // if (degArrNo.empty() && 0 != degArrVal_2_degArrNo(degArrNo, degArrVal)) {
-  // runStatus = -1;
-  // ERROR();
-  // return *this;
-  //}
 
   if (kMin <= 0)
     kMin = degArrVal.front() <= degArrVal.back() ? degArrVal.front()

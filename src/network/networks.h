@@ -7,6 +7,10 @@
 #include "../model/degree/network.h"
 #endif
 
+#ifdef NET_EXTREMUM
+#include "../model/extremum/network.h"
+#endif
+
 #ifdef NET_RANDOM
 #include "../model/random/network.h"
 #endif
@@ -19,8 +23,12 @@
 #include "../model/grid/network.h"
 #endif
 
-#ifdef NET_EXTREMUM
-#include "../model/extremum/network.h"
+#ifdef NET_ACTOR
+#include "../model/actor/network.h"
+#endif
+
+#ifdef NET_FOODWEB
+#include "../model/foodweb/network.h"
 #endif
 
 #ifdef STAT_PEARSON

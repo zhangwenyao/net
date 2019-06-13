@@ -18,8 +18,9 @@ const std::string NET_VERSION = "net3.0: " __DATE__ ", " __TIME__;
 
 //#define NET_EXTREMUM // 特例网络
 //#define NET_RANDOM // 随机网络
-//#define NET_BA // BA网络
+#define NET_BA // BA网络
 //#define NET_GRID     // 网格网络
+//#define NET_ACTOR     // 演员合作网络
 
 const bool STAT_TYPE_DIRAA = 0; // 0 : OutIn, 1 : OutIn OutOut InOut InIn
 #define STAT_PEARSON
@@ -215,6 +216,9 @@ int delLink_p2p_ranNode1(VVNodeType& p2p, const NodeType nodeSize,
     VNodeType& nodeDeg, VNodeType& remPoiNum, NodeType& remPoiSize,
     LinkType& linkRemain, const LinkType linkSize,
     LinkType delCount); // 随机选点再选边删除
+
+int addLink_p2p_full(VVNodeType& p2p, NodeType M = 0,
+    const NodeType n = 0); // 添加节点 [n,M) 的全连通网络
 
 // *******************************************************
 int check_p2pSize_linkSize(const VVNodeType& p2p, const LinkType linkSize);

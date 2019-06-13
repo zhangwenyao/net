@@ -3,12 +3,37 @@
 
 #include "../../common/common.h"
 #include "../../network/net.h"
+
+#ifdef MAIN_EXTREMUM_NEW_DEG_ARR
+#include "new_deg_arr.h"
+#endif
+
+#ifdef MAIN_EXTREMUM_NEW_MINIMAL
+#include "new_minimal.h"
+#endif
+
+#ifdef MAIN_EXTREMUM_NEW_MAXIMAL
+#include "new_maximal.h"
+#endif
+
+#ifdef MAIN_EXTREMUM_STAT_MINIMAL
+#include "stat_minimal.h"
+#endif
+
+#ifdef MAIN_EXTREMUM_STAT_MAXIMAL
+#include "stat_maximal.h"
+#endif
+
+#ifdef MAIN_EXTREMUM_STAT_ALL
+#include "stat_all.h"
+#endif
+
 using namespace std;
 using namespace common;
 using namespace network;
 using namespace main_func::extremum;
 
-// **********************************************************
+// ******************************************************
 #ifdef STAT_RELATIVITY
 double main_func::extremum::relativity_alpha;
 string main_func::extremum::alpha_string, main_func::extremum::kStatDir;

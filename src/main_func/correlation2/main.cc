@@ -3,14 +3,28 @@
 
 #include "../../common/common.h"
 #include "../../network/networks.h"
+
+#ifdef MAIN_CORRELATION2_NEW_NETWORKS
+#include "new_networks.h"
+#endif
+
+#ifdef MAIN_CORRELATION2_STATISTICS_NETWORKS
+#include "statistics_networks.h"
+#endif
+
+#ifdef MAIN_CORRELATION2_EVOLUTION
+#include "evolution.h"
+#endif
+
 using namespace std;
 using namespace common;
 using namespace network;
 using namespace main_func::correlation2;
 
+// **********************************************************
 string main_func::correlation2::name, main_func::correlation2::dirData,
     main_func::correlation2::dirStat;
-// **********************************************************
+
 int main_func::main_correlation2(int argc, char** argv)
 {
   for (auto& name_i : names) {
@@ -19,42 +33,18 @@ int main_func::main_correlation2(int argc, char** argv)
     dirStat = dirStat0;
     mkdirs(dirData.c_str());
     mkdirs(dirStat.c_str());
-    do {
-      Networks net;
-      net.readName = dirData + name;
-      net.saveName = dirStat + name;
-       net.argv = "--cal_p2p read_p2p_fix "
-      "--stat "
-      "--save "
-      "--print";
-      //net.seed = 0;
-      //net.nodeSize = (NodeType)1 << 15;
-       //net.random.p = 6.0 / net.nodeSize; // ER
-      //net.ba.M = 6; // BA
-      //net.argv = "--init_seed0 "
-                 //"--cal_p2p ER "
-                 //"--cal_p2p BA "
-                 //"--stat "
-                 //"--save "
-                 //"--print";
 
-      // 带参数运行
-      if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {
-        ERROR("net.read_params(argc, argv)");
-        break;
-      }
+#ifdef MAIN_CORRELATION2_NEW_NETWORKS
+    _ERR(correlation2::new_networks(argc, argv));
+#endif
 
-      //功能模块
-      if (0 != net.run().runStatus) {
-        ERROR("net.run");
-        cerr << net << endl;
-        net.saveName += "_error";
-        net.save_params();
-      } else {
-        //net.saveName += "_origin";
-        //net.save_params();
-      }
-    } while (0);
+#ifdef MAIN_CORRELATION2_STATISTICS_NETWORKS
+    _ERR(correlation2::statistics_networks(argc, argv));
+#endif
+
+#ifdef MAIN_CORRELATION2_EVOLUTION
+    _ERR(correlation2::evolution(argc, argv));
+#endif
   }
   return 0;
 }

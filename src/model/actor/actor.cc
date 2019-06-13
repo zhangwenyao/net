@@ -21,14 +21,14 @@ int network::actor::data_read_actor_p2p(VVNodeType& p2p, const char* name)
   }
   VNodeType v;
   LinkType c = 0;
-  while (read1_0(is, v) == 0) { // ÖğĞĞ¶ÁÈ¡
+  while (read1_0(is, v) == 0) { // é€è¡Œè¯»å–
     c++;
     if (v.size() < 2)
       continue;
     sort(v.begin(), v.end());
     if (p2p.size() <= v.back())
       p2p.resize(v.back() + 1);
-    // Í¬Ò»µçÓ°£¨ĞĞ£©¶ÔÓ¦ËùÓĞÑİÔ±£¨½Úµã£©Ë«ÏòÁ¬±ß
+    // åŒä¸€ç”µå½±ï¼ˆè¡Œï¼‰å¯¹åº”æ‰€æœ‰æ¼”å‘˜ï¼ˆèŠ‚ç‚¹ï¼‰åŒå‘è¿è¾¹
     for (VNodeTypeCItr i = v.begin(); i < v.end(); i++)
       for (VNodeTypeCItr j = i + 1; j != v.end(); j++) {
         if (*i != *j) {
@@ -43,3 +43,4 @@ int network::actor::data_read_actor_p2p(VVNodeType& p2p, const char* name)
 }
 // *******************************************************
 #endif
+

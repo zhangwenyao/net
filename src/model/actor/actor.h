@@ -12,4 +12,4 @@ namespace actor {
 
 // *******************************************************
 #endif
-#endif // NET_ACTOR_H
+#endif // _H_

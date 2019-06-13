@@ -8,6 +8,8 @@ namespace ba {
   // ******************************************************
   int BA_new(const NodeType M, const NodeType M0, const NodeType nodeSize,
       VVNodeType& p2p, NodeType& kMin, NodeType& kMax); // 生成BA网络
+  int BA_new(const NodeType M, const NodeType M0, const NodeType nodeSize,
+      VVNodeType& p2p, VNodeType& link, NodeType& kMin, NodeType& kMax);
 
   NodeType BA_get_distance(const NodeType ni, const NodeType nj,
       const NodeType nodeSize, const VVNodeType& p2p);

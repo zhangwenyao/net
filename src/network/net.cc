@@ -1592,6 +1592,25 @@ int network::addLink_p2p_full(VVNodeType& p2p, NodeType M, const NodeType n)
   return 0;
 }
 
+int network::addLink_p2p_link_full(
+    VVNodeType& p2p, VNodeType& link, NodeType M, const NodeType n)
+{
+  if (M > p2p.size() || n > M)
+    return -1;
+  if (M == 0)
+    M = p2p.size();
+  if (M <= 1)
+    return 0;
+  for (NodeType i = n + 1; i < M; ++i)
+    for (NodeType j = n; j < i; ++j) {
+      p2p[i].push_back(j);
+      p2p[j].push_back(i);
+      link.push_back(j);
+      link.push_back(i);
+    }
+  return 0;
+}
+
 int network::delLink_p2p_ranLink(VVNodeType& p2p, VNodeType& nodeDeg,
     VNodeType& remPoiNum, LinkType& linkRemain, const LinkType linkSize,
     VNodeType& link, LinkType delCount)

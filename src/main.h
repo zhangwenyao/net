@@ -3,8 +3,8 @@
 
 // *******************************************************
 //#define MAIN_TEST
-#define MAIN_EXTREMUM
-//#define MAIN_CORRELATION2
+//#define MAIN_EXTREMUM
+#define MAIN_CORRELATION2
 
 // *******************************************************
 #endif

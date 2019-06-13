@@ -95,17 +95,57 @@ int network::ba::BA_new(const NodeType M, const NodeType M0,
   kMin = M;
   kMax = M0 - 1;
   _ERR(add_node_prob(p2p, kMax, M, M0, nodeSize));
-  //_ERR(add_node_choice(p2p, kMax, M, M0, nodeSize));
 
   return 0;
 }
 
+// 添加 [n,nodeize) 号节点，随机选边的一端
+int add_node_link(VVNodeType& p2p, VNodeType& link, NodeType& kMax,
+    const NodeType M, const NodeType n, const NodeType nodeSize)
+{
+  if (nodeSize > p2p.size() || n >= nodeSize)
+    return -1;
+  VNodeType tmp(nodeSize), loc(nodeSize); // 已连边的节点编号、位置
+  for (NodeType i = 0; i < nodeSize; i++) {
+    tmp[i] = i;
+    loc[i] = i;
+  }
+  for (NodeType i = 0; i < nodeSize; i++)
+    tmp[i] = i;
+  for (NodeType i = n; i < nodeSize; i++) {
+    for (NodeType j = 0; j < M; j++) {
+      NodeType t;
+      std::uniform_int_distribution<NodeType> dis(0, link.size() - 1);
+      do {
+        t = link[dis(rand2)];
+      } while (loc[t] < j);
+      p2p[i].push_back(t);
+      p2p[t].push_back(i);
+      link.push_back(t);
+      link.push_back(i);
+      if (p2p[t].size() > kMax)
+        kMax = p2p[t].size();
+      const NodeType k = loc[t]; // 邻居的位置
+      if (k != j) {              // j、k位置节点互换
+        tmp[k] = tmp[j];
+        loc[tmp[j]] = k;
+        tmp[j] = t;
+        loc[t] = j;
+      }
+    }
+  }
+  return 0;
+}
+
 int network::ba::BA_new(const NodeType M, const NodeType M0,
-    const NodeType nodeSize, VVNodeType& p2p,VNodeType& link, NodeType& kMin, NodeType& kMax)
+    const NodeType nodeSize, VVNodeType& p2p, VNodeType& link, NodeType& kMin,
+    NodeType& kMax)
 {
   if (M <= 0 || M0 < M || nodeSize < M0)
     return -1;
   p2p.resize(nodeSize);
+  link.clear();
+  link.reserve(M0 * (M0 - 1) + M * (nodeSize - M0) * 2);
 
   // 全连通子网络
   VVNodeTypeItr itr = p2p.begin();
@@ -117,12 +157,11 @@ int network::ba::BA_new(const NodeType M, const NodeType M0,
     itr->clear();
     itr->reserve(M);
   }
-  addLink_p2p_full(p2p, M0);
+  addLink_p2p_link_full(p2p, link, M0);
 
   kMin = M;
   kMax = M0 - 1;
-  _ERR(add_node_prob(p2p, kMax, M, M0, nodeSize));
-  //_ERR(add_node_choice(p2p, kMax, M, M0, nodeSize));
+  _ERR(add_node_link(p2p, link, kMax, M, M0, nodeSize));
 
   return 0;
 }

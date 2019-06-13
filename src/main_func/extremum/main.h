@@ -12,14 +12,14 @@
 //#define MAIN_EXTREMUM_NEW_MAXIMAL
 #define MAIN_EXTREMUM_STAT_MINIMAL
 //#define MAIN_EXTREMUM_STAT_MAXIMAL
-//#define MAIN_EXTREMUM_STAT_ALL
-//#define MAIN_EXTREMUM_STAT_ALL_COLLECT
+#define MAIN_EXTREMUM_STAT_ALL
+#define MAIN_EXTREMUM_STAT_ALL_COLLECT
 
 // ******************************************************
 namespace main_func {
 int main_extremum(int argc, char** argv);
 namespace extremum {
-  const int kEMin = 60, kEMax = 60, kSeedMin = 1, kSeedMax = 100;
+  const int kEMin = 12, kEMax = 60, kSeedMin = 1, kSeedMax = 100;
   const double kGamma = 2.5;
   const std::string kGammaString = "2.5";
   // const std::string kDataDir
@@ -34,13 +34,13 @@ namespace extremum {
       + kGammaString + "_4/stat/pearson_spearman/";
 #else
   const double kGamma_2 = kGamma - 2.0;
-  // const double relativity_alphas[] = { kGamma_2 * 2, kGamma_2 * 3 / 2,
-  // kGamma_2, kGamma_2 * 3 / 4, kGamma_2 / 2, kGamma_2 / 4, -kGamma_2 / 2,
-  //-kGamma_2, -kGamma_2 * 2 };
-  // const std::string alpha_strings[]
-  //= { "2", "3d2", "1", "3d4", "1d2", "1d4", "-1d2", "-1", "-2" };
-  const double relativity_alphas[] = { -kGamma_2 / 2 };
-  const std::string alpha_strings[] = { "-1d2" };
+  const double relativity_alphas[] = { kGamma_2 * 2, kGamma_2 * 3 / 2,
+    kGamma_2, kGamma_2 * 3 / 4, kGamma_2 / 2, kGamma_2 / 4, -kGamma_2 / 2,
+    -kGamma_2, -kGamma_2 * 2 };
+  const std::string alpha_strings[]
+      = { "2", "3d2", "1", "3d4", "1d2", "1d4", "-1d2", "-1", "-2" };
+  // const double relativity_alphas[] = { -kGamma_2 / 2 };
+  // const std::string alpha_strings[] = { "-1d2" };
   // const double relativity_alphas[] = { kGamma_2 * 3 / 2 };
   // const std::string alpha_strings[] = { "3d2" };
   const size_t alpha_len

@@ -37,7 +37,7 @@ int add_node_prob(VVNodeType& p2p, NodeType& kMax, const NodeType M,
   return 0;
 }
 
-// 添加 [n,nodeize) 号节点，随机选点的随机邻居
+// 添加 [n,nodeize) 号节点，随机选点的随机邻居，非经典ba网络
 int add_node_choice(VVNodeType& p2p, NodeType& kMax, const NodeType M,
     const NodeType n, const NodeType nodeSize)
 {
@@ -94,8 +94,35 @@ int network::ba::BA_new(const NodeType M, const NodeType M0,
 
   kMin = M;
   kMax = M0 - 1;
-  //_ERR(add_node_prob(p2p, kMax, M, M0, nodeSize));
-  _ERR(add_node_choice(p2p, kMax, M, M0, nodeSize));
+  _ERR(add_node_prob(p2p, kMax, M, M0, nodeSize));
+  //_ERR(add_node_choice(p2p, kMax, M, M0, nodeSize));
+
+  return 0;
+}
+
+int network::ba::BA_new(const NodeType M, const NodeType M0,
+    const NodeType nodeSize, VVNodeType& p2p,VNodeType& link, NodeType& kMin, NodeType& kMax)
+{
+  if (M <= 0 || M0 < M || nodeSize < M0)
+    return -1;
+  p2p.resize(nodeSize);
+
+  // 全连通子网络
+  VVNodeTypeItr itr = p2p.begin();
+  for (NodeType i = 0; i < M0; i++, itr++) {
+    itr->clear();
+    itr->reserve(M0 - 1);
+  }
+  for (NodeType i = M0; i < nodeSize; i++, itr++) {
+    itr->clear();
+    itr->reserve(M);
+  }
+  addLink_p2p_full(p2p, M0);
+
+  kMin = M;
+  kMax = M0 - 1;
+  _ERR(add_node_prob(p2p, kMax, M, M0, nodeSize));
+  //_ERR(add_node_choice(p2p, kMax, M, M0, nodeSize));
 
   return 0;
 }

@@ -12,24 +12,24 @@
 namespace network {
 const std::string NET_VERSION = "net3.0: " __DATE__ ", " __TIME__;
 // *******************************************************
-//#define NET_DEGREE //节点度分布
+#define NET_DEGREE //节点度分布
 //#define DEG_POISSON //泊松分布
-//#define DEG_POWER //幂律分布
+#define DEG_POWER //幂律分布
 
-//#define NET_EXTREMUM // 特例网络
+#define NET_EXTREMUM // 特例网络
 //#define NET_RANDOM // 随机网络
-#define NET_BA // BA网络
+//#define NET_BA // BA网络
 //#define NET_GRID     // 网格网络
 //#define NET_ACTOR     // 演员合作网络
 
 const bool STAT_TYPE_DIRAA = 0; // 0 : OutIn, 1 : OutIn OutOut InOut InIn
-#define STAT_PEARSON
-#define STAT_SPEARMAN
+//#define STAT_PEARSON
+//#define STAT_SPEARMAN
 //#define MODEL_GAUSS
 //#define MODEL_EXP
 //#define STAT_KENDALLI
-//#define STAT_RELATIVITY
-#define STAT_CORRELATION2
+#define STAT_RELATIVITY
+//#define STAT_CORRELATION2
 //#define STAT_BETWEENNESS
 //#define STAT_MODULARITY
 //#define STAT_CLUSTER

@@ -104,7 +104,7 @@ class Network {
   double degMean, degMeanOut, degMeanIn;
 
   // link
-  VNodeType link, p2pSize; // [nodeSize*2] 网络连边
+  VNodeType link, p2pSize; // [linkSize*2] 网络连边
   VVNodeType p2p, p2pIn; // [nodeSize]   各点连边链表p2p:出度,p2pIn:入度
   VVDistType linkMatr; // [nodeSize]   网络连边距离矩阵
   VVChar linkMatrC;    // [nodeSize]   网络连边01矩阵

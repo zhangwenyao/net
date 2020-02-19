@@ -29,6 +29,21 @@ Networks& Networks::net_Max_new_lkk(const int fix)
   return *this;
 }
 
+Networks& Networks::net_Max_new_lkk2()
+{
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  if (0 != network::extremum::Max_new_lkk2(degArrVal, degArrSize, lkk2)) {
+    ERROR();
+    runStatus = -1;
+    status = -1;
+  } else
+    status = 2;
+  return *this;
+}
+
 Networks& Networks::net_Max_new_lkk3()
 {
   if (0 != runStatus) {

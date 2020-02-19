@@ -11,6 +11,7 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <stack>
 #include <string>
@@ -22,11 +23,16 @@
 
 namespace common {
 // *************************************************************
+template <typename T1, typename T2> struct Struct2;
 template <typename T1, typename T2, typename T3> struct Struct3;
 
 template <typename T> struct Range;   // 范围结构
 template <typename Tp> struct RangeP; // 范围结构
 
+template <typename T, typename T2, typename T3>
+int vector_2_map(const std::vector<T>& v, std::map<const T2, T3>& m);
+
+// *************************************************************
 template <typename T> bool find(const std::vector<T>& v, const T& t);
 template <typename T>
 void find_common(
@@ -135,6 +141,11 @@ int mkdirs(const char* dirname = NULL);
 } // end namespace common
 
 // *****************************************************
+template <typename T1, typename T2>
+std::ostream& operator<<(std::ostream& os, const common::Struct2<T1, T2>& r);
+template <typename T1, typename T2>
+std::istream& operator>>(std::istream& is, common::Struct2<T1, T2>& r);
+
 template <typename T1, typename T2, typename T3>
 std::ostream& operator<<(
     std::ostream& os, const common::Struct3<T1, T2, T3>& r);

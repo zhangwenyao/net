@@ -225,11 +225,11 @@ Networks& Networks::stat_pearson(void)
         break;
       }
       if (!p2p.empty()) {
-        network::pearson::cal_nodeNeiAveDeg_weight(pearson.nodeNeiAveDeg, p2p,
-            nodeDeg, vvweight, nodeWeight, weightFlag);
-        network::pearson::cal_neiAveDeg_weight(pearson.neiAveDeg,
-            pearson.nodeNeiAveDeg, nodeDeg, degArrSize, degArrNo, degArrVal,
-            degArrWeight, nodeWeight, weightFlag);
+        // network::pearson::cal_nodeNeiAveDeg_weight(pearson.nodeNeiAveDeg,
+        // p2p, nodeDeg, vvweight, nodeWeight, weightFlag);
+        // network::pearson::cal_neiAveDeg_weight(pearson.neiAveDeg,
+        // pearson.nodeNeiAveDeg, nodeDeg, degArrSize, degArrNo, degArrVal,
+        // degArrWeight, nodeWeight, weightFlag);
         if (!weightFlag) {
           if (lkk.empty())
             network::pearson::cal_pearson(pearson.pearson, p2p, linkSize);
@@ -241,21 +241,21 @@ Networks& Networks::stat_pearson(void)
 
     } else {
       // AllAll
-      network::pearson::cal_nodeNeiAveDeg_AllAll_weight(pearson.nodeNeiAveDeg,
-          p2p, nodeDeg, vvweight, nodeWeight, weightFlag);
-      network::pearson::cal_neiAveDeg_weight(pearson.neiAveDeg,
-          pearson.nodeNeiAveDeg, nodeDeg, degArrSize, degArrNo, degArrVal,
-          degArrWeight, nodeWeight, weightFlag);
+      //network::pearson::cal_nodeNeiAveDeg_AllAll_weight(pearson.nodeNeiAveDeg,
+          //p2p, nodeDeg, vvweight, nodeWeight, weightFlag);
+      //network::pearson::cal_neiAveDeg_weight(pearson.neiAveDeg,
+          //pearson.nodeNeiAveDeg, nodeDeg, degArrSize, degArrNo, degArrVal,
+          //degArrWeight, nodeWeight, weightFlag);
       network::pearson::cal_pearson_dir_weight(pearson.pearson, pearson.rho,
           p2p, vvweight, (weightFlag ? netWeightOut : linkSize), nodeDeg,
           nodeDeg, weightFlag);
 
       // OutIn
-      network::pearson::cal_nodeNeiAveDeg_weight(pearson.nodeNeiAveDegIn, p2p,
-          nodeDegIn, vvweight, nodeWeightOut, weightFlag);
-      network::pearson::cal_neiAveDeg_weight(pearson.neiAveDegOutIn,
-          pearson.nodeNeiAveDegIn, nodeDegOut, degArrSizeOut, degArrNoOut,
-          degArrValOut, degArrWeightOut, nodeWeightOut, weightFlag);
+      //network::pearson::cal_nodeNeiAveDeg_weight(pearson.nodeNeiAveDegIn, p2p,
+          //nodeDegIn, vvweight, nodeWeightOut, weightFlag);
+      //network::pearson::cal_neiAveDeg_weight(pearson.neiAveDegOutIn,
+          //pearson.nodeNeiAveDegIn, nodeDegOut, degArrSizeOut, degArrNoOut,
+          //degArrValOut, degArrWeightOut, nodeWeightOut, weightFlag);
       network::pearson::cal_pearson_dir_weight(pearson.OutIn,
           pearson.rhoOutIn, p2p, vvweight,
           (weightFlag ? netWeightOut : linkSize), nodeDegOut, nodeDegIn,
@@ -263,29 +263,29 @@ Networks& Networks::stat_pearson(void)
 
       if (STAT_TYPE_DIRAA) {
         // OutOut
-        network::pearson::cal_nodeNeiAveDeg_weight(pearson.nodeNeiAveDegOut,
-            p2p, nodeDegOut, vvweight, nodeWeightOut, weightFlag);
-        network::pearson::cal_neiAveDeg_weight(pearson.neiAveDegOutOut,
-            pearson.nodeNeiAveDegOut, nodeDegOut, degArrSizeOut, degArrNoOut,
-            degArrValOut, degArrWeightOut, nodeWeightOut, weightFlag);
+        //network::pearson::cal_nodeNeiAveDeg_weight(pearson.nodeNeiAveDegOut,
+            //p2p, nodeDegOut, vvweight, nodeWeightOut, weightFlag);
+        //network::pearson::cal_neiAveDeg_weight(pearson.neiAveDegOutOut,
+            //pearson.nodeNeiAveDegOut, nodeDegOut, degArrSizeOut, degArrNoOut,
+            //degArrValOut, degArrWeightOut, nodeWeightOut, weightFlag);
         network::pearson::cal_pearson_dir_weight(pearson.OutOut,
             pearson.rhoOutOut, p2p, vvweight,
             (weightFlag ? netWeightOut : linkSize), nodeDegOut, nodeDegOut,
             weightFlag);
 
         // InIn
-        network::pearson::cal_neiAveDeg_weight(pearson.neiAveDegInIn,
-            pearson.nodeNeiAveDegIn, nodeDegIn, degArrSizeIn, degArrNoIn,
-            degArrValIn, degArrWeightOut, nodeWeightOut, weightFlag);
+        //network::pearson::cal_neiAveDeg_weight(pearson.neiAveDegInIn,
+            //pearson.nodeNeiAveDegIn, nodeDegIn, degArrSizeIn, degArrNoIn,
+            //degArrValIn, degArrWeightOut, nodeWeightOut, weightFlag);
         network::pearson::cal_pearson_dir_weight(pearson.InIn,
             pearson.rhoInIn, p2p, vvweight,
             (weightFlag ? netWeightOut : linkSize), nodeDegIn, nodeDegIn,
             weightFlag);
 
         // InOut
-        network::pearson::cal_neiAveDeg_weight(pearson.neiAveDegInOut,
-            pearson.nodeNeiAveDegOut, nodeDegIn, degArrSizeIn, degArrNoIn,
-            degArrValIn, degArrWeightOut, nodeWeightOut, weightFlag);
+        //network::pearson::cal_neiAveDeg_weight(pearson.neiAveDegInOut,
+            //pearson.nodeNeiAveDegOut, nodeDegIn, degArrSizeIn, degArrNoIn,
+            //degArrValIn, degArrWeightOut, nodeWeightOut, weightFlag);
         network::pearson::cal_pearson_dir_weight(pearson.InOut,
             pearson.rhoInOut, p2p, vvweight,
             (weightFlag ? netWeightOut : linkSize), nodeDegIn, nodeDegOut,

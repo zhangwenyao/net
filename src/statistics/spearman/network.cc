@@ -250,81 +250,93 @@ Networks& Networks::stat_spearman(void)
         break;
       }
       if (!p2p.empty()) {
-        network::spearman::cal_nodeNeiAveDeg2_weight(spearman.nodeNeiAveDeg2,
-            p2p, nodeDeg, spearman.deg2ArrVal, degArrNo, vvweight, nodeWeight,
-            weightFlag);
-        network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2,
-            spearman.nodeNeiAveDeg2, nodeDeg, degArrSize, degArrNo, degArrVal,
-            degArrWeight, nodeWeight, weightFlag);
+        // network::spearman::cal_nodeNeiAveDeg2_weight(spearman.nodeNeiAveDeg2,
+        // p2p, nodeDeg, spearman.deg2ArrVal, degArrNo, vvweight,
+        // nodeWeight, weightFlag);
+        // network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2,
+        // spearman.nodeNeiAveDeg2, nodeDeg, degArrSize, degArrNo, degArrVal,
+        // degArrWeight, nodeWeight, weightFlag);
         if (!weightFlag) {
-          if (lkk.empty())
+          if (lkk.empty()) {
+            if (degArrNo.empty() && 0 != vector_2_map(degArrVal, degArrNo)) {
+              ERROR();
+              break;
+            }
             network::spearman::cal_spearman(spearman.spearman, p2p,
                 spearman.deg2ArrVal, degArrNo, linkSize);
-        } else
+          }
+        } else {
+          if (nodeDeg.empty() && 0 != p2p_2_nodeDeg(nodeDeg, p2p)) {
+            ERROR();
+            break;
+          }
           network::spearman::cal_spearman_dir_weight(spearman.spearman,
               spearman.rho, p2p, vvweight, netWeight, nodeDeg, degArrNo,
               spearman.deg2ArrVal, nodeDeg, degArrNo, spearman.deg2ArrVal,
               weightFlag);
+        }
+        break;
       }
 
     } else { // dirFlag
       // AllAll
-      network::spearman::cal_nodeNeiAveDeg2_AllAll(spearman.nodeNeiAveDeg2,
-          p2p, nodeDeg, spearman.deg2ArrVal, degArrNo, vvweight, nodeWeight,
-          weightFlag);
-      network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2,
-          spearman.nodeNeiAveDeg2, nodeDeg, degArrSize, degArrNo, degArrVal,
-          degArrWeight, nodeWeight, weightFlag);
+      // network::spearman::cal_nodeNeiAveDeg2_AllAll(spearman.nodeNeiAveDeg2,
+      // p2pOut, nodeDeg, spearman.deg2ArrVal, degArrNo, vvweight, nodeWeight,
+      // weightFlag);
+      // network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2,
+      // spearman.nodeNeiAveDeg2, nodeDeg, degArrSize, degArrNo, degArrVal,
+      // degArrWeight, nodeWeight, weightFlag);
       network::spearman::cal_spearman_dir_weight(spearman.spearman,
-          spearman.rho, p2p, vvweight, (weightFlag ? netWeightOut : linkSize),
-          nodeDeg, degArrNo, spearman.deg2ArrVal, nodeDeg, degArrNo,
-          spearman.deg2ArrVal, weightFlag);
+          spearman.rho, p2pOut, vvweight,
+          (weightFlag ? netWeightOut : linkSize), nodeDeg, degArrNo,
+          spearman.deg2ArrVal, nodeDeg, degArrNo, spearman.deg2ArrVal,
+          weightFlag);
 
       // OutIn
-      network::spearman::cal_nodeNeiAveDeg2_weight(spearman.nodeNeiAveDeg2In,
-          p2p, nodeDegIn, spearman.deg2ArrValIn, degArrNoIn, vvweight,
-          nodeWeightOut, weightFlag);
-      network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2OutIn,
-          spearman.nodeNeiAveDeg2In, nodeDegOut, degArrSizeOut, degArrNoOut,
-          degArrValOut, degArrWeightOut, nodeWeightOut, weightFlag);
+      // network::spearman::cal_nodeNeiAveDeg2_weight(spearman.nodeNeiAveDeg2In,
+      // p2pOut, nodeDegIn, spearman.deg2ArrValIn, degArrNoIn, vvweight,
+      // nodeWeightOut, weightFlag);
+      // network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2OutIn,
+      // spearman.nodeNeiAveDeg2In, nodeDegOut, degArrSizeOut, degArrNoOut,
+      // degArrValOut, degArrWeightOut, nodeWeightOut, weightFlag);
       network::spearman::cal_spearman_dir_weight(spearman.OutIn,
-          spearman.rhoOutIn, p2p, vvweight,
+          spearman.rhoOutIn, p2pOut, vvweight,
           (weightFlag ? netWeightOut : linkSize), nodeDegOut, degArrNoOut,
           spearman.deg2ArrValOut, nodeDegIn, degArrNoIn,
           spearman.deg2ArrValIn, weightFlag);
 
       if (STAT_TYPE_DIRAA) {
         // OutOut
-        network::spearman::cal_nodeNeiAveDeg2_weight(
-            spearman.nodeNeiAveDeg2Out, p2p, nodeDegOut,
-            spearman.deg2ArrValOut, degArrNoOut, vvweight, nodeWeightOut,
-            weightFlag);
-        network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2OutOut,
-            spearman.nodeNeiAveDeg2Out, nodeDegOut, degArrSizeOut,
-            degArrNoOut, degArrValOut, degArrWeightOut, nodeWeightOut,
-            weightFlag);
+        // network::spearman::cal_nodeNeiAveDeg2_weight(
+        // spearman.nodeNeiAveDeg2Out, p2pOut, nodeDegOut,
+        // spearman.deg2ArrValOut, degArrNoOut, vvweight, nodeWeightOut,
+        // weightFlag);
+        // network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2OutOut,
+        // spearman.nodeNeiAveDeg2Out, nodeDegOut, degArrSizeOut,
+        // degArrNoOut, degArrValOut, degArrWeightOut, nodeWeightOut,
+        // weightFlag);
         network::spearman::cal_spearman_dir_weight(spearman.OutOut,
-            spearman.rhoOutOut, p2p, vvweight,
+            spearman.rhoOutOut, p2pOut, vvweight,
             (weightFlag ? netWeightOut : linkSize), nodeDegOut, degArrNoOut,
             spearman.deg2ArrValOut, nodeDegOut, degArrNoOut,
             spearman.deg2ArrValOut, weightFlag);
 
         // InIn
-        network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2InIn,
-            spearman.nodeNeiAveDeg2In, nodeDegIn, degArrSizeIn, degArrNoIn,
-            degArrValIn, degArrWeightOut, nodeWeightOut, weightFlag);
+        // network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2InIn,
+        // spearman.nodeNeiAveDeg2In, nodeDegIn, degArrSizeIn, degArrNoIn,
+        // degArrValIn, degArrWeightOut, nodeWeightOut, weightFlag);
         network::spearman::cal_spearman_dir_weight(spearman.InIn,
-            spearman.rhoInIn, p2p, vvweight,
+            spearman.rhoInIn, p2pOut, vvweight,
             (weightFlag ? netWeightOut : linkSize), nodeDegIn, degArrNoIn,
             spearman.deg2ArrValIn, nodeDegIn, degArrNoIn,
             spearman.deg2ArrValIn, weightFlag);
 
         // InOut
-        network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2InOut,
-            spearman.nodeNeiAveDeg2Out, nodeDegIn, degArrSizeIn, degArrNoIn,
-            degArrValIn, degArrWeightOut, nodeWeightOut, weightFlag);
+        // network::spearman::cal_neiAveDeg2_weight(spearman.neiAveDeg2InOut,
+        // spearman.nodeNeiAveDeg2Out, nodeDegIn, degArrSizeIn, degArrNoIn,
+        // degArrValIn, degArrWeightOut, nodeWeightOut, weightFlag);
         network::spearman::cal_spearman_dir_weight(spearman.InOut,
-            spearman.rhoInOut, p2p, vvweight,
+            spearman.rhoInOut, p2pOut, vvweight,
             (weightFlag ? netWeightOut : linkSize), nodeDegIn, degArrNoIn,
             spearman.deg2ArrValIn, nodeDegOut, degArrNoOut,
             spearman.deg2ArrValOut, weightFlag);

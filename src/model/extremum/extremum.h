@@ -16,6 +16,8 @@ namespace extremum {
 
   int cal_Max_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
       const VNodeType& degArrSize, const int fix = 1);
+  int cal_Max_lkk2(const VNodeType& degArrVal, const VNodeType& degArrSize,
+      VVLkk2LinkType& lkk2);
   int cal_Max_lkk3(const VNodeType& degArrVal, const VNodeType& degArrSize,
       VLkk3LinkType& lkk3);
 
@@ -35,6 +37,8 @@ namespace extremum {
       const VNodeType& degArrSum); // 最大相关网络，按度安排
   int Max_new_lkk(VVLinkType& lkk, const VNodeType& degArrVal,
       const VNodeType& degArrSize, const int fix = 1);
+  int Max_new_lkk2(const VNodeType& degArrVal, const VNodeType& degArrSize,
+      VVLkk2LinkType& lkk2);
   int Max_new_lkk3(const VNodeType& degArrVal, const VNodeType& degArrSize,
       VLkk3LinkType& lkk3);
 

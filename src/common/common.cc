@@ -69,12 +69,17 @@ int common::mkdirs(const char* dirname)
   //在末尾加/
   if (dir[iLen - 1] != '\\' && dir[iLen - 1] != '/') {
     dir[iLen] = '/';
-    dir[iLen + 1] = '\0';
+    dir[++iLen] = '\0';
   }
 
   // 创建目录
   for (i = 0; i < iLen; i++) {
     if (dir[i] == '\\' || dir[i] == '/') {
+      if (i == 0) {
+        dir[i] = '/';
+        continue;
+      }
+
       dir[i] = '\0';
 
       //如果不存在,创建
@@ -82,6 +87,7 @@ int common::mkdirs(const char* dirname)
       if (iRet != 0) {
         iRet = MKDIR(dir);
         if (iRet != 0) {
+          ERROR(dir);
           return -1;
         }
       }

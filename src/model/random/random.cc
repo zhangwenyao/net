@@ -352,6 +352,40 @@ int network::random::addLink_p2p_remDeg(VVNodeType& p2p,
   return (linkRemain <= 0 ? 0 : -1);
 }
 
+int network::random::addLink_p2p_remDeg_dir(VVNodeType& p2p,
+    const VNodeType& nodeDegOut, VNodeType& remNodeNum, LinkType& linkRemain,
+    VNodeType& link, const LinkType tryCount)
+{
+  for (LinkType try0 = 0; linkRemain > 0;) {
+    std::uniform_int_distribution<LinkType> dis(0, linkRemain - 1);
+    LinkType ik = dis(rand2), jk = dis(rand2);
+    NodeType i = link[ik * 2], j = link[jk * 2 + 1], k = 0;
+    for (; k < p2p[i].size(); k++)
+      if (p2p[i][k] == j)
+        break;
+    if (k < p2p[i].size()) {
+      if (++try0 >= tryCount)
+        break;
+      else
+        continue;
+    }
+    p2p[i].push_back(j);
+    if (p2p[i].size() == nodeDegOut[i])
+      remNodeNum[i] = 0;
+    --linkRemain;
+    try0 = 0;
+    if (ik < linkRemain) {
+      link[ik * 2] = link[linkRemain * 2];
+      link[linkRemain * 2] = i;
+    }
+    if (jk < linkRemain) {
+      link[jk * 2 + 1] = link[linkRemain * 2 + 1];
+      link[linkRemain * 2 + 1] = j;
+    }
+  }
+  return (linkRemain <= 0 ? 0 : -1);
+}
+
 int network::random::addLink_p2p_ranLink_lkkProb(VVNodeType& p2p,
     const VNodeType& nodeDeg, VVDouble& lkkProb, VNodeType& degArrNo,
     VNodeType& remNodeNum, LinkType& linkRemain, VNodeType& link,
@@ -449,6 +483,36 @@ int network::random::delLink_p2p_ranLink(VVNodeType& p2p,
       if (*p == i) {
         *p = p2p[j].back();
         p2p[j].pop_back();
+        break;
+      }
+    }
+    link[l * 2] = link[linkRemain * 2];
+    link[l * 2 + 1] = link[linkRemain * 2 + 1];
+    link[linkRemain * 2] = i;
+    link[linkRemain * 2 + 1] = j;
+    linkRemain++;
+    delCount--;
+  }
+  return (delCount > 0 ? -1 : 0);
+}
+
+int network::random::delLink_p2p_ranLink_dir(VVNodeType& p2p,
+    const VNodeType& nodeDegOut, VNodeType& remNodeNum, LinkType& linkRemain,
+    VNodeType& link, LinkType delCount)
+{
+  const LinkType linkSize = link.size() / 2;
+  while (delCount > 0 && linkRemain < linkSize) {
+    NodeType i, j;
+    std::uniform_int_distribution<LinkType> dis(linkRemain, linkSize - 1);
+    LinkType l = dis(rand2);
+    i = link[l * 2];
+    j = link[l * 2 + 1];
+    if (p2p[i].size() == nodeDegOut[i])
+      remNodeNum[i] = 1;
+    for (auto& k : p2p[i]) {
+      if (k == j) {
+        k = p2p[i].back();
+        p2p[i].pop_back();
         break;
       }
     }

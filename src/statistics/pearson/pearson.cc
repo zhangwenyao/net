@@ -224,7 +224,6 @@ int network::pearson::cal_pearson_lkk3(double& pearson,
 int network::pearson::cal_pearson(
     double& pearson, const VVNodeType& p2p, const LinkType linkSize)
 {
-  INFORM();
   const LinkType n = linkSize * 2;
   double sx = 0., sxx = 0., sxy = 0.;
   for (NodeType i = 0, k; i < p2p.size(); i++) {

@@ -25,7 +25,7 @@ int main_func::extremum::stat_all(int argc, char** argv)
     } else {
       for (int e = kEMin; e <= kEMax; ++e) {
         double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
-        unsigned n = 0;
+        size_t n = 0;
         cout << "\te\t" << e << endl;
         string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
                sufname = ".Min.params.txt",
@@ -34,7 +34,8 @@ int main_func::extremum::stat_all(int argc, char** argv)
             coefficient_string.c_str(), sx, sxx, n);
         if (n > 0) {
           x_mean = sx / n;
-          x_sigma = sqrt(sxx / n - x_mean * x_mean);
+          x_sigma = sxx / n - x_mean * x_mean;
+          x_sigma = x_sigma > 0 ? sqrt(x_sigma) : 0;
           os << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma << endl;
         }
       }
@@ -52,7 +53,7 @@ int main_func::extremum::stat_all(int argc, char** argv)
     } else {
       for (int e = kEMin; e <= kEMax; ++e) {
         double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
-        unsigned n = 0;
+        size_t n = 0;
         cout << "\te\t" << e << endl;
         string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
                sufname = ".Max.params.txt",
@@ -61,7 +62,8 @@ int main_func::extremum::stat_all(int argc, char** argv)
             coefficient_string.c_str(), sx, sxx, n);
         if (n > 0) {
           x_mean = sx / n;
-          x_sigma = sqrt(sxx / n - x_mean * x_mean);
+          x_sigma = sxx / n - x_mean * x_mean;
+          x_sigma = x_sigma > 0 ? sqrt(x_sigma) : 0;
           os << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma << endl;
         }
       }
@@ -82,7 +84,7 @@ int main_func::extremum::stat_all(int argc, char** argv)
     } else {
       for (int e = kEMin; e <= kEMax; ++e) {
         double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
-        unsigned n = 0;
+        size_t n = 0;
         cout << "\te\t" << e << endl;
         string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
                sufname = ".Min.params.txt",
@@ -91,7 +93,8 @@ int main_func::extremum::stat_all(int argc, char** argv)
             coefficient_string.c_str(), sx, sxx, n);
         if (n > 0) {
           x_mean = sx / n;
-          x_sigma = sqrt(sxx / n - x_mean * x_mean);
+          x_sigma = sxx / n - x_mean * x_mean;
+          x_sigma = x_sigma > 0 ? sqrt(x_sigma) : 0;
           os << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma << endl;
         }
       }
@@ -109,7 +112,7 @@ int main_func::extremum::stat_all(int argc, char** argv)
     } else {
       for (int e = kEMin; e <= kEMax; ++e) {
         double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
-        unsigned n = 0;
+        size_t n = 0;
         cout << "\te\t" << e << endl;
         string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
                sufname = ".Max.params.txt",
@@ -118,7 +121,8 @@ int main_func::extremum::stat_all(int argc, char** argv)
             coefficient_string.c_str(), sx, sxx, n);
         if (n > 0) {
           x_mean = sx / n;
-          x_sigma = sqrt(sxx / n - x_mean * x_mean);
+          x_sigma = sxx / n - x_mean * x_mean;
+          x_sigma = x_sigma > 0 ? sqrt(x_sigma) : 0;
           os << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma << endl;
         }
       }
@@ -140,7 +144,7 @@ int main_func::extremum::stat_all(int argc, char** argv)
     } else {
       for (int e = kEMin; e <= kEMax; ++e) {
         double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
-        unsigned n = 0;
+        size_t n = 0;
         cout << "\te\t" << e << endl;
         string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
                sufname = ".Min.params.txt",
@@ -149,7 +153,8 @@ int main_func::extremum::stat_all(int argc, char** argv)
             coefficient_string.c_str(), sx, sxx, n);
         if (n > 0) {
           x_mean = sx / n;
-          x_sigma = sqrt(sxx / n - x_mean * x_mean);
+          x_sigma = sxx / n - x_mean * x_mean;
+          x_sigma = x_sigma > 0 ? sqrt(x_sigma) : 0;
           os << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma << endl;
         }
       }
@@ -168,7 +173,7 @@ int main_func::extremum::stat_all(int argc, char** argv)
     } else {
       for (int e = kEMin; e <= kEMax; ++e) {
         double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
-        unsigned n = 0;
+        size_t n = 0;
         cout << "\te\t" << e << endl;
         string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
                sufname = ".Max.params.txt",
@@ -177,7 +182,8 @@ int main_func::extremum::stat_all(int argc, char** argv)
             coefficient_string.c_str(), sx, sxx, n);
         if (n > 0) {
           x_mean = sx / n;
-          x_sigma = sqrt(sxx / n - x_mean * x_mean);
+          x_sigma = sxx / n - x_mean * x_mean;
+          x_sigma = x_sigma > 0 ? sqrt(x_sigma) : 0;
           os << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma << endl;
         }
       }

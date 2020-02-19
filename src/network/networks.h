@@ -83,6 +83,10 @@
 #include "../dynamics/recommend/network.h"
 #endif
 
+#ifdef ACT_CORRELATION
+#include "../dynamics/correlation/network.h"
+#endif
+
 // **************************************************************
 namespace network {
 class Networks : public Network {
@@ -129,6 +133,7 @@ class Networks : public Network {
   Networks& net_random_ranNode_link(void);
   Networks& net_random_node_prob(void);
   Networks& net_random_remDeg(void);
+  Networks& net_random_remDeg_dir(void);
   Networks& net_random_ranNode(void);
 #endif
 
@@ -145,6 +150,7 @@ class Networks : public Network {
 #ifdef NET_EXTREMUM
   Networks& net_Max(void);
   Networks& net_Max_new_lkk(const int fix = 1);
+  Networks& net_Max_new_lkk2();
   Networks& net_Max_new_lkk3();
   Networks& net_Min(void);
   Networks& net_Min_new_lkk_p2p(const int fix = 1);
@@ -228,6 +234,7 @@ class Networks : public Network {
   network::recommend::Recommend recommend;
   Networks& act_recommend(std::string s = "mass", const char* name = NULL);
 #endif
+
 };
 
 // **************************************************************

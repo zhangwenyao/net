@@ -9,6 +9,26 @@
 #include <vector>
 
 // **********************************************************
+template <typename T1, typename T2> struct common::Struct2 {
+  T1 x;
+  T2 y;
+};
+
+template <typename T1, typename T2>
+std::ostream& operator<<(std::ostream& os, const common::Struct2<T1, T2>& r)
+{
+  os << r.x << '\t' << r.y;
+  return os;
+}
+
+template <typename T1, typename T2>
+std::istream& operator>>(std::istream& is, common::Struct2<T1, T2>& r)
+{
+  is >> r.x >> r.y;
+  return is;
+}
+// **********************************************************
+
 template <typename T1, typename T2, typename T3> struct common::Struct3 {
   T1 x;
   T2 y;
@@ -21,14 +41,14 @@ std::ostream& operator<<(
 {
   os << r.x << '\t' << r.y << '\t' << r.val;
   return os;
-};
+}
 
 template <typename T1, typename T2, typename T3>
 std::istream& operator>>(std::istream& is, common::Struct3<T1, T2, T3>& r)
 {
   is >> r.x >> r.y >> r.val;
   return is;
-};
+}
 
 // *************************************************************
 template <typename T> struct common::Range {
@@ -45,14 +65,14 @@ std::ostream& operator<<(std::ostream& os, const common::Range<T>& r)
 {
   os << r.start << '\t' << r.end;
   return os;
-};
+}
 
 template <typename T>
 std::istream& operator>>(std::istream& is, common::Range<T>& r)
 {
   is >> r.x >> r.y;
   return is;
-};
+}
 
 template <typename Tp> struct common::RangeP {
   explicit RangeP(Tp s = NULL, Tp e = NULL)
@@ -63,6 +83,15 @@ template <typename Tp> struct common::RangeP {
   Tp start, end;
 };
 
+template <typename T, typename T2, typename T3>
+int common::vector_2_map(const std::vector<T>& v, std::map<const T2, T3>& m)
+{
+  for (size_t i = 0; i < v.size(); ++i)
+    m[v[i]] = i;
+  return 0;
+}
+
+// *************************************************************
 template <typename T> bool common::find(const std::vector<T>& v, const T& t)
 {
   return v.end() != find(v.begin(), v.end(), t);

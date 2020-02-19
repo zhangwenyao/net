@@ -18,6 +18,10 @@ network::Network::Network(void)
     , degSize(0)
     , kMin(0)
     , kMax(0)
+    , kMinOut(0)
+    , kMaxOut(0)
+    , kMinIn(0)
+    , kMaxIn(0)
     , linkSize(0)
     , priChar('\n')
     , priChar2('\t')
@@ -136,6 +140,26 @@ network::Network& network::Network::read_params_1(string& s, istream& is)
       cout << s << '\t' << kMax << endl;
       break;
     }
+    if (s == "--kMinOut") {
+      is >> kMin;
+      cout << s << '\t' << kMinOut << endl;
+      break;
+    }
+    if (s == "--kMaxOut") {
+      is >> kMax;
+      cout << s << '\t' << kMaxOut << endl;
+      break;
+    }
+    if (s == "--kMinIn") {
+      is >> kMin;
+      cout << s << '\t' << kMinIn << endl;
+      break;
+    }
+    if (s == "--kMaxIn") {
+      is >> kMax;
+      cout << s << '\t' << kMaxIn << endl;
+      break;
+    }
     if (s == "--degMean") {
       is >> degMean;
       cout << s << '\t' << degMean << endl;
@@ -209,8 +233,12 @@ ostream& operator<<(std::ostream& os, network::Network& net)
      << net.status << "\n--seed\t" << net.seed << "\n--dirFlag\t"
      << net.dirFlag << "\n--weightFlag\t" << net.weightFlag
      << "\n--nodeSize\t" << net.nodeSize << "\n--kMin\t" << net.kMin
-     << "\n--kMax\t" << net.kMax << "\n--degSize\t" << net.degArrVal.size()
-     << "\n--degMean\t" << net.degMean << "\n--linkSize\t" << net.linkSize;
+     << "\n--kMax\t" << net.kMax;
+  if (net.dirFlag)
+    os << "\n--kMinOut\t" << net.kMinOut << "\n--kMaxOut\t" << net.kMaxOut
+       << "\n--kMinIn\t" << net.kMinIn << "\n--kMaxIn\t" << net.kMaxIn;
+  os << "\n--degSize\t" << net.degArrVal.size() << "\n--degMean\t"
+     << net.degMean << "\n--linkSize\t" << net.linkSize;
   if (net.lkk_type != network::lkk_type_null)
     os << "\n--lkk_type\t" << net.lkk_type;
   if (net.weightFlag) {
@@ -529,10 +557,14 @@ network::Network& network::Network::save_lkk(const char* name)
     ERROR();
     return *this;
   }
-  if (lkk.empty() && lkk3.empty())
+  if (lkk.empty() && lkk2.empty() && lkk3.empty())
     return *this;
 
-  string fn = name;
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = saveName;
   switch (lkk_type) {
   case lkk_lkk:
     if (!lkk.empty())
@@ -552,6 +584,14 @@ network::Network& network::Network::save_lkk(const char* name)
   case lkk_lkk3reverse:
     // TODO
     ERROR();
+    break;
+  case lkk2_lkk2:
+    if (!lkk2.empty())
+      if (0
+          != save_lkk2((fn + ".lkk2.txt").c_str(), lkk2, priChar2, priChar)) {
+        ERROR();
+        runStatus = -1;
+      }
     break;
   case lkk3_lkk:
     // TODO
@@ -591,21 +631,24 @@ network::Network& network::Network::clear_p2p(void)
   // link
   link.clear(); // [nodeSize]   网络连边
   p2pSize.clear();
-  for (VVNodeTypeItr i = p2p.begin(); i != p2p.end(); i++)
-    i->clear();
+  for (auto& i : p2p)
+    i.clear();
   p2p.clear(); // [nodeSize]   各点连边
-  for (VVNodeTypeItr i = p2pIn.begin(); i != p2pIn.end(); i++)
-    i->clear();
+  for (auto& i : p2pOut)
+    i.clear();
+  p2pOut.clear(); // [nodeSize]   各点连边
+  for (auto& i : p2pIn)
+    i.clear();
   p2pIn.clear(); // [nodeSize]   各点连边
-  for (VVWeightTypeItr i = vvweight.begin(); i != vvweight.end(); i++)
-    i->clear();
+  for (auto& i : vvweight)
+    i.clear();
   vvweight.clear(); // [nodeSize]   各点连边
-  for (VVDistTypeItr i = linkMatr.begin(); i != linkMatr.end(); i++)
-    i->clear();
-  linkMatr.clear(); // [nodeSize]   网络连边矩阵
-  for (VVCharItr i = linkMatrC.begin(); i != linkMatrC.end(); i++)
-    i->clear();
-  linkMatrC.clear(); // [nodeSize]   网络连边矩阵
+  for (auto& i : linkMatr)
+    i.clear();
+  linkMatr.clear(); // [nodeSize]   各点连边
+  for (auto& i : linkMatrC)
+    i.clear();
+  linkMatrC.clear(); // [nodeSize]   各点连边
   return *this;
 }
 
@@ -625,10 +668,18 @@ network::Network& network::Network::save_p2p(const char* name)
     runStatus = -1;
     ERROR();
   }
-  if (dirFlag && !p2pIn.empty()
-      && 0 != common::save2((fn + ".p2pIn.txt").c_str(), p2pIn, priChar2)) {
-    runStatus = -1;
-    ERROR();
+  if (dirFlag) {
+    if (!p2pOut.empty()
+        && 0
+            != common::save2(
+                   (fn + ".p2pOut.txt").c_str(), p2pOut, priChar2)) {
+      runStatus = -1;
+      ERROR();
+    } else if (!p2pIn.empty()
+        && 0 != common::save2((fn + ".p2pIn.txt").c_str(), p2pIn, priChar2)) {
+      runStatus = -1;
+      ERROR();
+    }
   }
 
   // link
@@ -840,6 +891,13 @@ network::Network& network::Network::read_lkk(const char* name, Lkk_type lkk_t)
   case lkk_lkk3reverse:
     // TODO
     INFORM();
+    break;
+  case lkk2_lkk2:
+    if (0 != common::read2_0((fn + ".lkk2.txt").c_str(), lkk2)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
     break;
   case lkk3_lkk:
     // TODO
@@ -1096,20 +1154,21 @@ network::Network& network::Network::p2p_2_degArr(void)
     ERROR();
     return *this;
   }
-  if (p2p.empty()) {
+  VVNodeType& pp2p = dirFlag ? p2pOut : p2p;
+  if (pp2p.empty()) {
     runStatus = -1;
     ERROR();
     return *this;
   }
   if (nodeSize <= 0)
-    p2p_2_nodeSize(nodeSize, p2p);
+    p2p_2_nodeSize(nodeSize, pp2p);
   if (nodeSize <= 0) {
     runStatus = -1;
     ERROR();
     return *this;
   }
-  while (p2p.size() < nodeSize)
-    p2p.resize(nodeSize);
+  if (pp2p.size() < nodeSize)
+    pp2p.resize(nodeSize);
 
   if (!dirFlag) { // !dirFlag
     // All
@@ -1118,7 +1177,7 @@ network::Network& network::Network::p2p_2_degArr(void)
       ERROR();
       return *this;
     }
-    if (degArrVal.empty()
+    if (degArrSum.empty()
         && nodeDeg_2_degArr(nodeDeg, degArrVal, degArrSize, degArrSum)
             != 0) { // degArr
       runStatus = -1;
@@ -1156,7 +1215,7 @@ network::Network& network::Network::p2p_2_degArr(void)
 
   } else { // dirFlag
     // Out
-    if (nodeDegOut.empty() && p2p_2_nodeDeg(nodeDegOut, p2p) != 0) {
+    if (nodeDegOut.empty() && p2p_2_nodeDeg(nodeDegOut, p2pOut) != 0) {
       runStatus = -1;
       ERROR();
       return *this;
@@ -1168,7 +1227,7 @@ network::Network& network::Network::p2p_2_degArr(void)
       ERROR();
       return *this;
     }
-    if (degArrValOut.empty()
+    if (degArrSumOut.empty()
         && nodeDeg_2_degArr(
                nodeDegOut, degArrValOut, degArrSizeOut, degArrSumOut)
             != 0) {
@@ -1185,14 +1244,14 @@ network::Network& network::Network::p2p_2_degArr(void)
     // Out Weight
     if (weightFlag) {
       if (nodeWeightOut.empty() && !vvweight.empty())
-        vvweight_2_nodeWeight(nodeWeightOut, p2p, vvweight, netWeightOut);
+        vvweight_2_nodeWeight(nodeWeightOut, p2pOut, vvweight, netWeightOut);
       if (degArrWeightOut.empty() && !nodeWeightOut.empty())
         nodeWeight_2_degArrWeight(degArrWeightOut, nodeWeightOut, nodeDegOut,
             degArrNoOut, degArrValOut.size());
     }
 
     // In
-    if (p2pIn.empty() && p2p_2_p2pIn(p2pIn, p2p) != 0) {
+    if (p2pIn.empty() && p2pOut_2_p2pIn(p2pIn, p2pOut) != 0) {
       runStatus = -1;
       ERROR();
       return *this;
@@ -1209,7 +1268,7 @@ network::Network& network::Network::p2p_2_degArr(void)
       ERROR();
       return *this;
     }
-    if (degArrValIn.empty()
+    if (degArrSumIn.empty()
         && nodeDeg_2_degArr(nodeDegIn, degArrValIn, degArrSizeIn, degArrSumIn)
             != 0) {
       runStatus = -1;
@@ -1238,7 +1297,7 @@ network::Network& network::Network::p2p_2_degArr(void)
       ERROR();
       return *this;
     }
-    if (degArrVal.empty()
+    if (degArrSum.empty()
         && nodeDeg_2_degArr(nodeDeg, degArrVal, degArrSize, degArrSum) != 0) {
       runStatus = -1;
       ERROR();
@@ -1250,15 +1309,15 @@ network::Network& network::Network::p2p_2_degArr(void)
       return *this;
     }
     if (linkSize <= 0
-        && nodeDeg_2_linkSize(linkSize, nodeDeg) != 0) { // linkSize
+        && nodeDeg_2_linkSize(linkSize, nodeDeg, dirFlag) != 0) { // linkSize
       runStatus = -1;
       ERROR();
       return *this;
     }
     if (lkk.empty()
         && 0
-            != p2p_2_lkk_dir(lkk, p2p, nodeDeg, nodeDeg, degArrNo, degArrNo,
-                   degArrVal.size(),
+            != p2p_2_lkk_dir(lkk, p2pOut, nodeDeg, nodeDeg, degArrNo,
+                   degArrNo, degArrVal.size(),
                    degArrVal.size())) { // lkk
       runStatus = -1;
       ERROR();
@@ -1266,7 +1325,7 @@ network::Network& network::Network::p2p_2_degArr(void)
     }
     if (lkkOutIn.empty()
         && 0
-            != p2p_2_lkk_dir(lkkOutIn, p2p, nodeDegOut, nodeDegIn,
+            != p2p_2_lkk_dir(lkkOutIn, p2pOut, nodeDegOut, nodeDegIn,
                    degArrNoOut, degArrNoIn, degArrValOut.size(),
                    degArrValIn.size())) { // lkkOutIn
       runStatus = -1;
@@ -1287,6 +1346,16 @@ network::Network& network::Network::p2p_2_degArr(void)
   if (kMax <= 0) {
     kMin = degArrVal.front();
     kMax = degArrVal.back();
+  }
+  if (dirFlag) {
+    if (kMaxOut <= 0 && !degArrValOut.empty()) {
+      kMinOut = degArrValOut.front();
+      kMaxOut = degArrValOut.back();
+    }
+    if (kMaxIn <= 0 && !degArrValIn.empty()) {
+      kMinIn = degArrValIn.front();
+      kMaxIn = degArrValIn.back();
+    }
   }
   if (linkSize > 0) { // degMean degWeightMean
     degMean = 2. * linkSize
@@ -1317,4 +1386,11 @@ network::Network& network::Network::p2p_2_degArr(void)
   return *this;
 }
 
+network::Network& network::Network::rewire_rho(
+    const LinkType L, const double rho)
+{
+  runStatus = dirFlag ? ::network::rewire_rho_dir(L, rho, p2pOut, link)
+                      : ::network::rewire_rho(L, rho, p2p, link);
+  return *this;
+}
 // ******************************************************

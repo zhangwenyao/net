@@ -16,6 +16,10 @@ using namespace std;
 #include "main_func/correlation2/main.h"
 #endif
 
+#ifdef MAIN_REWIRE
+#include "main_func/rewire/main.h"
+#endif
+
 #ifdef MAIN_FITNESS_COMPLEXITY
 #include "main_func/fitness_complexity/main.h"
 #endif
@@ -26,7 +30,7 @@ namespace {
 int main_default(int argc, char** argv)
 {
   for (int i = 0; i < argc && argv[i] != NULL; ++i) {
-    cout << argc << '\t' << argv << '\n';
+    cout << argc << '\t' << argv[i] << '\n';
   }
   return 0;
 }

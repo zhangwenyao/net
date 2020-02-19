@@ -7,7 +7,6 @@
 using namespace std;
 using namespace common;
 using namespace network;
-using namespace network::extremum;
 
 //**//**************************************************//**//*
 int main_func::extremum::new_maximal(int argc, char** argv)
@@ -24,10 +23,10 @@ int main_func::extremum::new_maximal(int argc, char** argv)
       net.read_params();
       net.readName = fn_full;
       net.saveName = fn_full + ".Max";
-      net.lkk_type = lkk3_lkk3reverse;
+      net.lkk_type = lkk2_lkk2;
       net.argv = "--init_seed0"
                  " --cal_deg read_degArr"
-                 " --cal_p2p Max_lkk3"
+                 " --cal_p2p Max_lkk2"
                  " --print";
 
       // 带参数运行
@@ -44,7 +43,7 @@ int main_func::extremum::new_maximal(int argc, char** argv)
         net.save_params();
       } else {
         net.save_params();
-        net.save_p2p();
+        net.save_lkk();
       }
     }
   }

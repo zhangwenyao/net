@@ -31,8 +31,9 @@ int main_func::correlation2::statistics_networks(int argc, char** argv)
       net.saveName += "_error";
       net.save_params();
       cerr << net << endl;
+      break;
     }
-  }
+  } while (0);
   return 0;
 }
 

@@ -156,7 +156,7 @@ network::Networks& network::Networks::save_params(const char* name)
     fn = saveName;
   ofstream os((fn + ".params.txt").c_str());
   if (!os) {
-    ERROR();
+    ERROR(fn);
     return *this;
   }
   os << *this;
@@ -455,8 +455,13 @@ network::Networks& network::Networks::read_params_1(string& s, istream& is)
       break;
 #endif
 
-    ERROR(s);
-    runStatus = -1;
+    {
+      string t;
+      getline(is, t);
+      INFORM(s, t);
+      s.clear();
+      // runStatus = -1;
+    }
   } while (0);
 
   return *this;
@@ -672,13 +677,14 @@ network::Networks& network::Networks::stat(void)
     return *this;
   }
 
-  if (lkk.empty() && lkk3.empty() && p2p.empty()) {
+  VVNodeType* p_p2p = dirFlag ? &p2pOut : &p2p;
+  if (lkk.empty() && lkk3.empty() && p_p2p->empty()) {
     ERROR();
     runStatus = -1;
     return *this;
   }
   if (degArrSize.empty() || degArrVal.empty()) {
-    if (!p2p.empty()) {
+    if (!p_p2p->empty()) {
       if (0 != p2p_2_degArr().runStatus) {
         ERROR();
         runStatus = -1;
@@ -882,7 +888,8 @@ network::Networks& network::Networks::cal_p2p(const string& s)
     runStatus = -1;
     return *this;
   }
-  if (p2p.empty()) {
+  VVNodeType& pp2p = dirFlag ? p2pOut : p2p;
+  if (pp2p.empty()) {
     do {
       if (s.size() <= 0) {
         ERROR();
@@ -890,7 +897,7 @@ network::Networks& network::Networks::cal_p2p(const string& s)
         return *this;
       }
       if (s == "read_p2p" || s == "read_p2p_fix") {
-        if (!p2p.empty() || 0 != read_p2p().runStatus) {
+        if (!pp2p.empty() || 0 != read_p2p().runStatus) {
           ERROR();
           runStatus = -1;
           return *this;
@@ -899,7 +906,7 @@ network::Networks& network::Networks::cal_p2p(const string& s)
       }
 
       if (s == "read_linkMatr" || s == "read_linkMatr_fix") {
-        if (!p2p.empty() || 0 != read_linkMatr().runStatus) {
+        if (!pp2p.empty() || 0 != read_linkMatr().runStatus) {
           ERROR();
           runStatus = -1;
           return *this;
@@ -960,17 +967,17 @@ network::Networks& network::Networks::cal_p2p(const string& s)
           // break;
         }
         if (!linkMatr.empty()) {
-          if (0 != linkMatr_2_p2p(p2p, linkMatr))
+          if (0 != linkMatr_2_p2p(pp2p, linkMatr))
             ERROR();
           break;
         }
         if (!linkMatrC.empty()) {
-          if (0 != linkMatrC_2_p2p(p2p, linkMatrC))
+          if (0 != linkMatrC_2_p2p(pp2p, linkMatrC))
             ERROR();
           break;
         }
         if (!link.empty()) {
-          if (0 != link_2_p2p(p2p, link, p2pIn, nodeSize, dirFlag)) {
+          if (0 != link_2_p2p(pp2p, link, p2pIn, nodeSize, dirFlag)) {
             ERROR();
             runStatus = -1;
             return *this;
@@ -993,6 +1000,15 @@ network::Networks& network::Networks::cal_p2p(const string& s)
       }
       if (s == "Max_lkk") {
         net_Max_new_lkk();
+        if (0 != runStatus || 0 > status) {
+          ERROR();
+          return *this;
+        }
+        status = 2;
+        return *this;
+      }
+      if (s == "Max_lkk2") {
+        net_Max_new_lkk2();
         if (0 != runStatus || 0 > status) {
           ERROR();
           return *this;
@@ -1117,23 +1133,23 @@ network::Networks& network::Networks::cal_p2p(const string& s)
       return *this;
     } while (0);
   } else {
-    // !p2p.empty()
+    // !pp2p.empty()
     if (status == 0)
       status = -1;
   }
 
-  if (status < 0 || runStatus < 0 || p2p.empty()) {
+  if (status < 0 || runStatus < 0 || pp2p.empty()) {
     ERROR();
     runStatus = -1;
     return *this;
   }
 
   if (s.find("_fix") != string::npos) {
-    fix_p2p(p2p, dirFlag);
+    fix_p2p(pp2p, dirFlag);
     linkSize = 0;
   }
 
-  if (dirFlag && p2pIn.empty() && 0 != p2p_2_p2pIn(p2pIn, p2p)) {
+  if (dirFlag && p2pIn.empty() && 0 != p2pOut_2_p2pIn(p2pIn, p2pOut)) {
     ERROR();
     runStatus = -1;
     return *this;
@@ -1147,6 +1163,16 @@ network::Networks& network::Networks::cal_p2p(const string& s)
   if (kMax <= 0 || s.find("read_") != string::npos) {
     kMin = degArrVal.front();
     kMax = degArrVal.back();
+  if (dirFlag) {
+    if (kMaxOut <= 0 && !degArrValOut.empty()) {
+      kMinOut = degArrValOut.front();
+      kMaxOut = degArrValOut.back();
+    }
+    if (kMaxIn <= 0 && !degArrValIn.empty()) {
+      kMinIn = degArrValIn.front();
+      kMaxIn = degArrValIn.back();
+    }
+  }
   }
 
   status = 1;

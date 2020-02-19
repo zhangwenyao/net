@@ -7,7 +7,6 @@
 using namespace std;
 using namespace common;
 using namespace network;
-using namespace network::extremum;
 
 //**//**************************************************//**//*
 int main_func::extremum::new_deg_arr(int argc, char** argv)

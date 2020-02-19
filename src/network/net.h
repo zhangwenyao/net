@@ -12,24 +12,24 @@
 namespace network {
 const std::string NET_VERSION = "net3.0: " __DATE__ ", " __TIME__;
 // *******************************************************
-//#define NET_DEGREE //节点度分布
+#define NET_DEGREE //节点度分布
 //#define DEG_POISSON //泊松分布
-//#define DEG_POWER //幂律分布
+#define DEG_POWER //幂律分布
 
-//#define NET_EXTREMUM // 特例网络
+#define NET_EXTREMUM // 特例网络
 //#define NET_RANDOM // 随机网络
-#define NET_BA // BA网络
+//#define NET_BA // BA网络
 //#define NET_GRID     // 网格网络
 //#define NET_ACTOR     // 演员合作网络
 
-const bool STAT_TYPE_DIRAA = 0; // 0 : OutIn, 1 : OutIn OutOut InOut InIn
-#define STAT_PEARSON
-#define STAT_SPEARMAN
+//const bool STAT_TYPE_DIRAA = 0; // 0 : OutIn, 1 : OutIn OutOut InOut InIn
+//#define STAT_PEARSON
+//#define STAT_SPEARMAN
 //#define MODEL_GAUSS
 //#define MODEL_EXP
 //#define STAT_KENDALLI
 //#define STAT_RELATIVITY
-#define STAT_CORRELATION2
+//#define STAT_CORRELATION2
 //#define STAT_BETWEENNESS
 //#define STAT_MODULARITY
 //#define STAT_CLUSTER
@@ -39,6 +39,7 @@ const bool STAT_TYPE_DIRAA = 0; // 0 : OutIn, 1 : OutIn OutOut InOut InIn
 //#define ACT_SPREAD
 //#define ACT_FITNESS_COMPLEXITY
 //#define ACT_RECOMMEND
+//#define ACT_CORRELATION
 
 // *******************************************************
 int nodeDeg_update_nodeMap(VNodeType& nodeDeg, const VRNodeType& nodeMap);
@@ -47,47 +48,6 @@ int nodeDeg_update_nodeMap(VNodeType& nodeDeg, const VRNodeType& nodeMap);
 int init_linkMatrC(VVChar& linkMatrC, const NodeType nodeSize);
 int linkMatr_fix_0(VVDistType& linkMatr, const DistType MaxDist = DistMax);
 int linkMatr_fix_max(VVDistType& linkMatr, const DistType MaxDist = DistMax);
-
-template <typename T, typename T2>
-int linkMatr_2_nodeDeg(
-    std::vector<T>& nodeDeg, const std::vector<std::vector<T2>>& linkMatr);
-template <typename T, typename T2>
-int linkMatr_2_p2p(std::vector<std::vector<T2>>& p2p,
-    const std::vector<std::vector<T>>& linkMatr);
-template <typename T, typename T2>
-int linkMatr_2_p2pIn(std::vector<std::vector<T2>>& p2pIn,
-    const std::vector<std::vector<T>>& linkMatr);
-int linkMatrC_2_p2p(VVNodeType& p2p, const VVChar& linkMatrC);
-
-int p2p_2_linkMatr(VVDistType& linkMatr, const VVNodeType& p2p);
-int p2p_2_p2pIn(VVNodeType& p2pIn, const VVNodeType& p2p);
-int p2p_2_vvweight_sort(VVWeightType& vvweight, const VVNodeType& p2p);
-
-int p2p_2_nodeSize(NodeType& nodeSize, const VVNodeType& p2p);
-int p2p_2_nodeDeg(VNodeType& nodeDeg, const VVNodeType& p2p);
-int nodeDeg_2_degArr(const VNodeType& nodeDeg, VNodeType& degArrVal,
-    VNodeType& degArrSize, VNodeType& degArrSum);
-int nodeDeg_2_degArr_Sort(const VNodeType& nodeDeg, VNodeType& degArrVal,
-    VNodeType& degArrSize, VNodeType& degArrSum);
-int degArr_2_nodeSize(NodeType& nodeSize, const VNodeType& degArrSize);
-int degArr_2_nodeDeg(VNodeType& nodeDeg, const VNodeType& degArrVal,
-    const VNodeType& degArrSize);
-int degArrVal_2_degArrNo(MNodeType& degArrNo, const VNodeType& degArrVal);
-
-int degArrSize_2_degArrSum(VNodeType& degArrSum, const VNodeType& degArrSize);
-int degArr_2_linkSize(LinkType& linkSize, const VNodeType& degArrVal,
-    const VNodeType& degArrSize, const int dirFlag = 0);
-int degArr_2_linkSum(VLinkType& linkSum, const VNodeType& degArrVal,
-    const VNodeType& degArrSize);
-int nodeDeg_2_linkSize(
-    LinkType& linkSize, const VNodeType& nodeDeg, const int dirFlag = 0);
-int degArrVal_2_deg2ArrVal(VDouble& deg2ArrVal, const VNodeType& degArrSize,
-    const VNodeType& degArrVal, const LinkType linkSize,
-    const int dirFlag = 0);
-int degArrWeight_2_netWeight(
-    WeightSumType& netWeight, const VWeightSumType& degArrWeight);
-int degArrWeight_2_deg2ArrVal(VDouble& deg2ArrVal,
-    const VWeightSumType& degArrWeight, const WeightSumType netWeight);
 
 int check_nodeDeg0(const VNodeType& nodeDeg);
 int fix_degArr_kExtremum(VNodeType& degArrSize, const VNodeType& degArrVal,
@@ -101,50 +61,6 @@ int fix_degArr_linkSize2(VNodeType& degArrSize, const VNodeType& degArrVal,
 int fix_nodeDeg(VNodeType& nodeDeg, const VDouble& degArrProb,
     const VNodeType& degArrVal, LinkType& linkSize);
 int fix_degArrSize_0(VNodeType& degArrSize, VNodeType& degArrVal);
-
-int p2p_2_lkk(VVLinkType& lkk, const VVNodeType& p2p, const VNodeType& degNum,
-    const NodeType degSize);
-int p2p_2_lkk_dir(VVLinkType& lkkOutIn, const VVNodeType& p2p,
-    const VNodeType& nodeDegOut, const VNodeType& nodeDegIn,
-    MNodeType& degArrNoOut, MNodeType& degArrNoIn, const NodeType degOutSize,
-    const NodeType degInSize);
-int p2p_2_lkk(VVLinkType& lkk, const VVNodeType& p2p, MNodeType& degArrNo,
-    const NodeType degSize);
-int p2p_2_lkk_noDir(VVLinkType& lkk, const VVNodeType& p2p,
-    MNodeType& degArrNo, const VNodeType& nodeDeg, const NodeType degSize);
-int lkk_dir_2_nDir(VVLinkType& lkk);
-int lkk_nDir_2_dir(VVLinkType& lkk);
-int lkk_2_lkkSum(VVLinkType& lkkSum, const VVLinkType& lkk, const int dir);
-int link_2_nodeSize(NodeType& nodeSize, const VNodeType& link);
-int link_2_p2p(VVNodeType& p2p, const VNodeType& link, VVNodeType& p2pIn,
-    NodeType& nodeSize, const int dirFlag);
-int link_2_p2p_out(VVNodeType& p2p, const VNodeType& link, NodeType& nodeSize,
-    const int dirFlag);
-int link_2_p2p_out_linkSize(VVNodeType& p2p, const VNodeType& link,
-    NodeType& nodeSize, LinkType linkSize, const int dirFlag);
-int link_2_p2p_in(VVNodeType& p2pIn, const VNodeType& link,
-    NodeType& nodeSize, const int dirFlag);
-int p2p_2_link(VNodeType& link, const VVNodeType& p2p, const int dirFlag);
-int vvweight_2_vvweightIn(VVWeightType& vvweightIn,
-    const VVWeightType& vvweight, const VVNodeType& p2p);
-int weightMatr_2_linkMatr(
-    VVDistType& linkMatr, const VVWeightType& weightMatr);
-
-int link_2_lkk(VVLinkType& lkk, const VNodeType& link,
-    const VNodeType& nodeDeg, MNodeType& degArrNo, const LinkType linkSize,
-    const NodeType degSize);
-
-int vvweight_2_nodeWeight(VWeightType& nodeWeight, const VVNodeType& p2p,
-    const VVWeightType& vvweight, WeightSumType& netWeight);
-int nodeDegIO_2_nodeDeg(VNodeType& nodeDeg, const VNodeType& nodeDegOut,
-    const VNodeType& nodeDegIn);
-int nodeWeightIO_2_nodeWeight(VWeightType& nodeWeight,
-    const VWeightType& nodeWeightOut, const VWeightType& nodeWeightIn);
-int nodeWeight_2_degArrWeight(VWeightSumType& degArrWeight,
-    const VWeightSumType& nodeWeight, const VNodeType& nodeDeg,
-    MNodeType& degArrNo, const NodeType degSize);
-int degArrWeight_2_degArrWeightSum(
-    VWeightSumType& degArrWeightSum, const VWeightSumType& degArrWeight);
 
 // *******************************************************
 int sort_p2p(VVNodeType& p2p);
@@ -216,6 +132,8 @@ int delLink_p2p_ranNode1(VVNodeType& p2p, const NodeType nodeSize,
     VNodeType& nodeDeg, VNodeType& remPoiNum, NodeType& remPoiSize,
     LinkType& linkRemain, const LinkType linkSize,
     LinkType delCount); // 随机选点再选边删除
+int delLink_link_ranLink(VNodeType& link, LinkType delCount); //随机删边
+int delNode_p2p_max(VVNodeType& p2p, const NodeType n); //删除节点 [n,...)
 
 int addLink_p2p_full(VVNodeType& p2p, NodeType M = 0,
     const NodeType n = 0); // 添加节点 [n,M) 的全连通网络
@@ -259,10 +177,17 @@ int exchange_link_num_diff(
 int count_sameAdiff(LinkType& sum, LinkType& sum1, LinkType& sum3,
     LinkType& sum4, VLinkType& link, VNodeType& nodeDeg);
 
+int rewire_rho(
+    LinkType L, const double rho, VVNodeType& p2p, VNodeType& link);
+int rewire_rho_dir(
+    LinkType L, const double rho, VVNodeType& p2p, VNodeType& link);
+int change_p2p_link(
+    VVNodeType& p2p, const NodeType i1, const NodeType i2, const NodeType j2);
 } // end namespace network
 
 // *******************************************************
 #include "net_io.h"
+#include "net_transform.h"
 // *******************************************************
 #include "net_template.h"
 #endif // NET_H

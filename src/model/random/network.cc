@@ -232,6 +232,8 @@ Networks& Networks::net_random_node_prob(void) // 所有点按概率p连边
 
 Networks& Networks::net_random_remDeg(void) // 随机抽取剩余度连边
 {
+  if (dirFlag)
+    return net_random_remDeg_dir();
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -270,6 +272,62 @@ Networks& Networks::net_random_remDeg(void) // 随机抽取剩余度连边
       iDel++;
   }
   cout << "\taddLink end\n";
+
+  if (linkRemain > 0) {
+    linkSize -= linkRemain;
+    ERROR();
+    status = -2;
+    runStatus = -1;
+  } else
+    status = 1;
+
+  return *this;
+}
+
+Networks& Networks::net_random_remDeg_dir(void) // 随机抽取剩余度连边
+{
+  if (!dirFlag)
+    return net_random_remDeg();
+  if (0 != runStatus) {
+    ERROR();
+    return *this;
+  }
+  // 初始化连边信息
+  p2pOut.clear();
+  p2pOut.resize(nodeSize);
+  link.resize(linkSize * 2);
+  remNodeNum.resize(nodeSize);
+  for (NodeType i = 0, *p_out = &link[0], *p_in = p_out + 1; i < nodeSize;
+       ++i) {
+    remNodeNum[i] = 1;
+    for (NodeType j = 0; j < nodeDegOut[i]; p_out += 2, ++j)
+      *p_out = i; // 记录各点剩余度和网络所有连边情况
+    for (NodeType j = 0; j < nodeDegIn[i]; p_in += 2, ++j)
+      *p_in = i; // 记录各点剩余度和网络所有连边情况
+  }
+  linkRemain = linkSize;
+  LinkType linkRemain0 = linkRemain;
+  // 随机连边
+  for (LinkType iDel = 1;
+       iDel <= 10 && linkRemain > 0 && remNodeNum.size() > 0;) {
+    for (size_t count = 1000; count > 0; count--) {
+      network::random::delLink_p2p_ranLink_dir(p2pOut, nodeDegOut, remNodeNum,
+          linkRemain, link, iDel); // 随机删iDel条边
+      if (0
+          == network::random::addLink_p2p_remDeg_dir(
+                 p2pOut, nodeDegOut, remNodeNum, linkRemain, link, 1000))
+        break; // 随机抽取剩余度连边
+    }
+    if (linkRemain <= 0)
+      break;
+    cout << "linkRemain:\t" << linkRemain << "\tdel:\t" << iDel << '\n';
+    if (linkRemain < linkRemain0) {
+      linkRemain0 = linkRemain;
+      iDel = 1;
+    } else
+      iDel++;
+  }
+  cout << "\taddLink end. linkRemain: " << linkRemain << "\n";
 
   if (linkRemain > 0) {
     linkSize -= linkRemain;

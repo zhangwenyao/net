@@ -27,6 +27,7 @@
  *                              read_lkk3     读取lkk3
  *                              Max           最大度关联网络
  *                              Max_lkk       最大度关联网络
+ *                              Max_lkk2      最大度关联网络
  *                              Max_lkk3      最大度关联网络
  *                              Min           最小度关联网络
  *                              Min_lkk       最小度关联网络
@@ -79,6 +80,8 @@ class Network {
   int distFlag;               //  网络距离是否01，0:01，非0:实数
   NodeType nodeSize, degSize; // 节点数，不同度数
   NodeType kMin, kMax;        // 度范围,最小度,最大度
+  NodeType kMinOut, kMaxOut;        // 度范围,最小度,最大度
+  NodeType kMinIn, kMaxIn;        // 度范围,最小度,最大度
   LinkType linkSize;          // 连边数
   std::vector<int> paramsInt; // 整型参数
   std::vector<double> paramsDouble; // 实数参数
@@ -105,14 +108,15 @@ class Network {
 
   // link
   VNodeType link, p2pSize; // [linkSize*2] 网络连边
-  VVNodeType p2p, p2pIn; // [nodeSize]   各点连边链表p2p:出度,p2pIn:入度
+  VVNodeType p2p, p2pOut,
+      p2pIn; // [nodeSize] 各点连边链表p2pOut:出度,p2pIn:入度
   VVDistType linkMatr; // [nodeSize]   网络连边距离矩阵
   VVChar linkMatrC;    // [nodeSize]   网络连边01矩阵
   LinkType linkRemain;
   VLinkType linkSum; // 各度累计线头数
 
   // weight
-  VVWeightType vvweight, vvweightIn, weightMatr; // 连边权重
+  VVWeightType vvweight, vvweightOut, vvweightIn, weightMatr; // 连边权重
   unsigned weight_m, weight_n; // 数据文件中连边权重位置 (m+1) / n
   VWeightType nodeWeight, nodeWeightOut, nodeWeightIn; // 各节点总连边权重
   VWeightSumType degArrWeight, degArrWeightOut,
@@ -127,6 +131,7 @@ class Network {
   VVDouble lkkProb;               // [degSize]    连边的联合分布概率
   // lkk3
   VLkk3LinkType lkk3, lkk3reverse, lkk3OutIn; // 不同度之间连边数目矩阵
+  VVLkk2LinkType lkk2; // 不同度之间连边数目矩阵，无向、[i][j>=i]
   VLkk3Double lkk3Prob; // [degSize]    连边的联合分布概率
 
   Network(void);
@@ -160,6 +165,8 @@ class Network {
   Network& read_weightMatr(const char* name = NULL);
   Network& lkk_2_degArr(void);
   Network& p2p_2_degArr(void);
+
+  Network& rewire_rho(const LinkType L, const double rho);
 };
 
 // ******************************************************

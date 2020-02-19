@@ -16,6 +16,10 @@
 #include "evolution.h"
 #endif
 
+#ifdef MAIN_CORRELATION2_EVOLUTION_STATISTICS
+#include "evolution_statistics.h"
+#endif
+
 using namespace std;
 using namespace common;
 using namespace network;
@@ -44,6 +48,10 @@ int main_func::main_correlation2(int argc, char** argv)
 
 #ifdef MAIN_CORRELATION2_EVOLUTION
     _ERR(correlation2::evolution(argc, argv));
+#endif
+
+#ifdef MAIN_CORRELATION2_EVOLUTION_STATISTICS
+    _ERR(correlation2::evolution_statistics(argc, argv));
 #endif
   }
   return 0;

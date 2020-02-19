@@ -272,6 +272,54 @@ int network::save_lkk_3(const char* name, const VVLinkType& lkk, const int rv,
   return flag;
 }
 
+int network::read_lkk2(istream& is, VVLkk2LinkType& lkk2)
+{
+  if(is)
+    common::read2_0(is, lkk2);
+  return 0;
+}
+
+int network::read_lkk2(const char* name, VVLkk2LinkType& lkk2)
+{
+  if (!name || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ifstream is(name);
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  int flag = read_lkk2(is, lkk2);
+  is.close();
+  return flag;
+}
+
+int network::save_lkk2(
+    ostream& os, const VVLkk2LinkType& lkk2, const char pri2, const char pri)
+{
+  if (!os) {
+    ERROR();
+    return 0;
+  }
+  common::save2(os, lkk2, pri2);
+  return 0;
+}
+
+int network::save_lkk2(const char* name, const VVLkk2LinkType& lkk2,
+    const char pri2, const char pri)
+{
+  _ERR(!name || name[0] == '\0');
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  int flag = save_lkk2(os, lkk2, pri2, pri);
+  os.close();
+  return flag;
+}
+
 int network::read_lkk3(istream& is, VLkk3LinkType& lkk3)
 {
   LinkType n;

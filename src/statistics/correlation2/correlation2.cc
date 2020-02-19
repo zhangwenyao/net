@@ -24,7 +24,7 @@ int correlation2::cal_correlation2_node(double& node, const VVNodeType& p2p)
     const double x = p2p[i].size(), x2 = x * x, x2p = x * 2.0;
     for (const auto j : p2p[i]) {
       for (const auto k : p2p[j]) {
-        if (k <= i || nnodes.find(k) != nnodes.end())
+        if (k <= i || nnodes.find(k) != nnodes.end()) // k in nnodes
           continue;
         nnodes.insert(k);
         const double y = p2p[k].size();
@@ -37,7 +37,7 @@ int correlation2::cal_correlation2_node(double& node, const VVNodeType& p2p)
     if (i % 10000 == 9999)
       INFORM(i + 1, "\t/ ", nodeSize);
   }
-  if (l > 0)
+  if (l > 0 && 2.0 * l * sx2 - sx * sx > 0)
     node = (2.0 * l * sxy - sx * sx) / (2.0 * l * sx2 - sx * sx);
   return 0;
 }
@@ -60,7 +60,7 @@ int correlation2::cal_correlation2_node_spearman(double& node_spearman,
                  x2p = x * 2.0;
     for (const auto j : p2p[i]) {
       for (const auto k : p2p[j]) {
-        if (k <= i || nnodes.find(k) != nnodes.end())
+        if (k <= i || nnodes.find(k) != nnodes.end()) // k in nnodes
           continue;
         nnodes.insert(k);
         const double y = deg2ArrVal[degArrNo.at(p2p[k].size())];
@@ -73,7 +73,7 @@ int correlation2::cal_correlation2_node_spearman(double& node_spearman,
     if (i % 10000 == 9999)
       INFORM(i + 1, "\t/ ", nodeSize);
   }
-  if (l > 0)
+  if (l > 0 && 2.0 * l * sx2 - sx * sx > 0)
     node_spearman = (2.0 * l * sxy - sx * sx) / (2.0 * l * sx2 - sx * sx);
   return 0;
 }
@@ -109,7 +109,7 @@ int correlation2::cal_correlation2_link(double& link, const VVNodeType& p2p)
     if (i % 10000 == 9999)
       INFORM(i + 1, "\t/ ", nodeSize);
   }
-  if (l > 0)
+  if (l > 0 && 2.0 * l * sx2 - sx * sx > 0)
     link = (2.0 * l * sxy - sx * sx) / (2.0 * l * sx2 - sx * sx);
   return 0;
 }
@@ -148,7 +148,7 @@ int correlation2::cal_correlation2_link_spearman(double& link_spearman,
     if (i % 10000 == 9999)
       INFORM(i + 1, "\t/ ", nodeSize);
   }
-  if (l > 0)
+  if (l > 0 && 2.0 * l * sx2 - sx * sx > 0)
     link_spearman = (2.0 * l * sxy - sx * sx) / (2.0 * l * sx2 - sx * sx);
   return 0;
 }
@@ -189,7 +189,8 @@ int correlation2::cal_correlation2_node_k(VDouble& node_correlation2,
       INFORM(i + 1, "\t/ ", nodeSize);
   }
   for (NodeType i = 0; i < degSize; ++i) {
-    if (node_correlation2_size[i] > 0)
+    if (node_correlation2_size[i] > 0
+        && 2.0 * node_correlation2_size[i] * sx2[i] - sx[i] * sx[i] > 0)
       node_correlation2[i]
           = (2.0 * node_correlation2_size[i] * sxy[i] - sx[i] * sx[i])
           / (2.0 * node_correlation2_size[i] * sx2[i] - sx[i] * sx[i]);
@@ -234,7 +235,8 @@ int correlation2::cal_correlation2_node_spearman_k(
       INFORM(i + 1, "\t/ ", nodeSize);
   }
   for (NodeType i = 0; i < degSize; ++i) {
-    if (node_correlation2_size[i] > 0)
+    if (node_correlation2_size[i] > 0
+        && 2.0 * node_correlation2_size[i] * sx2[i] - sx[i] * sx[i] > 0)
       node_correlation2_spearman[i]
           = (2.0 * node_correlation2_size[i] * sxy[i] - sx[i] * sx[i])
           / (2.0 * node_correlation2_size[i] * sx2[i] - sx[i] * sx[i]);

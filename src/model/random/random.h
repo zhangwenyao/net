@@ -25,10 +25,16 @@ namespace random {
   int addLink_p2p_remDeg(VVNodeType& p2p, const VNodeType& nodeDeg,
       VNodeType& remNodeNum, LinkType& linkRemain, VNodeType& link,
       const LinkType tryCount);
+  int addLink_p2p_remDeg_dir(VVNodeType& p2p, const VNodeType& nodeDegOut,
+      VNodeType& remNodeNum, LinkType& linkRemain, VNodeType& link,
+      const LinkType tryCount);
   int addLink_p2p_ranLink_lkkProb(VVNodeType& p2p, const VNodeType& nodeDeg,
       VVDouble& lkkProb, VNodeType& degArrNo, VNodeType& remNodeNum,
       LinkType& linkRemain, VNodeType& link, const LinkType tryCount);
   int delLink_p2p_ranLink(VVNodeType& p2p, const VNodeType& nodeDeg,
+      VNodeType& remNodeNum, LinkType& linkRemain, VNodeType& link,
+      LinkType delCount);
+  int delLink_p2p_ranLink_dir(VVNodeType& p2p, const VNodeType& nodeDegOut,
       VNodeType& remNodeNum, LinkType& linkRemain, VNodeType& link,
       LinkType delCount);
 

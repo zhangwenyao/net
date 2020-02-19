@@ -5,6 +5,7 @@
 #include <cfloat>
 #include <climits>
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -147,22 +148,30 @@ typedef VVWeightSumType::const_iterator VVWeightSumTypeCItr;
 
 typedef struct common::Struct3<NodeType, NodeType, NodeType> Lkk3NodeType;
 typedef Lkk3NodeType* PLkk3NodeType;
-typedef struct common::Struct3<NodeType, NodeType, LinkType> Lkk3LinkType;
-typedef Lkk3LinkType* PLkk3LinkType;
-typedef struct common::Struct3<NodeType, NodeType, Double> Lkk3Double;
-typedef Lkk3Double* PLkk3Double;
-
 typedef std::vector<Lkk3NodeType> VLkk3NodeType;
 typedef VLkk3NodeType::iterator VLkk3NodeTypeItr;
 typedef VLkk3NodeType::const_iterator VLkk3NodeTypeCItr;
 
+typedef struct common::Struct3<NodeType, NodeType, LinkType> Lkk3LinkType;
+typedef Lkk3LinkType* PLkk3LinkType;
 typedef std::vector<Lkk3LinkType> VLkk3LinkType;
 typedef VLkk3LinkType::iterator VLkk3LinkTypeItr;
 typedef VLkk3LinkType::const_iterator VLkk3LinkTypeCItr;
 
+typedef struct common::Struct3<NodeType, NodeType, Double> Lkk3Double;
+typedef Lkk3Double* PLkk3Double;
 typedef std::vector<Lkk3Double> VLkk3Double;
 typedef VLkk3Double::iterator VLkk3DoubleItr;
 typedef VLkk3Double::const_iterator VLkk3DoubleCItr;
+
+typedef struct common::Struct2<NodeType, LinkType> Lkk2LinkType;
+typedef Lkk2LinkType* PLkk2LinkType2;
+typedef std::vector<Lkk2LinkType> VLkk2LinkType;
+typedef VLkk2LinkType::iterator VLkk2LinkTypeItr;
+typedef VLkk2LinkType::const_iterator VLkk2LinkTypeCItr;
+typedef std::vector<VLkk2LinkType> VVLkk2LinkType;
+typedef VVLkk2LinkType::iterator VVLkk2LinkTypeItr;
+typedef VVLkk2LinkType::const_iterator VVLkk2LinkTypeCItr;
 
 typedef common::Range<NodeType> RNodeType;
 typedef std::vector<RNodeType> VRNodeType;
@@ -173,6 +182,12 @@ typedef VRNodeType::const_iterator VRNodeTypeCItr;
 typedef std::map<const NodeType, NodeType> MNodeType;
 typedef MNodeType::iterator MNodeTypeItr;
 typedef MNodeType::const_iterator MNodeTypeCItr;
+typedef std::vector<MNodeType> VMNodeType;
+
+typedef std::set<const NodeType> SNodeType;
+typedef SNodeType::iterator SNodeTypeItr;
+typedef SNodeType::const_iterator SNodeTypeCItr;
+typedef std::vector<SNodeType> VSNodeType;
 
 int save_VRNodeType_start(
     std::ostream& os, const VRNodeType& v, const char c);
@@ -191,6 +206,7 @@ enum Lkk_type {
   lkk_lkk = 11,
   lkk_lkk3 = 13,
   lkk_lkk3reverse = 14,
+  lkk2_lkk2 = 22,
   lkk3_lkk = 31,
   lkk3_lkk3 = 33,
   lkk3_lkk3reverse = 34
@@ -199,7 +215,8 @@ enum Lkk_type {
 const std::map<Lkk_type, std::string> kLkkTypeString
     = { { lkk_type_null, "NULL" }, { lkk_lkk, "lkk_lkk" },
         { lkk_lkk3, "lkk_lkk3" }, { lkk_lkk3reverse, "lkk_lkk3reverse" },
-        { lkk3_lkk, "lkk3_lkk" }, { lkk3_lkk3, "lkk3_lkk3" },
+        { lkk2_lkk2, "lkk2_lkk2" }, { lkk3_lkk, "lkk3_lkk" },
+        { lkk3_lkk3, "lkk3_lkk3" },
         { lkk3_lkk3reverse, "lkk3_lkk3reverse" } };
 
 } // end namespace network

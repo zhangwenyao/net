@@ -14,9 +14,9 @@ int main_func::correlation2::new_networks(int argc, char** argv)
     Networks net;
     net.readName = dirData + name;
     net.saveName = dirStat + name;
-    net.seed = 0;
-    net.nodeSize = (NodeType)1 << 15;
-    net.argv = "--init_seed0";
+    net.seed = 1;
+    net.nodeSize = (NodeType)1 << 17;
+    net.argv = "--init_seed";
 #ifdef NET_ER
     if (name == "ER") {
       net.random.p = 6.0 / net.nodeSize; // ER
@@ -24,13 +24,12 @@ int main_func::correlation2::new_networks(int argc, char** argv)
     }
 #endif
 #ifdef NET_BA
-    if (name == "BA") {
+    if (name == "BA" || strncmp(name.c_str(), "BA_", 3) == 0) {
       net.ba.M = 6; // BA
       net.argv += " --cal_p2p BA";
     }
 #endif
-    net.argv += " --stat"
-                " --save"
+    net.argv += " --save"
                 " --print";
 
     // 带参数运行

@@ -315,6 +315,7 @@ Networks& Networks::stat_correlation2(void)
       network::correlation2::cal_correlation2_link_spearman(
           correlation2.link_spearman, p2p, spearman.deg2ArrVal, degArrNo);
 #endif
+      /*
       network::correlation2::cal_correlation2_node_k(
           correlation2.node_correlation2, correlation2.node_correlation2_size,
           p2p, degArrVal, degArrNo);
@@ -338,6 +339,7 @@ Networks& Networks::stat_correlation2(void)
           correlation2.histogram_size_spearman,
           correlation2.node_correlation2_spearman, spearman.deg2ArrVal,
           correlation2.node_correlation2_size, 0, 1, 10);
+      */
     } else {
       // TODO
       ERROR();

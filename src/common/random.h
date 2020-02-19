@@ -10,7 +10,7 @@ namespace common {
 //系统随机数
 extern std::default_random_engine rand2;
 extern std::uniform_real_distribution<double> dis_real; // [0,1)
-#define rand_double() dis_real(rand2)
+#define rand_double() dis_real(common::rand2)
 // extern decltype(std::bind(std::uniform_real_distribution<double>(), rand2))
 // rand_double;
 long rand_seed(long

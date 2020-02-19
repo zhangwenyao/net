@@ -7,7 +7,7 @@ using namespace common;
 //**//****************************************************//*
 int network::statistics::sum(const char* prename, const char* sufname,
     const int seed_min, const int seed_max, const char* coefficient_string,
-    double& sx, double& sx2, unsigned& n)
+    double& sx, double& sx2, size_t& n)
 {
   string s, fn0 = prename, fn_full, cs = coefficient_string;
   double x;
@@ -25,7 +25,7 @@ int network::statistics::sum(const char* prename, const char* sufname,
           sx2 += x * x;
           ++n;
         } else {
-          ERROR();
+          ERROR(fn_full);
         }
         break;
       }

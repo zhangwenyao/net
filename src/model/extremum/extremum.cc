@@ -697,6 +697,59 @@ int network::extremum::cal_Max_lkk(VVLinkType& lkk,
   return 0;
 }
 
+int network::extremum::cal_Max_lkk2(const VNodeType& degArrVal,
+    const VNodeType& degArrSize, VVLkk2LinkType& lkk2)
+{
+  const NodeType degSize = degArrVal.size();
+  lkk2.clear();
+  lkk2.resize(degSize);
+  VLinkType vlink(degSize);
+  for (NodeType i = 0; i < degSize; i++)
+    vlink[i] = (LinkType)degArrSize[i] * degArrVal[i];
+
+  for (NodeType i = degSize - 1; 1;) {
+    while (vlink[i] <= 0 && i > 0)
+      --i;
+    if (vlink[i] <= 0)
+      break;
+
+    // j==i
+    NodeType si = degArrSize[i];
+    LinkType l;
+    if (si > 1 && vlink[i] / si < si - 1)
+      l = vlink[i];
+    else
+      l = (LinkType)si * (si - 1);
+    if (l % 2 != 0)
+      --l;
+    if (l >= 2) {
+      vlink[i] -= l;
+      lkk2[i].push_back({ i, l / 2 });
+    }
+    _ERR(i <= 0 && vlink[i] > 0);
+
+    // j<i
+    for (NodeType j = i - 1; vlink[i] > 0; --j) {
+      while (vlink[j] <= 0 && j > 1)
+        --j;
+      _ERR(vlink[j] <= 0);
+      NodeType sj = degArrSize[j];
+      LinkType l = vlink[i] <= vlink[j] ? vlink[i] : vlink[j];
+      if (l / sj >= si)
+        l = (LinkType)sj * si;
+      vlink[i] -= l;
+      vlink[j] -= l;
+      lkk2[j].push_back({ i, l });
+      if (j <= 0)
+        break;
+    }
+
+    _ERR(vlink[i] > 0);
+  }
+
+  return 0;
+}
+
 int network::extremum::cal_Max_lkk3(const VNodeType& degArrVal,
     const VNodeType& degArrSize, VLkk3LinkType& lkk3)
 {
@@ -762,6 +815,14 @@ int network::extremum::Max_new_lkk(VVLinkType& lkk,
     ERROR();
     return -1;
   }
+  return 0;
+}
+
+int network::extremum::Max_new_lkk2(const VNodeType& degArrVal,
+    const VNodeType& degArrSize, VVLkk2LinkType& lkk2)
+{
+  _ERR(degArrSize.empty());
+  _ERR(cal_Max_lkk2(degArrVal, degArrSize, lkk2));
   return 0;
 }
 

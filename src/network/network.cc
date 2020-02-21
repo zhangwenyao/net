@@ -593,6 +593,14 @@ network::Network& network::Network::save_lkk(const char* name)
         runStatus = -1;
       }
     break;
+  case lkk2_lkk2compress:
+    if (!lkk2.empty())
+      if (0
+          != save_lkk2compress((fn + ".lkk2.txt").c_str(), lkk2, priChar2, priChar)) {
+        ERROR();
+        runStatus = -1;
+      }
+    break;
   case lkk3_lkk:
     // TODO
     ERROR();
@@ -894,6 +902,13 @@ network::Network& network::Network::read_lkk(const char* name, Lkk_type lkk_t)
     break;
   case lkk2_lkk2:
     if (0 != common::read2_0((fn + ".lkk2.txt").c_str(), lkk2)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+    break;
+  case lkk2_lkk2compress:
+    if (0 != read_lkk2compress((fn + ".lkk2.txt").c_str(), lkk2)) {
       runStatus = -1;
       ERROR();
       return *this;

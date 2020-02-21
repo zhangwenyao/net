@@ -13,6 +13,30 @@ int common::check_filename(const char* const name)
     return 0;
 }
 
+int common::save(const char* name, const string& s)
+{
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  os << s;
+  os.close();
+  return 0;
+}
+
+int common::save(const char* name, const char* s)
+{
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  os << s;
+  os.close();
+  return 0;
+}
+
 int common::get_string(istream& is, string& s)
 {
   if (is >> s && !s.empty() && s[0] == '\"') {

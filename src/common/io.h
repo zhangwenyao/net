@@ -19,6 +19,10 @@ int get_string(std::istream& is, std::string& s);
 // ********************* print, save ************************
 int check_filename(const char* const name = NULL);
 
+// string
+int save(const char* name, const std::string& s);
+int save(const char* name, const char* s);
+
 // 一维数组 a[n]
 template <typename T, const size_t n>
 int save(std::ostream& os, T (&a)[n], const char c = '\t');
@@ -169,6 +173,24 @@ int save_VString(const char* name, const std::vector<std::string>& vs);
 int read_VString(std::istream& is, std::vector<std::string>& vs);
 int read_VString(const char* name, std::vector<std::string>& vs);
 
+template <typename T>
+int save_double(
+    std::ostream& os, const T& ds, const int l = 18, const char c = '\t');
+template <typename T>
+int save_double(
+    const char* name, const T& ds, const int l = 18, const char c = '\t');
+template <typename T>
+int save_double1(
+    std::ostream& os, const T& ds, const int l = 18, const char c = '\t');
+template <typename T>
+int save_double1(
+    const char* name, const T& ds, const int l = 18, const char c = '\t');
+template <typename T>
+int save_double2(
+    std::ostream& os, const T& ds, const int l = 18, const char c = '\t');
+template <typename T>
+int save_double2(
+    const char* name, const T& ds, const int l = 18, const char c = '\t');
 } // end namespace common
 
 // *************************************************************

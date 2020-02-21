@@ -877,6 +877,72 @@ int common::read2_0(const char* name, std::vector<std::vector<T>>& v)
   return status;
 }
 
+template <typename T>
+int common::save_double(
+    std::ostream& os, const T& ds, const int l, const char c)
+{
+  os.precision(l);
+  return common::save(os, ds, c);
+}
+
+template <typename T>
+int common::save_double(
+    const char* name, const T& ds, const int l, const char c)
+{
+  std::ofstream os(name);
+  if (!os) {
+    ERROR("open file ", name);
+    return -1;
+  }
+  int status = common::save_double(os, ds, l, c);
+  os.close();
+  return status;
+}
+
+template <typename T>
+int common::save_double1(
+    std::ostream& os, const T& ds, const int l, const char c)
+{
+  os.precision(l);
+  return common::save1(os, ds, c);
+}
+
+template <typename T>
+int common::save_double1(
+    const char* name, const T& ds, const int l, const char c)
+{
+  std::ofstream os(name);
+  if (!os) {
+    ERROR("open file ", name);
+    return -1;
+  }
+  int status = common::save_double1(os, ds, l, c);
+  os.close();
+  return status;
+}
+
+template <typename T>
+int common::save_double2(
+    std::ostream& os, const T& ds, const int l, const char c)
+{
+  os.precision(l);
+  return common::save2(os, ds, c);
+}
+
+template <typename T>
+int common::save_double2(
+    const char* name, const T& ds, const int l, const char c)
+{
+  std::ofstream os(name);
+  if (!os) {
+    ERROR("open file ", name);
+    return -1;
+  }
+  int status = common::save_double2(os, ds, l, c);
+  os.close();
+  return status;
+}
+
 // *************************************************************
 template <typename T1, typename T2, typename T3>
 std::ostream& operator<<(

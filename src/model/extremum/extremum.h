@@ -20,6 +20,8 @@ namespace extremum {
       VVLkk2LinkType& lkk2);
   int cal_Max_lkk3(const VNodeType& degArrVal, const VNodeType& degArrSize,
       VLkk3LinkType& lkk3);
+  int cal_Max_lkk_statistics(const VNodeType& degArrVal,
+      const VNodeType& degArrSize, const double *alphas, VDouble& results);
 
   int cal_Min_lkk_side2mid(VVLinkType& lkk, const VNodeType& degArrVal,
       const VNodeType& degArrSize, const int fix = 1);

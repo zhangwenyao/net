@@ -8,6 +8,10 @@ namespace extremum {
   // ******************************************************
   int stat_maximal(int argc, char** argv);
 
+#ifdef STAT_RELATIVITY
+  int stat_maximal_lkk_alphas(int argc, char** argv);
+#endif
+
   // ******************************************************
 }
 }

@@ -1,7 +1,7 @@
 #ifndef STATISTICS__STAT_H_
 #define STATISTICS__STAT_H_
-
-#include <iostream>
+#include "../network/net.h"
+#ifdef STAT_STAT
 
 namespace network {
 namespace statistics {
@@ -10,7 +10,11 @@ namespace statistics {
       const int seed_max, const char* coefficient_string, double& sx,
       double& sx2, size_t& n);
 
+  int cal_degArr_sum_alphas(const VNodeType& degArrVal,
+      const VNodeType& degArrSize, const double* alphas, VDouble& results);
+
   // ******************************************************
 }
 }
+#endif
 #endif // _H_

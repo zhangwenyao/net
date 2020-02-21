@@ -207,17 +207,18 @@ enum Lkk_type {
   lkk_lkk3 = 13,
   lkk_lkk3reverse = 14,
   lkk2_lkk2 = 22,
+  lkk2_lkk2compress = 25,
   lkk3_lkk = 31,
   lkk3_lkk3 = 33,
   lkk3_lkk3reverse = 34
 };
 
-const std::map<Lkk_type, std::string> kLkkTypeString
-    = { { lkk_type_null, "NULL" }, { lkk_lkk, "lkk_lkk" },
-        { lkk_lkk3, "lkk_lkk3" }, { lkk_lkk3reverse, "lkk_lkk3reverse" },
-        { lkk2_lkk2, "lkk2_lkk2" }, { lkk3_lkk, "lkk3_lkk" },
-        { lkk3_lkk3, "lkk3_lkk3" },
-        { lkk3_lkk3reverse, "lkk3_lkk3reverse" } };
+const std::map<Lkk_type, std::string> kLkkTypeString = {
+  { lkk_type_null, "NULL" }, { lkk_lkk, "lkk_lkk" }, { lkk_lkk3, "lkk_lkk3" },
+  { lkk_lkk3reverse, "lkk_lkk3reverse" }, { lkk2_lkk2, "lkk2_lkk2" },
+  { lkk2_lkk2compress, "lkk2_lkk2compress" }, { lkk3_lkk, "lkk3_lkk" },
+  { lkk3_lkk3, "lkk3_lkk3" }, { lkk3_lkk3reverse, "lkk3_lkk3reverse" }
+};
 
 } // end namespace network
 

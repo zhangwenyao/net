@@ -31,6 +31,10 @@
 #include "../model/foodweb/network.h"
 #endif
 
+#ifdef STAT_STAT
+#include "../statistics/stat.h"
+#endif
+
 #ifdef STAT_PEARSON
 #include "../statistics/pearson/network.h"
 #endif

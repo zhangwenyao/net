@@ -274,7 +274,7 @@ int network::save_lkk_3(const char* name, const VVLinkType& lkk, const int rv,
 
 int network::read_lkk2(istream& is, VVLkk2LinkType& lkk2)
 {
-  if(is)
+  if (is)
     common::read2_0(is, lkk2);
   return 0;
 }
@@ -307,6 +307,64 @@ int network::save_lkk2(
 }
 
 int network::save_lkk2(const char* name, const VVLkk2LinkType& lkk2,
+    const char pri2, const char pri)
+{
+  _ERR(!name || name[0] == '\0');
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  int flag = save_lkk2(os, lkk2, pri2, pri);
+  os.close();
+  return flag;
+}
+
+int network::read_lkk2compress(istream& is, VVLkk2LinkType& lkk2)
+{
+  if (is)
+    common::read2_0(is, lkk2);
+  for (size_t i = 0; i < lkk2.size(); ++i)
+    for (size_t j = 0; j < lkk2[i].size(); ++j)
+      lkk2[i][j].x += i;
+  return 0;
+}
+
+int network::read_lkk2compress(const char* name, VVLkk2LinkType& lkk2)
+{
+  if (!name || name[0] == '\0') {
+    ERROR();
+    return -1;
+  }
+  ifstream is(name);
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  int flag = read_lkk2(is, lkk2);
+  is.close();
+  return flag;
+}
+
+int network::save_lkk2compress(
+    ostream& os, const VVLkk2LinkType& lkk2, const char pri2, const char pri)
+{
+  if (!os) {
+    ERROR();
+    return 0;
+  }
+  for (size_t i = 0; i < lkk2.size(); ++i) {
+    if (!lkk2.empty()) {
+      os << lkk2[i][0].x - i << pri2 << lkk2[i][0].y;
+      for (size_t j = 1; j < lkk2[i].size(); ++j)
+        os << pri2 << lkk2[i][j].x - i << pri2 << lkk2[i][j].y;
+    }
+    os << pri;
+  }
+  return 0;
+}
+
+int network::save_lkk2compress(const char* name, const VVLkk2LinkType& lkk2,
     const char pri2, const char pri)
 {
   _ERR(!name || name[0] == '\0');

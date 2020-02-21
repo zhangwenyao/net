@@ -66,7 +66,8 @@ int main_func::main_extremum(int argc, char** argv)
   _ERR(extremum::stat_all(argc, argv));
 #endif
 
-#else
+#else  // ifdef STAT_RELATIVITY
+  /*
   for (size_t i = 0; i < alpha_len; ++i) {
     relativity_alpha = relativity_alphas[i];
     alpha_string = alpha_strings[i];
@@ -83,7 +84,10 @@ int main_func::main_extremum(int argc, char** argv)
     _ERR(extremum::stat_all(argc, argv));
 #endif
   }
-#endif
+  */
+  kStatDir = main_func_extremum_kStatDir0;
+  _ERR(extremum::stat_maximal_lkk_alphas(argc, argv));
+#endif // STAT_RELATIVITY
 
   return 0;
 }

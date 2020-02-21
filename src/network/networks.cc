@@ -1163,16 +1163,16 @@ network::Networks& network::Networks::cal_p2p(const string& s)
   if (kMax <= 0 || s.find("read_") != string::npos) {
     kMin = degArrVal.front();
     kMax = degArrVal.back();
-  if (dirFlag) {
-    if (kMaxOut <= 0 && !degArrValOut.empty()) {
-      kMinOut = degArrValOut.front();
-      kMaxOut = degArrValOut.back();
+    if (dirFlag) {
+      if (kMaxOut <= 0 && !degArrValOut.empty()) {
+        kMinOut = degArrValOut.front();
+        kMaxOut = degArrValOut.back();
+      }
+      if (kMaxIn <= 0 && !degArrValIn.empty()) {
+        kMinIn = degArrValIn.front();
+        kMaxIn = degArrValIn.back();
+      }
     }
-    if (kMaxIn <= 0 && !degArrValIn.empty()) {
-      kMinIn = degArrValIn.front();
-      kMaxIn = degArrValIn.back();
-    }
-  }
   }
 
   status = 1;

@@ -808,54 +808,53 @@ int network::extremum::cal_Max_lkk_statistics(const VNodeType& degArrVal,
 {
   const NodeType degSize = degArrVal.size();
   const int na = results.size();
-  // results.assign(na, 0);
+  VDouble alphas2(alphas, alphas + na);
+  for (int i = 0; i < na; ++i)
+    alphas2[i] *= 2;
   VLinkType vlink(degSize);
   for (NodeType i = 0; i < degSize; i++)
     vlink[i] = (LinkType)degArrSize[i] * degArrVal[i];
 
+  const NodeType knNT1 = ~(NodeType)1;
+  const LinkType knLT1 = ~(LinkType)1;
   for (NodeType i = degSize - 1; 1;) {
-    while (vlink[i] <= 0 && i > 0)
+    while (i && !vlink[i]) // vlink[i] <=0 && i > 0
       --i;
-    if (vlink[i] <= 0)
+    if (!vlink[i]) // vlink[i] == 0
       break;
 
     // j==i
-    NodeType si = degArrSize[i];
-    LinkType l;
-    if (si > 1 && vlink[i] / si < si - 1)
-      l = vlink[i];
-    else
-      l = (LinkType)si * (si - 1);
-    if (l % 2 != 0)
-      --l;
-    if (l >= 2) {
+    const LinkType degi = degArrVal[i], si = degArrSize[i];
+    const LinkType sij = si * (si - 1),
+                   l = vlink[i] < sij ? (vlink[i] & knLT1) : sij;
+    if (l) {
       vlink[i] -= l;
       // lkk3.push_back({ i, i, l / 2 });
+      const double l2 = l >> 1;
       for (int ai = 0; ai < na; ++ai)
-        results[ai] += pow(degArrVal[i], alphas[ai] * 2) * (l / 2);
+        results[ai] += pow(degi, alphas2[ai]) * l2;
     }
-    _ERR(i <= 0 && vlink[i] > 0);
+    //_ERR(vlink[i] && !i);
 
     // j<i
-    for (NodeType j = i - 1; vlink[i] > 0; --j) {
-      while (vlink[j] <= 0 && j > 1)
+    for (NodeType j = i - 1; vlink[i]; --j) {
+      while (!vlink[j] && (j & knNT1))
         --j;
-      _ERR(vlink[j] <= 0);
-      NodeType sj = degArrSize[j];
-      LinkType l = vlink[i] <= vlink[j] ? vlink[i] : vlink[j];
-      if (l / sj >= si)
-        l = (LinkType)sj * si;
+      //_ERR(!vlink[j]);
+      const LinkType sj = degArrSize[j], sij = si * sj,
+                     vij = vlink[i] <= vlink[j] ? vlink[i] : vlink[j],
+                     l = sij <= vij ? sij : vij;
       vlink[i] -= l;
       vlink[j] -= l;
       // lkk3.push_back({ i, j, l });
+      const double x = degi * degArrVal[j], lt = l;
       for (int ai = 0; ai < na; ++ai)
-        results[ai]
-            += pow((double)degArrVal[i] * degArrVal[j], alphas[ai]) * l;
-      if (j <= 0)
+        results[ai] += pow(x, alphas[ai]) * lt;
+      if (!j)
         break;
     }
 
-    _ERR(vlink[i] > 0);
+    //_ERR(vlink[i]);
   }
 
   return 0;

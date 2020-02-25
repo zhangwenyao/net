@@ -29,8 +29,10 @@ CUR_OBJS_CC	= $(foreach x,$(EXTS_CC),$(patsubst %$(x),$(CUR_OBJ_DIR)/%.o,$(filte
 CUR_DEPS_CC	= $(CUR_OBJS_CC:%.o=%.d)
 
 
-export CC	= clang
-export CXX	= clang++
+#export CC	= clang
+#export CXX	= clang++
+export CC	= icc
+export CXX	= icpc
 ifdef DEBUG
 	export CFLAGS	= -Wall -O0 -I$(DIR_INC) -g -DDEBUG
 	export CXXFLAGS	= -Wall -O0 -I$(DIR_INC) -g -DDEBUG -std=c++11

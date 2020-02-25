@@ -8,18 +8,21 @@
 #define MAIN_FUNC main_func::main_extremum
 
 //#define MAIN_EXTREMUM_NEW_DEG_ARR
+//#define MAIN_EXTREMUM_NONE
 //#define MAIN_EXTREMUM_NEW_MINIMAL
 //#define MAIN_EXTREMUM_NEW_MAXIMAL
 //#define MAIN_EXTREMUM_STAT_MINIMAL
-#define MAIN_EXTREMUM_STAT_MAXIMAL
+//#define MAIN_EXTREMUM_STAT_MAXIMAL
 //#define MAIN_EXTREMUM_STAT_ALL
 //#define MAIN_EXTREMUM_STAT_ALL_COLLECT
+#define MAIN_EXTREMUM_ALPHAS
+#define MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL
 
 // ******************************************************
 namespace main_func {
 int main_extremum(int argc, char** argv);
 namespace extremum {
-  const int kEMin = 39, kEMax = 39, kSeedMin = 25, kSeedMax = 50;
+  const int kEMin = 40, kEMax = 40, kSeedMin = 51, kSeedMax = 100;
   const double kGamma = 2.5;
   const std::string kGammaString = "2.5";
   // const std::string kDataDir

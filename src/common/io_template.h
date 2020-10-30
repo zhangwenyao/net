@@ -35,6 +35,12 @@ inline size_t common::itoa(
   return l;
 }
 
+template <typename T> inline std::string dtoa(const T i)
+{
+  std::stringstream ss;
+  ss << i;
+  return ss.str();
+}
 // *********************** common::save, common::read **********************
 // 一维数组 a[n]
 template <typename T, const size_t n>

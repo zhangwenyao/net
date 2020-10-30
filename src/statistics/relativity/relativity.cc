@@ -61,7 +61,7 @@ int network::relativity::cal_relativity_lkk3(double& relativity,
   if (n * sxx == sx * sx)
     relativity = 0;
   else
-    relativity = (2.0*n * sxy - sx * sx) / (n * sxx - sx * sx);
+    relativity = (2.0 * n * sxy - sx * sx) / (n * sxx - sx * sx);
   return 0;
 }
 
@@ -106,5 +106,29 @@ int network::relativity::cal_relativity_link(double& relativity,
   return 0;
 }
 
+// ******************************************************
+int network::relativity::alphas_sum(const char* prename, const char* sufname,
+    const int seed_min, const int seed_max, VDouble& sx, VDouble& sx2,
+    size_t& n)
+{
+  string s, fn0 = prename, fn_full;
+  VVDouble dbs, results;
+  const size_t alphas_size = sx.size();
+  for (int seed = seed_min; seed <= seed_max; ++seed) {
+    fn_full = fn0 + to_string(seed) + sufname;
+    dbs.clear();
+    _ERR(0 != common::read2_0(fn_full.c_str(), dbs) || dbs.size() != 3);
+    for (int i = 0; i < 3; ++i)
+      _ERR(dbs[i].size() != alphas_size);
+    for (size_t i = 0; i < alphas_size; ++i) {
+      const double x1 = dbs[0][i] - dbs[1][i] * dbs[1][i],
+                   x2 = dbs[2][i] - dbs[1][i] * dbs[1][i],
+                   x = x2 == 0 ? 0 : x1 / x2;
+      sx[i] += x;
+      sx2[i] += x * x;
+    }
+    ++n;
+  }
+}
 // ******************************************************
 #endif // STAT_PEARSON

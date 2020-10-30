@@ -16,19 +16,21 @@
 //#define MAIN_EXTREMUM_STAT_ALL
 //#define MAIN_EXTREMUM_STAT_ALL_COLLECT
 #define MAIN_EXTREMUM_ALPHAS
-#define MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL
+//#define MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL
+#define MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL_COLLECT
 
 // ******************************************************
 namespace main_func {
 int main_extremum(int argc, char** argv);
 namespace extremum {
-  const int kEMin = 40, kEMax = 40, kSeedMin = 51, kSeedMax = 100;
+  const int kEMin = 20, kEMax = 20, kSeedMin = 1, kSeedMax = 100;
   const double kGamma = 2.5;
   const std::string kGammaString = "2.5";
   // const std::string kDataDir
   //= std::string("data/extremum/nature/") + kGammaString + "_4/data/";
   const std::string kDataDir
-      = std::string("/media/yao/Samsung_T5/net/data/") + kGammaString + "_4/";
+      = std::string("/media/yao/Server1T/net/data/extremum/nature/")
+      + kGammaString + "_4/";
 #ifndef STAT_RELATIVITY
   const std::string kStatDir = std::string("data/extremum/nature/")
       + kGammaString + "_4/stat/pearson_spearman/";

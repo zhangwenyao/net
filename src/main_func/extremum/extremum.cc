@@ -56,6 +56,7 @@ int main_func::extremum::new_deg_arr(int argc, char** argv)
   return 0;
 }
 
+#ifdef MAIN_EXTREMUM_NONE
 int main_func::extremum::new_minimal(int argc, char** argv)
 {
   for (int e = kEMin; e <= kEMax; ++e) {
@@ -394,7 +395,7 @@ int main_func::extremum::stat_all(int argc, char** argv)
 }
 
 //**//****************************************************//*
-#ifdef STAT_RELATIVITY
+#elif defined(STAT_RELATIVITY) && defined(MAIN_EXTREMUM_ALPHAS)
 int main_func::extremum::alphas_stat_maximal_lkk(int argc, char** argv)
 {
   mkdirs(kStatDir.c_str());
@@ -417,8 +418,8 @@ int main_func::extremum::alphas_stat_maximal_lkk(int argc, char** argv)
       VDouble alphas(alpha_len);
       VVDouble results(3, VDouble(alpha_len, 0));
       _ERR(0
-          != cal_Max_lkk_statistics(net.degArrVal, net.degArrSize,
-                 relativity_alphas, results[0]));
+          != network::extremum::cal_Max_lkk_statistics(net.degArrVal,
+                 net.degArrSize, relativity_alphas, results[0]));
       for (auto& x : results[0])
         x /= net.linkSize;
       for (size_t i = 0; i < alpha_len; ++i)
@@ -448,6 +449,42 @@ int main_func::extremum::alphas_stat_maximal_lkk(int argc, char** argv)
 
   return 0;
 }
+
+int main_func::extremum::alphas_stat_all(int argc, char** argv)
+{
+#ifdef MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL_COLLECT
+  const string kStatDir = main_func_extremum_kStatDir0,
+               save_prename = kStatDir + "kMin4";
+  cout << "statistics relativity maximal" << endl;
+      for (int e = kEMin; e <= kEMax; ++e) {
+      for (int seed = kSeedMin; seed <= kSeedMax; ++seed) {
+
+  for (size_t ai = 0; ai < alpha_len; ++ai) {
+    relativity_alpha = relativity_alphas[ai];
+    const string alpha_string = alpha_strings[ai];
+    string save_fullname
+        = save_prename + ".relativity" + alpha_string + ".maximal.alphas.txt";
+        VDouble sx(alpha_len, 0), sxx = sx, x_mean = sx, x_sigma = sx;
+        size_t n = 0;
+        cout << "\te\t" << e << endl;
+        string prename = kStatDir + "2^" + to_string(e) + "/kMin4_",
+               sufname = ".Max.alphas.txt";
+        relativity::alphas_sum(
+            prename.c_str(), sufname.c_str(), 1, 100, sx, sxx, n);
+        if (n > 0) {
+          for (size_t i = 0; i < alpha_len; ++i) {
+            x_mean[i] = sx[i] / n;
+            x_sigma[i] = sxx[i] / n - x_mean[i] * x_mean[i];
+            x_sigma[i] = x_sigma[i] > 0 ? sqrt(x_sigma[i]) : 0;
+            os[i] << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma
+                  << endl;
+          }
+        }
+      }
+    }
+#endif
+    return 0;
+  }
 #endif
 
 //**//****************************************************//*

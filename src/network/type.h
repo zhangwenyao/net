@@ -184,7 +184,7 @@ typedef MNodeType::iterator MNodeTypeItr;
 typedef MNodeType::const_iterator MNodeTypeCItr;
 typedef std::vector<MNodeType> VMNodeType;
 
-typedef std::set<const NodeType> SNodeType;
+typedef std::set<NodeType> SNodeType;
 typedef SNodeType::iterator SNodeTypeItr;
 typedef SNodeType::const_iterator SNodeTypeCItr;
 typedef std::vector<SNodeType> VSNodeType;

@@ -64,9 +64,14 @@ int main_func::main_extremum(int argc, char** argv)
 #endif // ifdef STAT_RELATIVITY
 
 #elif defined(MAIN_EXTREMUM_ALPHAS)
+#ifdef MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL
   kStatDir = main_func_extremum_kStatDir0;
   _ERR(extremum::alphas_stat_maximal_lkk(argc, argv));
-
+#endif
+#ifdef MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL_COLLECT
+  kStatDir = main_func_extremum_kStatDir0;
+  _ERR(extremum::alphas_stat_all(argc, argv));
+#endif
 #endif
 
   return 0;

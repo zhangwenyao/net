@@ -13,8 +13,12 @@ inline T atoi(const char* s, const char c = 'a', const char base = 26);
 template <typename T>
 inline size_t itoa(
     T i, char* s, const char c = 'a', const char base = 26, size_t n = 0);
+template <typename T> inline std::string dtoa(const T i);
 
 int get_string(std::istream& is, std::string& s);
+
+int save_string(std::ostream& os, const std::string& s);
+int save_string(const char* const name, const std::string& s);
 
 // ********************* print, save ************************
 int check_filename(const char* const name = NULL);

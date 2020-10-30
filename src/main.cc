@@ -16,6 +16,10 @@ using namespace std;
 #include "main_func/correlation2/main.h"
 #endif
 
+#ifdef MAIN_DISTRIBUTION
+#include "main_func/distribution/main.h"
+#endif
+
 #ifdef MAIN_REWIRE
 #include "main_func/rewire/main.h"
 #endif

@@ -5,6 +5,26 @@
 using namespace std;
 
 // *************************************************************
+int save_string(std::ostream& os, const std::string& s)
+{
+  os << s;
+  return 0;
+}
+
+int save_string(const char* const name, const std::string& s)
+{
+  if (name == NULL || name[0] == '\0')
+    return -1;
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  os << s;
+  os.close();
+  return 0;
+}
+
 int common::check_filename(const char* const name)
 {
   if (name == NULL || name[0] == '\0')

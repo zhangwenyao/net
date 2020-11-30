@@ -28,19 +28,20 @@ CUR_SOURCE_CC	= $(wildcard $(addprefix $(CUR_DIR)/*,$(EXTS_CC)))
 CUR_OBJS_CC	= $(foreach x,$(EXTS_CC),$(patsubst %$(x),$(CUR_OBJ_DIR)/%.o,$(filter %$(x),$(notdir $(CUR_SOURCE_CC)))))
 CUR_DEPS_CC	= $(CUR_OBJS_CC:%.o=%.d)
 
-
+export CC	= gcc
+export CXX	= g++
 #export CC	= clang
 #export CXX	= clang++
-export CC	= icc
-export CXX	= icpc
+#export CC	= icc
+#export CXX	= icpc
 ifdef DEBUG
-	export CFLAGS	= -Wall -O0 -I$(DIR_INC) -g -DDEBUG
-	export CXXFLAGS	= -Wall -O0 -I$(DIR_INC) -g -DDEBUG -std=c++11
-	export LDFLAGS	= -Wall -O0 -g -DDEBUG
+	export CFLAGS	= -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG
+	export CXXFLAGS	= -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG -std=c++11
+	export LDFLAGS	= -Wall -O0 -g -DDEBUG -fopenmp
 else
-	export CFLAGS	= -Wall -O3 -I$(DIR_INC)
-	export CXXFLAGS	= -Wall -O3 -I$(DIR_INC) -std=c++11
-	export LDFLAGS	= -Wall -O3
+	export CFLAGS	= -Wall -O3 -I$(DIR_INC) -fopenmp
+	export CXXFLAGS	= -Wall -O3 -I$(DIR_INC) -fopenmp -std=c++11
+	export LDFLAGS	= -Wall -O3 -fopenmp
 endif
 
 

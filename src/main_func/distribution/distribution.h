@@ -7,7 +7,7 @@ namespace main_func {
 namespace distribution {
   // ******************************************************
   int new_distribution(int argc, char** argv);
-
+  
   // ******************************************************
 }
 }

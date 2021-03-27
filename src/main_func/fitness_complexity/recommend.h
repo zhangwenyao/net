@@ -1,12 +1,12 @@
-#ifndef MAIN__DISTRIBUTION_H_
-#define MAIN__DISTRIBUTION_H_
+#ifndef MAIN__FITNESS_COMPLEXITY_H_
+#define MAIN__FITNESS_COMPLEXITY_H_
 #include "main.h"
-#ifdef MAIN_DISTRIBUTION
+#ifdef MAIN_FITNESS_COMPLEXITY_RECOMMEND
 
 namespace main_func {
-namespace distribution {
+namespace fitness_complexity {
   // ******************************************************
-  int new_distribution(int argc, char** argv);
+  int recommend(int argc, char** argv);
 
   // ******************************************************
 }

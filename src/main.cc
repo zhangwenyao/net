@@ -8,16 +8,16 @@ using namespace std;
 #include "test.h"
 #endif
 
+#ifdef MAIN_DISTRIBUTION
+#include "main_func/distribution/main.h"
+#endif
+
 #ifdef MAIN_EXTREMUM
 #include "main_func/extremum/main.h"
 #endif
 
 #ifdef MAIN_CORRELATION2
 #include "main_func/correlation2/main.h"
-#endif
-
-#ifdef MAIN_DISTRIBUTION
-#include "main_func/distribution/main.h"
 #endif
 
 #ifdef MAIN_REWIRE
@@ -36,7 +36,7 @@ int main_default(int argc, char** argv)
   for (int i = 0; i < argc && argv[i] != NULL; ++i) {
     cout << argc << '\t' << argv[i] << '\n';
   }
-  return 0;
+  return EXIT_SUCCESS;
 }
 }
 #endif

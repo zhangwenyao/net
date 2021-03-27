@@ -129,6 +129,7 @@ int network::relativity::alphas_sum(const char* prename, const char* sufname,
     }
     ++n;
   }
+  return EXIT_SUCCESS;
 }
 // ******************************************************
 #endif // STAT_PEARSON

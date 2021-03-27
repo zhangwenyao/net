@@ -157,7 +157,7 @@ int network::degree::power_cal_deg_arr_prob_sum_arr(const NodeType nodeSize,
     ERROR();
     return -1;
   }
-  if (kMax >= NodeType(1) << (degProbSumArr.size() + 1)) {
+  if (kMax >= (kMin << degProbSumArr.size())) {
     ERROR();
     return -1;
   }

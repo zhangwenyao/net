@@ -36,6 +36,27 @@ int network::statistics::sum(const char* prename, const char* sufname,
   return 0;
 }
 
+int network::statistics::sums_relativity(const char* prename,
+    const char* sufname, const int seed_min, const int seed_max, double* sx,
+    double* sx2, size_t& n, const size_t len)
+{
+  for (int seed = seed_min; seed <= seed_max; ++seed) {
+    string fn_full = prename + to_string(seed) + sufname;
+    VVDouble results(3, VDouble(len, 0));
+    if (0 == read2(fn_full.c_str(), results)) {
+      ++n;
+      for (size_t i = 0; i < len; ++i) {
+        double r2 = results[1][i];
+        r2 *= r2;
+        double x = (results[0][i] - r2) / (results[2][i] - r2);
+        sx[i] += x;
+        sx2[i] += x * x;
+      }
+    }
+  } // for seed
+  return 0;
+}
+
 int network::statistics::cal_degArr_sum_alphas(const VNodeType& degArrVal,
     const VNodeType& degArrSize, const double* alphas, VDouble& results)
 {

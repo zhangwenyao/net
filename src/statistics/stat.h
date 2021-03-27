@@ -10,6 +10,10 @@ namespace statistics {
       const int seed_max, const char* coefficient_string, double& sx,
       double& sx2, size_t& n);
 
+  int sums_relativity(const char* prename, const char* sufname,
+      const int seed_min, const int seed_max, double* sx, double* sx2,
+      size_t& n, const size_t len);
+
   int cal_degArr_sum_alphas(const VNodeType& degArrVal,
       const VNodeType& degArrSize, const double* alphas, VDouble& results);
 

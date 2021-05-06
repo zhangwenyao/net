@@ -6,6 +6,7 @@ export ROOT_OBJ	= $(ROOT_DIR)/obj
 DIR_BIN		= $(ROOT_DIR)/bin
 DIR_INC		= $(ROOT_DIR)/include
 BIN_TARGET	= $(DIR_BIN)/$(TARGET)
+datecmd		= date +%Y%m%d-%T.%3N
 
 CUR_DIR		= $(shell pwd)
 CUR_OBJ_DIR	= $(subst $(ROOT_DIR),$(ROOT_OBJ),$(CUR_DIR))

@@ -465,38 +465,131 @@ int main_func::extremum::alphas_stat_maximal_lkk(int argc, char** argv)
 }
 #endif
 
+#ifdef MAIN_EXTREMUM_ALPHAS_STAT_MINIMAL
+int main_func::extremum::alphas_stat_minimal_lkk(int argc, char** argv)
+{
+  mkdirs(kStatDir.c_str());
+  for (int e = kEMin; e <= kEMax; ++e) {
+    cout << "e\t" << e << endl;
+    string data_dir = kDataDir + "2^" + to_string(e) + "/",
+           stat_dir = kStatDir + "/relativity/2^" + to_string(e) + "/";
+    mkdirs(stat_dir.c_str());
+
+    for (int seed = kSeedMin; seed <= kSeedMax; ++seed) {
+      SHOW_TIME(cout); // 显示系统时间
+      cout << "e\t" << e << "\tseed\t" << seed << endl;
+      Networks net;
+      string fn_full0
+          = data_dir + "kMin" + to_string(kMin) + "_" + to_string(seed),
+          fn_full = fn_full0 + ".Min";
+      net.readName = fn_full0;
+      _ERR(0 != net.read_params().runStatus);
+      _ERR(0 != net.read_degArr(fn_full0.c_str()).runStatus);
+
+      VDouble alphas(alpha_len);
+      VVDouble results(3, VDouble(alpha_len, 0));
+      _ERR(0
+          != network::extremum::cal_Min_lkk_statistics(
+              net.degArrVal, net.degArrSize, relativity_alphas, results[0]));
+      for (auto& x : results[0])
+        x /= net.linkSize;
+      for (size_t i = 0; i < alpha_len; ++i)
+        alphas[i] = relativity_alphas[i] + 1;
+      _ERR(0
+          != network::statistics::cal_degArr_sum_alphas(
+              net.degArrVal, net.degArrSize, &alphas[0], results[1]));
+      for (auto& x : results[1])
+        x /= net.linkSize * 2;
+      for (size_t i = 0; i < alpha_len; ++i)
+        alphas[i] = relativity_alphas[i] * 2 + 1;
+      _ERR(0
+          != network::statistics::cal_degArr_sum_alphas(
+              net.degArrVal, net.degArrSize, &alphas[0], results[2]));
+      for (auto& x : results[2])
+        x /= net.linkSize * 2;
+      // for (size_t i = 0; i < alpha_len; ++i) {
+      // const double exx = results[1][i] * results[1][i];
+      // if (results[2][i] - exx != 0)
+      // results[3][i] = (results[0][i] - exx) / (results[2][i] - exx);
+      //}
+      string savename = stat_dir + "kMin" + to_string(kMin) + "_"
+          + to_string(seed) + ".Min.alphas.txt";
+      common::save_double2(savename.c_str(), results);
+    } // for seed
+  }   // for e
+
+  return 0;
+}
+#endif
+
 int main_func::extremum::alphas_stat_all(int argc, char** argv)
 {
   const string save_prename = kStatDir + "kMin" + to_string(kMin);
 #ifdef MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL_COLLECT
-  cout << "statistics relativity maximal" << endl;
-  vector<ofstream> oss(alpha_len);
-  for (size_t i = 0; i < alpha_len; ++i) {
-    relativity_alpha = relativity_alphas[i];
-    alpha_string = alpha_strings[i];
-    string save_fullname
-        = save_prename + ".relativity" + alpha_string + ".maximal.txt";
-    oss[i].open(save_fullname.c_str(), ofstream::out);
-  }
-  for (int e = kEMin; e <= kEMax; ++e) {
-    cout << "\te\t" << e << endl;
-    string prename = kStatDir + "/relativity/2^" + to_string(e) + "/kMin"
-        + to_string(kMin) + "_",
-           sufname = ".Max.alphas.txt";
-    double sx[alpha_len] = { 0 }, sxx[alpha_len] = { 0 };
-    size_t n = 0;
-    statistics::sums_relativity(prename.c_str(), sufname.c_str(), kSeedMin,
-        kSeedMax, sx, sxx, n, alpha_len);
-    if (n > 0) {
-      for (size_t i = 0; i < alpha_len; ++i) {
-        double x_mean = sx[i] / n, x_sigma = sxx[i] / n - x_mean * x_mean;
-        x_sigma = x_sigma > 0 ? sqrt(x_sigma) : 0;
-        oss[i] << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma << endl;
-      }
+  {
+    cout << "statistics relativity maximal" << endl;
+    vector<ofstream> oss(alpha_len);
+    for (size_t i = 0; i < alpha_len; ++i) {
+      relativity_alpha = relativity_alphas[i];
+      alpha_string = alpha_strings[i];
+      string save_fullname
+          = save_prename + ".relativity" + alpha_string + ".maximal.txt";
+      oss[i].open(save_fullname.c_str(), ofstream::out);
     }
-  } // for  e
-  for (auto& os : oss)
-    os.close();
+    for (int e = kEMin; e <= kEMax; ++e) {
+      cout << "\te\t" << e << endl;
+      string prename = kStatDir + "/relativity/2^" + to_string(e) + "/kMin"
+          + to_string(kMin) + "_",
+             sufname = ".Max.alphas.txt";
+      double sx[alpha_len] = { 0 }, sxx[alpha_len] = { 0 };
+      size_t n = 0;
+      statistics::sums_relativity(prename.c_str(), sufname.c_str(), kSeedMin,
+          kSeedMax, sx, sxx, n, alpha_len);
+      if (n > 0) {
+        for (size_t i = 0; i < alpha_len; ++i) {
+          double x_mean = sx[i] / n, x_sigma = sxx[i] / n - x_mean * x_mean;
+          x_sigma = x_sigma > 0 ? sqrt(x_sigma) : 0;
+          oss[i] << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma
+                 << endl;
+        }
+      }
+    } // for  e
+    for (auto& os : oss)
+      os.close();
+  }
+#endif
+#ifdef MAIN_EXTREMUM_ALPHAS_STAT_MINIMAL_COLLECT
+  {
+    cout << "statistics relativity minimal" << endl;
+    vector<ofstream> oss(alpha_len);
+    for (size_t i = 0; i < alpha_len; ++i) {
+      relativity_alpha = relativity_alphas[i];
+      alpha_string = alpha_strings[i];
+      string save_fullname
+          = save_prename + ".relativity" + alpha_string + ".minimal.txt";
+      oss[i].open(save_fullname.c_str(), ofstream::out);
+    }
+    for (int e = kEMin; e <= kEMax; ++e) {
+      cout << "\te\t" << e << endl;
+      string prename = kStatDir + "/relativity/2^" + to_string(e) + "/kMin"
+          + to_string(kMin) + "_",
+             sufname = ".Min.alphas.txt";
+      double sx[alpha_len] = { 0 }, sxx[alpha_len] = { 0 };
+      size_t n = 0;
+      statistics::sums_relativity(prename.c_str(), sufname.c_str(), kSeedMin,
+          kSeedMax, sx, sxx, n, alpha_len);
+      if (n > 0) {
+        for (size_t i = 0; i < alpha_len; ++i) {
+          double x_mean = sx[i] / n, x_sigma = sxx[i] / n - x_mean * x_mean;
+          x_sigma = x_sigma > 0 ? sqrt(x_sigma) : 0;
+          oss[i] << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma
+                 << endl;
+        }
+      }
+    } // for  e
+    for (auto& os : oss)
+      os.close();
+  }
 #endif
   return 0;
 }

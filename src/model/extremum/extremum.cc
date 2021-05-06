@@ -634,6 +634,110 @@ int network::extremum::cal_Min_lkk3_mid2side(VLkk3LinkType& lkk3,
   return 0;
 }
 
+int network::extremum::cal_Min_lkk_statistics(const VNodeType& degArrVal,
+    const VNodeType& degArrSize, const double* alphas, VDouble& results)
+{
+  const NodeType degSize = degArrVal.size();
+  const int na = results.size();
+  VDouble alphas2(alphas, alphas + na);
+  for (int i = 0; i < na; ++i)
+    alphas2[i] *= 2;
+
+  VLinkType vlink(degSize);
+  LinkType L2 = 0;
+  for (NodeType i = 0; i < degSize; i++) {
+    L2 += vlink[i] = (LinkType)degArrSize[i] * degArrVal[i];
+  }
+  NodeType mid = 0, end = degSize - 1;
+  const LinkType linkSize = L2 / 2;
+  LinkType linkMid = linkSize;
+  while (vlink[mid] < linkMid)
+    linkMid -= vlink[mid++];
+
+  // i==mid
+  if (linkMid != vlink[mid]) { // i==mid==j
+    LinkType si = degArrSize[mid], l = si * (si - 1) / 2;
+    if (l > linkMid)
+      l = linkMid;
+    if (l > vlink[mid] - linkMid)
+      l = vlink[mid] - linkMid;
+    // lkk[mid][mid] = l;
+    const double l2 = l >> 1;
+    const LinkType degi = degArrVal[mid];
+    for (int ai = 0; ai < na; ++ai)
+      results[ai] += pow(degi, alphas2[ai]) * l2;
+    linkMid -= l;
+    vlink[mid] -= l * 2;
+  }
+  if (linkMid > 0) { // i==mid<j
+    for (NodeType j = mid + 1; linkMid > 0 && j <= end; ++j) {
+      if (vlink[j] <= 0)
+        continue;
+      LinkType si = degArrSize[mid], l = si * degArrSize[j];
+      if (l > linkMid)
+        l = linkMid;
+      if (l > vlink[j])
+        l = vlink[j];
+      if (l > 0) {
+        // lkk[j][mid] = l;
+        const LinkType degi = degArrVal[mid];
+        const double x = degi * degArrVal[j], lt = l;
+        for (int ai = 0; ai < na; ++ai)
+          results[ai] += pow(x, alphas[ai]) * lt;
+        linkMid -= l;
+        vlink[mid] -= l;
+        vlink[j] -= l;
+      }
+    }
+  }
+  if (linkMid > 0)
+    vlink[mid] -= linkMid;
+
+  // i < mid <= j
+  for (NodeType i = mid, j0 = mid; i > 0;) {
+    --i;
+    if (vlink[i] <= 0)
+      continue;
+    while (j0 <= end && vlink[j0] <= 0)
+      ++j0;
+    if (j0 > end) {
+      ERROR();
+      break;
+    }
+
+    for (NodeType j = j0; vlink[i] > 0 && j <= end; ++j) {
+      if (vlink[j] <= 0)
+        continue;
+      LinkType l = (LinkType)degArrSize[i] * degArrSize[j];
+      if (l > vlink[i])
+        l = vlink[i];
+      if (l > vlink[j])
+        l = vlink[j];
+      if (l > 0) {
+        // lkk[j][i] = l;
+        const LinkType degi = degArrVal[i];
+        const double x = degi * degArrVal[j], lt = l;
+        for (int ai = 0; ai < na; ++ai)
+          results[ai] += pow(x, alphas[ai]) * lt;
+        vlink[i] -= l;
+        vlink[j] -= l;
+      }
+    }
+  }
+
+  if (linkMid > 0) {
+    ERROR();
+    return -1;
+  }
+  for (size_t i = 0; i <= end; ++i)
+    if (vlink[i] > 0) {
+      ERROR(vlink);
+      return -1;
+    }
+
+  return 0;
+}
+
 // *******************************************************************
 int network::extremum::cal_Max_lkk(VVLinkType& lkk,
     const VNodeType& degArrVal, const VNodeType& degArrSize, const int fix)

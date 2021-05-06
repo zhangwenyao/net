@@ -68,7 +68,11 @@ int main_func::main_extremum(int argc, char** argv)
 #ifdef MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL
   _ERR(extremum::alphas_stat_maximal_lkk(argc, argv));
 #endif
-#ifdef MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL_COLLECT
+#ifdef MAIN_EXTREMUM_ALPHAS_STAT_MINIMAL
+  _ERR(extremum::alphas_stat_minimal_lkk(argc, argv));
+#endif
+#if defined(MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL_COLLECT)                       \
+    || defined(MAIN_EXTREMUM_ALPHAS_STAT_MINIMAL_COLLECT)
   _ERR(extremum::alphas_stat_all(argc, argv));
 #endif
 #endif

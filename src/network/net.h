@@ -24,7 +24,7 @@ const std::string NET_VERSION = "net3.0: " __DATE__ ", " __TIME__;
 
 const bool STAT_TYPE_DIRAA = 0; // 0 : OutIn, 1 : OutIn OutOut InOut InIn
 #define STAT_STAT
-//#define STAT_PEARSON
+////#define STAT_PEARSON
 //#define STAT_SPEARMAN
 //#define MODEL_GAUSS
 //#define MODEL_EXP

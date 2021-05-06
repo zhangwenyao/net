@@ -17,6 +17,7 @@ namespace extremum {
 
 #elif defined(STAT_RELATIVITY) && defined(MAIN_EXTREMUM_ALPHAS)
   int alphas_stat_maximal_lkk(int argc, char** argv);
+  int alphas_stat_minimal_lkk(int argc, char** argv);
   int alphas_stat_all(int argc, char** argv);
 #endif
   // ******************************************************

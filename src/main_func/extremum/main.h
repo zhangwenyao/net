@@ -7,7 +7,7 @@
 #include <string>
 #define MAIN_FUNC main_func::main_extremum
 
-//#define MAIN_EXTREMUM_NEW_DEG_ARR
+#define MAIN_EXTREMUM_NEW_DEG_ARR
 
 //#define MAIN_EXTREMUM_NONE
 //#define MAIN_EXTREMUM_NEW_MAXIMAL
@@ -27,7 +27,7 @@
 namespace main_func {
 int main_extremum(int argc, char** argv);
 namespace extremum {
-  const int kEMin = 56, kEMax = 56, kSeedMin = 1, kSeedMax = 100;
+  const int kEMin = 58, kEMax = 60, kSeedMin = 101, kSeedMax = 300;
   constexpr int kMin = 4;
   constexpr double kGamma = 2.5;
   const std::string kGammaString = "2.5";
@@ -41,12 +41,12 @@ namespace extremum {
       + kGammaString + "_" + std::to_string(kMin) + "/stat/pearson_spearman/";
 #else
   constexpr double kGamma_2 = kGamma - 2.0;
-  const double relativity_alphas[] = { 1.0, 2.0, kGamma_2 * 2,
+  const double relativity_alphas[] = { 1.0, 2.0, -1.0, -2.0, kGamma_2 * 2,
     kGamma_2 * 3 / 2, kGamma_2, kGamma_2 * 3 / 4, kGamma_2 / 2, kGamma_2 / 4,
-    -kGamma_2 / 4, -kGamma_2 / 2, -kGamma_2, -kGamma_2 * 2, -kGamma_2 * 3,
-    -kGamma_2 * 4 };
-  const std::string alpha_strings[] = { "C1", "C2", "2", "3d2", "1", "3d4",
-    "1d2", "1d4", "-1d4", "-1d2", "-1", "-2", "-3", "-4" };
+    kGamma_2*(-1.0 / 4), kGamma_2*(-1.0 / 2), kGamma_2*(-1.0),
+    kGamma_2*(-2.0), kGamma_2*(-3.0), kGamma_2*(-4.0) };
+  const std::string alpha_strings[] = { "C1", "C2", "C-1", "C-2", "2", "3d2",
+    "1", "3d4", "1d2", "1d4", "-1d4", "-1d2", "-1", "-2", "-3", "-4" };
   // const double relativity_alphas[] = { -kGamma_2 * 2 };
   // const std::string alpha_strings[] = { "-2" };
   constexpr size_t alpha_len

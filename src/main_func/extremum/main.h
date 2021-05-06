@@ -27,7 +27,7 @@
 namespace main_func {
 int main_extremum(int argc, char** argv);
 namespace extremum {
-  const int kEMin = 58, kEMax = 58, kSeedMin = 1, kSeedMax = 100;
+  const int kEMin = 56, kEMax = 56, kSeedMin = 1, kSeedMax = 100;
   constexpr int kMin = 4;
   constexpr double kGamma = 2.5;
   const std::string kGammaString = "2.5";

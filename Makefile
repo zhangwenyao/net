@@ -35,68 +35,74 @@ export CXX	= g++
 #export CXX	= clang++
 #export CC	= icc
 #export CXX	= icpc
+USER_DEFINES	=
 ifdef DEBUG
-	export CFLAGS	= -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG
-	export CXXFLAGS	= -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG -std=c++11
+	export CFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG
+	export CXXFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG -std=c++11
 	export LDFLAGS	= -Wall -O0 -g -DDEBUG -fopenmp
 else
-	export CFLAGS	= -Wall -O3 -I$(DIR_INC) -fopenmp
-	export CXXFLAGS	= -Wall -O3 -I$(DIR_INC) -fopenmp -std=c++11
+	export CFLAGS	= ${USER_DEFINES} -Wall -O3 -I$(DIR_INC) -fopenmp
+	export CXXFLAGS	= ${USER_DEFINES} -Wall -O3 -I$(DIR_INC) -fopenmp -std=c++11
 	export LDFLAGS	= -Wall -O3 -fopenmp
 endif
 
 
-.PHONY: all subdirs clean cleanall rebuild run rebuildrun debug debugrebuild debugrun debugrebuildrun
+.PHONY: all subdirs execute run clean cleanall rebuild rebuildrun debug debugrun debugrebuild debugrebuildrun
 
 all:		$(CUR_OBJ_DIR) $(CUR_OBJS_C) $(CUR_OBJS_CC) subdirs $(BIN_TARGET)
+	echo ${USER_DEFINES}
 
 subdirs:
 	@for subdir in $(SUB_DIRS) ; do make -C $$subdir ; done
+
+execute:
+	@${datecmd}
+	$(BIN_TARGET)
+	@${datecmd}
+
+run:	all execute
 
 clean:
 	rm -rf $(shell find $(ROOT_OBJ) -name "*.o")
 	rm -rf $(shell find $(ROOT_OBJ) -name "*.d")
 
 cleanall:	clean
-	-rm -rf $(BIN_TARGET)
+	rm -rf $(BIN_TARGET)
 
 rebuild:	cleanall all
-
-run:
-	-reset && make all && $(BIN_TARGET)
 
 rebuildrun:	cleanall run
 
 debug:
 	make DEBUG=1 all
 
-debugrebuild:	cleanall debug
+debugrun:	debug run
 
-debugrun:
-	-reset && make debug && $(BIN_TARGET)
+debugrebuild:	cleanall debug
 
 debugrebuildrun:	cleanall debugrun
 
+
 $(CUR_OBJ_DIR)/%.d:	$(CUR_DIR)/%.c
-	@set -e; $(CC)  -MM $< $(CFLAGS) | sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
+	@set -e; $(CC) $(CFLAGS) -MM $< | sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
 
 $(CUR_OBJ_DIR)/%.o:	$(CUR_DIR)/%.c
-	$(CC)  -o $@ -c $< $(CFLAGS)
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(CUR_OBJ_DIR)/%.d:	$(CUR_DIR)/%.cc
-	@set -e; $(CXX) -MM $< $(CXXFLAGS)| sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
+	@set -e; $(CXX) $(CXXFLAGS) -MM $< | sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
 
 $(CUR_OBJ_DIR)/%.o:	$(CUR_DIR)/%.cc
-	$(CXX) -o $@ -c $< $(CXXFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 $(CUR_OBJ_DIR)/%.d:	$(CUR_DIR)/%.cpp
-	@set -e; $(CXX) -MM $< $(CXXFLAGS)| sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
+	@set -e; $(CXX) $(CXXFLAGS) -MM $< | sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
 
 $(CUR_OBJ_DIR)/%.o:	$(CUR_DIR)/%.cpp
-	$(CXX) -o $@ -c $< $(CXXFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 $(BIN_TARGET):		$(shell find $(ROOT_OBJ) -name "*.o")
-	$(CXX) -o $@ $(LDFLAGS) $(shell find $(ROOT_OBJ) -name "*.o")
+	$(CXX) $(LDFLAGS) -o $@ $(shell find $(ROOT_OBJ) -name "*.o")
 
 
 -include $(CUR_DEPS_C)

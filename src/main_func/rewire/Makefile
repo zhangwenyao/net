@@ -24,22 +24,25 @@ subdirs:
 
 
 $(CUR_OBJ_DIR)/%.d:	$(CUR_DIR)/%.c
-	@set -e; $(CC)  -MM $< $(CFLAGS) | sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
+	@set -e; $(CC) $(CFLAGS) -MM $< | sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
 
 $(CUR_OBJ_DIR)/%.o:	$(CUR_DIR)/%.c
-	$(CC)  -o $@ -c $< $(CFLAGS)
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(CUR_OBJ_DIR)/%.d:	$(CUR_DIR)/%.cc
-	@set -e; $(CXX) -MM $< $(CXXFLAGS)| sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
+	@set -e; $(CXX) $(CXXFLAGS) -MM $< | sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
 
 $(CUR_OBJ_DIR)/%.o:	$(CUR_DIR)/%.cc
-	$(CXX) -o $@ -c $< $(CXXFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 $(CUR_OBJ_DIR)/%.d:	$(CUR_DIR)/%.cpp
-	@set -e; $(CXX) -MM $< $(CXXFLAGS)| sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
+	@set -e; $(CXX) $(CXXFLAGS) -MM $< | sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
 
 $(CUR_OBJ_DIR)/%.o:	$(CUR_DIR)/%.cpp
-	$(CXX) -o $@ -c $< $(CXXFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+$(BIN_TARGET):		$(shell find $(ROOT_OBJ) -name "*.o")
+	$(CXX) $(LDFLAGS) -o $@ $(shell find $(ROOT_OBJ) -name "*.o")
 
 -include $(CUR_DEPS_C)
 -include $(CUR_DEPS_CC)

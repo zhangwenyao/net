@@ -1305,7 +1305,7 @@ int network::sort_link_greater_all(VNodeType& link, const VNodeType& p2pSize)
     for (NodeType* p = &link[0]; p < p0; p += 2) {
       if (p2pSize[*p] > p2pSize[p[2]]
           || (p2pSize[*p] == p2pSize[p[2]]
-                 && p2pSize[p[1]] > p2pSize[p[3]])) {
+              && p2pSize[p[1]] > p2pSize[p[3]])) {
         NodeType t = *p;
         *p = p[1];
         p[1] = t;
@@ -1353,7 +1353,7 @@ int network::sort_link_smaller_all(VNodeType& link, const VNodeType& p2pSize)
     for (NodeType* p = &link[0]; p < p0; p += 2) {
       if (p2pSize[*p] < p2pSize[p[2]]
           || (p2pSize[*p] == p2pSize[p[2]]
-                 && p2pSize[p[1]] < p2pSize[p[3]])) {
+              && p2pSize[p[1]] < p2pSize[p[3]])) {
         NodeType t = *p;
         *p = p[1];
         p[1] = t;
@@ -2044,7 +2044,7 @@ int network::rewire_rho(
       swap(sb1, sb2);
     }
     int disassortative_flag = (sa1 < sb1) ^ (sa2 < sb2);
-    bool rewire_flag = (rho >= rand_double()) ^ disassortative_flag;
+    bool rewire_flag = (rho < rand_double()) ^ disassortative_flag;
     if (!rewire_flag)
       continue;
     _ERR(change_p2p_link(p2p, a1, a2, b2));
@@ -2079,7 +2079,7 @@ int network::rewire_rho_dir(
     if (sa1 == sb1 || sa2 == sb2)
       continue;
     int disassortative_flag = (sa1 < sb1) ^ (sa2 < sb2);
-    bool rewire_flag = (rho >= rand_double()) ^ disassortative_flag;
+    bool rewire_flag = (rho < rand_double()) ^ disassortative_flag;
     if (!rewire_flag)
       continue;
     _ERR(change_p2p_link(p2p, a1, a2, b2));

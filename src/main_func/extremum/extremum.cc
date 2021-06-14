@@ -415,7 +415,7 @@ int main_func::extremum::alphas_stat_maximal_lkk(int argc, char** argv)
   for (int e = kEMin; e <= kEMax; ++e) {
     cout << "e\t" << e << endl;
     string data_dir = kDataDir + "2^" + to_string(e) + "/",
-           stat_dir = kStatDir + "/relativity/2^" + to_string(e) + "/";
+           stat_dir = kStatDir + "relativity/2^" + to_string(e) + "/";
     mkdirs(stat_dir.c_str());
 
     for (int seed = kSeedMin; seed <= kSeedMax; ++seed) {
@@ -472,7 +472,7 @@ int main_func::extremum::alphas_stat_minimal_lkk(int argc, char** argv)
   for (int e = kEMin; e <= kEMax; ++e) {
     cout << "e\t" << e << endl;
     string data_dir = kDataDir + "2^" + to_string(e) + "/",
-           stat_dir = kStatDir + "/relativity/2^" + to_string(e) + "/";
+           stat_dir = kStatDir + "relativity/2^" + to_string(e) + "/";
     mkdirs(stat_dir.c_str());
 
     for (int seed = kSeedMin; seed <= kSeedMax; ++seed) {
@@ -538,7 +538,7 @@ int main_func::extremum::alphas_stat_all(int argc, char** argv)
     }
     for (int e = kEMin; e <= kEMax; ++e) {
       cout << "\te\t" << e << endl;
-      string prename = kStatDir + "/relativity/2^" + to_string(e) + "/kMin"
+      string prename = kStatDir + "relativity/2^" + to_string(e) + "/kMin"
           + to_string(kMin) + "_",
              sufname = ".Max.alphas.txt";
       double sx[alpha_len] = { 0 }, sxx[alpha_len] = { 0 };
@@ -571,7 +571,7 @@ int main_func::extremum::alphas_stat_all(int argc, char** argv)
     }
     for (int e = kEMin; e <= kEMax; ++e) {
       cout << "\te\t" << e << endl;
-      string prename = kStatDir + "/relativity/2^" + to_string(e) + "/kMin"
+      string prename = kStatDir + "relativity/2^" + to_string(e) + "/kMin"
           + to_string(kMin) + "_",
              sufname = ".Min.alphas.txt";
       double sx[alpha_len] = { 0 }, sxx[alpha_len] = { 0 };

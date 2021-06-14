@@ -29,12 +29,12 @@ CUR_SOURCE_CC	= $(wildcard $(addprefix $(CUR_DIR)/*,$(EXTS_CC)))
 CUR_OBJS_CC	= $(foreach x,$(EXTS_CC),$(patsubst %$(x),$(CUR_OBJ_DIR)/%.o,$(filter %$(x),$(notdir $(CUR_SOURCE_CC)))))
 CUR_DEPS_CC	= $(CUR_OBJS_CC:%.o=%.d)
 
-export CC	= gcc
-export CXX	= g++
+#export CC	= gcc
+#export CXX	= g++
 #export CC	= clang
 #export CXX	= clang++
-#export CC	= icc
-#export CXX	= icpc
+export CC	= icc
+export CXX	= icpc
 USER_DEFINES	=
 ifdef DEBUG
 	export CFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG
@@ -50,7 +50,9 @@ endif
 .PHONY: all subdirs execute run clean cleanall rebuild rebuildrun debug debugrun debugrebuild debugrebuildrun
 
 all:		$(CUR_OBJ_DIR) $(CUR_OBJS_C) $(CUR_OBJS_CC) subdirs $(BIN_TARGET)
-	echo ${USER_DEFINES}
+ifneq ($(USER_DEFINES),)
+	@echo "USER_DEFINES=${USER_DEFINES}"
+endif
 
 subdirs:
 	@for subdir in $(SUB_DIRS) ; do make -C $$subdir ; done
@@ -58,6 +60,9 @@ subdirs:
 execute:
 	@${datecmd}
 	$(BIN_TARGET)
+ifneq ($(USER_DEFINES),)
+	@echo "USER_DEFINES=${USER_DEFINES}"
+endif
 	@${datecmd}
 
 run:	all execute

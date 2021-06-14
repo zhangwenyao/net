@@ -16,20 +16,21 @@ const std::string NET_VERSION = "net3.0: " __DATE__ ", " __TIME__;
 //#define DEG_POISSON //泊松分布
 #define DEG_POWER //幂律分布
 
-#define NET_EXTREMUM // 特例网络
-//#define NET_RANDOM // 随机网络
+//#define NET_EXTREMUM // 特例网络
+#define NET_RANDOM // 随机网络
 //#define NET_BA // BA网络
 //#define NET_GRID     // 网格网络
 //#define NET_ACTOR     // 演员合作网络
 
 const bool STAT_TYPE_DIRAA = 0; // 0 : OutIn, 1 : OutIn OutOut InOut InIn
 #define STAT_STAT
-////#define STAT_PEARSON
-//#define STAT_SPEARMAN
+#define STAT_PEARSON
+#define STAT_SPEARMAN
+#define SPEARMAN_NEI2
 //#define MODEL_GAUSS
 //#define MODEL_EXP
 //#define STAT_KENDALLI
-#define STAT_RELATIVITY
+//#define STAT_RELATIVITY
 //#define STAT_CORRELATION2
 //#define STAT_BETWEENNESS
 //#define STAT_MODULARITY
@@ -40,7 +41,7 @@ const bool STAT_TYPE_DIRAA = 0; // 0 : OutIn, 1 : OutIn OutOut InOut InIn
 //#define ACT_SPREAD
 //#define ACT_FITNESS_COMPLEXITY
 //#define ACT_RECOMMEND
-//#define ACT_CORRELATION
+#define ACT_CORRELATION
 
 // *******************************************************
 int nodeDeg_update_nodeMap(VNodeType& nodeDeg, const VRNodeType& nodeMap);

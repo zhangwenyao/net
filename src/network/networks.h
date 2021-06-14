@@ -105,6 +105,7 @@ class Networks : public Network {
   Networks& save_params(const char* name = NULL);
   Networks& save_data(const char* name = NULL);
   Networks& save(const char* name = NULL);
+  Networks& save_seed(const char* name = NULL);
   // friend std::istream& operator>>(std::istream& is, Networks& net);
   Networks& read_params_1(std::string& s, std::istream& is);
   Networks& read_params(const char* name = NULL);
@@ -238,7 +239,6 @@ class Networks : public Network {
   network::recommend::Recommend recommend;
   Networks& act_recommend(std::string s = "mass", const char* name = NULL);
 #endif
-
 };
 
 // **************************************************************

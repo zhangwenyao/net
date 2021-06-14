@@ -270,6 +270,21 @@ network::Networks& network::Networks::save(const char* name)
   return *this;
 }
 
+network::Networks& network::Networks::save_seed(const char* name)
+{
+  string fn;
+  if (name != NULL && name[0] != '\0')
+    fn = name;
+  else
+    fn = saveName;
+  fn = fn + "_" + to_string(seed);
+  if (0 != save_params(fn.c_str()).runStatus)
+    ERROR();
+  if (0 != save_data(fn.c_str()).runStatus)
+    ERROR();
+  return *this;
+}
+
 // ******************************************************
 std::istream& operator>>(std::istream& is, network::Networks& net)
 {
@@ -645,7 +660,7 @@ network::Networks& network::Networks::run(const string argv2)
       continue;
     }
     if (s == "--save_seed") {
-      if (0 != save((saveName + "_" + to_string(seed)).c_str()).runStatus) {
+      if (0 != save_seed().runStatus) {
         ERROR();
         runStatus = -1;
         return *this;

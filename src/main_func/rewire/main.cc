@@ -3,30 +3,7 @@
 
 #include "../../common/common.h"
 #include "../../network/networks.h"
-
-#ifdef MAIN_REWIRE_DISTRIBUTION
-#include "distribution.h"
-#endif
-
-#ifdef MAIN_REWIRE_DISTRIBUTION_STAT
-#include "distribution_stat.h"
-#endif
-
-#ifdef MAIN_REWIRE_DISTRIBUTION_STAT_ALL
-#include "distribution_stat_all.h"
-#endif
-
-#ifdef MAIN_REWIRE_NEW_NETWORKS
-#include "new_networks.h"
-#endif
-
-#ifdef MAIN_REWIRE_STAT
-#include "stat.h"
-#endif
-
-#ifdef MAIN_REWIRE_STAT_ALL
-#include "stat_all.h"
-#endif
+#include "rewire.h"
 
 using namespace std;
 using namespace common;
@@ -53,8 +30,12 @@ int main_func::main_rewire(int argc, char** argv)
   _ERR(rewire::distribution_stat_all(argc, argv));
 #endif
 
-#ifdef MAIN_REWIRE_NEW_NETWORKS
-  _ERR(rewire::new_networks(argc, argv));
+#ifdef MAIN_REWIRE_NETWORKS_RANDOM
+  _ERR(rewire::networks_random(argc, argv));
+#endif
+
+#ifdef MAIN_REWIRE_NETWORKS_RANDOM1
+  _ERR(rewire::networks_random1(argc, argv));
 #endif
 
 #ifdef MAIN_REWIRE_STAT

@@ -24,6 +24,10 @@
 #include "plot_data.h"
 #endif
 
+#ifdef MAIN_FITNESS_COMPLEXITY_USER_ITEM
+#include "user_item.h"
+#endif
+
 using namespace std;
 using namespace common;
 using namespace network;
@@ -50,6 +54,10 @@ int main_func::main_fitness_complexity(int argc, char** argv)
 
 #ifdef MAIN_FITNESS_COMPLEXITY_PLOT_DATA
   _ERR(fitness_complexity::plot_data(argc, argv));
+#endif
+
+#ifdef MAIN_FITNESS_COMPLEXITY_USER_ITEM
+  _ERR(fitness_complexity::user_item(argc, argv));
 #endif
 
   return 0;

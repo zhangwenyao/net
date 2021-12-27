@@ -179,7 +179,7 @@ typedef RNodeType* PRNodeType;
 typedef VRNodeType::iterator VRNodeTypeItr;
 typedef VRNodeType::const_iterator VRNodeTypeCItr;
 
-typedef std::map<const NodeType, NodeType> MNodeType;
+typedef std::map<NodeType, NodeType> MNodeType;
 typedef MNodeType::iterator MNodeTypeItr;
 typedef MNodeType::const_iterator MNodeTypeCItr;
 typedef std::vector<MNodeType> VMNodeType;

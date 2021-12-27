@@ -10,10 +10,10 @@
 // *******************************************************
 //#define MAIN_TEST
 //#define MAIN_DISTRIBUTION
-#define MAIN_EXTREMUM
+//#define MAIN_EXTREMUM
 //#define MAIN_CORRELATION2
 //#define MAIN_REWIRE
-//#define MAIN_FITNESS_COMPLEXITY
+#define MAIN_FITNESS_COMPLEXITY
 
 // *******************************************************
 #endif

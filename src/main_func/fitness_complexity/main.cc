@@ -34,10 +34,13 @@ using namespace network;
 using namespace main_func::fitness_complexity;
 
 // **********************************************************
-int main_func::main_fitness_complexity(int argc, char** argv)
-{
+int main_func::main_fitness_complexity(int argc, char** argv) {
 #ifdef MAIN_FITNESS_COMPLEXITY_FILTER
   _ERR(fitness_complexity::filter(argc, argv));
+#endif
+
+#ifdef MAIN_FITNESS_COMPLEXITY_USER_ITEM
+  _ERR(fitness_complexity::user_item(argc, argv));
 #endif
 
 #ifdef MAIN_FITNESS_COMPLEXITY_MAIN
@@ -54,10 +57,6 @@ int main_func::main_fitness_complexity(int argc, char** argv)
 
 #ifdef MAIN_FITNESS_COMPLEXITY_PLOT_DATA
   _ERR(fitness_complexity::plot_data(argc, argv));
-#endif
-
-#ifdef MAIN_FITNESS_COMPLEXITY_USER_ITEM
-  _ERR(fitness_complexity::user_item(argc, argv));
 #endif
 
   return 0;

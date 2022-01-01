@@ -1,5 +1,5 @@
-#ifndef MAIN__EXTREMUM__MAIN_H_
-#define MAIN__EXTREMUM__MAIN_H_
+#ifndef MAIN_FUNC__EXTREMUM__MAIN_H_
+#define MAIN_FUNC__EXTREMUM__MAIN_H_
 #include "../../main.h"
 #ifdef MAIN_EXTREMUM
 

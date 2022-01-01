@@ -39,6 +39,7 @@ inline std::string dtoa(const T i) {
   ss << i;
   return ss.str();
 }
+
 // *********************** common::save, common::read **********************
 // 一维数组 a[n]
 template <typename T, const size_t n>
@@ -153,36 +154,6 @@ int common::read0(const char *name, T *a, T2 &n) {
   return status;
 }
 
-template <typename T>
-int common::save_bool(std::ostream &os, const T *a, const size_t n,
-                      const char c) {
-  _ERR(!os);
-  for (size_t i = 0, flag = 0; i < n; i++)
-    if (*a++) {
-      if (flag)
-        os << c << i;
-      else {
-        os << i;
-        flag = 1;
-      }
-    }
-  return 0;
-}
-
-template <typename T>
-int common::save_bool(const char *name, const T *a, const size_t n,
-                      const char c) {
-  std::ofstream os(name);
-  if (!os) {
-    ERROR("open file ", name);
-    return -1;
-  }
-  int status = common::save_bool(os, a, n, c);
-  _ERR(0 != status);
-  os.close();
-  return status;
-}
-
 // a[p[i]]
 template <typename T, typename T2>
 int common::save1_p(std::ostream &os, T *a, T2 *p, const size_t n,
@@ -227,6 +198,30 @@ int common::read1_p(const char *name, T *a, T2 *p, const size_t n) {
   }
   int status = common::read1_p(is, a, p, n);
   is.close();
+  return status;
+}
+
+// a[0..n]
+template <typename T>
+int common::save1_head(std::ostream &os, T &a, const size_t n, const char c) {
+  _ERR(!os);
+  if (n > 0) {
+    os << a[0];
+    for (size_t i = 1; i < n; i++) os << c << a[i];
+  }
+  return 0;
+}
+
+template <typename T>
+int common::save1_head(const char *name, T &a, const size_t n, const char c) {
+  std::ofstream os(name);
+  if (!os) {
+    ERROR("open file ", name);
+    return -1;
+  }
+  int status = common::save1_head(os, a, n, c);
+  _ERR(0 != status);
+  os.close();
   return status;
 }
 
@@ -558,6 +553,60 @@ int common::read2_0_size(const char *name, T **a, T2 *size, T2 *n) {
     return -1;
   }
   int status = common::read2_0_size(is, a, size, n);
+  is.close();
+  return status;
+}
+
+// *a, n1, n2
+template <typename T>
+int common::save2_1(std::ostream &os, const T &a, const size_t n1,
+                    const size_t n2, const char c) {
+  auto *p = &a[0];
+  for (size_t i = 0; i < n1; i++) {
+    if (n2 > 0) {
+      os << *p++;
+      for (size_t j = 1; j < n2; j++) os << c << *p++;
+    }
+    os << '\n';
+  }
+  return 0;
+}
+template <typename T>
+int common::save2_1(const char *name, const T &a, const size_t n1,
+                    const size_t n2, const char c) {
+  std::ofstream os(name);
+  if (!os) {
+    ERROR("open file ", name);
+    return -1;
+  }
+  int status = common::save2_1(os, a, n1, n2, c);
+  _ERR(0 != status);
+  os.close();
+  return status;
+}
+
+template <typename T>
+int common::read2_1(std::istream &is, T &a, const size_t n1, const size_t n2) {
+  _ERR(!is);
+  size_t i;
+  auto *p = &a[0];
+  for (i = 0; i < n1 && is; i++) {
+    size_t j = 0;
+    while (j < n2 && is >> *p++) j++;
+    _ERR(j < n2);
+  }
+  _ERR(i < n1);
+  return 0;
+}
+
+template <typename T>
+int common::read2_1(const char *name, T &a, const size_t n1, const size_t n2) {
+  std::ifstream is(name);
+  if (!is) {
+    ERROR("open file ", name);
+    return -1;
+  }
+  int status = common::read2_1(is, a, n1, n2);
   is.close();
   return status;
 }
@@ -936,6 +985,93 @@ int common::save_double2(const char *name, const T &ds, const int l,
   int status = common::save_double2(os, ds, l, c);
   os.close();
   return status;
+}
+
+// *********************** common::save, common::read **********************
+template <typename T, typename... Argv>
+inline int common::ssave_string(const std::string &name, T &&a, Argv... argv) {
+  return save_string(name.c_str(), a, argv...);
+}
+
+template <typename T, typename... Argv>
+inline int common::ssave(const std::string &name, T &&a, Argv... argv) {
+  return save(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::sread(const std::string &name, T &&a, Argv... argv) {
+  return read(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::sread0(const std::string &name, T &&a, Argv... argv) {
+  return read0(name.c_str(), a, argv...);
+}
+
+template <typename T, typename... Argv>
+inline int common::ssave1_p(const std::string &name, T &&a, Argv... argv) {
+  return save1_p(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::sread1_p(const std::string &name, T &&a, Argv... argv) {
+  return read1_p(name.c_str(), a, argv...);
+}
+
+template <typename T, typename... Argv>
+inline int common::ssave1(const std::string &name, T &&a, Argv... argv) {
+  return save1(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::sread1(const std::string &name, T &&a, Argv... argv) {
+  return read1(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::sread1_0(const std::string &name, T &&a, Argv... argv) {
+  return read1_0(name.c_str(), a, argv...);
+}
+
+template <typename T, typename... Argv>
+inline int common::ssave2(const std::string &name, T &&a, Argv... argv) {
+  return save2(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::sread2(const std::string &name, T &&a, Argv... argv) {
+  return read2(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+int read2_0(const std::string &name, T &&a, Argv... argv) {
+  return read2_0(name.c_str(), a, argv...);
+}
+
+template <typename T, typename... Argv>
+inline int common::ssave2_size(const std::string &name, T &&a, Argv... argv) {
+  return save2_size(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::sread2_size(const std::string &name, T &&a, Argv... argv) {
+  return read2_size(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::sread2_0_size(const std::string &name, T &&a, Argv... argv) {
+  return read2_0_size(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::ssave_VString(const std::string &name, T &&a, Argv... argv) {
+  return save_VString(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::sread_VString(const std::string &name, T &&a, Argv... argv) {
+  return read_VString(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::ssave_double(const std::string &name, T &&a, Argv... argv) {
+  return save_double(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::ssave_double1(const std::string &name, T &&a, Argv... argv) {
+  return save_double1(name.c_str(), a, argv...);
+}
+template <typename T, typename... Argv>
+inline int common::ssave_double2(const std::string &name, T &&a, Argv... argv) {
+  return save_double2(name.c_str(), a, argv...);
 }
 
 // *************************************************************

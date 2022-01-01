@@ -24,8 +24,9 @@
 #include "plot_data.h"
 #endif
 
-#ifdef MAIN_FITNESS_COMPLEXITY_USER_ITEM
-#include "user_item.h"
+#ifdef MAIN_FITNESS_COMPLEXITY_HOTEL
+#include "hotel_filter.h"
+#include "hotel.h"
 #endif
 
 using namespace std;
@@ -39,8 +40,9 @@ int main_func::main_fitness_complexity(int argc, char** argv) {
   _ERR(fitness_complexity::filter(argc, argv));
 #endif
 
-#ifdef MAIN_FITNESS_COMPLEXITY_USER_ITEM
-  _ERR(fitness_complexity::user_item(argc, argv));
+#ifdef MAIN_FITNESS_COMPLEXITY_HOTEL
+  _ERR(fitness_complexity::hotel_filter(argc, argv));
+  _ERR(fitness_complexity::hotel(argc, argv));
 #endif
 
 #ifdef MAIN_FITNESS_COMPLEXITY_MAIN

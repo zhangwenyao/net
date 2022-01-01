@@ -7,12 +7,26 @@
 using namespace std;
 
 // *************************************************************
-int save_string(std::ostream& os, const std::string& s) {
+int common::check_filename(const string& name) {
+  if (name.empty())
+    return -1;
+  else
+    return 0;
+}
+
+int common::check_filename(const char* const name) {
+  if (name == NULL || name[0] == '\0')
+    return -1;
+  else
+    return 0;
+}
+
+int common::save_string(std::ostream& os, const std::string& s) {
   os << s;
   return 0;
 }
 
-int save_string(const char* const name, const std::string& s) {
+int common::save_string(const char* name, const std::string& s) {
   if (name == NULL || name[0] == '\0') return -1;
   ofstream os(name);
   if (!os) {
@@ -22,13 +36,6 @@ int save_string(const char* const name, const std::string& s) {
   os << s;
   os.close();
   return 0;
-}
-
-int common::check_filename(const char* const name) {
-  if (name == NULL || name[0] == '\0')
-    return -1;
-  else
-    return 0;
 }
 
 int common::save(const char* name, const string& s) {
@@ -50,6 +57,17 @@ int common::save(const char* name, const char* s) {
   }
   os << s;
   os.close();
+  return 0;
+}
+
+int common::read(const char* name, string& s) {
+  ifstream is(name);
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  is >> s;
+  is.close();
   return 0;
 }
 

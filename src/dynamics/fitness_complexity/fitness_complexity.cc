@@ -1,63 +1,58 @@
 #include "fitness_complexity.h"
 #ifdef ACT_FITNESS_COMPLEXITY
 
-#include "../../common/common.h"
 #include <iomanip>
+
+#include "../../common/common.h"
 using namespace std;
 using namespace common;
 using namespace network;
 
 // *******************************************************
-int network::fitness_complexity::count_deg(
-    const VVNodeType& mcp, VNodeType& deg, const char* name)
-{
+int network::fitness_complexity::count_deg(const VVNodeType& mcp,
+                                           VNodeType& deg, const char* name) {
   const NodeType NC = mcp.size(), NP = mcp[0].size();
   deg.assign(NC, 0);
   for (NodeType c = 0; c < NC; ++c) {
     for (NodeType p = 0; p < NP; ++p) {
-      if (mcp[c][p])
-        deg[c]++;
+      if (mcp[c][p]) deg[c]++;
     }
   }
-  if (name != NULL && name[0] != '\0')
-    _ERR(save1(name, deg, '\n'));
+  if (name != NULL && name[0] != '\0') _ERR(save1(name, deg, '\n'));
   return 0;
 }
 
-int network::fitness_complexity::count_product_deg(
-    const VVNodeType& mcp, VNodeType& deg, const char* name)
-{
+int network::fitness_complexity::count_product_deg(const VVNodeType& mcp,
+                                                   VNodeType& deg,
+                                                   const char* name) {
   const NodeType NC = mcp.size(), NP = mcp[0].size();
   deg.assign(NP, 0);
   for (NodeType p = 0; p < NP; ++p) {
     for (NodeType c = 0; c < NC; ++c) {
-      if (mcp[c][p])
-        deg[p]++;
+      if (mcp[c][p]) deg[p]++;
     }
   }
-  if (name != NULL && name[0] != '\0')
-    _ERR(save1(name, deg, '\n'));
+  if (name != NULL && name[0] != '\0') _ERR(save1(name, deg, '\n'));
   return 0;
 }
 
-int network::fitness_complexity::count_mcpMcp(
-    const VVNodeType& mcp, VVNodeType& mcpMcp)
-{
+int network::fitness_complexity::count_mcpMcp(const VVNodeType& mcp,
+                                              VVNodeType& mcpMcp) {
   NodeType NC = mcp.size(), NP = mcp[0].size();
   mcpMcp.resize(NC);
   for (size_t c = 0; c < NC; c++) {
     mcpMcp[c].clear();
     for (size_t p = 0; p < NP; p++) {
-      if (mcp[c][p] != 0)
-        mcpMcp[c].push_back(p);
+      if (mcp[c][p] != 0) mcpMcp[c].push_back(p);
     }
   }
   return 0;
 }
 
 int network::fitness_complexity::count_mcpNew(const VVNodeType& mcp0,
-    const VVNodeType& mcp, VVNodeType& mcpNew, VVNodeType& mcpRemain)
-{
+                                              const VVNodeType& mcp,
+                                              VVNodeType& mcpNew,
+                                              VVNodeType& mcpRemain) {
   NodeType NC = mcp.size(), NP = mcp[0].size();
   mcpNew.resize(NC);
   mcpRemain.resize(NC);
@@ -77,8 +72,8 @@ int network::fitness_complexity::count_mcpNew(const VVNodeType& mcp0,
 }
 
 int network::fitness_complexity::count_pcNewRankV2(const VNodeType& pcRankV2,
-    const VVNodeType& mcpNew, VVNodeType& pcNewRankV2)
-{
+                                                   const VVNodeType& mcpNew,
+                                                   VVNodeType& pcNewRankV2) {
   const size_t NC = mcpNew.size();
   pcNewRankV2.clear();
   pcNewRankV2.resize(NC);
@@ -91,19 +86,16 @@ int network::fitness_complexity::count_pcNewRankV2(const VNodeType& pcRankV2,
 }
 
 int network::fitness_complexity::count_pcNewRemainRankV2(
-    const VNodeType& pcRankV2, const VVNodeType& mcp,
-    const VVNodeType& mcpNew, VVNodeType& pcNewRemainRankV2)
-{
+    const VNodeType& pcRankV2, const VVNodeType& mcp, const VVNodeType& mcpNew,
+    VVNodeType& pcNewRemainRankV2) {
   const size_t NC = mcp.size(), NP = mcp[0].size();
   pcNewRemainRankV2.clear();
   pcNewRemainRankV2.resize(NC);
   for (size_t c = 0; c < NC; c++) {
     VNodeType rk = mcp[c];
-    for (auto p : mcpNew[c])
-      rk[p] = 0;
+    for (auto p : mcpNew[c]) rk[p] = 0;
     for (size_t p = 0; p < NP; ++p)
-      if (rk[p] != 0)
-        pcNewRemainRankV2[c].push_back(pcRankV2[p]);
+      if (rk[p] != 0) pcNewRemainRankV2[c].push_back(pcRankV2[p]);
   }
   return 0;
 }
@@ -129,62 +121,54 @@ int network::fitness_complexity::count_pcNewRemainRankV2(
 //}
 
 int network::fitness_complexity::count_newRank(const VVDouble& rcm,
-    const size_t NC, const size_t NP, const VVNodeType& cpNew,
-    VVNodeType& newRank, const char* name)
-{
+                                               const size_t NC, const size_t NP,
+                                               const VVNodeType& cpNew,
+                                               VVNodeType& newRank,
+                                               const char* name) {
   newRank.resize(NC);
   VNodeType rk(NP, 0), rk2(NP, 0);
   for (size_t c = 0; c < NC; c++) {
-    for (size_t p = 0; p < NP; p++)
-      rk[p] = p;
+    for (size_t p = 0; p < NP; p++) rk[p] = p;
     sort_p_val_less(&rk[0], &rk[NP], &rcm[c][0]);
-    for (size_t p = 0; p < NP; p++)
-      rk2[rk[p]] = p;
+    for (size_t p = 0; p < NP; p++) rk2[rk[p]] = p;
     for (size_t p = 0; p < cpNew[c].size(); p++)
       newRank[c].push_back(rk2[cpNew[c][p]]);
   }
-  if (name != NULL && name[0] != '\0')
-    _ERR(save2(name, newRank));
+  if (name != NULL && name[0] != '\0') _ERR(save2(name, newRank));
   return 0;
 }
 
-int network::fitness_complexity::count_newRemainRank(const VVDouble& rcm,
-    const size_t NC, const size_t NP, const VVNodeType& mcp,
-    const VVNodeType& mcpNew, VVNodeType& newRemainRank, const char* name)
-{
+int network::fitness_complexity::count_newRemainRank(
+    const VVDouble& rcm, const size_t NC, const size_t NP,
+    const VVNodeType& mcp, const VVNodeType& mcpNew, VVNodeType& newRemainRank,
+    const char* name) {
   newRemainRank.resize(NC);
   VNodeType rk(NP, 0), rk2(NP, 0);
   for (size_t c = 0; c < NC; c++) {
     newRemainRank[c].clear();
     size_t NN = mcpNew[c].size(), NR = 0;
-    if (NN <= 0)
-      continue;
+    if (NN <= 0) continue;
     for (size_t p = 0; p < NP; p++)
-      if (mcp[c][p] == 0)
-        rk[NR++] = p;
+      if (mcp[c][p] == 0) rk[NR++] = p;
     sort_p_val_less(&rk[0], &rk[NR], &rcm[c][0]);
-    for (size_t p = 0; p < NR; p++)
-      rk2[rk[p]] = p;
+    for (size_t p = 0; p < NR; p++) rk2[rk[p]] = p;
     for (size_t p = 0; p < NN; p++)
       newRemainRank[c].push_back(rk2[mcpNew[c][p]]);
     break;
   }
-  if (name != NULL && name[0] != '\0')
-    _ERR(save2(name, newRemainRank));
+  if (name != NULL && name[0] != '\0') _ERR(save2(name, newRemainRank));
   return 0;
 }
 
-int network::fitness_complexity::cal_val_2_rankScale(const VDouble& val,
-    VNodeType& rk, VNodeType& rkIndex, VNodeType& rkV2, VNodeType& rkV2Index,
-    VDouble& rkScale, const size_t N)
-{
+int network::fitness_complexity::cal_val_2_rankScale(
+    const VDouble& val, VNodeType& rk, VNodeType& rkIndex, VNodeType& rkV2,
+    VNodeType& rkV2Index, VDouble& rkScale, const size_t N) {
   rk.resize(N);
   rkIndex.resize(N);
   rkV2.resize(N);
   rkV2Index.resize(N);
   rkScale.resize(N);
-  for (size_t i = 0; i < N; ++i)
-    rk[i] = i;
+  for (size_t i = 0; i < N; ++i) rk[i] = i;
   sort_p_val_less(rk.begin(), rk.end(), &val.front());
   get_index(rk.begin(), rk.end(), &rkIndex.front());
   sort_rankV2(&val.front(), rk.begin(), rk.end(), &rkV2.front());
@@ -197,45 +181,40 @@ int network::fitness_complexity::cal_val_2_rankScale(const VDouble& val,
   return 0;
 }
 
-int network::fitness_complexity::cal_val_2_rankScale(
-    const VDouble& pc, VDouble& scale)
-{
+int network::fitness_complexity::cal_val_2_rankScale(const VDouble& pc,
+                                                     VDouble& scale) {
   const size_t NP = pc.size();
   VNodeType pcRank(NP), pcRankIndex(NP), pcRankV2(NP), pcRankV2Index(NP);
   scale.resize(NP);
-  cal_val_2_rankScale(
-      pc, pcRank, pcRankIndex, pcRankV2, pcRankV2Index, scale, NP);
+  cal_val_2_rankScale(pc, pcRank, pcRankIndex, pcRankV2, pcRankV2Index, scale,
+                      NP);
   return 0;
 }
 
-int network::fitness_complexity::save_val_2_rankScale(
-    const VDouble& pc, const char* dir)
-{
+int network::fitness_complexity::save_val_2_rankScale(const VDouble& pc,
+                                                      const char* dir) {
   const size_t NP = pc.size();
   VNodeType pcRank(NP), pcRankIndex(NP), pcRankV2(NP), pcRankV2Index(NP);
   VDouble pcRankScale(NP);
-  cal_val_2_rankScale(
-      pc, pcRank, pcRankIndex, pcRankV2, pcRankV2Index, pcRankScale, NP);
+  cal_val_2_rankScale(pc, pcRank, pcRankIndex, pcRankV2, pcRankV2Index,
+                      pcRankScale, NP);
   string s = dir;
   save_rankScale((s + ".rankLess").c_str(), pcRank, pcRankIndex, pcRankV2,
-      pcRankV2Index, pcRankScale);
+                 pcRankV2Index, pcRankScale);
   return 0;
 }
 
-int network::fitness_complexity::cal_val_2_rankScale_p(const VDouble& val,
-    const NodeType* p, VNodeType& rk, VNodeType& rkIndex, VNodeType& rkV2,
-    VNodeType& rkV2Index, VDouble& rkScale, const size_t N)
-{
+int network::fitness_complexity::cal_val_2_rankScale_p(
+    const VDouble& val, const NodeType* p, VNodeType& rk, VNodeType& rkIndex,
+    VNodeType& rkV2, VNodeType& rkV2Index, VDouble& rkScale, const size_t N) {
   VDouble v(N);
-  for (size_t i = 0; i < N; ++i)
-    v[i] = val[*p++];
+  for (size_t i = 0; i < N; ++i) v[i] = val[*p++];
   return cal_val_2_rankScale(val, rk, rkIndex, rkV2, rkV2Index, rkScale, N);
 }
 
-int network::fitness_complexity::save_rankScale(const char* dir,
-    const VNodeType& rk, const VNodeType& rkIndex, const VNodeType& rkV2,
-    const VNodeType& rkV2Index, const VDouble& rkScale)
-{
+int network::fitness_complexity::save_rankScale(
+    const char* dir, const VNodeType& rk, const VNodeType& rkIndex,
+    const VNodeType& rkV2, const VNodeType& rkV2Index, const VDouble& rkScale) {
   string s = dir;
   save1((s + ".txt").c_str(), rk, '\n');
   save1((s + ".index.txt").c_str(), rkIndex, '\n');
@@ -246,9 +225,11 @@ int network::fitness_complexity::save_rankScale(const char* dir,
 }
 
 int network::fitness_complexity::save_rankScale2(const char* dir,
-    const VVNodeType& rk, const VVNodeType& rkIndex, const VVNodeType& rkV2,
-    const VVNodeType& rkV2Index, const VVDouble& rkScale)
-{
+                                                 const VVNodeType& rk,
+                                                 const VVNodeType& rkIndex,
+                                                 const VVNodeType& rkV2,
+                                                 const VVNodeType& rkV2Index,
+                                                 const VVDouble& rkScale) {
   string s = dir;
   save2((s + ".txt").c_str(), rk);
   save2((s + ".index.txt").c_str(), rkIndex);
@@ -258,9 +239,8 @@ int network::fitness_complexity::save_rankScale2(const char* dir,
   return 0;
 }
 
-int network::fitness_complexity::save_rankScale_val(
-    const char* dir, const VDouble& val)
-{
+int network::fitness_complexity::save_rankScale_val(const char* dir,
+                                                    const VDouble& val) {
   VNodeType rk, rkIndex, rkV2, rkV2Index;
   VDouble rkScale;
   cal_val_2_rankScale(val, rk, rkIndex, rkV2, rkV2Index, rkScale, val.size());
@@ -268,41 +248,38 @@ int network::fitness_complexity::save_rankScale_val(
   return 0;
 }
 
-int network::fitness_complexity::save_rankScale2_val(
-    const char* dir, const VVDouble& val)
-{
+int network::fitness_complexity::save_rankScale2_val(const char* dir,
+                                                     const VVDouble& val) {
   const size_t N = val.size();
   VVNodeType rk(N), rkIndex(N), rkV2(N), rkV2Index(N);
   VVDouble rkScale(N);
   for (size_t i = 0; i < N; ++i)
     cal_val_2_rankScale(val[i], rk[i], rkIndex[i], rkV2[i], rkV2Index[i],
-        rkScale[i], val[i].size());
+                        rkScale[i], val[i].size());
   save_rankScale2(dir, rk, rkIndex, rkV2, rkV2Index, rkScale);
   return 0;
 }
 
-int network::fitness_complexity::save_rankScale2_val_p(
-    const char* dir, const VVDouble& val, const VVNodeType p)
-{
+int network::fitness_complexity::save_rankScale2_val_p(const char* dir,
+                                                       const VVDouble& val,
+                                                       const VVNodeType p) {
   const size_t N = val.size();
   VVNodeType rk(N), rkIndex(N), rkV2(N), rkV2Index(N);
   VVDouble rkScale(N);
   for (size_t i = 0; i < N; ++i) {
     size_t NN = p[i].size();
     VDouble v(NN);
-    for (size_t j = 0; j < NN; ++j)
-      v[j] = val[i][p[i][j]];
-    cal_val_2_rankScale(
-        v, rk[i], rkIndex[i], rkV2[i], rkV2Index[i], rkScale[i], NN);
+    for (size_t j = 0; j < NN; ++j) v[j] = val[i][p[i][j]];
+    cal_val_2_rankScale(v, rk[i], rkIndex[i], rkV2[i], rkV2Index[i], rkScale[i],
+                        NN);
   }
   save_rankScale2(dir, rk, rkIndex, rkV2, rkV2Index, rkScale);
   return 0;
 }
 
-int network::fitness_complexity::save_rankScale2_val_mcp(const char* dir,
-    const VVDouble& val, const VVNodeType& mcp0, const VVNodeType& mcp,
-    const VVNodeType& mcpMcp)
-{
+int network::fitness_complexity::save_rankScale2_val_mcp(
+    const char* dir, const VVDouble& val, const VVNodeType& mcp0,
+    const VVNodeType& mcp, const VVNodeType& mcpMcp) {
   string DIR = dir;
   const size_t NC = mcp.size(), NP = mcp[0].size();
   VVNodeType mcpPcRank(NC), mcpPcRankIndex(NC), mcpPcRankV2(NC),
@@ -315,18 +292,18 @@ int network::fitness_complexity::save_rankScale2_val_mcp(const char* dir,
       mcpRemainPcRankV2(NC), mcpRemainPcRankV2Index(NC);
   VVDouble mcpRemainPcRankScale(NC);
   for (size_t c = 0; c < NC; ++c) {
-    cal_val_2_rankScale_p(val[c], &mcpMcp[c][0], mcpPcRank[c],
-        mcpPcRankIndex[c], mcpPcRankV2[c], mcpPcRankV2Index[c],
-        mcpPcRankScale[c], mcpMcp[c].size());
+    cal_val_2_rankScale_p(
+        val[c], &mcpMcp[c][0], mcpPcRank[c], mcpPcRankIndex[c], mcpPcRankV2[c],
+        mcpPcRankV2Index[c], mcpPcRankScale[c], mcpMcp[c].size());
     for (size_t p = 0, i = 0; p < NP; ++p)
       if (mcp[c][p] != 0) {
-        if (mcp0[c][p] == 0) { // New
+        if (mcp0[c][p] == 0) {  // New
           mcpNewPcRank[c].push_back(mcpPcRank[c][i]);
           mcpNewPcRankIndex[c].push_back(mcpPcRankIndex[c][i]);
           mcpNewPcRankV2[c].push_back(mcpPcRankV2[c][i]);
           mcpNewPcRankV2Index[c].push_back(mcpPcRankV2Index[c][i]);
           mcpNewPcRankScale[c].push_back(mcpPcRankScale[c][i]);
-        } else { // remain
+        } else {  // remain
           mcpRemainPcRank[c].push_back(mcpPcRank[c][i]);
           mcpRemainPcRankIndex[c].push_back(mcpPcRankIndex[c][i]);
           mcpRemainPcRankV2[c].push_back(mcpPcRankV2[c][i]);
@@ -338,75 +315,68 @@ int network::fitness_complexity::save_rankScale2_val_mcp(const char* dir,
   }
 
   save_rankScale2((DIR + ".mcp.rankLess").c_str(), mcpPcRank, mcpPcRankIndex,
-      mcpPcRankV2, mcpPcRankV2Index, mcpPcRankScale);
+                  mcpPcRankV2, mcpPcRankV2Index, mcpPcRankScale);
   save_rankScale2((DIR + ".new.rankLess").c_str(), mcpNewPcRank,
-      mcpNewPcRankIndex, mcpNewPcRankV2, mcpNewPcRankV2Index,
-      mcpNewPcRankScale);
+                  mcpNewPcRankIndex, mcpNewPcRankV2, mcpNewPcRankV2Index,
+                  mcpNewPcRankScale);
   save_rankScale2((DIR + ".remain.rankLess").c_str(), mcpRemainPcRank,
-      mcpRemainPcRankIndex, mcpRemainPcRankV2, mcpRemainPcRankV2Index,
-      mcpRemainPcRankScale);
+                  mcpRemainPcRankIndex, mcpRemainPcRankV2,
+                  mcpRemainPcRankV2Index, mcpRemainPcRankScale);
 
   return 0;
 }
 
 //*******************************************************
 int network::fitness_complexity::trade_name(const char* tradeFilename,
-    const char* countryFilename, const char* productFilename)
-{
+                                            const char* countryFilename,
+                                            const char* productFilename) {
   FILE* fp = fopen(tradeFilename, "r");
   if (NULL == fp) {
     ERROR();
     return -1;
   }
   const unsigned NC = 26 * 26 * 26, NP = 9999;
-  unsigned cVal[NC] = { 0 }, pVal[NP] = { 0 };
+  unsigned cVal[NC] = {0}, pVal[NP] = {0};
   char origin[9], s[999];
   unsigned nc = 0, np = 0;
   fgets(s, 999, fp);
   for (unsigned t, hs92; 2 == fscanf(fp, "%*s%s%u%*s", origin, &hs92);) {
-    if (!cVal[t = atoi<unsigned>(origin)])
-      cVal[t] = ++nc;
-    if (!pVal[hs92])
-      pVal[hs92] = ++np;
+    if (!cVal[t = atoi<unsigned>(origin)]) cVal[t] = ++nc;
+    if (!pVal[hs92]) pVal[hs92] = ++np;
   }
   fclose(fp);
 
-  char cChar[300][4] = { { 0 } };
+  char cChar[300][4] = {{0}};
   for (unsigned i = 0, c = 0; i < NC && c < nc; ++i) {
     if (cVal[i]) {
       itoa(i, cChar[c], 'a', 26, 3);
       cstring_reverse(cChar[c++]);
     }
   }
-  _ERR(save(countryFilename, cChar, nc, '\n'));
-
-  save_bool(productFilename, &pVal[0], 9999, '\n');
+  _ERR(save1_head(countryFilename, cChar, nc, '\n'));
+  _ERR(save1_head(productFilename, pVal, NP, '\n'));
 
   return 0;
 }
 
-int network::fitness_complexity::trade_name_OEC(const char* tradeFilename,
-    const char* cIsoFile, const char* cIso3cFile, const char* codeFile,
-    const char* countryFilename, const char* productFilename,
-    const NodeType YEAR1, const NodeType YEAR2)
-{
+int network::fitness_complexity::trade_name_OEC(
+    const char* tradeFilename, const char* cIsoFile, const char* cIso3cFile,
+    const char* codeFile, const char* countryFilename,
+    const char* productFilename, const NodeType YEAR1, const NodeType YEAR2) {
   ifstream is(tradeFilename);
   _ERR(!is);
   const NodeType NC = 26 * 26 * 26, NP = 9999;
-  NodeType nc = 0, np = 0, cVal[NC] = { 0 }, pVal[NP] = { 0 }, year;
+  NodeType nc = 0, np = 0, cVal[NC] = {0}, pVal[NP] = {0}, year;
   char origin[9], s[999];
   is.getline(s, 999);
   for (NodeType t, pd; is >> year >> origin >> pd >> s;) {
-    if (year < YEAR1 || year >= YEAR2)
-      continue;
-    if (!cVal[t = atoi<NodeType>(origin)])
-      cVal[t] = ++nc;
-    if (!pVal[pd])
-      pVal[pd] = ++np;
+    if (year < YEAR1 || year >= YEAR2) continue;
+    if (!cVal[t = atoi<NodeType>(origin)]) cVal[t] = ++nc;
+    if (!pVal[pd]) pVal[pd] = ++np;
   }
   is.close();
 
-  char cChar[300][4] = { { 0 } };
+  char cChar[300][4] = {{0}};
   for (NodeType i = 0, c = 0; i < NC && c < nc; ++i) {
     if (cVal[i]) {
       itoa(i, cChar[c], 'a', 26, 3);
@@ -415,7 +385,7 @@ int network::fitness_complexity::trade_name_OEC(const char* tradeFilename,
   }
   _ERR(save(countryFilename, cChar, nc, '\n'));
   INFORM(nc);
-  _ERR(save_bool(productFilename, &pVal[0], 9999, '\n'));
+  _ERR(save1_head(productFilename, pVal, NP, '\n'));
   NodeType _s = 0;
   total_bool(&pVal[0], 9999, _s);
   INFORM(_s);
@@ -429,8 +399,7 @@ int network::fitness_complexity::trade_name_OEC(const char* tradeFilename,
     c3c[i] = cChar[i];
     transform(c3c[i].begin(), c3c[i].end(), c3c[i].begin(), ::toupper);
     for (NodeType j = 0; j < cIso3c.size(); ++j)
-      if (c3c[i] == cIso3c[j])
-        code[i] = cIso[j];
+      if (c3c[i] == cIso3c[j]) code[i] = cIso[j];
   }
   _ERR(save1(codeFile, code, '\n'));
   return 0;
@@ -440,8 +409,7 @@ int network::fitness_complexity::trade_name_OEC(const char* tradeFilename,
 int network::fitness_complexity::trade_name_NBERUN_wtf(
     const char* tradeFilename, const char* countryFilename,
     const char* productFilename, const char* countryFilename0,
-    const char* productFilename0)
-{
+    const char* productFilename0) {
   if (tradeFilename == NULL || tradeFilename[0] == '\0') {
     ERROR();
     return -1;
@@ -452,21 +420,20 @@ int network::fitness_complexity::trade_name_NBERUN_wtf(
     return -1;
   }
   VString cVal, pVal;
-  if (countryFilename0 == NULL)
-    countryFilename0 = countryFilename;
+  if (countryFilename0 == NULL) countryFilename0 = countryFilename;
   if (countryFilename0 != NULL && countryFilename0[0] != '\0')
     _INF(0 != read1_0(countryFilename0, cVal));
-  if (productFilename0 == NULL)
-    productFilename0 = productFilename;
+  if (productFilename0 == NULL) productFilename0 = productFilename;
   if (productFilename0 != NULL && productFilename0[0] != '\0')
     _INF(0 != read1_0(productFilename0, pVal));
   typedef char CS[99];
   CS node, year, importer, exporter, unit, dot, value, quantity;
   string icode, ecode, sitc4;
   char s[999];
-  for (is.getline(s, 999); is >> node >> year >> icode >> importer >> ecode
-       >> exporter >> sitc4 >> unit >> dot >> value >> quantity;) {
-    if (icode != "100000" || ecode == "100000" || sitc4 == "0") // World
+  for (is.getline(s, 999); is >> node >> year >> icode >> importer >> ecode >>
+                           exporter >> sitc4 >> unit >> dot >> value >>
+                           quantity;) {
+    if (icode != "100000" || ecode == "100000" || sitc4 == "0")  // World
       continue;
     if (ecode.length() != 6 || sitc4.length() != 4) {
       ERROR(node, "\t", ecode, "\t", sitc4, "\t", tradeFilename);
@@ -489,8 +456,7 @@ int network::fitness_complexity::trade_name_NBERUN_wtf(
 int network::fitness_complexity::trade_name_NBERUN_wtf2(
     const char* tradeFilename, const char* countryFilename,
     const char* productFilename, const char* countryFilename0,
-    const char* productFilename0)
-{
+    const char* productFilename0) {
   if (tradeFilename == NULL || tradeFilename[0] == '\0') {
     ERROR();
     return -1;
@@ -501,21 +467,20 @@ int network::fitness_complexity::trade_name_NBERUN_wtf2(
     return -1;
   }
   VString cVal, pVal;
-  if (countryFilename0 == NULL)
-    countryFilename0 = countryFilename;
+  if (countryFilename0 == NULL) countryFilename0 = countryFilename;
   if (countryFilename0 != NULL && countryFilename0[0] != '\0')
     _INF(0 != read1_0(countryFilename0, cVal));
-  if (productFilename0 == NULL)
-    productFilename0 = productFilename;
+  if (productFilename0 == NULL) productFilename0 = productFilename;
   if (productFilename0 != NULL && productFilename0[0] != '\0')
     _INF(0 != read1_0(productFilename0, pVal));
   typedef char CS[99];
   CS node, year, importer, exporter, unit, dot, value, quantity;
   string icode, ecode, sitc4;
   char s[999];
-  for (is.getline(s, 999); is >> node >> year >> icode >> importer >> ecode
-       >> exporter >> sitc4 >> unit >> dot >> value >> quantity;) {
-    if (icode == "100000" || ecode == "100000" || sitc4 == "0") // World
+  for (is.getline(s, 999); is >> node >> year >> icode >> importer >> ecode >>
+                           exporter >> sitc4 >> unit >> dot >> value >>
+                           quantity;) {
+    if (icode == "100000" || ecode == "100000" || sitc4 == "0")  // World
       continue;
     if (ecode.length() != 6 || sitc4.length() != 4) {
       ERROR(node, "\t", ecode, "\t", sitc4, "\t", tradeFilename);
@@ -534,39 +499,36 @@ int network::fitness_complexity::trade_name_NBERUN_wtf2(
   return 0;
 }
 
-int network::fitness_complexity::read_country_names(
-    const char* countryFilename, NodeType& NC, VNodeType& cVal)
-{
+int network::fitness_complexity::read_country_names(const char* countryFilename,
+                                                    NodeType& NC,
+                                                    VNodeType& cVal) {
   ifstream is(countryFilename);
   if (!is) {
     ERROR();
     return -1;
   }
   NC = 0;
-  for (string s; is >> s;)
-    cVal[atoi<unsigned>(s.c_str())] = NC++;
+  for (string s; is >> s;) cVal[atoi<unsigned>(s.c_str())] = NC++;
   is.close();
   return 0;
 }
 
-int network::fitness_complexity::read_product_names(
-    const char* productFilename, NodeType& NP, VNodeType& pVal)
-{
+int network::fitness_complexity::read_product_names(const char* productFilename,
+                                                    NodeType& NP,
+                                                    VNodeType& pVal) {
   ifstream is(productFilename);
   if (!is) {
     ERROR();
     return -1;
   }
   NP = 0;
-  for (NodeType v; is >> v;)
-    pVal[v] = NP++;
+  for (NodeType v; is >> v;) pVal[v] = NP++;
   is.close();
   return 0;
 }
 
-int network::fitness_complexity::save_export_data(
-    const char* s, VVDouble expts)
-{
+int network::fitness_complexity::save_export_data(const char* s,
+                                                  VVDouble expts) {
   FILE* fp = fopen(s, "w");
   if (NULL == fp) {
     ERROR();
@@ -589,9 +551,9 @@ int network::fitness_complexity::save_export_data(
 }
 
 int network::fitness_complexity::sum_trade(const char* tradeFilename,
-    const char* countryFilename, const char* productFilename,
-    const char* dirSave)
-{
+                                           const char* countryFilename,
+                                           const char* productFilename,
+                                           const char* dirSave) {
   VNodeType cVal(26 * 26 * 26, 0);
   NodeType NC = 0;
   read_country_names(countryFilename, NC, cVal);
@@ -611,8 +573,7 @@ int network::fitness_complexity::sum_trade(const char* tradeFilename,
     unsigned year, pd, YEAR1 = 1995, year0 = YEAR1;
     long long unsigned l = 1;
     fgets(s, 999, fp);
-    for (double v; 4 == fscanf(fp, "%u%s%u%lf", &year, origin, &pd, &v);
-         ++l) {
+    for (double v; 4 == fscanf(fp, "%u%s%u%lf", &year, origin, &pd, &v); ++l) {
       if (year < year0) {
         ERROR();
         break;
@@ -625,7 +586,7 @@ int network::fitness_complexity::sum_trade(const char* tradeFilename,
         expts.assign(NC, VDouble(NP, 0));
         expts[cVal[atoi<size_t>(origin)]][pVal[pd]] = v;
         year0 = year;
-      } else { // year==year0
+      } else {  // year==year0
         expts[cVal[atoi<size_t>(origin)]][pVal[pd]] += v;
       }
     }
@@ -639,9 +600,11 @@ int network::fitness_complexity::sum_trade(const char* tradeFilename,
 }
 
 int network::fitness_complexity::sum_trade_OEC(const char* tradeFilename,
-    const char* countryFilename, const char* productFilename,
-    const char* dirSave, const NodeType YEAR1, const NodeType YEAR2)
-{
+                                               const char* countryFilename,
+                                               const char* productFilename,
+                                               const char* dirSave,
+                                               const NodeType YEAR1,
+                                               const NodeType YEAR2) {
   VNodeType cVal(26 * 26 * 26, 0);
   NodeType NC = 0;
   read_country_names(countryFilename, NC, cVal);
@@ -661,8 +624,7 @@ int network::fitness_complexity::sum_trade_OEC(const char* tradeFilename,
   LinkType l = 1;
   is.getline(s, 999);
   for (double v; is >> year >> origin >> pd >> v; ++l) {
-    if (YEAR1 > year || year >= YEAR2)
-      continue;
+    if (YEAR1 > year || year >= YEAR2) continue;
     if (year < year0) {
       ERROR();
     } else {
@@ -685,8 +647,7 @@ int network::fitness_complexity::sum_trade_OEC(const char* tradeFilename,
 }
 
 int network::fitness_complexity::trade_gdp_country_code_OEC(
-    const char* eCodeFile, const char* gCodeFile, const char* codeFile)
-{
+    const char* eCodeFile, const char* gCodeFile, const char* codeFile) {
   VNodeType eCode, gCode, code;
   _ERR(read1_0(eCodeFile, eCode));
   _ERR(read1_0(gCodeFile, gCode));
@@ -699,9 +660,9 @@ int network::fitness_complexity::trade_gdp_country_code_OEC(
 }
 
 int network::fitness_complexity::sum_trade_NBER_wtf(const char* tradeFilename,
-    const char* countryFilename, const char* productFilename,
-    const char* saveName)
-{
+                                                    const char* countryFilename,
+                                                    const char* productFilename,
+                                                    const char* saveName) {
   VString cVal, pVal;
   _ERR(read1_0(countryFilename, cVal));
   _ERR(read1_0(productFilename, pVal));
@@ -717,9 +678,10 @@ int network::fitness_complexity::sum_trade_NBER_wtf(const char* tradeFilename,
   string icode, ecode, sitc4;
   double value;
   is.getline(s, 999);
-  for (VStringItr c, p; is >> node >> year >> icode >> importer >> ecode
-       >> exporter >> sitc4 >> unit >> dot >> value >> quantity;) {
-    if (icode != "100000" || ecode == "100000" || sitc4 == "0") // World
+  for (VStringItr c, p; is >> node >> year >> icode >> importer >> ecode >>
+                        exporter >> sitc4 >> unit >> dot >> value >>
+                        quantity;) {
+    if (icode != "100000" || ecode == "100000" || sitc4 == "0")  // World
       continue;
     c = find(cVal.begin(), cVal.end(), ecode);
     p = find(pVal.begin(), pVal.end(), sitc4);
@@ -741,8 +703,7 @@ int network::fitness_complexity::sum_trade_NBER_wtf(const char* tradeFilename,
 
 int network::fitness_complexity::sum_trade_NBER_wtf2(
     const char* tradeFilename, const char* countryFilename,
-    const char* productFilename, const char* saveName)
-{
+    const char* productFilename, const char* saveName) {
   VString cVal, pVal;
   _ERR(read1_0(countryFilename, cVal));
   _ERR(read1_0(productFilename, pVal));
@@ -757,9 +718,9 @@ int network::fitness_complexity::sum_trade_NBER_wtf2(
   string icode, ecode, sitc4;
   double value;
   is.getline(s, 999);
-  for (size_t c, p; is >> node >> year >> icode >> importer >> ecode
-       >> exporter >> sitc4 >> unit >> dot >> value >> quantity;) {
-    if (icode == "100000" || ecode == "100000" || sitc4 == "0") // World
+  for (size_t c, p; is >> node >> year >> icode >> importer >> ecode >>
+                    exporter >> sitc4 >> unit >> dot >> value >> quantity;) {
+    if (icode == "100000" || ecode == "100000" || sitc4 == "0")  // World
       continue;
     c = find(cVal.begin(), cVal.end(), ecode) - cVal.begin();
     p = find(pVal.begin(), pVal.end(), sitc4) - pVal.begin();
@@ -773,16 +734,14 @@ int network::fitness_complexity::sum_trade_NBER_wtf2(
 
 int network::fitness_complexity::export_gdp_country_name(
     const char* exportName, const char* gdpName, const char* commonName,
-    const char* diffExportname, const char* diffGdpName)
-{
+    const char* diffExportname, const char* diffGdpName) {
   VString vept, vgdp, same, diffGdp, diffEpt;
   _ERR(read_VString(exportName, vept));
   _ERR(read_VString(gdpName, vgdp));
   VStringCItr ie, ig;
   for (ie = vept.begin(); ie != vept.end(); ++ie) {
     for (ig = vgdp.begin(); ig != vgdp.end(); ++ig)
-      if (*ig == *ie)
-        break;
+      if (*ig == *ie) break;
     if (ig != vgdp.end())
       same.push_back(*ie);
     else
@@ -790,10 +749,8 @@ int network::fitness_complexity::export_gdp_country_name(
   }
   for (ig = vgdp.begin(); ig != vgdp.end(); ++ig) {
     for (ie = vept.begin(); ie != vept.end(); ++ie)
-      if (*ie == *ig)
-        break;
-    if (ie == vept.end())
-      diffGdp.push_back(*ig);
+      if (*ie == *ig) break;
+    if (ie == vept.end()) diffGdp.push_back(*ig);
   }
   _ERR(save_VString(commonName, same));
   _ERR(save_VString(diffGdpName, diffGdp));
@@ -801,18 +758,16 @@ int network::fitness_complexity::export_gdp_country_name(
   return 0;
 }
 
-int network::fitness_complexity::trade_gdp_country_code(const char* tradeName,
-    const char* gdpName, const char* commonName, const char* diffTradeName,
-    const char* diffGdpName)
-{
+int network::fitness_complexity::trade_gdp_country_code(
+    const char* tradeName, const char* gdpName, const char* commonName,
+    const char* diffTradeName, const char* diffGdpName) {
   VUnsigned vept, vgdp, same, diffGdp, diffEpt;
   _ERR(read1_0(tradeName, vept));
   _ERR(read1_0(gdpName, vgdp));
   VUnsignedCItr ie, ig;
   for (ie = vept.begin(); ie != vept.end(); ++ie) {
     for (ig = vgdp.begin(); ig != vgdp.end(); ++ig)
-      if (*ig == *ie)
-        break;
+      if (*ig == *ie) break;
     if (ig != vgdp.end())
       same.push_back(*ie);
     else
@@ -820,10 +775,8 @@ int network::fitness_complexity::trade_gdp_country_code(const char* tradeName,
   }
   for (ig = vgdp.begin(); ig != vgdp.end(); ++ig) {
     for (ie = vept.begin(); ie != vept.end(); ++ie)
-      if (*ie == *ig)
-        break;
-    if (ie == vept.end())
-      diffGdp.push_back(*ig);
+      if (*ie == *ig) break;
+    if (ie == vept.end()) diffGdp.push_back(*ig);
   }
   sort(same.begin(), same.end());
   _ERR(save1(commonName, same, '\n'));
@@ -834,9 +787,8 @@ int network::fitness_complexity::trade_gdp_country_code(const char* tradeName,
   return 0;
 }
 
-int network::fitness_complexity::index_same_all(
-    const char* namesFull, const char* sameAll)
-{
+int network::fitness_complexity::index_same_all(const char* namesFull,
+                                                const char* sameAll) {
   {
     VString vept, veptAll;
     string s = namesFull;
@@ -846,8 +798,7 @@ int network::fitness_complexity::index_same_all(
     VNodeType cIndex;
     for (NodeType i = 0, j; i < vept.size(); ++i) {
       for (j = 0; j < veptAll.size(); ++j)
-        if (vept[i] == veptAll[j])
-          break;
+        if (vept[i] == veptAll[j]) break;
       if (j < veptAll.size())
         cIndex.push_back(j);
       else
@@ -866,8 +817,7 @@ int network::fitness_complexity::index_same_all(
     VNodeType cIndex;
     for (NodeType i = 0, j; i < vgdp.size(); ++i) {
       for (j = 0; j < vgdpAll.size(); ++j)
-        if (vgdp[i] == vgdpAll[j])
-          break;
+        if (vgdp[i] == vgdpAll[j]) break;
       if (j < vgdpAll.size())
         cIndex.push_back(j);
       else
@@ -879,12 +829,11 @@ int network::fitness_complexity::index_same_all(
   return 0;
 }
 
-int network::fitness_complexity::index_same_all_OEC(const char* tradeName,
-    const char* gdpName, const char* sameName, const char* sameTradeName,
-    const char* sameGdpName, const char* sameTradeAllName,
-    const char* sameGdpAllName, const char* sameTradeAllIndexName,
-    const char* sameGdpAllIndexName)
-{
+int network::fitness_complexity::index_same_all_OEC(
+    const char* tradeName, const char* gdpName, const char* sameName,
+    const char* sameTradeName, const char* sameGdpName,
+    const char* sameTradeAllName, const char* sameGdpAllName,
+    const char* sameTradeAllIndexName, const char* sameGdpAllIndexName) {
   VString ept, gdp;
   _ERR(read_VString(tradeName, ept));
   _ERR(read_VString(gdpName, gdp));
@@ -903,14 +852,12 @@ int network::fitness_complexity::index_same_all_OEC(const char* tradeName,
   VNodeType iept, igdp;
   for (size_t i = 0; i < cept.size(); i++) {
     auto t = find(ept.begin(), ept.end(), cept[i]);
-    if (t != ept.end())
-      iept.push_back(t - ept.begin());
+    if (t != ept.end()) iept.push_back(t - ept.begin());
   }
   _ERR(save1(sameTradeAllIndexName, iept, '\n'));
   for (size_t i = 0; i < cgdp.size(); i++) {
     auto t = find(gdp.begin(), gdp.end(), cgdp[i]);
-    if (t != gdp.end())
-      igdp.push_back(t - gdp.begin());
+    if (t != gdp.end()) igdp.push_back(t - gdp.begin());
   }
   _ERR(save1(sameGdpAllIndexName, igdp, '\n'));
   return 0;
@@ -919,8 +866,7 @@ int network::fitness_complexity::index_same_all_OEC(const char* tradeName,
 int network::fitness_complexity::index_same_not0_OEC(
     const char* sameTradeAllIndexName, const char* sameGdpAllIndexName,
     const char* tradeNot0IndexName, const char* sameTradeNot0IndexName,
-    const char* sameGdpNot0IndexName)
-{
+    const char* sameGdpNot0IndexName) {
   VNodeType ep, gdp, epN0, e, eAll, g;
   _ERR(read1_0(sameTradeAllIndexName, ep));
   _ERR(read1_0(sameGdpAllIndexName, gdp));
@@ -939,16 +885,14 @@ int network::fitness_complexity::index_same_not0_OEC(
   return 0;
 }
 
-int network::fitness_complexity::index_gdp_0(
-    const char* gdpFile, const char* cIndexFile)
-{
+int network::fitness_complexity::index_gdp_0(const char* gdpFile,
+                                             const char* cIndexFile) {
   VVString gdp;
   _ERR(read2_0(gdpFile, gdp));
   VNodeType cIndex;
   for (NodeType i = 0, j; i < gdp.size(); ++i) {
     for (j = 0; j < gdp[i].size(); ++j)
-      if (gdp[i][j] == "0")
-        break;
+      if (gdp[i][j] == "0") break;
     if (j >= gdp[i].size()) {
       cIndex.push_back(i);
     }
@@ -957,12 +901,12 @@ int network::fitness_complexity::index_gdp_0(
   return -1;
 }
 
-int network::fitness_complexity::export_gdp_0_OEC(const char* epDIR,
-    const NodeType YEAR1, const NodeType YEAR2, const char* p4dFile,
-    const char* cCodeFile, const char* c3cCodeFile, const char* gFile,
-    const NodeType YEAR0, const char* gCodeFile, const char* egCodeFile,
-    const char* eg0CodeFile, const char* eg0P4dFile, const LinkType filter)
-{
+int network::fitness_complexity::export_gdp_0_OEC(
+    const char* epDIR, const NodeType YEAR1, const NodeType YEAR2,
+    const char* p4dFile, const char* cCodeFile, const char* c3cCodeFile,
+    const char* gFile, const NodeType YEAR0, const char* gCodeFile,
+    const char* egCodeFile, const char* eg0CodeFile, const char* eg0P4dFile,
+    const LinkType filter) {
   const NodeType NYEAR = YEAR2 - YEAR1;
   VVLinkType epAll[NYEAR], gdpAll;
   VLinkType gdp;
@@ -970,8 +914,8 @@ int network::fitness_complexity::export_gdp_0_OEC(const char* epDIR,
   VNodeType p4d, cCode, gCode, egCode, eg0Code, egc0Code;
 
   for (NodeType i = 0; i < NYEAR; ++i)
-    _ERR(read2_0(
-        (string(epDIR) + to_string(YEAR1 + i) + ".txt").c_str(), epAll[i]));
+    _ERR(read2_0((string(epDIR) + to_string(YEAR1 + i) + ".txt").c_str(),
+                 epAll[i]));
   _ERR(read1_0(p4dFile, p4d));
   _ERR(read1_0(cCodeFile, cCode));
   _ERR(read1_0(c3cCodeFile, c3cCode));
@@ -982,10 +926,9 @@ int network::fitness_complexity::export_gdp_0_OEC(const char* epDIR,
   VNodeType cIndex;
   // exclude: wld xx.
   for (NodeType ci = 0; ci < c3cCode.size(); ++ci) {
-    if (!find(egCode, cCode[ci]))
-      continue;
-    if (c3cCode[ci] == "wld"
-        || (c3cCode[ci][0] == 'x' && c3cCode[ci][1] == 'x'))
+    if (!find(egCode, cCode[ci])) continue;
+    if (c3cCode[ci] == "wld" ||
+        (c3cCode[ci][0] == 'x' && c3cCode[ci][1] == 'x'))
       continue;
     cIndex.push_back(ci);
   }
@@ -1022,7 +965,7 @@ int network::fitness_complexity::export_gdp_0_OEC(const char* epDIR,
   for (bool flag = true; flag;) {
     flag = false;
 
-    for (NodeType ci = 0; ci < cIndex.size();) { // filter country
+    for (NodeType ci = 0; ci < cIndex.size();) {  // filter country
       bool flag0 = false;
       NodeType c = cIndex[ci];
       for (NodeType yi = 0; yi < NYEAR; ++yi) {
@@ -1047,7 +990,7 @@ int network::fitness_complexity::export_gdp_0_OEC(const char* epDIR,
         ++ci;
     }
 
-    for (NodeType pi = 0; pi < pIndex.size();) { // filter product
+    for (NodeType pi = 0; pi < pIndex.size();) {  // filter product
       bool flag0 = false;
       NodeType p = pIndex[pi];
       for (NodeType yi = 0; yi < NYEAR; ++yi) {
@@ -1083,10 +1026,9 @@ int network::fitness_complexity::export_gdp_0_OEC(const char* epDIR,
   return 0;
 }
 
-int network::fitness_complexity::population_OEC(const char* pFile,
-    const NodeType YEAR_FILTER, const char* pIsoCodeFile,
-    const char* c0IsoCodeFile, const LinkType filter, const char* pfFile)
-{
+int network::fitness_complexity::population_OEC(
+    const char* pFile, const NodeType YEAR_FILTER, const char* pIsoCodeFile,
+    const char* c0IsoCodeFile, const LinkType filter, const char* pfFile) {
   VVLinkType populations;
   VNodeType pIsoCode, c0IsoCode;
   _ERR(read2_0(pFile, populations));
@@ -1095,8 +1037,7 @@ int network::fitness_complexity::population_OEC(const char* pFile,
   const NodeType NC = pIsoCode.size();
   VNodeType cIndex;
   for (NodeType ci = 0; ci < NC; ++ci) {
-    if (find(c0IsoCode, pIsoCode[ci])
-        && populations[ci][YEAR_FILTER] >= filter)
+    if (find(c0IsoCode, pIsoCode[ci]) && populations[ci][YEAR_FILTER] >= filter)
       cIndex.push_back(ci);
 
     // if (find(c0IsoCode, pIsoCode[ci])
@@ -1123,51 +1064,46 @@ int network::fitness_complexity::population_OEC(const char* pFile,
   return 0;
 }
 
-int network::fitness_complexity::trade_OEC(const char* epDir,
-    const NodeType YEAR_FILTER1, const NodeType YEAR_FILTER2,
-    const char* cIsoCodeFile, const char* c0IsoCodeFile,
-    const LinkType filter, const char* cfFile)
-{
+int network::fitness_complexity::trade_OEC(
+    const char* epDir, const NodeType YEAR_FILTER1, const NodeType YEAR_FILTER2,
+    const char* cIsoCodeFile, const char* c0IsoCodeFile, const LinkType filter,
+    const char* cfFile) {
   const NodeType NY = YEAR_FILTER2 - YEAR_FILTER1 + 1;
   VVLinkType ep[NY];
   VNodeType cIsoCode, c0IsoCode;
   for (NodeType yi = 0; yi < NY; ++yi)
-    _ERR(read2_0(
-        (string(epDir) + to_string(YEAR_FILTER1 + yi) + ".txt").c_str(),
-        ep[yi]));
+    _ERR(
+        read2_0((string(epDir) + to_string(YEAR_FILTER1 + yi) + ".txt").c_str(),
+                ep[yi]));
   _ERR(read1_0(cIsoCodeFile, cIsoCode));
   _ERR(read1_0(c0IsoCodeFile, c0IsoCode));
   const NodeType NC = cIsoCode.size();
   VNodeType cIndex;
   for (NodeType ci = 0; ci < NC; ++ci) {
-    if (!find(c0IsoCode, cIsoCode[ci]))
-      continue;
+    if (!find(c0IsoCode, cIsoCode[ci])) continue;
     LinkType e = 0;
     for (NodeType yi = 0; yi < NY; ++yi) {
-      for (NodeType pi = 0; pi < ep[yi][ci].size(); ++pi)
-        e += ep[yi][ci][pi];
+      for (NodeType pi = 0; pi < ep[yi][ci].size(); ++pi) e += ep[yi][ci][pi];
     }
     // 剔除进出口小于 1E6 的国家 & Iraq(368),Chad(148),Macau(446)
     // if (e >= filter * NY && cIsoCode[ci] != 368 && cIsoCode[ci] != 148
     //&& cIsoCode[ci] != 446)
-    if (e >= filter * NY)
-      cIndex.push_back(ci);
+    if (e >= filter * NY) cIndex.push_back(ci);
   }
   _ERR(save1_p(cfFile, &cIsoCode[0], &cIndex[0], cIndex.size(), '\n'));
   INFORM(cIndex.size());
   return 0;
 }
 
-int network::fitness_complexity::index_export_0_OEC(const char* epDIR,
-    const char* cIndexFile, const char* pIndexFile,
+int network::fitness_complexity::index_export_0_OEC(
+    const char* epDIR, const char* cIndexFile, const char* pIndexFile,
     const char* countryFilename, const char* productFilename,
-    const NodeType YEAR1, const NodeType YEAR2)
-{
+    const NodeType YEAR1, const NodeType YEAR2) {
   const NodeType NYEAR = YEAR2 - YEAR1;
   vector<VVLinkType> ep(NYEAR);
   for (NodeType i = 0; i < NYEAR; ++i)
-    _ERR(read2_0(
-        (string(epDIR) + to_string(YEAR1 + i) + ".txt").c_str(), ep[i]));
+    _ERR(read2_0((string(epDIR) + to_string(YEAR1 + i) + ".txt").c_str(),
+                 ep[i]));
 
   NodeType NC = ep[0].size(), NP = ep[0][0].size();
   VNodeType cIndex, pIndex;
@@ -1177,14 +1113,13 @@ int network::fitness_complexity::index_export_0_OEC(const char* epDIR,
       VString cNames;
       _ERR(read1_0(countryFilename, cNames));
       for (NodeType ci = 0; ci < cNames.size(); ++ci)
-        if (cNames[ci] != "wld"
-            && !(cNames[ci][0] == 'x' && cNames[ci][1] == 'x'))
+        if (cNames[ci] != "wld" &&
+            !(cNames[ci][0] == 'x' && cNames[ci][1] == 'x'))
           cIndex.push_back(ci);
       INFORM(cIndex.size());
     } else {
       cIndex.resize(NC);
-      for (NodeType ci = 0; ci < cIndex.size(); ++ci)
-        cIndex[ci] = ci;
+      for (NodeType ci = 0; ci < cIndex.size(); ++ci) cIndex[ci] = ci;
     }
   }
   {
@@ -1192,28 +1127,25 @@ int network::fitness_complexity::index_export_0_OEC(const char* epDIR,
       VNodeType pNames;
       _ERR(read1_0(productFilename, pNames));
       for (NodeType pi = 0; pi < pNames.size(); ++pi) {
-        if (pNames[pi] % 10 != 0) // exclude: xxx0
+        if (pNames[pi] % 10 != 0)  // exclude: xxx0
           pIndex.push_back(pi);
       }
       INFORM(pIndex.size());
     } else {
       pIndex.resize(NP);
-      for (NodeType pi = 0; pi < pIndex.size(); ++pi)
-        pIndex[pi] = pi;
+      for (NodeType pi = 0; pi < pIndex.size(); ++pi) pIndex[pi] = pi;
     }
   }
 
   for (bool flag = true; flag;) {
     flag = false;
 
-    for (NodeType ci = 0; ci < cIndex.size();) { // filter country
+    for (NodeType ci = 0; ci < cIndex.size();) {  // filter country
       NodeType c = cIndex[ci], i = 0;
       for (i = 0; i < NYEAR; ++i) {
         NodeType pi = 0;
-        while (pi < pIndex.size() && ep[i][c][pIndex[pi]] <= 0)
-          ++pi;
-        if (pi >= pIndex.size())
-          break;
+        while (pi < pIndex.size() && ep[i][c][pIndex[pi]] <= 0) ++pi;
+        if (pi >= pIndex.size()) break;
       }
       if (i < NYEAR) {
         flag = true;
@@ -1223,14 +1155,12 @@ int network::fitness_complexity::index_export_0_OEC(const char* epDIR,
         ++ci;
     }
 
-    for (NodeType pi = 0; pi < pIndex.size();) { // filter product
+    for (NodeType pi = 0; pi < pIndex.size();) {  // filter product
       NodeType p = pIndex[pi], i = 0;
       for (i = 0; i < NYEAR; ++i) {
         NodeType ci = 0;
-        while (ci < cIndex.size() && ep[i][cIndex[ci]][p] <= 0)
-          ++ci;
-        if (ci >= cIndex.size())
-          break;
+        while (ci < cIndex.size() && ep[i][cIndex[ci]][p] <= 0) ++ci;
+        if (ci >= cIndex.size()) break;
       }
       if (i < NYEAR) {
         flag = true;
@@ -1240,26 +1170,22 @@ int network::fitness_complexity::index_export_0_OEC(const char* epDIR,
         ++pi;
     }
 
-    if (flag)
-      continue;
+    if (flag) continue;
     break;
 
-    for (NodeType ci = 0; ci < cIndex.size();) { // filter country
+    for (NodeType ci = 0; ci < cIndex.size();) {  // filter country
       NodeType c = cIndex[ci], i = 0;
       bool f1 = true, f2 = true, f3 = true, vFlag = false;
-      { // cal f2
+      {  // cal f2
         NodeType pi = 0;
-        while (pi < pIndex.size() && ep[i][c][pIndex[pi]] <= 0)
-          ++pi;
+        while (pi < pIndex.size() && ep[i][c][pIndex[pi]] <= 0) ++pi;
         f2 = pi < pIndex.size();
       }
-      for (i = 1; i < NYEAR; ++i) { // cal f3
+      for (i = 1; i < NYEAR; ++i) {  // cal f3
         NodeType pi = 0;
-        while (pi < pIndex.size() && ep[i][c][pIndex[pi]] <= 0)
-          ++pi;
+        while (pi < pIndex.size() && ep[i][c][pIndex[pi]] <= 0) ++pi;
         f3 = pi < pIndex.size();
-        if ((vFlag = f1 && !f2 && f3))
-          break;
+        if ((vFlag = f1 && !f2 && f3)) break;
       }
       if (vFlag) {
         flag = true;
@@ -1269,22 +1195,19 @@ int network::fitness_complexity::index_export_0_OEC(const char* epDIR,
         ++ci;
     }
 
-    for (NodeType pi = 0; pi < pIndex.size();) { // filter product
+    for (NodeType pi = 0; pi < pIndex.size();) {  // filter product
       NodeType p = pIndex[pi], i = 0;
       bool f1 = true, f2 = true, f3 = true, vFlag = false;
-      { // cal f2
+      {  // cal f2
         NodeType ci = 0;
-        while (ci < cIndex.size() && ep[i][cIndex[ci]][p] <= 0)
-          ++ci;
+        while (ci < cIndex.size() && ep[i][cIndex[ci]][p] <= 0) ++ci;
         f2 = ci < cIndex.size();
       }
-      for (i = 1; i < NYEAR; ++i) { // cal f3
+      for (i = 1; i < NYEAR; ++i) {  // cal f3
         NodeType ci = 0;
-        while (ci < cIndex.size() && ep[i][cIndex[ci]][p] <= 0)
-          ++ci;
+        while (ci < cIndex.size() && ep[i][cIndex[ci]][p] <= 0) ++ci;
         f3 = ci < cIndex.size();
-        if ((vFlag = f1 && !f2 && f3))
-          break;
+        if ((vFlag = f1 && !f2 && f3)) break;
       }
       if (vFlag) {
         flag = true;
@@ -1303,41 +1226,38 @@ int network::fitness_complexity::index_export_0_OEC(const char* epDIR,
   return 0;
 }
 
-int network::fitness_complexity::index_export_0_NBER_wtf(const char* epDIR,
-    const char* cIndexFile, const char* pIndexFile, const char* pIndexFileAll,
-    const NodeType YEAR1, const NodeType YEAR2, const NodeType YEAR0)
-{
+int network::fitness_complexity::index_export_0_NBER_wtf(
+    const char* epDIR, const char* cIndexFile, const char* pIndexFile,
+    const char* pIndexFileAll, const NodeType YEAR1, const NodeType YEAR2,
+    const NodeType YEAR0) {
   const NodeType NYEAR = YEAR2 - YEAR1;
   _ERR(YEAR1 > YEAR0 || YEAR0 > YEAR2);
   vector<VVDouble> ep(NYEAR);
   const double EP0 = 1e-5;
   string s = epDIR;
   for (NodeType year = YEAR1; year < YEAR2; ++year)
-    _ERR(read2_0(
-        (s + to_string(year) + ".export.txt").c_str(), ep[year - YEAR1]));
+    _ERR(read2_0((s + to_string(year) + ".export.txt").c_str(),
+                 ep[year - YEAR1]));
 
   NodeType NC = ep[0].size(), NP = ep[0][0].size();
   VNodeType cIndex(NC), pIndex;
-  for (NodeType ci = 0; ci < cIndex.size(); ++ci)
-    cIndex[ci] = ci;
+  for (NodeType ci = 0; ci < cIndex.size(); ++ci) cIndex[ci] = ci;
   if (pIndexFileAll != NULL && pIndexFileAll[0] != '\0') {
     _ERR(read1_0(pIndexFileAll, pIndex));
     cout << pIndexFileAll << "\t" << pIndex.size() << endl;
   } else {
     pIndex.resize(NP);
-    for (NodeType pi = 0; pi < pIndex.size(); ++pi)
-      pIndex[pi] = pi;
+    for (NodeType pi = 0; pi < pIndex.size(); ++pi) pIndex[pi] = pi;
   }
 
   for (bool flag = true; flag;) {
     flag = false;
 
-    for (NodeType ci = 0; ci < cIndex.size();) { // filter country
+    for (NodeType ci = 0; ci < cIndex.size();) {  // filter country
       NodeType c = cIndex[ci], year = YEAR1;
       for (NodeType pi; year < YEAR2; ++year) {
         for (pi = 0;
-             pi < pIndex.size() && ep[year - YEAR1][c][pIndex[pi]] <= EP0;
-             ++pi)
+             pi < pIndex.size() && ep[year - YEAR1][c][pIndex[pi]] <= EP0; ++pi)
           continue;
         if (pi >= pIndex.size()) {
           flag = true;
@@ -1346,16 +1266,14 @@ int network::fitness_complexity::index_export_0_NBER_wtf(const char* epDIR,
           break;
         }
       }
-      if (year >= YEAR2)
-        ++ci;
+      if (year >= YEAR2) ++ci;
     }
 
-    for (NodeType pi = 0; pi < pIndex.size();) { // filter product
+    for (NodeType pi = 0; pi < pIndex.size();) {  // filter product
       NodeType p = pIndex[pi], year = YEAR1;
       for (NodeType ci; year < YEAR2; ++year) {
         for (ci = 0;
-             ci < cIndex.size() && ep[year - YEAR1][cIndex[ci]][p] <= EP0;
-             ++ci)
+             ci < cIndex.size() && ep[year - YEAR1][cIndex[ci]][p] <= EP0; ++ci)
           continue;
         if (ci >= cIndex.size()) {
           flag = true;
@@ -1364,21 +1282,19 @@ int network::fitness_complexity::index_export_0_NBER_wtf(const char* epDIR,
           break;
         }
       }
-      if (year >= YEAR2)
-        ++pi;
+      if (year >= YEAR2) ++pi;
     }
-    if (flag)
-      continue;
+    if (flag) continue;
     break;
 
-    for (NodeType ci = 0; ci < cIndex.size();) { // filter country
+    for (NodeType ci = 0; ci < cIndex.size();) {  // filter country
       NodeType c = cIndex[ci];
       bool flag2 = false;
       for (NodeType pi = 0; pi < pIndex.size(); ++pi) {
         NodeType p = pIndex[pi];
         NodeType year = YEAR0;
         bool f1 = true, f2 = ep[year - YEAR1][c][p] <= EP0, f3 = true;
-        for (year = YEAR0 + 1; year <= YEAR2; ++year) { // cal f3
+        for (year = YEAR0 + 1; year <= YEAR2; ++year) {  // cal f3
           f3 = ep[year - YEAR1][c][p] <= EP0;
           if ((flag2 = f1 && !f2 && f3)) {
             flag = true;
@@ -1389,11 +1305,9 @@ int network::fitness_complexity::index_export_0_NBER_wtf(const char* epDIR,
           f1 = f2;
           f2 = f3;
         }
-        if (flag2)
-          break;
+        if (flag2) break;
       }
-      if (!flag2)
-        ++ci;
+      if (!flag2) ++ci;
     }
   }
 
@@ -1405,11 +1319,10 @@ int network::fitness_complexity::index_export_0_NBER_wtf(const char* epDIR,
   return 0;
 }
 
-int network::fitness_complexity::index_export_gdp(const char* gdpIndexFile0,
-    const char* gdpIndexFile, const char* gdpIndexFile2,
-    const char* exportIndexFile0, const char* exportIndexFile,
-    const char* exportIndexFile2)
-{
+int network::fitness_complexity::index_export_gdp(
+    const char* gdpIndexFile0, const char* gdpIndexFile,
+    const char* gdpIndexFile2, const char* exportIndexFile0,
+    const char* exportIndexFile, const char* exportIndexFile2) {
   VNodeType g0, g, g2, e0, e, e2;
   _ERR(read1_0(gdpIndexFile0, g0));
   _ERR(read1_0(gdpIndexFile, g));
@@ -1436,25 +1349,25 @@ int network::fitness_complexity::index_export_gdp(const char* gdpIndexFile0,
       }
     }
   for (NodeType i = 0; i < n; ++i)
-    if (cIndex[i] == 2)
-      id.push_back(i);
+    if (cIndex[i] == 2) id.push_back(i);
   _ERR(save1_p(gdpIndexFile2, &g0[0], &id[0], id.size(), '\n'));
   _ERR(save1_p(exportIndexFile2, &e0[0], &id[0], id.size(), '\n'));
   return 0;
 }
 
 int network::fitness_complexity::data_export(const char* exportDIR,
-    const char* countryIndexFile, const char* productIndexFile,
-    const char* DATA_DIR, const NodeType YEAR1, const NodeType YEAR2)
-{
+                                             const char* countryIndexFile,
+                                             const char* productIndexFile,
+                                             const char* DATA_DIR,
+                                             const NodeType YEAR1,
+                                             const NodeType YEAR2) {
   VNodeType cIndex, pIndex;
   _ERR(read1_0(countryIndexFile, cIndex));
   _ERR(read1_0(productIndexFile, pIndex));
   for (NodeType year = YEAR1; year < YEAR2; ++year) {
     VVString epts;
     string s0 = exportDIR;
-    _ERR(read2_0(
-        (string(exportDIR) + to_string(year) + ".txt").c_str(), epts));
+    _ERR(read2_0((string(exportDIR) + to_string(year) + ".txt").c_str(), epts));
     VVString epts2(cIndex.size());
     for (NodeType ci = 0; ci < cIndex.size(); ++ci)
       for (NodeType pi = 0; pi < pIndex.size(); ++pi)
@@ -1465,10 +1378,11 @@ int network::fitness_complexity::data_export(const char* exportDIR,
 }
 
 int network::fitness_complexity::data(const char* gdpFile,
-    const char* gdpIndexFile, const char* exportDIR,
-    const char* countryIndexFile, const char* productIndexFile,
-    const char* DATA_DIR)
-{
+                                      const char* gdpIndexFile,
+                                      const char* exportDIR,
+                                      const char* countryIndexFile,
+                                      const char* productIndexFile,
+                                      const char* DATA_DIR) {
   VVString gdp;
   _ERR(read2_0(gdpFile, gdp));
   VNodeType gIndex;
@@ -1484,8 +1398,7 @@ int network::fitness_complexity::data(const char* gdpFile,
     y = ss.str();
     string s = DATA_DIR;
     VString g(gIndex.size());
-    for (NodeType gi = 0; gi < gIndex.size(); ++gi)
-      g[gi] = gdp[gIndex[gi]][i];
+    for (NodeType gi = 0; gi < gIndex.size(); ++gi) g[gi] = gdp[gIndex[gi]][i];
     _ERR(save1((s + y + ".gdp.txt").c_str(), g, '\n'));
 
     VVString epts;
@@ -1502,8 +1415,9 @@ int network::fitness_complexity::data(const char* gdpFile,
 
 // *******************************************************
 int network::fitness_complexity::code2name(const char* nameFile,
-    const char* codeFile, const char* code0File, const char* name0File)
-{
+                                           const char* codeFile,
+                                           const char* code0File,
+                                           const char* name0File) {
   VString name, name0;
   VNodeType code, code0;
   _ERR(read_VString(nameFile, name));
@@ -1525,11 +1439,10 @@ int network::fitness_complexity::code2name(const char* nameFile,
   return 0;
 }
 
-int network::fitness_complexity::sum_export(const char* epDir,
-    const char* epName, const NodeType YEAR1, const NodeType YEAR2,
-    const char* cFile, const char* cName, const char* pFile,
-    const char* pName)
-{
+int network::fitness_complexity::sum_export(
+    const char* epDir, const char* epName, const NodeType YEAR1,
+    const NodeType YEAR2, const char* cFile, const char* cName,
+    const char* pFile, const char* pName) {
   for (NodeType y = YEAR1; y < YEAR2; ++y) {
     VVLinkType ep;
     _ERR(read2_0((string(epDir) + to_string(y) + epName).c_str(), ep));
@@ -1547,11 +1460,10 @@ int network::fitness_complexity::sum_export(const char* epDir,
   return 0;
 }
 
-int network::fitness_complexity::data_export_OEC(const char* cp0DIR,
-    const char* c0CodeFile, const char* p4d0File, const char* cCodeFile,
-    const char* p4dFile, const NodeType YEAR1, const NodeType YEAR2,
-    const char* cpDIR, const char* cpName)
-{
+int network::fitness_complexity::data_export_OEC(
+    const char* cp0DIR, const char* c0CodeFile, const char* p4d0File,
+    const char* cCodeFile, const char* p4dFile, const NodeType YEAR1,
+    const NodeType YEAR2, const char* cpDIR, const char* cpName) {
   VNodeType c0Code, p4d0, cCode, p4d, cIndex, pIndex;
   _ERR(read1_0(c0CodeFile, c0Code));
   _ERR(read1_0(p4d0File, p4d0));
@@ -1559,8 +1471,7 @@ int network::fitness_complexity::data_export_OEC(const char* cp0DIR,
   _ERR(read1_0(p4dFile, p4d));
   cIndex.resize(cCode.size());
   for (NodeType ci = 0; ci < cCode.size(); ++ci)
-    cIndex[ci]
-        = find(c0Code.begin(), c0Code.end(), cCode[ci]) - c0Code.begin();
+    cIndex[ci] = find(c0Code.begin(), c0Code.end(), cCode[ci]) - c0Code.begin();
   pIndex.resize(p4d.size());
   for (NodeType pi = 0; pi < p4d.size(); ++pi)
     pIndex[pi] = find(p4d0.begin(), p4d0.end(), p4d[pi]) - p4d0.begin();
@@ -1578,4 +1489,4 @@ int network::fitness_complexity::data_export_OEC(const char* cp0DIR,
 }
 
 // *******************************************************
-#endif // ACT_FITNESS_COMPLEXITY
+#endif  // ACT_FITNESS_COMPLEXITY

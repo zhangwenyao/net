@@ -22,6 +22,9 @@
 //#define MAIN_STAT_LKK_EXTREMUM
 //#define MAIN_STAT_BETWEENNESS
 
+#ifdef MAIN_FITNESS_COMPLEXITY_HOTEL
+#include "hotel_order.h"
+#endif
 // ******************************************************
 namespace main_func {
 int main_fitness_complexity(int argc, char **argv);
@@ -29,7 +32,7 @@ namespace fitness_complexity {
 const std::string DIR_DAT =
     std::string("/Users/zwy/data/xiaotong_trip_hotel_order/");
 const std::string DIR_DATA = std::string("data/hotel/");
-// const int YEAR1 = 2021, YEAR2=2021;
+// const int YEAR1 = 2016, YEAR2=2016;
 const int YEAR1 = 2016, YEAR2 = 2021;
 }  // namespace fitness_complexity
 }  // namespace main_func

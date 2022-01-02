@@ -41,7 +41,7 @@ int main_func::main_fitness_complexity(int argc, char** argv) {
 #endif
 
 #ifdef MAIN_FITNESS_COMPLEXITY_HOTEL
-  _ERR(fitness_complexity::hotel_filter(argc, argv));
+  // _ERR(fitness_complexity::hotel_filter(argc, argv));
   _ERR(fitness_complexity::hotel(argc, argv));
 #endif
 

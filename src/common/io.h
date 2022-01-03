@@ -41,9 +41,10 @@ int read_VString(const char *name, std::vector<std::string> &vs);
 // json
 int save(const char *name, const nlohmann::json &j);
 int read(const char *name, nlohmann::json &j);
+inline int read(const std::string &name, nlohmann::json &j);
 int save_json(std::ostream &os, const nlohmann::json &j);
 int save_json(const char *name, const nlohmann::json &j);
-inline int save_json(const std::string& name, const nlohmann::json &j);
+inline int save_json(const std::string &name, const nlohmann::json &j);
 
 // 一维数组 a[n]
 template <typename T, const size_t n>
@@ -205,6 +206,11 @@ template <typename T>
 int read2_0(std::istream &is, std::vector<std::vector<T>> &v);
 template <typename T>
 int read2_0(const char *name, std::vector<std::vector<T>> &v);
+// vv: v
+template <typename T, typename T2>
+int read2_len_n(std::istream &is, T &vv, const T2 &l, const size_t n);
+template <typename T, typename T2>
+int read2_len_n(const char *name, T &vv, const T2 &l, const size_t n);
 
 // Map
 template <typename T1, typename T2>
@@ -226,29 +232,23 @@ int read0(const char *name, std::vector<std::vector<T2>> &s,
 
 // double
 template <typename T>
-int save_double(std::ostream &os, const T &ds,
-                const int l = std::numeric_limits<double>::digits10 + 1,
-                const char c = '\t');
+int save_double(std::ostream &os, const T &ds, const char c = '\t',
+                const int l = std::numeric_limits<double>::digits10 + 1);
 template <typename T>
-int save_double(const char *name, const T &ds,
-                const int l = std::numeric_limits<double>::digits10 + 1,
-                const char c = '\t');
+int save_double(const char *name, const T &ds, const char c = '\t',
+                const int l = std::numeric_limits<double>::digits10 + 1);
 template <typename T>
-int save1_double(std::ostream &os, const T &ds,
-                 const int l = std::numeric_limits<double>::digits10 + 1,
-                 const char c = '\t');
+int save1_double(std::ostream &os, const T &ds, const char c = '\t',
+                 const int l = std::numeric_limits<double>::digits10 + 1);
 template <typename T>
-int save1_double(const char *name, const T &ds,
-                 const int l = std::numeric_limits<double>::digits10 + 1,
-                 const char c = '\t');
+int save1_double(const char *name, const T &ds, const char c = '\t',
+                 const int l = std::numeric_limits<double>::digits10 + 1);
 template <typename T>
-int save2_double(std::ostream &os, const T &ds,
-                 const int l = std::numeric_limits<double>::digits10 + 1,
-                 const char c = '\t');
+int save2_double(std::ostream &os, const T &ds, const char c = '\t',
+                 const int l = std::numeric_limits<double>::digits10 + 1);
 template <typename T>
-int save2_double(const char *name, const T &ds,
-                 const int l = std::numeric_limits<double>::digits10 + 1,
-                 const char c = '\t');
+int save2_double(const char *name, const T &ds, const char c = '\t',
+                 const int l = std::numeric_limits<double>::digits10 + 1);
 
 // ********************* print, save ************************
 template <typename T, typename... Argv>

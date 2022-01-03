@@ -40,7 +40,8 @@ using namespace main_func::fitness_complexity;
 int main_func::main_fitness_complexity(int argc, char** argv) {
 #ifdef MAIN_FITNESS_COMPLEXITY_HOTEL
 #ifdef MAIN_FITNESS_COMPLEXITY_HOTEL_FILTER
-  _ERR(fitness_complexity::hotel_filter(argc, argv));
+  // _ERR(fitness_complexity::hotel_filter(argc, argv));
+  _ERR(fitness_complexity::hotel_filter2(argc, argv));
 #endif
 #ifdef MAIN_FITNESS_COMPLEXITY_HOTEL_MAIN
   _ERR(fitness_complexity::hotel_main(argc, argv));

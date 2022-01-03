@@ -56,7 +56,7 @@ else
 endif
 
 
-.PHONY: all subdirs execute run_ logexecute run clean cleanall rebuild rebuildrun debug debugrun logdebugrun debugrebuild debugrebuildrun
+.PHONY: all subdirs execute executea run logrun clean cleanall rebuild rebuildrun debug debugrun logdebugrun debugrebuild debugrebuildrun
 
 all:		$(CUR_OBJ_DIR) $(CUR_OBJS_C) $(CUR_OBJS_CC) subdirs $(BIN_TARGET)
 ifneq ($(USER_DEFINES),)
@@ -74,17 +74,17 @@ ifneq ($(USER_DEFINES),)
 endif
 	@${datecmd}
 
-run_:	all execute
-
-logexcute:
+logexecute:
 	@${datecmd}
-	./script/logrun.sh $(BIN_TARGET)
+	$(ROOT_DIR)/script/logrun.sh $(BIN_TARGET)
 ifneq ($(USER_DEFINES),)
 	@echo "USER_DEFINES=${USER_DEFINES}"
 endif
 	@${datecmd}
 
-run:	all logexecute
+run:	all execute
+
+logrun:	all logexecute
 
 clean:
 	rm -rf $(shell find $(ROOT_OBJ) -name "*.o")

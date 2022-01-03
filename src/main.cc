@@ -43,8 +43,8 @@ int main_default(int argc, char** argv) {
 // **********************************************************
 
 int main(int argc, char** argv) {
-  std::ios::sync_with_stdio(false);
-  cin.tie(NULL);
+  // std::ios::sync_with_stdio(false);
+  // cin.tie(NULL);
   common::SHOW_TIME(cout);  // 显示系统时间
 
   _ERR(MAIN_FUNC(argc, argv));

@@ -42,7 +42,11 @@ inline std::string dtoa(const T i) {
 }
 
 // *********************** common::save, common::read **********************
-inline int common::save_json(const std::string& name, const nlohmann::json &j){
+inline int common::read(const std::string &name, nlohmann::json &j) {
+  return read(name.c_str(), j);
+}
+
+inline int common::save_json(const std::string &name, const nlohmann::json &j) {
   return save_json(name.c_str(), j);
 }
 
@@ -861,6 +865,28 @@ int common::read2_0(const char *name, std::vector<std::vector<T>> &v) {
   return status;
 }
 
+template <typename T, typename T2>
+int common::read2_len_n(std::istream &is, T &vv, const T2 &l, const size_t n) {
+  _ERR(!is);
+  for (size_t i = 0; i < n; ++i) {
+    vv[i].resize(l[i]);
+    read1(is, vv[i]);
+  }
+  return 0;
+}
+
+template <typename T, typename T2>
+int common::read2_len_n(const char *name, T &vv, const T2 &l, const size_t n) {
+  std::ifstream is(name);
+  if (!is) {
+    ERROR("open file ", name);
+    return -1;
+  }
+  common::read2_len_n(is, vv, l, n);
+  is.close();
+  return 0;
+}
+
 template <typename T1, typename T2>
 int common::read0(std::istream &is, std::map<T1, T2> &m) {
   _ERR(!is);
@@ -933,61 +959,61 @@ int common::read0(const char *name, std::vector<std::vector<T2>> &s,
 }
 
 template <typename T>
-int common::save_double(std::ostream &os, const T &ds, const int l,
-                        const char c) {
+int common::save_double(std::ostream &os, const T &ds, const char c,
+                        const int l) {
   os.precision(l);
   return common::save(os, ds, c);
 }
 
 template <typename T>
-int common::save_double(const char *name, const T &ds, const int l,
-                        const char c) {
+int common::save_double(const char *name, const T &ds, const char c,
+                        const int l) {
   std::ofstream os(name);
   if (!os) {
     ERROR("open file ", name);
     return -1;
   }
-  int status = common::save_double(os, ds, l, c);
+  int status = common::save_double(os, ds, c, l);
   os.close();
   return status;
 }
 
 template <typename T>
-int common::save1_double(std::ostream &os, const T &ds, const int l,
-                         const char c) {
+int common::save1_double(std::ostream &os, const T &ds, const char c,
+                         const int l) {
   os.precision(l);
   return common::save1(os, ds, c);
 }
 
 template <typename T>
-int common::save1_double(const char *name, const T &ds, const int l,
-                         const char c) {
+int common::save1_double(const char *name, const T &ds, const char c,
+                         const int l) {
   std::ofstream os(name);
   if (!os) {
     ERROR("open file ", name);
     return -1;
   }
-  int status = common::save1_double(os, ds, l, c);
+  int status = common::save1_double(os, ds, c, l);
   os.close();
   return status;
 }
 
 template <typename T>
-int common::save2_double(std::ostream &os, const T &ds, const int l,
-                         const char c) {
+int common::save2_double(std::ostream &os, const T &ds, const char c,
+                         const int l) {
   os.precision(l);
-  return common::save2(os, ds, c);
+  return common::save2(os, ds, c, l);
 }
 
 template <typename T>
-int common::save2_double(const char *name, const T &ds, const int l,
-                         const char c) {
+int common::save2_double(const char *name, const T &ds, const char c,
+                         const int l) {
   std::ofstream os(name);
   if (!os) {
     ERROR("open file ", name);
     return -1;
   }
-  int status = common::save2_double(os, ds, l, c);
+  int status = common::save2_double(os, ds, c, l);
   os.close();
   return status;
 }

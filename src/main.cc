@@ -1,6 +1,6 @@
 #include "main.h"
-#include "common/common.h"
 
+#include "common/common.h"
 using namespace std;
 
 // *******************************************************
@@ -31,23 +31,24 @@ using namespace std;
 #ifndef MAIN_FUNC
 #define MAIN_FUNC main_default
 namespace {
-int main_default(int argc, char** argv)
-{
+int main_default(int argc, char** argv) {
   for (int i = 0; i < argc && argv[i] != NULL; ++i) {
     cout << argc << '\t' << argv[i] << '\n';
   }
   return EXIT_SUCCESS;
 }
-}
+}  // namespace
 #endif
 
 // **********************************************************
-int main(int argc, char** argv)
-{
-  common::SHOW_TIME(cout); // 显示系统时间
+
+int main(int argc, char** argv) {
+  std::ios::sync_with_stdio(false);
+  cin.tie(NULL);
+  common::SHOW_TIME(cout);  // 显示系统时间
 
   _ERR(MAIN_FUNC(argc, argv));
 
-  common::SHOW_TIME(cout); // 显示系统时间
+  common::SHOW_TIME(cout);  // 显示系统时间
   return 0;
 }

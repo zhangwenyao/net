@@ -10,6 +10,7 @@
 
 #include "debug.h"
 #include "io.h"
+#include "json.hpp"
 
 // *********************************************************************
 template <typename T>
@@ -41,6 +42,10 @@ inline std::string dtoa(const T i) {
 }
 
 // *********************** common::save, common::read **********************
+inline int common::save_json(const std::string& name, const nlohmann::json &j){
+  return save_json(name.c_str(), j);
+}
+
 // 一维数组 a[n]
 template <typename T, const size_t n>
 int common::save(std::ostream &os, T (&a)[n], const char c) {
@@ -948,41 +953,41 @@ int common::save_double(const char *name, const T &ds, const int l,
 }
 
 template <typename T>
-int common::save_double1(std::ostream &os, const T &ds, const int l,
+int common::save1_double(std::ostream &os, const T &ds, const int l,
                          const char c) {
   os.precision(l);
   return common::save1(os, ds, c);
 }
 
 template <typename T>
-int common::save_double1(const char *name, const T &ds, const int l,
+int common::save1_double(const char *name, const T &ds, const int l,
                          const char c) {
   std::ofstream os(name);
   if (!os) {
     ERROR("open file ", name);
     return -1;
   }
-  int status = common::save_double1(os, ds, l, c);
+  int status = common::save1_double(os, ds, l, c);
   os.close();
   return status;
 }
 
 template <typename T>
-int common::save_double2(std::ostream &os, const T &ds, const int l,
+int common::save2_double(std::ostream &os, const T &ds, const int l,
                          const char c) {
   os.precision(l);
   return common::save2(os, ds, c);
 }
 
 template <typename T>
-int common::save_double2(const char *name, const T &ds, const int l,
+int common::save2_double(const char *name, const T &ds, const int l,
                          const char c) {
   std::ofstream os(name);
   if (!os) {
     ERROR("open file ", name);
     return -1;
   }
-  int status = common::save_double2(os, ds, l, c);
+  int status = common::save2_double(os, ds, l, c);
   os.close();
   return status;
 }
@@ -1066,12 +1071,12 @@ inline int common::ssave_double(const std::string &name, T &&a, Argv... argv) {
   return save_double(name.c_str(), a, argv...);
 }
 template <typename T, typename... Argv>
-inline int common::ssave_double1(const std::string &name, T &&a, Argv... argv) {
-  return save_double1(name.c_str(), a, argv...);
+inline int common::ssave1_double(const std::string &name, T &&a, Argv... argv) {
+  return save1_double(name.c_str(), a, argv...);
 }
 template <typename T, typename... Argv>
-inline int common::ssave_double2(const std::string &name, T &&a, Argv... argv) {
-  return save_double2(name.c_str(), a, argv...);
+inline int common::ssave2_double(const std::string &name, T &&a, Argv... argv) {
+  return save2_double(name.c_str(), a, argv...);
 }
 
 // *************************************************************

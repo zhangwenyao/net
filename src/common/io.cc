@@ -5,6 +5,7 @@
 
 #include "debug.h"
 using namespace std;
+using nlohmann::json;
 
 // *************************************************************
 int common::check_filename(const string& name) {
@@ -120,6 +121,44 @@ int common::read_VString(const char* name, std::vector<std::string>& vs) {
   int flag = common::read_VString(is, vs);
   is.close();
   return flag;
+}
+
+int common::save(const char* name, const json& j) {
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  os << j;
+  os.close();
+  return 0;
+}
+
+int common::read(const char* name, json& j) {
+  ifstream is(name);
+  if (!is) {
+    ERROR();
+    return -1;
+  }
+  is >> j;
+  is.close();
+  return 0;
+}
+
+int common::save_json(ostream& os, const json& j) {
+  os << setw(4) << j;
+  return 0;
+}
+
+int common::save_json(const char* name, const json& j) {
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  save_json(os, j);
+  os.close();
+  return 0;
 }
 
 // *************************************************************

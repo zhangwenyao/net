@@ -2,12 +2,14 @@
 #define COMMON__COMMON_IO_H_
 
 #include <iostream>
+#include <limits>
 #include <map>
 #include <set>
 #include <string>
 #include <vector>
 
 #include "common.h"
+#include "json.hpp"
 
 namespace common {
 // *********************************************************************
@@ -35,6 +37,13 @@ int save_VString(std::ostream &os, const std::vector<std::string> &vs);
 int save_VString(const char *name, const std::vector<std::string> &vs);
 int read_VString(std::istream &is, std::vector<std::string> &vs);
 int read_VString(const char *name, std::vector<std::string> &vs);
+
+// json
+int save(const char *name, const nlohmann::json &j);
+int read(const char *name, nlohmann::json &j);
+int save_json(std::ostream &os, const nlohmann::json &j);
+int save_json(const char *name, const nlohmann::json &j);
+inline int save_json(const std::string& name, const nlohmann::json &j);
 
 // 一维数组 a[n]
 template <typename T, const size_t n>
@@ -217,22 +226,28 @@ int read0(const char *name, std::vector<std::vector<T2>> &s,
 
 // double
 template <typename T>
-int save_double(std::ostream &os, const T &ds, const int l = 18,
+int save_double(std::ostream &os, const T &ds,
+                const int l = std::numeric_limits<double>::digits10 + 1,
                 const char c = '\t');
 template <typename T>
-int save_double(const char *name, const T &ds, const int l = 18,
+int save_double(const char *name, const T &ds,
+                const int l = std::numeric_limits<double>::digits10 + 1,
                 const char c = '\t');
 template <typename T>
-int save_double1(std::ostream &os, const T &ds, const int l = 18,
+int save1_double(std::ostream &os, const T &ds,
+                 const int l = std::numeric_limits<double>::digits10 + 1,
                  const char c = '\t');
 template <typename T>
-int save_double1(const char *name, const T &ds, const int l = 18,
+int save1_double(const char *name, const T &ds,
+                 const int l = std::numeric_limits<double>::digits10 + 1,
                  const char c = '\t');
 template <typename T>
-int save_double2(std::ostream &os, const T &ds, const int l = 18,
+int save2_double(std::ostream &os, const T &ds,
+                 const int l = std::numeric_limits<double>::digits10 + 1,
                  const char c = '\t');
 template <typename T>
-int save_double2(const char *name, const T &ds, const int l = 18,
+int save2_double(const char *name, const T &ds,
+                 const int l = std::numeric_limits<double>::digits10 + 1,
                  const char c = '\t');
 
 // ********************* print, save ************************
@@ -277,9 +292,9 @@ inline int sread_VString(const std::string &name, T &&a, Argv... argv);
 template <typename T, typename... Argv>
 inline int ssave_double(const std::string &name, T &&a, Argv... argv);
 template <typename T, typename... Argv>
-inline int ssave_double1(const std::string &name, T &&a, Argv... argv);
+inline int ssave1_double(const std::string &name, T &&a, Argv... argv);
 template <typename T, typename... Argv>
-inline int ssave_double2(const std::string &name, T &&a, Argv... argv);
+inline int ssave2_double(const std::string &name, T &&a, Argv... argv);
 
 }  // end namespace common
 

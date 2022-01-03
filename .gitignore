@@ -4,6 +4,7 @@
 bin
 config
 data
+log
 obj
 test
 */.DS_Store

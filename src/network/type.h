@@ -56,6 +56,8 @@ typedef VVIDType::iterator VVIDTypeItr;
 typedef VVIDType::const_iterator VVIDTypeCItr;
 typedef std::unordered_set<IDType> USIDType;
 typedef std::set<IDType> SIDType;
+typedef std::unordered_map<IDType, NodeType> UMIDType;
+typedef std::map<IDType, NodeType> MIDType;
 
 typedef std::string String;
 typedef std::vector<String> VString;

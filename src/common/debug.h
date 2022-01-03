@@ -68,7 +68,7 @@ void DEBUG_INFO(Args... args);
   do {           \
     if ((x)) {   \
       ERROR();   \
-      return -1; \
+      return EXIT_FAILURE; \
     }            \
   } while (0)
 #endif

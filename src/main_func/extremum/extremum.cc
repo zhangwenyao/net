@@ -457,7 +457,7 @@ int main_func::extremum::alphas_stat_maximal_lkk(int argc, char** argv)
       //}
       string savename = stat_dir + "kMin" + to_string(kMin) + "_"
           + to_string(seed) + ".Max.alphas.txt";
-      common::save_double2(savename.c_str(), results);
+      common::save2_double(savename.c_str(), results);
     } // for seed
   }   // for e
 
@@ -514,7 +514,7 @@ int main_func::extremum::alphas_stat_minimal_lkk(int argc, char** argv)
       //}
       string savename = stat_dir + "kMin" + to_string(kMin) + "_"
           + to_string(seed) + ".Min.alphas.txt";
-      common::save_double2(savename.c_str(), results);
+      common::save2_double(savename.c_str(), results);
     } // for seed
   }   // for e
 

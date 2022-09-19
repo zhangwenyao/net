@@ -1,78 +1,115 @@
 
-TARGET	= net.exe
-SRCEXTS	= .c .cpp
-DIR_INC	= ./include
-DIR_SRC	= ./src
-DIR_OBJ	= ./obj
-DIR_BIN	= ./bin
+TARGET		= net.exe
 
+export ROOT_DIR	= $(shell pwd)
+export ROOT_OBJ	= $(ROOT_DIR)/obj
+DIR_BIN		= $(ROOT_DIR)/bin
+DIR_INC		= $(ROOT_DIR)/include
+BIN_TARGET	= $(DIR_BIN)/$(TARGET)
+datecmd		= date +%Y%m%d-%T.%3N
 
-CC	= clang
-CXX	= clang++
+CUR_DIR		= $(shell pwd)
+CUR_OBJ_DIR	= $(subst $(ROOT_DIR),$(ROOT_OBJ),$(CUR_DIR))
 
-SRC	= $(foreach d,$(DIR_SRC),$(wildcard $(addprefix $(d)/*,$(SRCEXTS))))
-OBJ	= $(foreach x,$(SRCEXTS),$(patsubst %$(x),${DIR_OBJ}/%.o,$(filter %$(x),$(notdir ${SRC}))))
-DEP	= $(patsubst %.o,%.d,$(OBJ))
-BIN_TARGET = ${DIR_BIN}/${TARGET}
+SUB_DIRS	= $(ROOT_DIR)/src
 
+$(shell mkdir -p $(ROOT_OBJ))
+$(shell mkdir -p $(CUR_OBJ_DIR))
+$(shell mkdir -p $(DIR_BIN))
+
+export EXTS_HC	= .h
+export EXTS_C	= .c
+CUR_SOURCE_C	= $(wildcard $(addprefix $(CUR_DIR)/*,$(EXTS_C)))
+CUR_OBJS_C	= $(foreach x,$(EXTS_C),$(patsubst %$(x),$(CUR_OBJ_DIR)/%.o,$(filter %$(x),$(notdir $(CUR_SOURCE_C)))))
+CUR_DEPS_C	= $(CUR_OBJS_C:%.o=%.d)
+
+export EXTS_HCC	= .hpp
+export EXTS_CC	= .cc .cpp
+CUR_SOURCE_CC	= $(wildcard $(addprefix $(CUR_DIR)/*,$(EXTS_CC)))
+CUR_OBJS_CC	= $(foreach x,$(EXTS_CC),$(patsubst %$(x),$(CUR_OBJ_DIR)/%.o,$(filter %$(x),$(notdir $(CUR_SOURCE_CC)))))
+CUR_DEPS_CC	= $(CUR_OBJS_CC:%.o=%.d)
+
+export CC	= gcc
+export CXX	= g++
+#export CC	= clang
+#export CXX	= clang++
+#export CC	= icc
+#export CXX	= icpc
+USER_DEFINES	=
 ifdef DEBUG
-	CFLAGS	= -Wall -O0 -I${DIR_INC} -g -DDEBUG
-	CXXFLAGS= -Wall -O0 -I${DIR_INC} -g -DDEBUG -std=c++11
-	LDFLAGS	= -Wall -O0 -g -DDEBUG
+	export CFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG
+	export CXXFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG -std=c++11
+	export LDFLAGS	= -Wall -O0 -g -DDEBUG -fopenmp
 else
-	CFLAGS	= -Wall -O3 -I${DIR_INC}
-	CXXFLAGS= -Wall -O3 -I${DIR_INC} -std=c++11
-	LDFLAGS	= -Wall -O3
+	export CFLAGS	= ${USER_DEFINES} -Wall -O3 -I$(DIR_INC) -fopenmp
+	export CXXFLAGS	= ${USER_DEFINES} -Wall -O3 -I$(DIR_INC) -fopenmp -std=c++11
+	export LDFLAGS	= -Wall -O3 -fopenmp
 endif
 
-$(shell mkdir -p ${DIR_OBJ} 2> /dev/null)
-$(shell mkdir -p ${DIR_BIN} 2> /dev/null)
 
+.PHONY: all subdirs execute run clean cleanall rebuild rebuildrun debug debugrun debugrebuild debugrebuildrun
 
-.PHONY: all clean cleanall rebuild run debug redebug rundebug
-
-all:$(BIN_TARGET)
-
-${DIR_OBJ}/%.d	:	${DIR_SRC}/%.c
-	@set -e; $(CC)  -MM $< $(CFLAGS) | sed 's,\($*\)\.o[ :]*,${DIR_OBJ}/\1.o $@ : ,g' > $@
-
-${DIR_OBJ}/%.d	:	${DIR_SRC}/%.cpp
-	@set -e; $(CXX) -MM $< $(CXXFLAGS)| sed 's,\($*\)\.o[ :]*,${DIR_OBJ}/\1.o $@ : ,g' > $@
-
-${DIR_OBJ}/%.o	:	${DIR_SRC}/%.c
-	$(CC)  -o $@ -c $< $(CFLAGS)
-
-$(DIR_OBJ)/%.o	:	$(DIR_SRC)/%.cpp
-	$(CXX) -o $@ -c $< $(CXXFLAGS)
-
--include $(DEP)
-
-$(BIN_TARGET)	:	$(OBJ)
-ifeq ($(strip $(SRCEXTS)), .c)	# C file
-	$(CC)  -o $@ $^ $(LDFLAGS)
-else				# C++ file
-	$(CXX) -o $@ $^ $(LDFLAGS)
+all:		$(CUR_OBJ_DIR) $(CUR_OBJS_C) $(CUR_OBJS_CC) subdirs $(BIN_TARGET)
+ifneq ($(USER_DEFINES),)
+	@echo "USER_DEFINES=${USER_DEFINES}"
 endif
+
+subdirs:
+	@for subdir in $(SUB_DIRS) ; do make -C $$subdir ; done
+
+execute:
+	@${datecmd}
+	$(BIN_TARGET)
+ifneq ($(USER_DEFINES),)
+	@echo "USER_DEFINES=${USER_DEFINES}"
+endif
+	@${datecmd}
+
+run:	all execute
 
 clean:
-	-rm -rf $(OBJ) $(DEP)
+	rm -rf $(shell find $(ROOT_OBJ) -name "*.o")
+	rm -rf $(shell find $(ROOT_OBJ) -name "*.d")
 
-cleanall: clean
-	-rm -rf $(BIN_TARGET)
-	-rmdir $(DIR_OBJ) $(DIR_BIN)
+cleanall:	clean
+	rm -rf $(BIN_TARGET)
 
-rebuild: cleanall
-	make all
+rebuild:	cleanall all
 
-run:
-	-reset && make all && $(BIN_TARGET)
+rebuildrun:	cleanall run
 
 debug:
-	make DEBUG=1
+	make DEBUG=1 all
 
-debug-rebuild: cleanall
-	make debug
+debugrun:	debug run
 
-debug-run:
-	-reset && make debug && $(BIN_TARGET)
+debugrebuild:	cleanall debug
+
+debugrebuildrun:	cleanall debugrun
+
+
+$(CUR_OBJ_DIR)/%.d:	$(CUR_DIR)/%.c
+	@set -e; $(CC) $(CFLAGS) -MM $< | sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
+
+$(CUR_OBJ_DIR)/%.o:	$(CUR_DIR)/%.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(CUR_OBJ_DIR)/%.d:	$(CUR_DIR)/%.cc
+	@set -e; $(CXX) $(CXXFLAGS) -MM $< | sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
+
+$(CUR_OBJ_DIR)/%.o:	$(CUR_DIR)/%.cc
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+$(CUR_OBJ_DIR)/%.d:	$(CUR_DIR)/%.cpp
+	@set -e; $(CXX) $(CXXFLAGS) -MM $< | sed 's,\($*\)\.o[ :]*,$(CUR_OBJ_DIR)/\1.o $@ : ,g' > $@
+
+$(CUR_OBJ_DIR)/%.o:	$(CUR_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+$(BIN_TARGET):		$(shell find $(ROOT_OBJ) -name "*.o")
+	$(CXX) $(LDFLAGS) -o $@ $(shell find $(ROOT_OBJ) -name "*.o")
+
+
+-include $(CUR_DEPS_C)
+-include $(CUR_DEPS_CC)
 

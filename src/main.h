@@ -1,46 +1,20 @@
-#ifndef MAIN_H
-#define MAIN_H
-// g++ *.cpp -O3 -Wall -std=c++11 -o main.exe
+#ifndef MAIN_H_
+#define MAIN_H_
+
+// *******************************************************
+//#define NET_OMP
+#ifdef NET_OMP
+#include <omp.h>
+#endif
 
 // *******************************************************
 //#define MAIN_TEST
-
-//#define MAIN_NET_EXTREMUM
-
-//#define MAIN_STAT_LKK_K
-//#define MAIN_STAT_LKK_EXTREMUM
-//#define MAIN_STAT_BETWEENNESS
-
-//#define MAIN_FITNESS_COMPLEXITY_FILTER
+//#define MAIN_DISTRIBUTION
+#define MAIN_EXTREMUM
+//#define MAIN_CORRELATION2
+//#define MAIN_REWIRE
+//#define MAIN_SPEARMAN
 //#define MAIN_FITNESS_COMPLEXITY
-//#define MAIN_FITNESS_COMPLEXITY_RECOMMEND
-<<<<<<< HEAD
-//#define MAIN_FITNESS_COMPLEXITY_COUNT
-=======
-#define MAIN_FITNESS_COMPLEXITY_COUNT
->>>>>>> ab9adcb4d0d5bdcd957d0aa60e7108f7fbed6a38
-#define MAIN_FITNESS_COMPLEXITY_PLOTDATA
-
-// *******************************************************
-#ifdef MAIN_FITNESS_COMPLEXITY_FILTER
-int main_fitness_complexity_filter(int argc, char** argv);
-#endif
-
-#ifdef MAIN_FITNESS_COMPLEXITY
-int main_fitness_complexity(int argc, char** argv);
-#endif
-
-#ifdef MAIN_FITNESS_COMPLEXITY_RECOMMEND
-int main_fitness_complexity_recommend(int argc, char** argv);
-#endif
-
-#ifdef MAIN_FITNESS_COMPLEXITY_COUNT
-int main_fitness_complexity_count(int argc, char** argv);
-#endif
-
-#ifdef MAIN_FITNESS_COMPLEXITY_PLOTDATA
-int main_fitness_complexity_plotdata(int argc, char** argv);
-#endif
 
 // *******************************************************
 #endif

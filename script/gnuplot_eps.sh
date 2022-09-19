@@ -14,11 +14,11 @@ outfile="$2"
 shift
 shift
 gnuplot << EOF
-set terminal push
+#set terminal push
 set terminal postscript eps color solid enh lw 1 font "Helvetica, 24"
-set out "$outfile.eps"
+set output "$outfile.eps"
 call "$plt" $@
-set output
-set terminal pop
+#set output
+#set terminal pop
 EOF
 

@@ -75,7 +75,7 @@ execute:
 ifneq ($(USER_DEFINES),)
 	@echo "USER_DEFINES=${USER_DEFINES}"
 endif
-@${datecmd}
+	@${datecmd}
 
 logexecute:
 	@${datecmd}
@@ -83,7 +83,7 @@ logexecute:
 ifneq ($(USER_DEFINES),)
 	@echo "USER_DEFINES=${USER_DEFINES}"
 endif
-@${datecmd}
+	@${datecmd}
 
 run:	all execute
 

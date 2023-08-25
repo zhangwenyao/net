@@ -3,9 +3,10 @@
 #include "fitness_complexity.h"
 #ifdef ACT_FITNESS_COMPLEXITY
 
-#include "../../common/common.h"
 #include <cstdlib>
 #include <cstring>
+
+#include "../../common/common.h"
 
 // *******************************************************
 template <typename T, typename T2>
@@ -28,9 +29,10 @@ int network::fitness_complexity::export_2_Mcp(
   mcp.assign(NC, std::vector<T2>(NP, (T2)0));
   for (size_t c = 0; c < NC; c++) {
     for (size_t p = 0; p < NP; p++) {
-      mcp[c][p] = (T2)(
-          e[c][p] > 0 && (double)e[c][p] * Qsum >= (double)Qc[c] * Qp[p] ? 1
-                                                                         : 0);
+      mcp[c][p] = (T2)(e[c][p] > 0
+                  && (double)e[c][p] * Qsum >= (double)Qc[c] * Qp[p]
+              ? 1
+              : 0);
     }
   }
 
@@ -106,6 +108,93 @@ int network::fitness_complexity::Mcp_2_FC(
             iCp[p] = 0;
           iCp[p] += 1 / Fc[c];
         }
+      }
+      if (iCp[p] >= 0) {
+        iCp[p] = 1 / iCp[p];
+        icMean += iCp[p];
+        ++n;
+      }
+    }
+    if (n <= 0 || icMean <= 0) {
+      flag = -1;
+      ERROR("icMean = ", icMean, "\t", count);
+      break;
+    }
+    icMean /= n;
+    // icMean /= NP;
+
+    // INFORM(count, "\t", ifMean, "\t", icMean);
+    for (size_t c = 0; c < NC; c++)
+      Fc[c] = iFc[c] < 0 ? -1 : iFc[c] / ifMean;
+    for (size_t p = 0; p < NP; p++)
+      Cp[p] = iCp[p] < 0 ? -1 : iCp[p] / icMean;
+
+    if ((1.0 - delta) * cMean <= icMean && icMean <= (1.0 + delta) * cMean
+        && (1.0 - delta) * fMean <= ifMean
+        && ifMean <= (1.0 + delta) * fMean) {
+      // DBG(count);
+      break;
+    }
+    fMean = ifMean;
+    cMean = icMean;
+    // if (count % 1000 == 0)
+    // DBG(count, "\tfm ", fMean, "\tcm ", cMean);
+  }
+  for (size_t c = 0; c < NC; c++)
+    if (iFc[c] < 0)
+      Fc[c] = 0;
+  for (size_t p = 0; p < NP; p++)
+    if (iCp[p] < 0)
+      Cp[p] = 0;
+
+  return flag;
+}
+
+template <typename T>
+int network::fitness_complexity::Mcp_2_FC_p2p(VDouble& Fc, VDouble& Cp,
+    const std::vector<std::vector<T>>& c2p,
+    const std::vector<std::vector<T>>& p2c)
+{
+  int flag = 0;
+  const double delta = 1.0e-8;
+  const size_t NC = c2p.size(), NP = p2c.size();
+  Fc.assign(NC, 1);
+  Cp.assign(NP, 1);
+  VDouble iFc = Fc, iCp = Cp;
+  double fMean = 1, cMean = 1, ifMean, icMean;
+  for (int count = 1; 1; count++) {
+    iFc.assign(NC, -1);
+    ifMean = 0;
+    size_t n = 0;
+    for (size_t c = 0; c < NC; c++) {
+      // for (size_t p = 0; p < NP; p++){
+      for (auto p : c2p[c]) {
+        if (iFc[c] < 0)
+          iFc[c] = 0;
+        iFc[c] += Cp[p];
+      }
+      if (iFc[c] >= 0) {
+        ifMean += iFc[c];
+        ++n;
+      }
+    }
+    if (n <= 0 || ifMean <= 0) {
+      flag = -1;
+      ERROR("ifMean = ", ifMean, "\t", count);
+      break;
+    }
+    ifMean /= n;
+    // ifMean /= NC;
+
+    iCp.assign(NP, -1);
+    icMean = 0;
+    n = 0;
+    for (size_t p = 0; p < NP; p++) {
+      // for (size_t c = 0; c < NC; c++) {
+      for (auto c : p2c[p]) {
+        if (iCp[p] < 0)
+          iCp[p] = 0;
+        iCp[p] += 1 / Fc[c];
       }
       if (iCp[p] >= 0) {
         iCp[p] = 1 / iCp[p];

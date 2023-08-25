@@ -1,8 +1,9 @@
 #include "fitness_complexity.h"
 #ifdef ACT_FITNESS_COMPLEXITY
 
-#include "../../common/common.h"
 #include <iomanip>
+
+#include "../../common/common.h"
 using namespace std;
 using namespace common;
 using namespace network;
@@ -378,9 +379,8 @@ int network::fitness_complexity::trade_name(const char* tradeFilename,
       cstring_reverse(cChar[c++]);
     }
   }
-  _ERR(save(countryFilename, cChar, nc, '\n'));
-
-  save_bool(productFilename, &pVal[0], 9999, '\n');
+  _ERR(save1_head(countryFilename, cChar, nc, '\n'));
+  _ERR(save1_head(productFilename, pVal, NP, '\n'));
 
   return 0;
 }
@@ -415,7 +415,7 @@ int network::fitness_complexity::trade_name_OEC(const char* tradeFilename,
   }
   _ERR(save(countryFilename, cChar, nc, '\n'));
   INFORM(nc);
-  _ERR(save_bool(productFilename, &pVal[0], 9999, '\n'));
+  _ERR(save1_head(productFilename, pVal, NP, '\n'));
   NodeType _s = 0;
   total_bool(&pVal[0], 9999, _s);
   INFORM(_s);

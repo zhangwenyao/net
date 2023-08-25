@@ -5,12 +5,15 @@
 #include <ctime>
 #include <iostream>
 
-//#define DEBUG
+// #define DEBUG
 
 // ************* INFORM, DBG, ERROR, SHOW_TIME ****************
 namespace common {
 std::string GET_TIME(void);
 void SHOW_TIME(std::ostream& os);
+
+void _INFO();
+template <typename T, typename... Args> void _INFO(T x, Args... args);
 
 void INFO(std::ostream& os);
 template <typename T, typename... Args>
@@ -18,7 +21,7 @@ void INFO(std::ostream& os, T x, Args... args);
 template <typename... Args> void ERROR_INFO(Args... args);
 template <typename... Args> void INFORM_INFO(Args... args);
 template <typename... Args> void DEBUG_INFO(Args... args);
-}
+} // namespace common
 
 #ifndef ERROR
 #define ERROR(...)                                                           \
@@ -49,7 +52,7 @@ template <typename... Args> void DEBUG_INFO(Args... args);
     common::DEBUG_INFO(__VA_ARGS__);                                         \
     std::clog << std::endl;                                                  \
   } while (0)
-#else // DEBUG
+#else // !DEBUG
 #define DBG(...)                                                             \
   do {                                                                       \
   } while (0)
@@ -61,7 +64,7 @@ template <typename... Args> void DEBUG_INFO(Args... args);
   do {                                                                       \
     if ((x)) {                                                               \
       ERROR();                                                               \
-      return -1;                                                             \
+      return EXIT_FAILURE;                                                   \
     }                                                                        \
   } while (0)
 #endif
@@ -78,7 +81,7 @@ template <typename... Args> void DEBUG_INFO(Args... args);
 #define _DBG(x)                                                              \
   do {                                                                       \
     if ((x))                                                                 \
-      DEBUG();                                                               \
+      DBG();                                                                 \
   } while (0)
 #endif
 

@@ -122,10 +122,10 @@ int network::spearman::Spearman::save_data(const char* name,
   }
 
 #ifdef MODEL_GAUSS
-  if (GaussS2.size() > 0)
-    f |= save1((fn + "_GaussS2.txt").c_str(), GaussS2, priChar);
-    // if (lkkProb.size() > 0)
-    // f |= save2((fn + "_lkkProb.txt").c_str(), lkkProb, priChar);
+  // if (GaussS2.size() > 0)
+  // f |= save1((fn + "_SGaussS2.txt").c_str(), GaussS2, priChar);
+  // if (lkkProb.size() > 0)
+  // f |= save2((fn + "_lkkProb.txt").c_str(), lkkProb, priChar);
 #endif // MODEL_GAUSS
 
   return f;
@@ -516,8 +516,8 @@ Networks& Networks::spearman_gauss_new_ranLink(
   std::cout << "\tcal_lkkProb_gauss end\n";
   NodeType remPoiSize = nodeSize;
   for (size_t count = 0, iDel = 1; linkRemain > 0 && remPoiSize > 0;) {
-    delLink_p2p_ranLink_lkkProb(p2p, nodeDeg, lkkProb, degArrNo, remPoiSize,
-        linkRemain, linkSize, link, iDel); // 随机删iDel条边
+    // delLink_p2p_randLink(p2p, nodeDeg, p2pSize, remNodeNum,
+    // linkRemain, linkSize, link, iDel); // 随机删iDel条边
     if (0
         == addLink_p2p_ranLink_lkkProb(p2p, nodeDeg, lkkProb, degArrNo,
             remPoiSize, linkRemain, link, 100000))

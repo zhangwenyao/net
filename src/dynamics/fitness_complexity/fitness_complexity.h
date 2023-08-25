@@ -15,6 +15,10 @@ namespace fitness_complexity {
   template <typename T>
   int Mcp_2_FC(
       VDouble& Fc, VDouble& Cp, const std::vector<std::vector<T>>& Mcp);
+  template <typename T>
+  int Mcp_2_FC_p2p(VDouble& Fc, VDouble& Cp,
+      const std::vector<std::vector<T>>& c2p,
+      const std::vector<std::vector<T>>& p2c);
 
   int count_deg(
       const VVNodeType& mcp, VNodeType& deg, const char* name = NULL);
@@ -166,8 +170,8 @@ namespace fitness_complexity {
   int filter_data2_code2(const char* d0File, const char* code0File,
       const char* codeFile, const char* dFile_dir, const char* dFile_dir2,
       const size_t y1, const size_t y2, const size_t y0);
-}
-}
+} // namespace fitness_complexity
+} // namespace network
 // *******************************************************
 #include "fitness_complexity_template.h"
 #endif // ACT_FITNESS_COMPLEXITY

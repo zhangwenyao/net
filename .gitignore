@@ -1,5 +1,10 @@
+.git
+.idea
+.vscode
 bin
-obj
 config
 data
+log
+obj
 test
+*/.DS_Store

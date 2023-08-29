@@ -164,7 +164,12 @@ int main_func::rewire::networks_random_dir(int argc, char** argv)
       net.lkk.clear();
       _ERR(net.save().runStatus);
 
+<<<<<<< HEAD
       for (size_t i = 0; i < rho_len; ++i) {
+=======
+      constexpr size_t rs = sizeof(kRhos) / sizeof(kRhos[0]);
+      for (size_t i = 0; i < rs; ++i) {
+>>>>>>> refs/remotes/origin/master
         net.p2pOut = p2pOut;
         net.link = link;
         cout << '\t' << kRhoStrings[i] << endl;
@@ -227,7 +232,12 @@ int main_func::rewire::networks_random(int argc, char** argv)
       net.nodeDeg.clear();
       _ERR(net.save().runStatus);
 
+<<<<<<< HEAD
       for (size_t i = 0; i < rho_len; ++i) {
+=======
+      constexpr size_t rs = sizeof(kRhos) / sizeof(kRhos[0]);
+      for (size_t i = 0; i < rs; ++i) {
+>>>>>>> refs/remotes/origin/master
         net.p2p = p2p;
         net.link = link;
         cout << '\t' << kRhoStrings[i] << endl;
@@ -290,7 +300,12 @@ int main_func::rewire::networks_random1(int argc, char** argv)
     VNodeType link = move(net.link);
     _ERR(net.save().runStatus);
 
+<<<<<<< HEAD
     for (size_t i = 0; i < rho_len; ++i) {
+=======
+    constexpr size_t rs = sizeof(kRhos) / sizeof(kRhos[0]);
+    for (size_t i = 0; i < rs; ++i) {
+>>>>>>> refs/remotes/origin/master
       cout << '\t' << kRhoStrings[i] << endl;
       for (int seed = kSeedMin; seed <= kSeedMax; ++seed) {
         cout << '\t' << seed << endl;
@@ -306,11 +321,15 @@ int main_func::rewire::networks_random1(int argc, char** argv)
         //_ERR(0 != p2p_2_lkk(net.lkk, net.p2p, net.degArrNo, net.degSize));
         _ERR(0 != net.stat().runStatus);
         _ERR(0 != net.save_params().runStatus);
+<<<<<<< HEAD
 #ifdef SPEARMAN_NEI2
+=======
+>>>>>>> refs/remotes/origin/master
         save1((net.saveName + ".nodeNeiAveDeg2.txt").c_str(),
             net.spearman.nodeNeiAveDeg2);
         save1((net.saveName + ".neiAveDeg2.txt").c_str(),
             net.spearman.neiAveDeg2);
+<<<<<<< HEAD
 #endif
       }
     }
@@ -386,6 +405,8 @@ int main_func::rewire::networks_r_random1(int argc, char** argv)
         save1((net.saveName + ".neiAveDeg2.txt").c_str(),
             net.spearman.neiAveDeg2);
 #endif
+=======
+>>>>>>> refs/remotes/origin/master
       }
     }
   }
@@ -415,7 +436,12 @@ int main_func::rewire::stat(int argc, char** argv)
 #ifdef STAT_RELATIVITY
       net.relativity.alpha = relativity_alpha;
 #endif
+<<<<<<< HEAD
       for (size_t i = 0; i < rho_len; ++i) {
+=======
+      constexpr size_t rs = sizeof(kRhos) / sizeof(kRhos[0]);
+      for (size_t i = 0; i < rs; ++i) {
+>>>>>>> refs/remotes/origin/master
         net.readName = fn_read + ".rewire_" + kRhoStrings[i];
         net.saveName = fn_save + ".rewire_" + kRhoStrings[i];
         _ERR(0 != net.read_p2p().runStatus);
@@ -430,10 +456,17 @@ int main_func::rewire::stat(int argc, char** argv)
 
 int main_func::rewire::stat_all(int argc, char** argv)
 {
+<<<<<<< HEAD
   for (size_t i = 0; i < rho_len; ++i) {
     const string save_prename = kStatDir + "kMin" + to_string(kMin),
                  sufname
         = string(".rewire_") + kRhoStrings[i] + ".params.txt";
+=======
+  constexpr size_t rs = sizeof(kRhos) / sizeof(kRhos[0]);
+  for (size_t i = 0; i < rs; ++i) {
+    const string save_prename = kStatDir + "kMin" + to_string(kMin);
+    string sufname = string(".rewire_") + kRhoStrings[i] + ".params.txt";
+>>>>>>> refs/remotes/origin/master
 
 #ifdef STAT_PEARSON
     {
@@ -468,6 +501,7 @@ int main_func::rewire::stat_all(int argc, char** argv)
 #ifdef STAT_SPEARMAN
     {
       cout << "statistics spearman" << endl;
+<<<<<<< HEAD
       {
         string save_fullname
             = save_prename + ".rewire_" + kRhoStrings[i] + ".spearman.txt";
@@ -526,6 +560,32 @@ int main_func::rewire::stat_all(int argc, char** argv)
         }
       }
 #endif
+=======
+      string save_fullname
+          = save_prename + ".rewire_" + kRhoStrings[i] + ".spearman.txt";
+      ofstream os(save_fullname.c_str());
+      if (!os) {
+        ERROR();
+      } else {
+        for (int e = kEMin; e <= kEMax; ++e) {
+          double sx = 0, sxx = 0, x_mean = 0, x_sigma = 0;
+          size_t n = 0;
+          cout << "\te\t" << e << endl;
+          string prename = kDataDir + "2^" + to_string(e) + "/kMin"
+              + to_string(kMin) + "_",
+                 coefficient_string = "--spearman.spearman";
+          statistics::sum(prename.c_str(), sufname.c_str(), kSeedMin,
+              kSeedMax, coefficient_string.c_str(), sx, sxx, n);
+          if (n > 0) {
+            x_mean = sx / n;
+            x_sigma = sxx / n - x_mean * x_mean;
+            x_sigma = x_sigma > 0 ? sqrt(x_sigma) : 0;
+            os << e << "\t" << n << "\t" << x_mean << "\t" << x_sigma << endl;
+          }
+        }
+        os.close();
+      }
+>>>>>>> refs/remotes/origin/master
     }
 #endif
 

@@ -360,14 +360,15 @@ network::Network& network::Network::clear_deg(void)
     ERROR();
     return *this;
   }
-  degArrProb.clear(); // [degSize]    ¶È·Ö²¼¸ÅÂÊ p(k)
-  degArrVal.clear();  // [degSize]    ¶È·Ö²¼ÐòÁÐ k
-  degArrSize.clear(); // [degSize]    ¸÷¶È½ÚµãÊý n(k)
-  degArrNo.clear();   // [kMax+1]     ¶ÈkÔÚdegArrValÖÐµÄÎ»ÖÃ
-  degArrSum.clear();  // [degSize+1]  ¶È·Ö²¼ÀÛ¼ÆÐòÁÐ
-  nodeDeg.clear();    // [nodeSize]   ¸÷½Úµã¶È
-  remNodeNum.clear(); // [remNodeSize] Î´È«Á¬±ßµÄ½Úµã±àºÅ
-  nodesName.clear(), nodesName2.clear(); // [nodeSize]   ½ÚµãµÄÓ³Éä¹ØÏµ
+  degArrProb.clear(); // [degSize]    ï¿½È·Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ p(k)
+  degArrVal.clear(); // [degSize]    ï¿½È·Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ k
+  degArrSize.clear(); // [degSize]    ï¿½ï¿½ï¿½È½Úµï¿½ï¿½ï¿½ n(k)
+  degArrNo.clear(); // [kMax+1]     ï¿½ï¿½kï¿½ï¿½degArrValï¿½Ðµï¿½Î»ï¿½ï¿½
+  degArrSum.clear(); // [degSize+1]  ï¿½È·Ö²ï¿½ï¿½Û¼ï¿½ï¿½ï¿½ï¿½ï¿½
+  nodeDeg.clear(); // [nodeSize]   ï¿½ï¿½ï¿½Úµï¿½ï¿½
+  remNodeNum.clear(); // [remNodeSize] Î´È«ï¿½ï¿½ï¿½ßµÄ½Úµï¿½ï¿½ï¿½
+  nodesName.clear(),
+      nodesName2.clear(); // [nodeSize]   ï¿½Úµï¿½ï¿½Ó³ï¿½ï¿½ï¿½Ïµ
   degArrWeight.clear();
   degArrWeightOut.clear();
   degArrWeightIn.clear();
@@ -624,7 +625,6 @@ network::Network& network::Network::save_lkk(const char* name)
       }
     break;
   default:
-    ERROR();
     break;
   }
   return *this;
@@ -639,26 +639,26 @@ network::Network& network::Network::clear_p2p(void)
   }
   clear_lkk();
   // link
-  link.clear(); // [nodeSize]   ÍøÂçÁ¬±ß
+  link.clear(); // [nodeSize]   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   p2pSize.clear();
   for (auto& i : p2p)
     i.clear();
-  p2p.clear(); // [nodeSize]   ¸÷µãÁ¬±ß
+  p2p.clear(); // [nodeSize]   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   for (auto& i : p2pOut)
     i.clear();
-  p2pOut.clear(); // [nodeSize]   ¸÷µãÁ¬±ß
+  p2pOut.clear(); // [nodeSize]   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   for (auto& i : p2pIn)
     i.clear();
-  p2pIn.clear(); // [nodeSize]   ¸÷µãÁ¬±ß
+  p2pIn.clear(); // [nodeSize]   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   for (auto& i : vvweight)
     i.clear();
-  vvweight.clear(); // [nodeSize]   ¸÷µãÁ¬±ß
+  vvweight.clear(); // [nodeSize]   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   for (auto& i : linkMatr)
     i.clear();
-  linkMatr.clear(); // [nodeSize]   ¸÷µãÁ¬±ß
+  linkMatr.clear(); // [nodeSize]   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   for (auto& i : linkMatrC)
     i.clear();
-  linkMatrC.clear(); // [nodeSize]   ¸÷µãÁ¬±ß
+  linkMatrC.clear(); // [nodeSize]   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   return *this;
 }
 
@@ -670,9 +670,8 @@ network::Network& network::Network::save_p2p(const char* name)
   else
     fn = saveName;
 
-  if (!lkk.empty() || !lkk3.empty()) {
+  if (!lkk.empty() || !lkk3.empty())
     save_lkk(fn.c_str());
-  }
 
   if (!p2p.empty()
       && 0 != common::save2((fn + ".p2p.txt").c_str(), p2p, priChar2)) {
@@ -696,8 +695,8 @@ network::Network& network::Network::save_p2p(const char* name)
   // link
   if (!link.empty()
       && 0
-          != common::save2(
-              (fn + ".link.txt").c_str(), &link[0], linkSize, 2, priChar2)) {
+          != common::save2_1(
+              (fn + ".link.txt").c_str(), link, linkSize, 2, priChar2)) {
     runStatus = -1;
     ERROR();
   }
@@ -736,6 +735,7 @@ network::Network& network::Network::save_p2p(const char* name)
           && 0
               != common::save2(
                   (fn + ".vvweightIn.txt").c_str(), vvweightIn, priChar2)) {
+>>>>>>> refs/remotes/origin/master
         runStatus = -1;
         ERROR();
       }

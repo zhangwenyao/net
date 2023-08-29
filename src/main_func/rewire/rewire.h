@@ -16,7 +16,10 @@ namespace rewire {
   int stat(int argc, char** argv);
   int stat_all(int argc, char** argv);
   int networks_random1(int argc, char** argv);
+<<<<<<< HEAD
   int networks_r_random1(int argc, char** argv);
+=======
+>>>>>>> refs/remotes/origin/master
   int stat_all1(int argc, char** argv);
 
   // ******************************************************

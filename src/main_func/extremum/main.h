@@ -1,5 +1,5 @@
-#ifndef MAIN__EXTREMUM__MAIN_H_
-#define MAIN__EXTREMUM__MAIN_H_
+#ifndef MAIN_FUNC__EXTREMUM__MAIN_H_
+#define MAIN_FUNC__EXTREMUM__MAIN_H_
 #include "../../main.h"
 #ifdef MAIN_EXTREMUM
 
@@ -8,16 +8,15 @@
 #include <string>
 #define MAIN_FUNC main_func::main_extremum
 
-//#define MAIN_EXTREMUM_NEW_DEG_ARR
+// #define MAIN_EXTREMUM_NEW_DEG_ARR
 
-//#define MAIN_EXTREMUM_NEW_MINIMAL
-//#define MAIN_EXTREMUM_NEW_MAXIMAL
-
-//#define MAIN_EXTREMUM_NONE
-//#define MAIN_EXTREMUM_STAT_MAXIMAL
-//#define MAIN_EXTREMUM_STAT_MINIMAL
-//#define MAIN_EXTREMUM_STAT_ALL
-//#define MAIN_EXTREMUM_STAT_ALL_COLLECT
+// #define MAIN_EXTREMUM_NONE
+// #define MAIN_EXTREMUM_NEW_MAXIMAL
+// #define MAIN_EXTREMUM_NEW_MINIMAL
+// #define MAIN_EXTREMUM_STAT_MAXIMAL
+// #define MAIN_EXTREMUM_STAT_MINIMAL
+// #define MAIN_EXTREMUM_STAT_ALL
+// #define MAIN_EXTREMUM_STAT_ALL_COLLECT
 
 #define MAIN_EXTREMUM_ALPHAS
 //#define MAIN_EXTREMUM_ALPHAS11
@@ -34,8 +33,8 @@ namespace main_func {
 int main_extremum(int argc, char** argv);
 namespace extremum {
 #ifndef KEXTREMUM_GAMMA
-  constexpr double kGamma = 2.1;
-  const std::string kGammaString = "2.1";
+  constexpr double kGamma = 2.3;
+  const std::string kGammaString = "2.3";
 #else
   constexpr double kGamma = KEXTREMUM_GAMMA;
   const std::string kGammaString = TOSTRING(KEXTREMUM_GAMMA);
@@ -65,11 +64,12 @@ namespace extremum {
 #else
   constexpr int kSeedMax = KEXTREMUM_SEEDMAX;
 #endif
-  const std::string kDataDir = std::string("data/extremum/nature/")
+  // const std::string kDataDir = std::string("data/extremum/nature/")
+  //+ kGammaString + "_" + to_string(kMin) + "/data/";
+  const std::string kDataDir
+      //= std::string("/media/yao/tsb1T/net/data/extremum/nature/")
+      = std::string("/media/yao/Samsung_T5/net/data/extremum/nature/")
       + kGammaString + "_" + std::to_string(kMin) + "/";
-  // const std::string kDataDir
-  //= std::string("/media/yao/tsb1T/net/data/extremum/nature/")
-  //+ kGammaString + "_" + std::to_string(kMin) + "/";
 #ifndef STAT_RELATIVITY
   const std::string kStatDir = std::string("data/extremum/nature/")
       + kGammaString + "_" + std::to_string(kMin) + "/stat/pearson_spearman/";
@@ -100,19 +100,19 @@ namespace extremum {
       = { "C1", "C2", "C-1", "C-2", "4", "3", "2", "3d2", "1", "3d4", "1d2",
           "1d4", "-1d4", "-1d2", "-3d4", "-1", "-3d2", "-2", "-3", "-4" };
 #endif
+#endif
+
   constexpr size_t alpha_len
       = sizeof(relativity_alphas) / sizeof(relativity_alphas[0]);
-#define main_func_extremum_kStatDirAlphas                                    \
-  (std::string("data/extremum/nature/") + main_func::extremum::kGammaString  \
-      + "_" + std::to_string(kMin) + "/stat/")
-#endif // MAIN_EXTREMUM_ALPHAS
-
   extern double relativity_alpha;
   extern std::string alpha_string, kStatDir;
 #define main_func_extremum_kStatDir0                                         \
   (std::string("data/extremum/nature/") + main_func::extremum::kGammaString  \
       + "_" + std::to_string(kMin) + "/stat/relativity/"                     \
       + main_func::extremum::alpha_string + "/")
+#define main_func_extremum_kStatDirAlphas                                    \
+  (std::string("data/extremum/nature/") + main_func::extremum::kGammaString  \
+      + "_" + std::to_string(kMin) + "/stat/")
 #endif
 }
 }

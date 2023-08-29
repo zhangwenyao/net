@@ -2033,15 +2033,15 @@ int network::count_sameAdiff(LinkType& sum, LinkType& sum1, LinkType& sum3,
         continue;
       NodeType di1 = nodeDeg[i1], di2 = nodeDeg[i2], dj1 = nodeDeg[j1],
                dj2 = nodeDeg[j2];
-      if (di1 == di2 || dj1 == dj2) { //有某边两端点度相同 i-i j-k
-        if (di1 == di2 && dj1 == dj2) { //两边的两端点度分别相同 i-i j-j
+      if (di1 == di2 || dj1 == dj2) { // 有某边两端点度相同 i-i j-k
+        if (di1 == di2 && dj1 == dj2) { // 两边的两端点度分别相同 i-i j-j
           if (di1 == dj1)
-            sum4++; //度全相同 i==j
+            sum4++; // 度全相同 i==j
           else
             sum++; // i!=j  同配
           continue;
         }
-        if (di1 == dj1 || di2 == dj2) { //有3点度相同 i-i i-j
+        if (di1 == dj1 || di2 == dj2) { // 有3点度相同 i-i i-j
           sum3++;
           continue;
         }

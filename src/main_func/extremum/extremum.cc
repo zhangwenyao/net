@@ -58,7 +58,7 @@ int main_func::extremum::new_deg_arr(int argc, char** argv)
 }
 #endif
 
-#ifdef MAIN_EXTREMUM_NEW_MINIMAL
+#ifdef MAIN_EXTREMUM_NONE
 int main_func::extremum::new_minimal(int argc, char** argv)
 {
   for (int e = kEMin; e <= kEMax; ++e) {
@@ -83,7 +83,6 @@ int main_func::extremum::new_minimal(int argc, char** argv)
       if (argc > 1 && 0 != net.read_params(argc - 1, argv + 1).runStatus) {
         ERROR("net.read_params(argc, argv)");
         break;
-        // continue;
       }
 
       //功能模块
@@ -101,9 +100,6 @@ int main_func::extremum::new_minimal(int argc, char** argv)
 
   return 0;
 }
-#endif
-
-#ifdef MAIN_EXTREMUM_NEW_MAXIMAL
 int main_func::extremum::new_maximal(int argc, char** argv)
 {
   for (int e = kEMin; e <= kEMax; ++e) {
@@ -145,9 +141,6 @@ int main_func::extremum::new_maximal(int argc, char** argv)
 
   return 0;
 }
-#endif
-
-#ifdef MAIN_EXTREMUM_NONE
 int main_func::extremum::stat_minimal(int argc, char** argv)
 {
   mkdirs(kStatDir.c_str());
@@ -462,7 +455,7 @@ int main_func::extremum::alphas_stat_maximal_lkk(int argc, char** argv)
       //}
       string savename = stat_dir + "kMin" + to_string(kMin) + "_"
           + to_string(seed) + ".Max.alphas.txt";
-      common::save_double2(savename.c_str(), results);
+      common::save2_double(savename.c_str(), results);
     } // for seed
   }   // for e
 
@@ -522,7 +515,7 @@ int main_func::extremum::alphas_stat_minimal_lkk(int argc, char** argv)
       //}
       string savename = stat_dir + "kMin" + to_string(kMin) + "_"
           + to_string(seed) + ".Min.alphas.txt";
-      common::save_double2(savename.c_str(), results);
+      common::save2_double(savename.c_str(), results);
     } // for seed
   }   // for e
 

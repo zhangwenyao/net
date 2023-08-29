@@ -5,43 +5,59 @@
 #include <cfloat>
 #include <climits>
 #include <map>
+#include <unordered_map>
 #include <set>
+#include <unordered_set>
 #include <string>
 #include <vector>
 
 namespace network {
 // *******************************************************
-//typedef unsigned NodeType;         // 节点编号类型
- //typedef int NodeSType;             // 节点数目有符号类型
- //typedef unsigned long LinkType;
- //typedef long LinkSType;
- //const NodeType NodeMax = UINT_MAX; // 最大编号节点、空节点，不用
- //const NodeType NodeNULL = UINT_MAX;
- //const LinkType LinkMax = ULONG_MAX;
- //typedef unsigned DistType;         // 节点间距离类型
- //typedef int DistSType;             // 节点间距离类型
- //const DistType DistMax = UINT_MAX; // 距离无穷大的值
+// int:int32_t. long, long long: int64_t
+typedef uint32_t NodeType;         // 节点编号类型
+typedef int32_t NodeSType;             // 节点数目有符号类型
+const NodeType NodeMax = UINT32_MAX; // 最大编号节点、空节点，不用
+const NodeType NodeNULL = UINT32_MAX;
+typedef uint32_t LinkType;
+typedef int32_t LinkSType;
+const LinkType LinkMax = UINT32_MAX;
+typedef uint32_t DistType;         // 节点间距离类型
+typedef int32_t DistSType;             // 节点间距离类型
+const DistType DistMax = UINT32_MAX; // 距离无穷大的值
+
+// typedef uint64_t NodeType; // 节点编号类型
+// typedef int64_t NodeSType;     // 节点数目有符号类型
+// const NodeType NodeMax =  UINT64_MAX; // 最大编号节点、空节点，不用
+// const NodeType NodeNULL = UINT64_MAX;
+// typedef uint64_t LinkType;
+// typedef int64_t LinkSType;
+// const LinkType LinkMax = UINT64_MAX;
+// typedef uint64_t DistType;     // 节点间距离类型
+// typedef int64_t DistSType;         // 节点间距离类型
+// const DistType DistMax = UINT64_MAX; // 距离无穷大的值
 
 // typedef double    DistType;     // 节点间距离类型
 // typedef double    DistSType;    // 节点间距离类型
 // const DistType    DistMax = DBL_MAX; // 距离无穷大的值
-
-typedef unsigned long NodeType; // 节点编号类型
-typedef long int NodeSType;     // 节点数目有符号类型
-typedef unsigned long long LinkType;
-typedef long long LinkSType;
-const NodeType NodeMax = ULONG_MAX; // 最大编号节点、空节点，不用
-const NodeType NodeNULL = ULONG_MAX;
-const LinkType LinkMax = ULLONG_MAX;
-typedef long unsigned DistType;     // 节点间距离类型
-typedef long int DistSType;         // 节点间距离类型
-const DistType DistMax = ULONG_MAX; // 距离无穷大的值
 
 typedef double WeightType;            // 边权
 typedef double WeightSType;           // 边权
 typedef double WeightSumType;         // 边权求和
 typedef double WeightSumSType;        // 边权求和
 const WeightType WeightMax = DBL_MAX; // 距离无穷大的值
+
+typedef uint64_t IDType;
+typedef std::vector<IDType> VIDType;
+typedef std::vector<VIDType> VVIDType;
+typedef std::string* PIDType;
+typedef VIDType::iterator VIDTypeItr;
+typedef VIDType::const_iterator VIDTypeCItr;
+typedef VVIDType::iterator VVIDTypeItr;
+typedef VVIDType::const_iterator VVIDTypeCItr;
+typedef std::unordered_set<IDType> USIDType;
+typedef std::set<IDType> SIDType;
+typedef std::unordered_map<IDType, NodeType> UMIDType;
+typedef std::map<IDType, NodeType> MIDType;
 
 typedef std::string String;
 typedef std::vector<String> VString;
@@ -79,7 +95,7 @@ typedef VShort::const_iterator VShortCItr;
 typedef VVShort::iterator VVShortItr;
 typedef VVShort::const_iterator VVShortCItr;
 
-typedef int Int;
+typedef int32_t Int;
 typedef std::vector<Int> VInt;
 typedef std::vector<VInt> VVInt;
 typedef int* PInt;
@@ -88,7 +104,7 @@ typedef VInt::const_iterator VIntCItr;
 typedef VVInt::iterator VVIntItr;
 typedef VVInt::const_iterator VVIntCItr;
 
-typedef unsigned Unsigned;
+typedef uint32_t Unsigned;
 typedef std::vector<Unsigned> VUnsigned;
 typedef std::vector<VUnsigned> VVUnsigned;
 typedef unsigned* PUnsigned;
@@ -96,6 +112,24 @@ typedef VUnsigned::iterator VUnsignedItr;
 typedef VUnsigned::const_iterator VUnsignedCItr;
 typedef VVUnsigned::iterator VVUnsignedItr;
 typedef VVUnsigned::const_iterator VVUnsignedCItr;
+
+typedef int64_t Long;
+typedef std::vector<Long> VLong;
+typedef std::vector<VLong> VVLong;
+typedef int* PLong;
+typedef VLong::iterator VLongItr;
+typedef VLong::const_iterator VLongCItr;
+typedef VVLong::iterator VVLongItr;
+typedef VVLong::const_iterator VVLongCItr;
+
+typedef uint64_t ULong;
+typedef std::vector<ULong> VULong;
+typedef std::vector<VULong> VVULong;
+typedef unsigned* PULong;
+typedef VULong::iterator VULongItr;
+typedef VULong::const_iterator VULongCItr;
+typedef VVULong::iterator VVULongItr;
+typedef VVULong::const_iterator VVULongCItr;
 
 typedef double Double;
 typedef std::vector<Double> VDouble;
@@ -179,15 +213,25 @@ typedef RNodeType* PRNodeType;
 typedef VRNodeType::iterator VRNodeTypeItr;
 typedef VRNodeType::const_iterator VRNodeTypeCItr;
 
-typedef std::map<const NodeType, NodeType> MNodeType;
+typedef std::map<NodeType, NodeType> MNodeType;
 typedef MNodeType::iterator MNodeTypeItr;
 typedef MNodeType::const_iterator MNodeTypeCItr;
 typedef std::vector<MNodeType> VMNodeType;
+
+typedef std::unordered_map<NodeType, NodeType> UMNodeType;
+typedef UMNodeType::iterator UMNodeTypeItr;
+typedef UMNodeType::const_iterator UMNodeTypeCItr;
+typedef std::vector<UMNodeType> VUMNodeType;
 
 typedef std::set<NodeType> SNodeType;
 typedef SNodeType::iterator SNodeTypeItr;
 typedef SNodeType::const_iterator SNodeTypeCItr;
 typedef std::vector<SNodeType> VSNodeType;
+
+typedef std::unordered_set<NodeType> USNodeType;
+typedef USNodeType::iterator USNodeTypeItr;
+typedef USNodeType::const_iterator USNodeTypeCItr;
+typedef std::vector<USNodeType> VUSNodeType;
 
 int save_VRNodeType_start(
     std::ostream& os, const VRNodeType& v, const char c);

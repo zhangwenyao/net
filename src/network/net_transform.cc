@@ -279,7 +279,7 @@ int network::degArrWeight_2_deg2ArrVal(VDouble& deg2ArrVal,
 }
 
 int network::p2p_2_lkk(VVLinkType& lkk, const VVNodeType& p2p,
-    const VNodeType& degNo, const NodeType degSize)
+    const VNodeType& degNum, const NodeType degSize)
 {
   lkk.clear();
   if (degSize <= 0)
@@ -287,11 +287,11 @@ int network::p2p_2_lkk(VVLinkType& lkk, const VVNodeType& p2p,
   lkk.assign(degSize, VLinkType(degSize, 0));
   NodeType ti = 0;
   for (VVNodeTypeCItr i = p2p.begin(); i != p2p.end(); ti++, i++) {
-    const NodeType ni = degNo[i->size()];
+    const NodeType ni = degNum[i->size()];
     LinkType* li = &lkk[ni][0];
     for (VNodeTypeCItr j = i->begin(); j != i->end(); j++) {
       if (ti <= *j) {
-        const NodeType nj = degNo[p2p[*j].size()];
+        const NodeType nj = degNum[p2p[*j].size()];
         if (ni >= nj)
           li[nj]++;
         else
@@ -365,6 +365,46 @@ int network::p2p_2_lkk_noDir(VVLinkType& lkk, const VVNodeType& p2p,
         li[nj]++;
       else
         lkk[nj][ni]++;
+    }
+  }
+  return 0;
+}
+
+int network::lkk_dir_2_nDir(VVLinkType& lkk)
+{
+  if (lkk.empty())
+    return 0;
+  const NodeType degSize = lkk.size();
+  for (NodeType i = 0; i < degSize; i++) {
+    if (lkk[i].size() != degSize) {
+      ERROR();
+      return -1;
+    }
+    for (NodeType j = i + 1; j < degSize; j++)
+      lkk[j][i] += lkk[i][j];
+    lkk[i].resize(i);
+  }
+  return 0;
+}
+
+int network::lkk_nDir_2_dir(VVLinkType& lkk)
+{
+  if (lkk.empty())
+    return 0;
+  const NodeType degSize = lkk.size();
+  for (NodeType i = 0; i < degSize; i++) {
+    if (lkk[i].size() > degSize || lkk[i].size() < i) {
+      ERROR();
+      return -1;
+    }
+    if (lkk[i].size() < degSize)
+      lkk[i].resize(degSize, 0);
+    for (NodeType j = i + 1; j < degSize; j++) {
+      if (lkk[i][j] != 0 || lkk[j][i] % 2 != 0) {
+        ERROR();
+        return -1;
+      }
+      lkk[i][j] = lkk[j][i] /= 2;
     }
   }
   return 0;

@@ -50,7 +50,7 @@ int degArrWeight_2_netWeight(
 int degArrWeight_2_deg2ArrVal(VDouble& deg2ArrVal,
     const VWeightSumType& degArrWeight, const WeightSumType netWeight);
 
-int p2p_2_lkk(VVLinkType& lkk, const VVNodeType& p2p, const VNodeType& degNo,
+int p2p_2_lkk(VVLinkType& lkk, const VVNodeType& p2p, const VNodeType& degNum,
     const NodeType degSize);
 int p2p_2_lkk_dir(VVLinkType& lkkOutIn, const VVNodeType& p2p,
     const VNodeType& nodeDegOut, const VNodeType& nodeDegIn,
@@ -60,10 +60,8 @@ int p2p_2_lkk(VVLinkType& lkk, const VVNodeType& p2p, MNodeType& degArrNo,
     const NodeType degSize);
 int p2p_2_lkk_noDir(VVLinkType& lkk, const VVNodeType& p2p,
     MNodeType& degArrNo, const VNodeType& nodeDeg, const NodeType degSize);
-template <typename T>
-int lkk_dir_2_nDir(std::vector<std::vector<T>>& lkk, const int dir = 0);
-template <typename T>
-int lkk_nDir_2_dir(std::vector<std::vector<T>>& lkk, const int dir = 0);
+int lkk_dir_2_nDir(VVLinkType& lkk);
+int lkk_nDir_2_dir(VVLinkType& lkk);
 int lkk_2_lkkSum(VVLinkType& lkkSum, const VVLinkType& lkk, const int dir);
 int link_2_nodeSize(NodeType& nodeSize, const VNodeType& link);
 int link_2_p2p(VVNodeType& p2p, const VNodeType& link, NodeType& nodeSize);

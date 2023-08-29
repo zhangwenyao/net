@@ -38,10 +38,6 @@ int main_func::main_rewire(int argc, char** argv)
   _ERR(rewire::networks_random1(argc, argv));
 #endif
 
-#ifdef MAIN_REWIRE_NETWORKS_R_RANDOM1
-  _ERR(rewire::networks_r_random1(argc, argv));
-#endif
-
 #ifdef MAIN_REWIRE_STAT
   _ERR(rewire::stat(argc, argv));
 #endif

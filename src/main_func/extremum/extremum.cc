@@ -488,10 +488,10 @@ int main_func::extremum::alphas_stat_minimal_lkk(int argc, char** argv)
           = data_dir + "kMin" + to_string(kMin) + "_" + to_string(seed),
           fn_full = fn_full0 + ".Min";
       net.readName = fn_full0;
-      if (0 != net.read_params().runStatus) {
-        continue;
-      }
-      //_ERR(0 != net.read_params().runStatus);
+      //if (0 != net.read_params().runStatus) {
+        //continue;
+      //}
+      _ERR(0 != net.read_params().runStatus);
       _ERR(0 != net.read_degArr(fn_full0.c_str()).runStatus);
 
       VDouble alphas(alpha_len);
@@ -613,7 +613,7 @@ int main_func::extremum::stat_bc_collect(int argc, char** argv)
     relativity_alpha = relativity_alphas[i];
     alpha_string = alpha_strings[i];
     string save_fullname
-        = save_prename + ".relativity" + alpha_string + ".bc.txt";
+        = save_prename + ".relativity" + alpha_string + ".rabc.txt";
     oss[i].open(save_fullname.c_str(), ofstream::out);
   }
   for (int e = kEMin; e <= kEMax; ++e) {
@@ -621,21 +621,25 @@ int main_func::extremum::stat_bc_collect(int argc, char** argv)
     string prename = kStatDir + "relativity/2^" + to_string(e) + "/kMin"
         + to_string(kMin) + "_",
            sufname = ".Min.alphas.txt";
-    double sxb[alpha_len] = { 0 }, sxxb[alpha_len] = { 0 },
+    double sxa[alpha_len] = { 0 }, sxxa[alpha_len] = { 0 },
+           sxb[alpha_len] = { 0 }, sxxb[alpha_len] = { 0 },
            sxc[alpha_len] = { 0 }, sxxc[alpha_len] = { 0 };
     size_t n = 0;
     statistics::sums_relativity_bc(prename.c_str(), sufname.c_str(), kSeedMin,
-        kSeedMax, sxb, sxxb, sxc, sxxc, n, alpha_len);
+        kSeedMax, sxa, sxxa, sxb, sxxb, sxc, sxxc, n, alpha_len);
     if (n > 0) {
       for (size_t i = 0; i < alpha_len; ++i) {
-        double xb_mean = sxb[i] / n,
-               xb_sigma = sxxb[i] / n - xb_mean * xb_mean,
+        double xa_mean = sxa[i] / n, xb_mean = sxb[i] / n,
                xc_mean = sxc[i] / n,
+               xa_sigma = sxxa[i] / n - xa_mean * xa_mean,
+               xb_sigma = sxxb[i] / n - xb_mean * xb_mean,
                xc_sigma = sxxc[i] / n - xc_mean * xc_mean;
+        xa_sigma = xa_sigma > 0 ? sqrt(xa_sigma) : 0;
         xb_sigma = xb_sigma > 0 ? sqrt(xb_sigma) : 0;
         xc_sigma = xc_sigma > 0 ? sqrt(xc_sigma) : 0;
-        oss[i] << e << "\t" << n << "\t" << xb_mean << "\t" << xb_sigma
-               << "\t" << xc_mean << "\t" << xc_sigma << endl;
+        oss[i] << e << "\t" << n << "\t" << xa_mean << "\t" << xa_sigma
+               << "\t" << xb_mean << "\t" << xb_sigma << "\t" << xc_mean
+               << "\t" << xc_sigma << endl;
       }
     }
   } // for  e

@@ -58,8 +58,9 @@ int network::statistics::sums_relativity(const char* prename,
 }
 
 int network::statistics::sums_relativity_bc(const char* prename,
-    const char* sufname, const int seed_min, const int seed_max, double* sxb,
-    double* sx2b, double* sxc, double* sx2c, size_t& n, const size_t len)
+    const char* sufname, const int seed_min, const int seed_max, double* sxa,
+    double* sx2a, double* sxb, double* sx2b, double* sxc, double* sx2c,
+    size_t& n, const size_t len)
 {
   for (int seed = seed_min; seed <= seed_max; ++seed) {
     string fn_full = prename + to_string(seed) + sufname;
@@ -67,7 +68,9 @@ int network::statistics::sums_relativity_bc(const char* prename,
     if (0 == read2(fn_full.c_str(), results)) {
       ++n;
       for (size_t i = 0; i < len; ++i) {
-        double b = results[1][i], c = results[2][i];
+        double a = results[0][i], b = results[1][i], c = results[2][i];
+        sxa[i] += a;
+        sx2a[i] += a * a;
         sxb[i] += b;
         sx2b[i] += b * b;
         sxc[i] += c;

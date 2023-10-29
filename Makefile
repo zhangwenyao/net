@@ -29,7 +29,6 @@ CUR_SOURCE_CC	= $(wildcard $(addprefix $(CUR_DIR)/*,$(EXTS_CC)))
 CUR_OBJS_CC	= $(foreach x,$(EXTS_CC),$(patsubst %$(x),$(CUR_OBJ_DIR)/%.o,$(filter %$(x),$(notdir $(CUR_SOURCE_CC)))))
 CUR_DEPS_CC	= $(CUR_OBJS_CC:%.o=%.d)
 
-
 #export CC	= gcc
 #export CXX	= g++
 # export CC	= gcc-11
@@ -38,6 +37,7 @@ export CC	= clang
 export CXX	= clang++
 #export CC	= icc
 #export CXX	= icpc
+
 USER_DEFINES	=
 # ifdef DEBUG
 #	export CFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG

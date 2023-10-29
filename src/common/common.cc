@@ -66,7 +66,7 @@ int common::mkdirs(const char* dirname)
   if (iLen <= 0 || iLen >= 998)
     return -1;
   strcpy(dir, dirname);
-  //在末尾加/
+  // 在末尾加/
   if (dir[iLen - 1] != '\\' && dir[iLen - 1] != '/') {
     dir[iLen] = '/';
     dir[++iLen] = '\0';
@@ -82,7 +82,7 @@ int common::mkdirs(const char* dirname)
 
       dir[i] = '\0';
 
-      //如果不存在,创建
+      // 如果不存在,创建
       iRet = ACCESS(dir, 0);
       if (iRet != 0) {
         iRet = MKDIR(dir);
@@ -91,7 +91,7 @@ int common::mkdirs(const char* dirname)
           return -1;
         }
       }
-      //支持linux,将所有\换成/
+      // 支持linux,将所有\换成/
       dir[i] = '/';
     }
   }

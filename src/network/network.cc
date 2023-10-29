@@ -735,7 +735,6 @@ network::Network& network::Network::save_p2p(const char* name)
           && 0
               != common::save2(
                   (fn + ".vvweightIn.txt").c_str(), vvweightIn, priChar2)) {
->>>>>>> refs/remotes/origin/master
         runStatus = -1;
         ERROR();
       }

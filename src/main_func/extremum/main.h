@@ -19,13 +19,14 @@
 // #define MAIN_EXTREMUM_STAT_ALL_COLLECT
 
 #define MAIN_EXTREMUM_ALPHAS
-// #define MAIN_EXTREMUM_ALPHAS11
-// #define MAIN_EXTREMUM_ALPHAS16
+//#define MAIN_EXTREMUM_ALPHAS11
+//#define MAIN_EXTREMUM_ALPHAS16
 #define MAIN_EXTREMUM_ALPHAS20
-// #define MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL
-// #define MAIN_EXTREMUM_ALPHAS_STAT_MINIMAL
-#define MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL_COLLECT
+//#define MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL
+//#define MAIN_EXTREMUM_ALPHAS_STAT_MINIMAL
+//#define MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL_COLLECT
 #define MAIN_EXTREMUM_ALPHAS_STAT_MINIMAL_COLLECT
+#define MAIN_EXTREMUM_ALPHAS_STAT_BC_COLLECT
 
 // ******************************************************
 namespace main_func {
@@ -39,7 +40,7 @@ namespace extremum {
   const std::string kGammaString = TOSTRING(KEXTREMUM_GAMMA);
 #endif
 #ifndef KEXTREMUM_KMIN
-  constexpr int kMin = 4;
+  constexpr int kMin = 3;
 #else
   constexpr int kMin = KEXTREMUM_KMIN;
 #endif

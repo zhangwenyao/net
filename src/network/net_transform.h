@@ -103,5 +103,4 @@ int lkk2_2_lkk3(VLkk3LinkType& lkk3, const VVLkk2LinkType& lkk2,
 } // end namespace network
 
 // *******************************************************
-#include "net_transform_template.h"
 #endif // NET_H

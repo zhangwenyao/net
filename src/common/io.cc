@@ -75,10 +75,10 @@ int common::read(const char* name, string& s) {
 int common::get_string(istream& is, string& s) {
   if (is >> s && !s.empty() && s[0] == '\"') {
     string t;
-    if (s.size() == 1 && is >> t) s += move(t);
+    if (s.size() == 1 && is >> t) s += std::move(t);
     while (*s.rend() != '\"' && is >> t) {
       s += '\t';
-      s += move(t);
+      s += std::move(t);
     }
   }
   if (s.size() == 1 || (s.size() >= 2 && s[0] == '\"' && (*s.rend()) == '\"')) {
@@ -108,7 +108,7 @@ int common::save_VString(const char* name, const std::vector<std::string>& vs) {
 }
 
 int common::read_VString(std::istream& is, std::vector<std::string>& vs) {
-  for (string s; getline(is, s);) vs.push_back(move(s));
+  for (string s; getline(is, s);) vs.push_back(std::move(s));
   return 0;
 }
 

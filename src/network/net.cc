@@ -1018,6 +1018,7 @@ int network::delLink_p2p_ranLink(VVNodeType& p2p, VNodeType& nodeDeg,
   return (delCount > 0 ? -1 : 0);
 }
 
+/*
 int network::delLink_p2p_ranLink_lkkProb(VVNodeType& p2p, VNodeType& nodeDeg,
     VVDouble& lkkProb, MNodeType& degArrNo, NodeType& remPoiSize,
     LinkType& linkRemain, const LinkType linkSize, VNodeType& link,
@@ -1062,6 +1063,7 @@ int network::delLink_p2p_ranLink_lkkProb(VVNodeType& p2p, VNodeType& nodeDeg,
   }
   return (delCount > 0 ? -1 : 0);
 }
+*/
 
 int network::delLink_linkMatrC_ranNode(VVChar& linkMatrC,
     const NodeType nodeSize, VNodeType& nodeDeg, VNodeType& p2pSize,

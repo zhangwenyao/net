@@ -481,6 +481,9 @@ int main_func::extremum::alphas_stat_minimal_lkk(int argc, char** argv)
           = data_dir + "kMin" + to_string(kMin) + "_" + to_string(seed),
           fn_full = fn_full0 + ".Min";
       net.readName = fn_full0;
+      //if (0 != net.read_params().runStatus) {
+        //continue;
+      //}
       _ERR(0 != net.read_params().runStatus);
       _ERR(0 != net.read_degArr(fn_full0.c_str()).runStatus);
 

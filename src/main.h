@@ -10,18 +10,10 @@
 // *******************************************************
 //#define MAIN_TEST
 //#define MAIN_DISTRIBUTION
-<<<<<<< HEAD
-#define MAIN_EXTREMUM
-//#define MAIN_CORRELATION2
-//#define MAIN_REWIRE
-//#define MAIN_SPEARMAN
-//#define MAIN_FITNESS_COMPLEXITY
-=======
 //#define MAIN_EXTREMUM
 //#define MAIN_CORRELATION2
 //#define MAIN_REWIRE
-#define MAIN_FITNESS_COMPLEXITY
->>>>>>> refs/remotes/origin/master
+//#define MAIN_FITNESS_COMPLEXITY
 
 // *******************************************************
 #endif

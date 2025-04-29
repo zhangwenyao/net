@@ -9,14 +9,10 @@ using namespace network;
 
 // ******************************************************
 network::betweenness::Betweenness::Betweenness(void)
-    : meanNode(0)
-    , meanEdge(0)
-{
-}
+    : meanNode(0), meanEdge(0) {}
 
-ostream& operator<<(
-    ostream& os, const network::betweenness::Betweenness& betweenness)
-{
+ostream& operator<<(ostream& os,
+                    const network::betweenness::Betweenness& betweenness) {
   if (!os) {
     ERROR();
     return os;
@@ -26,8 +22,7 @@ ostream& operator<<(
   return os;
 }
 
-int network::betweenness::Betweenness::save_params(ostream& os) const
-{
+int network::betweenness::Betweenness::save_params(ostream& os) const {
   if (!os) {
     ERROR();
     return -1;
@@ -36,8 +31,7 @@ int network::betweenness::Betweenness::save_params(ostream& os) const
   return 0;
 }
 
-int network::betweenness::Betweenness::save_params(const char* name) const
-{
+int network::betweenness::Betweenness::save_params(const char* name) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -53,8 +47,9 @@ int network::betweenness::Betweenness::save_params(const char* name) const
 }
 
 int network::betweenness::Betweenness::save_data(const char* name,
-    const int dirFlag, const char priChar, const char priChar2) const
-{
+                                                 const int dirFlag,
+                                                 const char priChar,
+                                                 const char priChar2) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -69,14 +64,13 @@ int network::betweenness::Betweenness::save_data(const char* name,
     f |= save2((fn + ".minDistMatr.txt").c_str(), minDistMatr, priChar2);
   if (!minDistMean.empty())
     f |= save1((fn + ".minDistMean.txt").c_str(), minDistMean, priChar);
-  if (0 != f)
-    ERROR();
+  if (0 != f) ERROR();
   return f;
 }
 
-int network::betweenness::Betweenness::save(const char* name,
-    const int dirFlag, const char priChar, const char priChar2) const
-{
+int network::betweenness::Betweenness::save(const char* name, const int dirFlag,
+                                            const char priChar,
+                                            const char priChar2) const {
   if (name == NULL || name[0] == '\0') {
     ERROR();
     return -1;
@@ -86,17 +80,15 @@ int network::betweenness::Betweenness::save(const char* name,
     ERROR();
     return -1;
   }
-  if (0
-      != save_data(
-             (fn + ".betweenness").c_str(), dirFlag, priChar, priChar2)) {
+  if (0 !=
+      save_data((fn + ".betweenness").c_str(), dirFlag, priChar, priChar2)) {
     ERROR();
     return -1;
   }
   return 0;
 }
 
-int network::betweenness::Betweenness::read_params_1(string& s, istream& is)
-{
+int network::betweenness::Betweenness::read_params_1(string& s, istream& is) {
   if (!is) {
     ERROR();
     return -1;
@@ -115,14 +107,12 @@ int network::betweenness::Betweenness::read_params_1(string& s, istream& is)
     }
     flag = 0;
   } while (0);
-  if (flag)
-    s.clear();
+  if (flag) s.clear();
   return 0;
 }
 
 network::betweenness::Betweenness& network::betweenness::Betweenness::clear(
-    void)
-{
+    void) {
   meanNode = 0;
   meanEdge = 0;
   betwNode.clear();
@@ -133,8 +123,7 @@ network::betweenness::Betweenness& network::betweenness::Betweenness::clear(
 }
 
 // ******************************************************
-Networks& Networks::stat_betweenness(void)
-{
+Networks& Networks::stat_betweenness(void) {
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -146,35 +135,35 @@ Networks& Networks::stat_betweenness(void)
       return *this;
     }
     linkMatr_2_p2p(p2p, linkMatr);
-    if (dirFlag)
-      p2p_2_p2pIn(p2pIn, p2p);
+    if (dirFlag) p2pOut_2_p2pIn(p2pIn, p2p);
   }
 
   if (distFlag) {
     if (dirFlag)
-      runStatus = network::betweenness::cal_betweenness(betweenness.betwNode,
-          betweenness.betwEdge, betweenness.meanNode, betweenness.meanEdge,
-          betweenness.minDistMatr, betweenness.minDistMean, p2p, p2pIn,
-          linkMatr);
+      runStatus = network::betweenness::cal_betweenness(
+          betweenness.betwNode, betweenness.betwEdge, betweenness.meanNode,
+          betweenness.meanEdge, betweenness.minDistMatr,
+          betweenness.minDistMean, p2p, p2pIn, linkMatr);
     else
-      runStatus = network::betweenness::cal_betweenness(betweenness.betwNode,
-          betweenness.betwEdge, betweenness.meanNode, betweenness.meanEdge,
-          betweenness.minDistMatr, betweenness.minDistMean, p2p, p2p,
-          linkMatr);
+      runStatus = network::betweenness::cal_betweenness(
+          betweenness.betwNode, betweenness.betwEdge, betweenness.meanNode,
+          betweenness.meanEdge, betweenness.minDistMatr,
+          betweenness.minDistMean, p2p, p2p, linkMatr);
   } else {
     if (dirFlag)
-      runStatus = network::betweenness::cal_betweenness0(betweenness.betwNode,
-          betweenness.betwEdge, betweenness.meanNode, betweenness.meanEdge,
-          betweenness.minDistMatr, betweenness.minDistMean, p2p, p2pIn);
+      runStatus = network::betweenness::cal_betweenness0(
+          betweenness.betwNode, betweenness.betwEdge, betweenness.meanNode,
+          betweenness.meanEdge, betweenness.minDistMatr,
+          betweenness.minDistMean, p2p, p2pIn);
     else
-      runStatus = network::betweenness::cal_betweenness0(betweenness.betwNode,
-          betweenness.betwEdge, betweenness.meanNode, betweenness.meanEdge,
-          betweenness.minDistMatr, betweenness.minDistMean, p2p, p2p);
+      runStatus = network::betweenness::cal_betweenness0(
+          betweenness.betwNode, betweenness.betwEdge, betweenness.meanNode,
+          betweenness.meanEdge, betweenness.minDistMatr,
+          betweenness.minDistMean, p2p, p2p);
   }
-  if (0 != runStatus)
-    ERROR();
+  if (0 != runStatus) ERROR();
   return *this;
 }
 
 // ******************************************************
-#endif // STAT_BETWEENNESS
+#endif  // STAT_BETWEENNESS

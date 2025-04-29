@@ -57,8 +57,6 @@ int network::linkMatr_2_p2pIn(std::vector<std::vector<T2>>& p2pIn,
   return 0;
 }
 
-
-
 template <typename T>
 int network::lkk_dir_2_nDir(std::vector<std::vector<T>>& lkk, const int dir)
 {
@@ -104,7 +102,6 @@ int network::lkk_nDir_2_dir(std::vector<std::vector<T>>& lkk, const int dir)
   }
   return 0;
 }
-
 
 // **********************************************************
 #endif

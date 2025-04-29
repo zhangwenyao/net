@@ -94,7 +94,7 @@
 // **************************************************************
 namespace network {
 class Networks : public Network {
-  public:
+ public:
   Networks* net2;
 
   Networks(void);
@@ -178,8 +178,8 @@ class Networks : public Network {
   Networks& spearman_read_GaussS2(const char* name = NULL);
   Networks& spearman_cal_lkkProb_gauss(void);
   Networks& spearman_gauss_new_ranLink(
-      void); // 随机选点按度之差的相应高斯概率连边，重连时随机选点再选边
-#endif       // MODEL_GAUSS
+      void);  // 随机选点按度之差的相应高斯概率连边，重连时随机选点再选边
+#endif        // MODEL_GAUSS
 #endif
 
 #ifdef STAT_KENDALL
@@ -242,8 +242,8 @@ class Networks : public Network {
 };
 
 // **************************************************************
-}
+}  // namespace network
 std::ostream& operator<<(std::ostream& os, network::Networks& net);
 std::istream& operator>>(std::istream& is, network::Networks& net);
 
-#endif // NETWOKS_H_
+#endif  // NETWOKS_H_

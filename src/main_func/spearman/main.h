@@ -11,8 +11,8 @@
 //#define MAIN_SPEARMAN_RANDOM
 //#define MAIN_SPEARMAN_GAUSS
 //#define MAIN_SPEARMAN_R_RANDOM
-//#define MAIN_SPEARMAN_R_GAUSS
-#define MAIN_SPEARMAN_R_STAT
+#define MAIN_SPEARMAN_R_GAUSS
+//#define MAIN_SPEARMAN_R_STAT
 //#define MAIN_SPEARMAN_TEST
 
 // ******************************************************

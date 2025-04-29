@@ -8,15 +8,15 @@
 #include <string>
 #define MAIN_FUNC main_func::main_extremum
 
-// #define MAIN_EXTREMUM_NEW_DEG_ARR
+//#define MAIN_EXTREMUM_NEW_DEG_ARR
 
-// #define MAIN_EXTREMUM_NONE
-// #define MAIN_EXTREMUM_NEW_MAXIMAL
-// #define MAIN_EXTREMUM_NEW_MINIMAL
-// #define MAIN_EXTREMUM_STAT_MAXIMAL
-// #define MAIN_EXTREMUM_STAT_MINIMAL
-// #define MAIN_EXTREMUM_STAT_ALL
-// #define MAIN_EXTREMUM_STAT_ALL_COLLECT
+//#define MAIN_EXTREMUM_NONE
+//#define MAIN_EXTREMUM_NEW_MAXIMAL
+//#define MAIN_EXTREMUM_NEW_MINIMAL
+//#define MAIN_EXTREMUM_STAT_MAXIMAL
+//#define MAIN_EXTREMUM_STAT_MINIMAL
+//#define MAIN_EXTREMUM_STAT_ALL
+//#define MAIN_EXTREMUM_STAT_ALL_COLLECT
 
 #define MAIN_EXTREMUM_ALPHAS
 //#define MAIN_EXTREMUM_ALPHAS11
@@ -24,9 +24,8 @@
 #define MAIN_EXTREMUM_ALPHAS20
 //#define MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL
 //#define MAIN_EXTREMUM_ALPHAS_STAT_MINIMAL
-//#define MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL_COLLECT
+#define MAIN_EXTREMUM_ALPHAS_STAT_MAXIMAL_COLLECT
 #define MAIN_EXTREMUM_ALPHAS_STAT_MINIMAL_COLLECT
-#define MAIN_EXTREMUM_ALPHAS_STAT_BC_COLLECT
 
 // ******************************************************
 namespace main_func {
@@ -40,7 +39,7 @@ namespace extremum {
   const std::string kGammaString = TOSTRING(KEXTREMUM_GAMMA);
 #endif
 #ifndef KEXTREMUM_KMIN
-  constexpr int kMin = 3;
+  constexpr int kMin = 4;
 #else
   constexpr int kMin = KEXTREMUM_KMIN;
 #endif
@@ -101,6 +100,7 @@ namespace extremum {
           "1d4", "-1d4", "-1d2", "-3d4", "-1", "-3d2", "-2", "-3", "-4" };
 #endif
 #endif
+
 
   constexpr size_t alpha_len
       = sizeof(relativity_alphas) / sizeof(relativity_alphas[0]);

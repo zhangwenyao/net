@@ -62,6 +62,10 @@ int p2p_2_lkk_noDir(VVLinkType& lkk, const VVNodeType& p2p,
     MNodeType& degArrNo, const VNodeType& nodeDeg, const NodeType degSize);
 int lkk_dir_2_nDir(VVLinkType& lkk);
 int lkk_nDir_2_dir(VVLinkType& lkk);
+template <typename T>
+int lkk_dir_2_nDir(std::vector<std::vector<T>>& lkk, const int dir);
+template <typename T>
+int lkk_nDir_2_dir(std::vector<std::vector<T>>& lkk, const int dir);
 int lkk_2_lkkSum(VVLinkType& lkkSum, const VVLinkType& lkk, const int dir);
 int link_2_nodeSize(NodeType& nodeSize, const VNodeType& link);
 int link_2_p2p(VVNodeType& p2p, const VNodeType& link, NodeType& nodeSize);
@@ -102,5 +106,7 @@ int lkk2_2_lkk3(VLkk3LinkType& lkk3, const VVLkk2LinkType& lkk2,
 
 } // end namespace network
 
+// *******************************************************
+#include "net_transform_template.h"
 // *******************************************************
 #endif // NET_H

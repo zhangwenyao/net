@@ -8,20 +8,24 @@
 #include <string>
 #define MAIN_FUNC main_func::main_correlation2
 
-//#define MAIN_CORRELATION2_NEW_NETWORKS
+#define MAIN_CORRELATION2_NEW_NETWORKS
 //#define MAIN_CORRELATION2_STATISTICS_NETWORKS
 //#define MAIN_CORRELATION2_EVOLUTION
-#define MAIN_CORRELATION2_EVOLUTION_STATISTICS
+//#define MAIN_CORRELATION2_EVOLUTION_STATISTICS
 
 // ******************************************************
 namespace main_func {
 int main_correlation2(int argc, char** argv);
 namespace correlation2 {
   extern std::string name, dirData, dirStat;
-  //#define dirData0 ("data/DataSet/0undirected_unweight_all/" + name + "/")
-  /*
+#if defined(MAIN_CORRELATION2_NEW_NETWORKS)
+#define dirData0 ("data/DataSet/0undirected_unweight_all/" + name + "/")
   const std::string names[] = {
     "ER", "BA", // model
+  };
+#elif defined(MAIN_CORRELATION2_STATISTICS_NETWORKS)
+#define dirData0 ("data/DataSet/0undirected_unweight_all/" + name + "/")
+  const std::string names[] = {
     "adjnoun", "as-22july06", "CElegansMetabolic", "dolphins", "email",
     "football", "jazz", "karate", "PGPgiantcompo", "polbooks", "power",
     "Protein", // undirected_unweighted
@@ -34,13 +38,15 @@ namespace correlation2 {
     "astro-ph", "cond-mat", "cond-mat-2003", "cond-mat-2005", "hep-th",
     "lesmis", "netscience", "actor" // undirected_weight
   };
-  */
+#elif defined(MAIN_CORRELATION2_EVOLUTION)                                   \
+    || defined(MAIN_CORRELATION2_EVOLUTION_STATISTICS)
 #define dirData0 ("data/DataSet/evolution/" + name + "/")
   // const std::string names[] = { "www", "actor" };
   const std::string names[] = { "actor" };
-#define dirStat0 dirData0
   const int kDelPers[] = { 5, 10, 20, 50, 100, 200 };
   // const int kDelPers[] = { 10, 20, 50, 100 };
+#endif
+#define dirStat0 dirData0
   const long kSeedMin = 1, kSeedMax = 100;
 }
 }

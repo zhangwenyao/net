@@ -59,9 +59,9 @@ else
 endif
 
 
-.PHONY: all subdirs execute executea run logrun clean cleanall rebuild rebuildrun debug debugrun logdebugrun debugrebuild debugrebuildrun
+.PHONY: all subdirs execute logexecute run logrun clean cleanall rebuild rebuildrun debug debugrun logdebugrun debugrebuild debugrebuildrun
 
-all:		$(CUR_OBJ_DIR) $(CUR_OBJS_C) $(CUR_OBJS_CC) subdirs $(BIN_TARGET)
+all:	$(CUR_OBJ_DIR) $(CUR_OBJS_C) $(CUR_OBJS_CC) subdirs $(BIN_TARGET)
 ifneq ($(USER_DEFINES),)
 	@echo "USER_DEFINES=${USER_DEFINES}"
 endif

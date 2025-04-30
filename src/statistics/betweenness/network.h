@@ -7,33 +7,34 @@
 
 namespace network {
 namespace betweenness {
-  // ******************************************************
-  class Betweenness {
-public:
-    double meanNode, meanEdge; // 平均介数
-    VDouble betwNode;          // 各点介数
-    VVDouble betwEdge;         // 各边介数
-    VVDistType minDistMatr;    // 最短距离
-    VDouble minDistMean;       // 平均最短距离
+// ******************************************************
+class Betweenness {
+ public:
+  double meanNode, meanEdge;  // 平均介数
+  VDouble betwNode;           // 各点介数
+  VVDouble betwEdge;          // 各边介数
+  VDouble betwLink;           // 各边介数
+  VVDistType minDistMatr;     // 最短距离
+  VDouble minDistMean;        // 平均最短距离
 
-    Betweenness(void);
-    // friend std::ostream& operator<<(
-    // std::ostream& os, const Betweenness& betweenness);
-    int save_params(std::ostream& os) const;
-    int save_params(const char* name = NULL) const;
-    int save_data(const char* name = NULL, const int dirFlag = 0,
-        const char priChar = '\n', const char priChar2 = '\t') const;
-    int save(const char* name = NULL, const int dirFlag = 0,
-        const char priChar = '\n', const char priChar2 = '\t') const;
-    int read_params_1(std::string& s, std::istream& is);
-    Betweenness& clear(void);
-  };
-}
-}
+  Betweenness(void);
+  // friend std::ostream& operator<<(
+  // std::ostream& os, const Betweenness& betweenness);
+  int save_params(std::ostream& os) const;
+  int save_params(const char* name = NULL) const;
+  int save_data(const char* name = NULL, const int dirFlag = 0,
+                const char priChar = '\n', const char priChar2 = '\t') const;
+  int save(const char* name = NULL, const int dirFlag = 0,
+           const char priChar = '\n', const char priChar2 = '\t') const;
+  int read_params_1(std::string& s, std::istream& is);
+  Betweenness& clear(void);
+};
+}  // namespace betweenness
+}  // namespace network
 
 // ******************************************************
-std::ostream& operator<<(
-    std::ostream& os, const network::betweenness::Betweenness& betweenness);
+std::ostream& operator<<(std::ostream& os,
+                         const network::betweenness::Betweenness& betweenness);
 
-#endif // STAT_BETWEENNESS
-#endif // NETWORK_STAT_BETWEENNESS_H
+#endif  // STAT_BETWEENNESS
+#endif  // NETWORK_STAT_BETWEENNESS_H

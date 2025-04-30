@@ -8,8 +8,11 @@ namespace network {
 template <typename LinknameType = std::string>
 int read_link_name(std::map<LinknameType, NodeType>& mp, const char* name);
 template <typename LinknameType = std::string>
-int linkname_2_link(const char* linkfile0, const char* linkfile,
-                    const char* namefile);
+int linkname_2_link0(const char* linkfile0, const char* linkfile,
+                     const char* namefile);
+template <typename LinknameType = std::string>
+int linkname_2_link(const char* link_name, const char* namefile,
+                    const char* linkfile0, const char* linkfile);
 // *******************************************************
 int read0_link(VNodeType& link, const char* name, const unsigned n);
 int read_link(VNodeType& link, const char* name);

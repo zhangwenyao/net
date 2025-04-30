@@ -7,6 +7,21 @@ using namespace common;
 using namespace network;
 
 // ******************************************************
+int network::link0_2_link(VNodeType& link, const VNodeType& link0) {
+  link.clear();
+  set<LinkKeyType> st;
+  for (auto itr = link0.begin(); itr != link0.end();) {
+    NodeType i = *itr++;
+    NodeType j = *itr++;
+    st.insert(link_key(i, j));
+  }
+  for (auto key : st) {
+    link.push_back(key >> 32);
+    link.push_back(key & 0xffffffff);
+  }
+  return EXIT_SUCCESS;
+}
+// ******************************************************
 int network::linkMatrC_2_p2p(VVNodeType& p2p, const VVChar& linkMatrC) {
   const NodeType nodeSize = linkMatrC.size();
   p2p.resize(nodeSize);

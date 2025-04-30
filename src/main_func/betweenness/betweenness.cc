@@ -11,25 +11,107 @@ using namespace std;
 using namespace common;
 using namespace network;
 
+#ifdef MAIN_BETWEENNESS_STAT_BOOST
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/betweenness_centrality.hpp>
+using namespace boost;
+
+#ifdef MAIN_BETWEENNESS_STAT_BOOST_NODE
+typedef adjacency_list<vecS, vecS, undirectedS> Graph;
+template <typename Graph>
+void cal_betweenness_boost(Graph& g, vector<double>& centrality) {
+  brandes_betweenness_centrality(
+      g, centrality_map(make_iterator_property_map(centrality.begin(),
+                                                   get(vertex_index, g))));
+}
+#endif
+#ifdef MAIN_BETWEENNESS_STAT_BOOST_EDGE
+typedef adjacency_list<vecS, vecS, undirectedS, no_property,
+                       property<edge_index_t, int> >
+    Graph;
+
+template <typename Graph>
+void cal_betweenness_boost(Graph& g, vector<double>& edge_centrality) {
+  brandes_betweenness_centrality(
+      g, edge_centrality_map(make_iterator_property_map(
+             edge_centrality.begin(), get(edge_index, g), double())));
+}
+#endif
+#ifdef MAIN_BETWEENNESS_STAT_BOOST_NODE_EDGE
+typedef adjacency_list<vecS, vecS, undirectedS, no_property,
+                       property<edge_index_t, int> >
+    Graph;
+
+template <typename Graph>
+void cal_betweenness_boost(Graph& g, vector<double>& vertex_centrality,
+                           vector<double>& edge_centrality) {
+  brandes_betweenness_centrality(
+      g, centrality_map(make_iterator_property_map(vertex_centrality.begin(),
+                                                   get(vertex_index, g)))
+             .edge_centrality_map(make_iterator_property_map(
+                 edge_centrality.begin(), get(edge_index, g))));
+}
+#endif
+typedef graph_traits<Graph>::vertex_descriptor Vertex;
+typedef graph_traits<Graph>::edge_descriptor Edge;
+#endif  // MAIN_BETWEENNESS_STAT_BOOST
+
 //**//**************************************************//**//*
 #ifdef MAIN_BETWEENNESS_DATA
-int main_func::betweenness::networks_data(int argc, char **argv) {
+int main_func::betweenness::networks_data(int argc, char** argv) {
   for (int i = 0; i < DATASET_SIZE; i++) {
     string dataset = DATASET_NAMES[i];
     string data_dir = kDataDir + dataset + "/";
-    string link_file0 = data_dir + dataset + ".linkname.txt",
-           link_file = data_dir + dataset + ".link0.txt",
-           name_file = data_dir + dataset + ".name.txt";
+    string link_name = data_dir + dataset + ".linkname.txt",
+           name_file = data_dir + dataset + ".name.txt",
+           link_file0 = data_dir + dataset + ".link0.txt",
+           link_file = data_dir + dataset + ".link.txt";
     INFORM(dataset, ": ", link_file0);
-    linkname_2_link<NodeType>(link_file0.c_str(), link_file.c_str(),
-                              name_file.c_str());
+    linkname_2_link<NodeType>(link_name.c_str(), name_file.c_str(),
+                              link_file0.c_str(), link_file.c_str());
   }
   return EXIT_SUCCESS;
 }
-#endif
+#endif  // MAIN_BETWEENNESS_DATA
 
 #ifdef MAIN_BETWEENNESS_STAT
-int main_func::betweenness::networks_stat(int argc, char **argv) {
+#ifdef MAIN_BETWEENNESS_STAT_BOOST
+template <typename Graph>
+int net_2_graph(Graph& g, Networks& net) {
+  for (LinkType i = 0, p = 0; i < net.linkSize; i++) {
+    NodeType x = net.link[p++];
+    NodeType y = net.link[p++];
+    add_edge(x, y, g);
+  }
+  return EXIT_SUCCESS;
+}
+
+template <typename Graph>
+void normalize_betweenness_boost_node(Graph& g, vector<double>& centrality) {
+  int n1 = num_vertices(g) - 1;  // n-1
+  if (n1 <= 0) return;
+  double normalizer = 2.0 / (n1 * (n1 - 1));  // (n-1)(n-2) / 2
+  typename graph_traits<Graph>::vertex_iterator vit, vitEnd;
+  for (tie(vit, vitEnd) = vertices(g); vit != vitEnd; ++vit) {
+    centrality[*vit] *= normalizer;
+  }
+}
+
+template <typename Graph>
+void normalize_betweenness_boost_edge(Graph& g,
+                                      vector<double>& edge_centrality) {
+  int n = num_vertices(g);  // nodeSize
+  if (n <= 0) return;
+  double normalizer = 2.0 / (n * (n - 1));  // n(n-1) / 2
+  typename graph_traits<Graph>::edge_iterator eit, eitEnd;
+  for (tie(eit, eitEnd) = edges(g); eit != eitEnd; ++eit) {
+    Edge e = *eit;
+    edge_centrality[get(edge_index, g, e)] *= normalizer;
+  }
+}
+#endif  // MAIN_BETWEENNESS_STAT_BOOST
+
+int main_func::betweenness::networks_stat(int argc, char** argv) {
   for (int i = 0; i < DATASET_SIZE; i++) {
     string dataset = DATASET_NAMES[i];
     string data_dir = kDataDir + dataset + "/", stat_dir = data_dir;
@@ -43,7 +125,6 @@ int main_func::betweenness::networks_stat(int argc, char **argv) {
     net.seed = kSeed0;
     net.dirFlag = 0;
     net.argv =
-        // "--init_seed0"
         " --cal_p2p read_link"
         " --stat"
         " --save";
@@ -63,7 +144,7 @@ int main_func::betweenness::networks_stat(int argc, char **argv) {
     // }
 
     {  // read links
-      _ERR(read_link_unique(net.link, (fn_full + ".link0.txt").c_str()));
+      _ERR(read_link(net.link, (fn_full + ".link.txt").c_str()));
       net.linkSize = net.link.size() / 2;
       link_2_nodeSize(net.nodeSize, net.link);
 
@@ -72,32 +153,74 @@ int main_func::betweenness::networks_stat(int argc, char **argv) {
       net.kMin = net.degArrVal.front();
       net.kMax = net.degArrVal.back();
       net.status = 1;
+      INFORM("nodeSize: ", net.nodeSize, "\tlinkSize: ", net.linkSize);
     }
 
-    {
-      INFORM();
+    {  // stat betweenness
+#ifndef MAIN_BETWEENNESS_STAT_BOOST
+      INFORM("stat betweenness");
       // _ERR(net.stat_betweenness().runStatus);
-      net.save_data();
+      _ERR(net.stat_betweenness(true).runStatus);  // is_large
+#else
+      net.saveName += "_boost";
+      Graph g(net.nodeSize);
+      net_2_graph(g, net);
+      INFORM("stat...");
+#ifdef MAIN_BETWEENNESS_STAT_BOOST_NODE
+      auto& centrality = net.betweenness.betwNode;
+      centrality.assign(net.nodeSize, 0);
+      cal_betweenness_boost(g, centrality);
+      normalize_betweenness_boost_node(g, centrality);
+      net.betweenness.meanNode =
+          accumulate(centrality.begin(), centrality.end(), 0.0) / net.nodeSize;
+#endif
+#ifdef MAIN_BETWEENNESS_STAT_BOOST_EDGE
+      auto& edge_centrality = net.betweenness.betwLink;
+      edge_centrality.assign(net.linkSize, 0);
+      // 边的索引映射
+      property_map<Graph, edge_index_t>::type e_index = get(edge_index, g);
+      int edge_count = 0;
+      graph_traits<Graph>::edge_iterator ei, ei_end;
+      for (boost::tie(ei, ei_end) = edges(g); ei != ei_end; ++ei) {
+        put(e_index, *ei, edge_count++);
+      }
+      cal_betweenness_boost(g, edge_centrality);
+      normalize_betweenness_boost_edge(g, edge_centrality);
+      net.betweenness.meanEdge =
+          accumulate(edge_centrality.begin(), edge_centrality.end(), 0.0) /
+          net.linkSize;
+#endif
+#ifdef MAIN_BETWEENNESS_STAT_BOOST_NODE_EDGE
+      auto& centrality = net.betweenness.betwNode;
+      auto& edge_centrality = net.betweenness.betwLink;
+      centrality.assign(net.nodeSize, 0);
+      edge_centrality.assign(net.linkSize, 0);
+      // 边的索引映射
+      property_map<Graph, edge_index_t>::type e_index = get(edge_index, g);
+      int edge_count = 0;
+      graph_traits<Graph>::edge_iterator ei, ei_end;
+      for (boost::tie(ei, ei_end) = edges(g); ei != ei_end; ++ei) {
+        put(e_index, *ei, edge_count++);
+      }
+      cal_betweenness_boost(g, centrality, edge_centrality);
+      normalize_betweenness_boost_node(g, centrality);
+      normalize_betweenness_boost_edge(g, edge_centrality);
+      net.betweenness.meanNode =
+          accumulate(centrality.begin(), centrality.end(), 0.0) / net.nodeSize;
+      net.betweenness.meanEdge =
+          accumulate(edge_centrality.begin(), edge_centrality.end(), 0.0) /
+          net.linkSize;
+#endif  //
+#endif  // MAIN_BETWEENNESS_STAT_BOOST
+      net.betweenness.save_data((net.saveName + ".betweenness").c_str());
+      // save1((net.saveName + ".betweenness.node.txt").c_str(),
+      // net.betweenness.betwNode);
     }
-    INFORM();
-
-    net.lkk.clear();
-    net.nodeDeg.clear();
     _ERR(net.save_params().runStatus);
   }
   return EXIT_SUCCESS;
 }
-#endif
-#ifdef MAIN_BETWEENNESS_BOOST
-int main_func::betweenness::networks_stat_boost(int argc, char **argv) {
-  // Graph g;
-  // map<int, string> vertexName;
-  // map<string, int> nameVertexMap;
-  // load node from -> to
-  // add edge (from, to)
-  return EXIT_SUCCESS;
-}
-#endif
+#endif  // MAIN_BETWEENNESS_STAT
 
 //**//****************************************************//*
 #endif

@@ -11,7 +11,6 @@ int networks_data(int argc, char** argv);
 #endif
 #ifdef MAIN_BETWEENNESS_STAT
 int networks_stat(int argc, char** argv);
-int networks_stat_boost(int argc, char** argv);
 #endif
 #ifdef MAIN_BETWEENNESS_TEST
 int networks_test(int argc, char** argv);

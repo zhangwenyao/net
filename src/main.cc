@@ -54,11 +54,11 @@ int main(int argc, char **argv) {
   // std::ios::sync_with_stdio(false);
   // cin.tie(NULL);
   // common::SHOW_TIME(cout);  // 显示系统时间
-  INFORM("");
+  INFORM("START...");
 
   _ERR(MAIN_FUNC(argc, argv));
 
-  INFORM("");
+  INFORM("DONE!");
   // common::SHOW_TIME(cout);  // 显示系统时间
   return EXIT_SUCCESS;
 }

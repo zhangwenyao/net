@@ -10,9 +10,7 @@ using namespace common;
 // using namespace network;
 using namespace main_func::betweenness;
 
-int main_func::check_args(int argc, char** argv) {
-  return EXIT_SUCCESS;
-}
+int main_func::check_args(int argc, char** argv) { return EXIT_SUCCESS; }
 
 // ******************************************************
 int main_func::main_betweenness(int argc, char** argv) {
@@ -27,9 +25,6 @@ int main_func::main_betweenness(int argc, char** argv) {
 
 #ifdef MAIN_BETWEENNESS_STAT
   _ERR(betweenness::networks_stat(argc, argv));
-#endif
-#ifdef MAIN_BETWEENNESS_STAT_BOOST
-  _ERR(betweenness::networks_stat_boost(argc, argv));
 #endif
 
 #ifdef MAIN_BETWEENNESS_TEST

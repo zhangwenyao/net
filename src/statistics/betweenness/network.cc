@@ -60,6 +60,8 @@ int network::betweenness::Betweenness::save_data(const char* name,
     f |= save1((fn + ".betwNode.txt").c_str(), betwNode, priChar);
   if (!betwEdge.empty())
     f |= save2((fn + ".betwEdge.txt").c_str(), betwEdge, priChar2);
+  if (!betwLink.empty())
+    f |= save1((fn + ".betwLink.txt").c_str(), betwLink, priChar);
   if (!minDistMatr.empty())
     f |= save2((fn + ".minDistMatr.txt").c_str(), minDistMatr, priChar2);
   if (!minDistMean.empty())
@@ -123,7 +125,7 @@ network::betweenness::Betweenness& network::betweenness::Betweenness::clear(
 }
 
 // ******************************************************
-Networks& Networks::stat_betweenness(void) {
+Networks& Networks::stat_betweenness(const bool is_large) {
   if (0 != runStatus) {
     ERROR();
     return *this;
@@ -155,11 +157,17 @@ Networks& Networks::stat_betweenness(void) {
           betweenness.betwNode, betweenness.betwEdge, betweenness.meanNode,
           betweenness.meanEdge, betweenness.minDistMatr,
           betweenness.minDistMean, p2p, p2pIn);
-    else
-      runStatus = network::betweenness::cal_betweenness0(
-          betweenness.betwNode, betweenness.betwEdge, betweenness.meanNode,
-          betweenness.meanEdge, betweenness.minDistMatr,
-          betweenness.minDistMean, p2p, p2p);
+    else {
+      if (!is_large)
+        runStatus = network::betweenness::cal_betweenness0(
+            betweenness.betwNode, betweenness.betwEdge, betweenness.meanNode,
+            betweenness.meanEdge, betweenness.minDistMatr,
+            betweenness.minDistMean, p2p, p2p);
+      else
+        runStatus = network::betweenness::cal_betweenness0_large(
+            betweenness.betwNode, betweenness.betwLink, betweenness.meanNode,
+            betweenness.meanEdge, betweenness.minDistMean, p2p, p2p, link);
+    }
   }
   if (0 != runStatus) ERROR();
   return *this;

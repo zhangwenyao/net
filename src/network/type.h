@@ -1,29 +1,34 @@
 #ifndef NETWORK__TYPE_H_
 #define NETWORK__TYPE_H_
 
-#include "../common/common.h"
 #include <cfloat>
 #include <climits>
 #include <map>
-#include <unordered_map>
 #include <set>
-#include <unordered_set>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
+
+#include "../common/common.h"
 
 namespace network {
 // *******************************************************
 // int:int32_t. long, long long: int64_t
-typedef uint32_t NodeType;         // 节点编号类型
-typedef int32_t NodeSType;             // 节点数目有符号类型
-const NodeType NodeMax = UINT32_MAX; // 最大编号节点、空节点，不用
+typedef uint32_t NodeType;            // 节点编号类型
+typedef int32_t NodeSType;            // 节点数目有符号类型
+const NodeType NodeMax = UINT32_MAX;  // 最大编号节点、空节点，不用
 const NodeType NodeNULL = UINT32_MAX;
 typedef uint32_t LinkType;
 typedef int32_t LinkSType;
+typedef uint64_t LinkKeyType;
 const LinkType LinkMax = UINT32_MAX;
-typedef uint32_t DistType;         // 节点间距离类型
-typedef int32_t DistSType;             // 节点间距离类型
-const DistType DistMax = UINT32_MAX; // 距离无穷大的值
+typedef uint32_t DistType;            // 节点间距离类型
+typedef int32_t DistSType;            // 节点间距离类型
+const DistType DistMax = UINT32_MAX;  // 距离无穷大的值
+inline LinkKeyType link_key(const NodeType i, const NodeType j) {
+  return i < j ? ((LinkKeyType)i << 32 | j) : ((LinkKeyType)j << 32 | i);
+}
 
 // typedef uint64_t NodeType; // 节点编号类型
 // typedef int64_t NodeSType;     // 节点数目有符号类型
@@ -40,11 +45,11 @@ const DistType DistMax = UINT32_MAX; // 距离无穷大的值
 // typedef double    DistSType;    // 节点间距离类型
 // const DistType    DistMax = DBL_MAX; // 距离无穷大的值
 
-typedef double WeightType;            // 边权
-typedef double WeightSType;           // 边权
-typedef double WeightSumType;         // 边权求和
-typedef double WeightSumSType;        // 边权求和
-const WeightType WeightMax = DBL_MAX; // 距离无穷大的值
+typedef double WeightType;             // 边权
+typedef double WeightSType;            // 边权
+typedef double WeightSumType;          // 边权求和
+typedef double WeightSumSType;         // 边权求和
+const WeightType WeightMax = DBL_MAX;  // 距离无穷大的值
 
 typedef uint64_t IDType;
 typedef std::vector<IDType> VIDType;
@@ -233,13 +238,12 @@ typedef USNodeType::iterator USNodeTypeItr;
 typedef USNodeType::const_iterator USNodeTypeCItr;
 typedef std::vector<USNodeType> VUSNodeType;
 
-int save_VRNodeType_start(
-    std::ostream& os, const VRNodeType& v, const char c);
-int save_VRNodeType_start(
-    const char* name, const VRNodeType& v, const char c = '\t');
+int save_VRNodeType_start(std::ostream& os, const VRNodeType& v, const char c);
+int save_VRNodeType_start(const char* name, const VRNodeType& v,
+                          const char c = '\t');
 int save_VRNodeType_end(std::ostream& os, const VRNodeType& v, const char c);
-int save_VRNodeType_end(
-    const char* name, const VRNodeType& v, const char c = '\t');
+int save_VRNodeType_end(const char* name, const VRNodeType& v,
+                        const char c = '\t');
 
 bool cmp_RNodeType_start(const RNodeType& a, const RNodeType& b);
 bool cmp_RNodeType_end(const RNodeType& a, const RNodeType& b);
@@ -258,13 +262,17 @@ enum Lkk_type {
 };
 
 const std::map<Lkk_type, std::string> kLkkTypeString = {
-  { lkk_type_null, "NULL" }, { lkk_lkk, "lkk_lkk" }, { lkk_lkk3, "lkk_lkk3" },
-  { lkk_lkk3reverse, "lkk_lkk3reverse" }, { lkk2_lkk2, "lkk2_lkk2" },
-  { lkk2_lkk2compress, "lkk2_lkk2compress" }, { lkk3_lkk, "lkk3_lkk" },
-  { lkk3_lkk3, "lkk3_lkk3" }, { lkk3_lkk3reverse, "lkk3_lkk3reverse" }
-};
+    {lkk_type_null, "NULL"},
+    {lkk_lkk, "lkk_lkk"},
+    {lkk_lkk3, "lkk_lkk3"},
+    {lkk_lkk3reverse, "lkk_lkk3reverse"},
+    {lkk2_lkk2, "lkk2_lkk2"},
+    {lkk2_lkk2compress, "lkk2_lkk2compress"},
+    {lkk3_lkk, "lkk3_lkk"},
+    {lkk3_lkk3, "lkk3_lkk3"},
+    {lkk3_lkk3reverse, "lkk3_lkk3reverse"}};
 
-} // end namespace network
+}  // end namespace network
 
 // *******************************************************
 std::istream& operator>>(std::istream& is, network::Lkk_type& lkk_type);

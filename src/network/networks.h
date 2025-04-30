@@ -199,7 +199,7 @@ class Networks : public Network {
 
 #ifdef STAT_BETWEENNESS
   network::betweenness::Betweenness betweenness;
-  Networks& stat_betweenness(void);
+  Networks& stat_betweenness(const bool is_large = false);
 #endif
 
 #ifdef STAT_MODULARITY

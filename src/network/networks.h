@@ -75,6 +75,10 @@
 #include "../dynamics/sis/network.h"
 #endif
 
+#ifdef ACT_SIR
+#include "../dynamics/sir/network.h"
+#endif
+
 #ifdef ACT_SPREAD
 #include "../dynamics/spread/network.h"
 #endif
@@ -230,6 +234,11 @@ class Networks : public Network {
   network::sis::Sis sis;
   Networks& act_sis(void);
   Networks& act_sis_tau(void);
+#endif
+
+#ifdef ACT_SIR
+  network::sir::Sir sir;
+  Networks& act_sir(void);
 #endif
 
 #ifdef ACT_FITNESS_COMPLEXITY

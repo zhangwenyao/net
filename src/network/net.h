@@ -23,8 +23,8 @@ const std::string NET_VERSION = "net3.0: " __DATE__ ", " __TIME__;
 // #define NET_GRID     // 网格网络
 // #define NET_ACTOR     // 演员合作网络
 
-const bool STAT_TYPE_DIRAA = 0;  // 0 : OutIn, 1 : OutIn OutOut InOut InIn
-#define STAT_STAT
+// const bool STAT_TYPE_DIRAA = 0;  // 0 : OutIn, 1 : OutIn OutOut InOut InIn
+// #define STAT_STAT
 // #define STAT_PEARSON
 // #define STAT_SPEARMAN
 // #define SPEARMAN_NEI2
@@ -33,12 +33,13 @@ const bool STAT_TYPE_DIRAA = 0;  // 0 : OutIn, 1 : OutIn OutOut InOut InIn
 // #define STAT_KENDALLI
 // #define STAT_RELATIVITY
 // #define STAT_CORRELATION2
-#define STAT_BETWEENNESS
+// #define STAT_BETWEENNESS
 // #define STAT_MODULARITY
 // #define STAT_CLUSTER
 // #define STAT_SIMILARITY
 
 // #define ACT_SIS
+#define ACT_SIR
 // #define ACT_SPREAD
 // #define ACT_FITNESS_COMPLEXITY
 // #define ACT_RECOMMEND

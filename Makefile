@@ -29,33 +29,27 @@ CUR_SOURCE_CC	= $(wildcard $(addprefix $(CUR_DIR)/*,$(EXTS_CC)))
 CUR_OBJS_CC	= $(foreach x,$(EXTS_CC),$(patsubst %$(x),$(CUR_OBJ_DIR)/%.o,$(filter %$(x),$(notdir $(CUR_SOURCE_CC)))))
 CUR_DEPS_CC	= $(CUR_OBJS_CC:%.o=%.d)
 
-#export CC	= gcc
-#export CXX	= g++
-# export CC	= gcc-11
-# export CXX	= g++-11
+# OPENMP		= -fopenmp
+# export CC	= gcc
+# export CXX	= g++
+#export CC	= gcc-11
+#export CXX	= g++-11
 export CC	= clang
 export CXX	= clang++
-#export CC	= icc
-#export CXX	= icpc
+# OPENMP		= -qopenmp
+#export CC	= icx
+#export CXX	= icpx
 
 USER_DEFINES	=
-# ifdef DEBUG
-#	export CFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG
-#	export CXXFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g -fopenmp -DDEBUG -std=c++11
-#	export LDFLAGS	= -Wall -O0 -g -DDEBUG -fopenmp
-# else
-#	export CFLAGS	= ${USER_DEFINES} -Wall -O3 -I$(DIR_INC) -fopenmp
-#	export CXXFLAGS	= ${USER_DEFINES} -Wall -O3 -I$(DIR_INC) -fopenmp -std=c++11
-#	export LDFLAGS	= -Wall -O3 -fopenmp
-# endif
+
 ifdef DEBUG
-	export CFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g -DDEBUG
-	export CXXFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g -DDEBUG -std=c++11
-	export LDFLAGS	= -Wall -O0 -g -DDEBUG
+	export CFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g ${OPENMP} -DDEBUG
+	export CXXFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g ${OPENMP} -DDEBUG -std=c++11
+	export LDFLAGS	= -Wall -O0 -g -DDEBUG ${OPENMP}
 else
-	export CFLAGS	= ${USER_DEFINES} -Wall -O3 -I$(DIR_INC)
-	export CXXFLAGS	= ${USER_DEFINES} -Wall -O3 -I$(DIR_INC) -std=c++11
-	export LDFLAGS	= -Wall -O3
+	export CFLAGS	= ${USER_DEFINES} -Wall -O3 -I$(DIR_INC) ${OPENMP}
+	export CXXFLAGS	= ${USER_DEFINES} -Wall -O3 -I$(DIR_INC) ${OPENMP} -std=c++11
+	export LDFLAGS	= -Wall -O3 ${OPENMP}
 endif
 
 

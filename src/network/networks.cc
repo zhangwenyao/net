@@ -121,6 +121,10 @@ ostream& operator<<(ostream& os, network::Networks& net) {
   os << net.sis;
 #endif
 
+#ifdef ACT_SIR
+  os << net.sir;
+#endif
+
 #ifdef ACT_FITNESS_COMPLEXITY
   // os << net.fitness_complexity;
 #endif
@@ -232,7 +236,12 @@ network::Networks& network::Networks::save_data(const char* name) {
 #endif
 
 #ifdef ACT_SIS
-  runStatus = sis.save_data((fn + ".sis").c_str(), dirFlag, priChar, priChar2);
+  runStatus = sis.save_data((fn + ".sis").c_str(), priChar, priChar2);
+  if (0 != runStatus) ERROR();
+#endif
+
+#ifdef ACT_SIR
+  runStatus = sir.save_data((fn + ".sir").c_str(), seed, priChar, priChar2);
   if (0 != runStatus) ERROR();
 #endif
 
@@ -417,6 +426,15 @@ network::Networks& network::Networks::read_params_1(string& s, istream& is) {
 
 #ifdef ACT_SIS
     if (0 != sis.read_params_1(s, is)) {
+      runStatus = -1;
+      ERROR();
+      return *this;
+    }
+    if (s.size() <= 0) break;
+#endif
+
+#ifdef ACT_SIR
+    if (0 != sir.read_params_1(s, is)) {
       runStatus = -1;
       ERROR();
       return *this;

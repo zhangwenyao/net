@@ -129,23 +129,24 @@ int network::betweenness::cal_betweenness0_large(
   minDistMean.assign(nodeSize, 0);
   if (nodeSize < 2) return 0;
 
-  VDistType d(nodeSize);
-  VNodeType nodeStk(nodeSize);
-  VLinkType wayNum(nodeSize);  // i到j最短路径的数目
-  VDouble b(nodeSize);         // i节点出发的介数
-  NodeType stk_end, stk_head;
   unordered_map<unsigned long, LinkType> linkID;
   for (LinkType i = 0, p = 0; i < linkSize; i++) {
     NodeType x = link[p++];
     NodeType y = link[p++];
     linkID[link_key(x, y)] = i;
   }
+
+#pragma omp parallel for reduction(+ : betwNode, betwLink)
   for (NodeType i = 0; i < nodeSize; i++) {  // 计算从i节点出发的最短路径、介数
+    if (i % 1000 == 0) INFORM(i);
     // 广度搜索算法，计算最短距离、最短路径路径数目，按距离存储编号nodeStk数组中
     if (p2p[i].size() <= 0) {
       continue;
     }
-    d.assign(nodeSize, DistMax);  // 最短距离
+    VDistType d(nodeSize, DistMax);  // 最短距离
+    VNodeType nodeStk(nodeSize);
+    VLinkType wayNum(nodeSize);  // i到j最短路径的数目
+    NodeType stk_end, stk_head;
     d[i] = 0;
     wayNum.assign(nodeSize, 0);
     wayNum[i] = 1;
@@ -173,7 +174,7 @@ int network::betweenness::cal_betweenness0_large(
     }
 
     // 计算i节点出发的介数
-    b.assign(nodeSize, 0);  // 介数
+    VDouble b(nodeSize, 0);  // i节点出发的介数
     while (stk_end-- > 0) {
       NodeType jTmp = nodeStk[stk_end];
       DistType dTmp = d[jTmp];

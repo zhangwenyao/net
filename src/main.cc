@@ -36,6 +36,10 @@ using namespace std;
 #include "main_func/betweenness/main.h"
 #endif
 
+#ifdef MAIN_SPREADER
+#include "main_func/spreader/main.h"
+#endif
+
 #ifndef MAIN_FUNC
 #define MAIN_FUNC main_default
 namespace {

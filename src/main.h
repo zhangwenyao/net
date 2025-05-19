@@ -15,7 +15,8 @@
 // #define MAIN_REWIRE
 // #define MAIN_FITNESS_COMPLEXITY
 // #define MAIN_SPEARMAN
-#define MAIN_BETWEENNESS
+// #define MAIN_BETWEENNESS
+#define MAIN_SPREADER
 
 // *******************************************************
 #endif

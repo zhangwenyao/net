@@ -17,6 +17,5 @@
 // #define MAIN_SPEARMAN
 // #define MAIN_BETWEENNESS
 #define MAIN_SPREADER
-
 // *******************************************************
 #endif

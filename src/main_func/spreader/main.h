@@ -10,7 +10,7 @@
 #define MAIN_FUNC main_func::main_spreader
 
 // #define MAIN_SPREADER_DATA
-// #define MAIN_SPREADER_CALC
+#define MAIN_SPREADER_CALC
 #define MAIN_SPREADER_STAT
 // #define MAIN_SPREADER_TEST
 
@@ -19,17 +19,11 @@ namespace main_func {
 int main_spreader(int argc, char** argv);
 int check_args(int argc, char** argv);
 namespace spreader {
-constexpr int kSeedMin = 1, kSeedMax = 1000;
-
-const std::string kDataDir = std::string("data/spreader/"), kStatDir = kDataDir;
-//   kStatDir = std::string("data/spreader/");
-const std::string DATASET_NAMES[] = {
-    // "example"
-    "CondMat"
-    // "Email-Enron"
-    // "Facebook"
-};
-const int DATASET_SIZE = sizeof(DATASET_NAMES) / sizeof(DATASET_NAMES[0]);
+extern int kSeedMin, kSeedMax, DATASET_SIZE;
+extern std::string kDataDir, kStatDir, kStatDir2;
+extern std::vector<std::string> kDatasetNames;
+extern double kBeta, kGamma;
+extern bool kCalcFlag, kStatFlag;
 }  // namespace spreader
 }  // namespace main_func
 

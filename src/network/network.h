@@ -1,24 +1,25 @@
 #ifndef NETWORK__NETWORK_H_
 #define NETWORK__NETWORK_H_
 
-#include "net.h"
 #include <iostream>
+
+#include "net.h"
 
 // *******************************************************************
 /*
- *                net_run       argv          options
- * 参数           cal_params    read          读取参数
- *                              dirFlag     !dirFlag      是否有向
- *                              weightFlag  !weightFlag   是否带权重
- * 随机数种子     init_seed                   仅首次初始化
- *                init_seed0                  重新初始化种子
- * 度分布         cal_deg       read_deg      读取度序列
+ *               net_run        argv          options
+ * 参数           cal_params     read          读取参数
+ *                              dirFlag       是否有向
+ *                              weightFlag    是否带权重
+ * 随机数种子      init_seed                    仅首次初始化
+ *               init_seed0                   重新初始化种子
+ * 度分布         cal_deg        read_deg      读取度序列
  *                              read_degArr   读取度分布
  *                              lkk_power     度序列幂律的联合分布矩阵lkk
  *                              power         度序列幂律分布
  *                              power_arr     度序列幂律分布
  *                              poisson       度序列泊松分布
- * 连边           cal_p2p       p2p           利用已有数组转化
+ * 连边           cal_p2p        p2p           利用已有数组转化
  *                              read_p2p      读取连边链接表
  *                              read_p2p_fix  读取连边链接表
  *                              read_linkMatr 读取连边矩阵
@@ -68,38 +69,38 @@
 // *******************************************************************
 namespace network {
 class Network {
-  public:
+ public:
   // variables
-  std::string argv;     // 参数
-  std::string saveName; // 保存文件名前缀
-  std::string readName; // 读取文件名前缀
-  int status; // 网络状态 0：空，1：正常p2p，2：lkk，-1：有错，-2：未连完
-  long seed;  // 随机数种子值
-  int dirFlag;                // 网络是否有向，0无向，非0有向
-  int weightFlag;             // 网络是否有权，0无权，非0有权
-  int distFlag;               //  网络距离是否01，0:01，非0:实数
-  NodeType nodeSize, degSize; // 节点数，不同度数
-  NodeType kMin, kMax;        // 度范围,最小度,最大度
-  NodeType kMinOut, kMaxOut;        // 度范围,最小度,最大度
-  NodeType kMinIn, kMaxIn;        // 度范围,最小度,最大度
-  LinkType linkSize;          // 连边数
-  std::vector<int> paramsInt; // 整型参数
-  std::vector<double> paramsDouble; // 实数参数
-  char priChar, priChar2;           // 保存文件时的分隔符
+  std::string argv;      // 参数
+  std::string saveName;  // 保存文件名前缀
+  std::string readName;  // 读取文件名前缀
+  int status;  // 网络状态 0：空，1：正常p2p，2：lkk，-1：有错，-2：未连完
+  long seed;                   // 随机数种子值
+  int dirFlag;                 // 网络是否有向，0无向，非0有向
+  int weightFlag;              // 网络是否有权，0无权，非0有权
+  int distFlag;                //  网络距离是否01，0:01，非0:实数
+  NodeType nodeSize, degSize;  // 节点数，不同度数
+  NodeType kMin, kMax;         // 度范围,最小度,最大度
+  NodeType kMinOut, kMaxOut;   // 度范围,最小度,最大度
+  NodeType kMinIn, kMaxIn;     // 度范围,最小度,最大度
+  LinkType linkSize;           // 连边数
+  std::vector<int> paramsInt;  // 整型参数
+  std::vector<double> paramsDouble;  // 实数参数
+  char priChar, priChar2;            // 保存文件时的分隔符
   int runStatus;
 
   // deg
-  VDouble degArrProb, degArrProbSum; // [degSize]    度分布概率 p(k)
+  VDouble degArrProb, degArrProbSum;  // [degSize]    度分布概率 p(k)
   double degProbSum;
   VDouble degProbSumArr;
   VNodeType degProbSumVal;
-  VNodeType degArrVal;  // [degSize]    度分布序列 k
-  VNodeType degArrSize; // [degSize]    各度节点数 n(k)
-  MNodeType degArrNo;   // [kMax+1]     度k在degArrVal中的位置
-  VNodeType degArrSum;  // [degSize+1]  度分布累计序列
-  VNodeType nodeDeg;    // [nodeSize]   各节点度
-  VNodeType remNodeNum; // [remNodeSize]    未全连边的节点编号
-  VNodeType nodesName, nodesName2; // [nodeSize]   节点的映射关系
+  VNodeType degArrVal;   // [degSize]    度分布序列 k
+  VNodeType degArrSize;  // [degSize]    各度节点数 n(k)
+  MNodeType degArrNo;    // [kMax+1]     度k在degArrVal中的位置
+  VNodeType degArrSum;   // [degSize+1]  度分布累计序列
+  VNodeType nodeDeg;     // [nodeSize]   各节点度
+  VNodeType remNodeNum;  // [remNodeSize]    未全连边的节点编号
+  VNodeType nodesName, nodesName2;  // [nodeSize]   节点的映射关系
 
   VNodeType nodeDegIn, degArrValIn, degArrSizeIn, degArrSumIn;
   VNodeType nodeDegOut, degArrValOut, degArrSizeOut, degArrSumOut;
@@ -107,32 +108,32 @@ class Network {
   double degMean, degMeanOut, degMeanIn;
 
   // link
-  VNodeType link, p2pSize; // [linkSize*2] 网络连边
+  VNodeType link, p2pSize;  // [linkSize*2] 网络连边
   VVNodeType p2p, p2pOut,
-      p2pIn; // [nodeSize] 各点连边链表p2pOut:出度,p2pIn:入度
-  VVDistType linkMatr; // [nodeSize]   网络连边距离矩阵
-  VVChar linkMatrC;    // [nodeSize]   网络连边01矩阵
+      p2pIn;  // [nodeSize] 各点连边链表p2pOut:出度,p2pIn:入度
+  VVDistType linkMatr;  // [nodeSize]   网络连边距离矩阵
+  VVChar linkMatrC;     // [nodeSize]   网络连边01矩阵
   LinkType linkRemain;
-  VLinkType linkSum; // 各度累计线头数
+  VLinkType linkSum;  // 各度累计线头数
 
   // weight
-  VVWeightType vvweight, vvweightOut, vvweightIn, weightMatr; // 连边权重
-  unsigned weight_m, weight_n; // 数据文件中连边权重位置 (m+1) / n
-  VWeightType nodeWeight, nodeWeightOut, nodeWeightIn; // 各节点总连边权重
+  VVWeightType vvweight, vvweightOut, vvweightIn, weightMatr;  // 连边权重
+  unsigned weight_m, weight_n;  // 数据文件中连边权重位置 (m+1) / n
+  VWeightType nodeWeight, nodeWeightOut, nodeWeightIn;  // 各节点总连边权重
   VWeightSumType degArrWeight, degArrWeightOut,
-      degArrWeightIn; // 同度节点连边总权重
+      degArrWeightIn;  // 同度节点连边总权重
   WeightSumType netWeight, netWeightOut, netWeightIn;
   double degWeightMean, degWeightMeanOut, degWeightMeanIn;
 
   // lkk
   Lkk_type lkk_type;
-  VVLinkType lkk, lkkOutIn;       // 不同度之间连边数目矩阵
-  VVLinkType lkkSum, lkkSumOutIn; // 同度点连向所有度的累计边数
-  VVDouble lkkProb;               // [degSize]    连边的联合分布概率
+  VVLinkType lkk, lkkOutIn;        // 不同度之间连边数目矩阵
+  VVLinkType lkkSum, lkkSumOutIn;  // 同度点连向所有度的累计边数
+  VVDouble lkkProb;                // [degSize]    连边的联合分布概率
   // lkk3
-  VLkk3LinkType lkk3, lkk3reverse, lkk3OutIn; // 不同度之间连边数目矩阵
-  VVLkk2LinkType lkk2; // 不同度之间连边数目矩阵，无向、[i][j>=i]
-  VLkk3Double lkk3Prob; // [degSize]    连边的联合分布概率
+  VLkk3LinkType lkk3, lkk3reverse, lkk3OutIn;  // 不同度之间连边数目矩阵
+  VVLkk2LinkType lkk2;  // 不同度之间连边数目矩阵，无向、[i][j>=i]
+  VLkk3Double lkk3Prob;  // [degSize]    连边的联合分布概率
 
   Network(void);
   // friend std::istream& operator>>(std::istream& is, network::Network& net);
@@ -170,8 +171,8 @@ class Network {
 };
 
 // ******************************************************
-}
+}  // namespace network
 std::istream& operator>>(std::istream& is, network::Network& net);
 std::ostream& operator<<(std::ostream& os, network::Network& net);
 
-#endif // NETWORK_H_
+#endif  // NETWORK_H_

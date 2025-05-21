@@ -1,5 +1,7 @@
 
 TARGET		= net.exe
+USER_DEFINES	=
+ARGV		=
 
 export ROOT_DIR	= $(shell pwd)
 export ROOT_OBJ	= $(ROOT_DIR)/obj
@@ -40,7 +42,6 @@ export CXX	= clang++
 #export CC	= icx
 #export CXX	= icpx
 
-USER_DEFINES	=
 
 ifdef DEBUG
 	export CFLAGS	= ${USER_DEFINES} -Wall -O0 -I$(DIR_INC) -g ${OPENMP} -DDEBUG
@@ -65,7 +66,7 @@ subdirs:
 
 execute:
 	@${datecmd}
-	$(BIN_TARGET)
+	$(BIN_TARGET) $(ARGV)
 ifneq ($(USER_DEFINES),)
 	@echo "USER_DEFINES=${USER_DEFINES}"
 endif
@@ -73,7 +74,7 @@ endif
 
 logexecute:
 	@${datecmd}
-	$(ROOT_DIR)/script/logrun.sh $(BIN_TARGET)
+	$(ROOT_DIR)/script/logrun.sh $(BIN_TARGET) $(ARGV)
 ifneq ($(USER_DEFINES),)
 	@echo "USER_DEFINES=${USER_DEFINES}"
 endif

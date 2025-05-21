@@ -12,9 +12,8 @@ using namespace network;
 //**//**************************************************//**//*
 #ifdef MAIN_SPREADER_DATA
 int main_func::spreader::networks_data(int argc, char** argv) {
-  for (int i = 0; i < DATASET_SIZE; i++) {
-    string dataset = DATASET_NAMES[i];
-    string data_dir = kDataDir + dataset + "/";
+  for (auto& dataset : kDatasetNames) {
+    string data_dir = kDataDir + "/" + dataset + "/";
     string link_name = data_dir + dataset + ".linkname.txt",
            name_file = data_dir + dataset + ".name.txt",
            link_file0 = data_dir + dataset + ".link0.txt",
@@ -29,17 +28,17 @@ int main_func::spreader::networks_data(int argc, char** argv) {
 
 #ifdef MAIN_SPREADER_CALC
 int main_func::spreader::networks_calc(int argc, char** argv) {
-  for (int i = 0; i < DATASET_SIZE; i++) {
-    string dataset = DATASET_NAMES[i];
-    string data_dir = kDataDir + dataset + "/", stat_dir = data_dir;
+  for (auto& dataset : kDatasetNames) {
+    string data_dir = kDataDir + "/" + dataset + "/",
+           stat_dir = kStatDir + "/" + dataset + "/" + kStatDir2 + "/";
     INFORM(dataset, " in ", data_dir);
     mkdirs(stat_dir.c_str());
 
     Networks net;
     string fn_full = data_dir + dataset;
     net.readName = fn_full;
-    net.saveName = fn_full + ".spreader";
-    net.seed = 1;
+    net.saveName = stat_dir + dataset + ".spreader";
+    // net.seed = 1;
     net.dirFlag = 0;
     net.argv =
         " --cal_p2p read_link"
@@ -70,30 +69,31 @@ int main_func::spreader::networks_calc(int argc, char** argv) {
       net.kMax = net.degArrVal.back();
       net.status = 1;
       auto& sir = net.sir;
-      sir.beta = 0.2;
-      sir.gamma = 1.0;
+      sir.beta = kBeta;
+      sir.gamma = kGamma;
       // _ERR(net.p2p_2_lkk().runStatus);
       INFORM("nodeSize: ", net.nodeSize, "\tlinkSize: ", net.linkSize);
     }
 
-    {  // calc spreader
+    if (0) {  // calc spreader
       // net.act_sir();
       auto& sir = net.sir;
       network::sir::act_sir_cal_modularity(net.p2p, sir.modularity_nums,
                                            sir.modularity_nums2, net.nodeSize);
       // sir::act_sir(sir.Rs, sir.beta, sir.gamma, net.p2p, net.nodeSize);
-      // net.sir.save_data((net.saveName + ".sir").c_str());
       if (save1((net.saveName + ".modularity.txt").c_str(), sir.modularity_nums,
                 net.priChar) != 0)
         return EXIT_FAILURE;
       if (save1((net.saveName + ".modularity2.txt").c_str(),
                 sir.modularity_nums2, net.priChar) != 0)
         return EXIT_FAILURE;
+      _ERR(net.save_params().runStatus);
     }
-    _ERR(net.save_params().runStatus);
 
     for (int seed = kSeedMin; seed <= kSeedMax; seed++) {
-      INFORM("seed: ", seed);
+      INFORM("seed: ", seed, " / ", kSeedMax - kSeedMin + 1);
+      // cout << "seed:\t" << seed << "/" << kSeedMax - kSeedMin + 1 << "\r"
+      //  << flush;
       rand_seed(seed);
       auto& sir = net.sir;
       // sir::act_sir(sir.Rs, sir.beta, sir.gamma, net.p2p, net.nodeSize);
@@ -105,6 +105,7 @@ int main_func::spreader::networks_calc(int argc, char** argv) {
                 sir.Rs, net.priChar) != 0)
         return EXIT_FAILURE;
     }
+    INFORM(dataset, " DONE!\tkSeedMin: ", kSeedMin, "\tkSeedMax: ", kSeedMax);
   }
   return EXIT_SUCCESS;
 }
@@ -112,16 +113,16 @@ int main_func::spreader::networks_calc(int argc, char** argv) {
 
 #ifdef MAIN_SPREADER_STAT
 int main_func::spreader::networks_stat(int argc, char** argv) {
-  for (int i = 0; i < DATASET_SIZE; i++) {
-    string dataset = DATASET_NAMES[i];
-    string data_dir = kDataDir + dataset + "/", stat_dir = data_dir;
+  for (auto& dataset : kDatasetNames) {
+    string data_dir = kDataDir + "/" + dataset + "/",
+           stat_dir = kStatDir + "/" + dataset + "/" + kStatDir2 + "/";
     INFORM(dataset, " in ", data_dir);
     mkdirs(stat_dir.c_str());
 
     Networks net;
     string fn_full = data_dir + dataset;
     net.readName = fn_full + ".spreader";
-    net.saveName = net.readName;
+    net.saveName = stat_dir + dataset + ".spreader";
     net.read_params();
 
     {  // stat spreader
@@ -139,6 +140,7 @@ int main_func::spreader::networks_stat(int argc, char** argv) {
           Rsum2[i] += (LinkType)sir.Rs[i] * sir.Rs[i];
         }
       }
+      INFORM("kSeedMin: ", kSeedMin, "\tkSeedMax: ", kSeedMax);
       double nseed = kSeedMax - kSeedMin + 1;
       for (NodeType i = 0; i < net.nodeSize; i++) {
         Rmean[i] = (double)Rsum[i] / nseed;

@@ -2,6 +2,7 @@
 
 #include "common/common.h"
 using namespace std;
+using namespace common;
 
 // *******************************************************
 #ifdef MAIN_TEST
@@ -59,6 +60,9 @@ int main(int argc, char **argv) {
   // cin.tie(NULL);
   // common::SHOW_TIME(cout);  // 显示系统时间
   INFORM("START...");
+  init_config();
+  // for (auto &it : configs.items())
+  // cout << it.key() << ": " << it.value() << endl;
 
   _ERR(MAIN_FUNC(argc, argv));
 

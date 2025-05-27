@@ -91,7 +91,11 @@ int main_func::spreader::networks_calc(int argc, char** argv) {
     }
 
     for (int seed = kSeedMin; seed <= kSeedMax; seed++) {
-      INFORM("seed: ", seed, " / ", kSeedMax - kSeedMin + 1);
+      // INFORM("seed: ", seed, " [", kSeedMin, "-", kSeedMax, "], ",
+      //  seed - kSeedMin, "/", kSeedMax - kSeedMin + 1, ", ", dataset,
+      //  ", beta: ", kBeta, ", gamma: ", kGamma);
+      INFORM("seed: ", seed, " [", kSeedMin, "-", kSeedMax, "], ",
+             seed - kSeedMin, "/", kSeedMax - kSeedMin + 1);
       // cout << "seed:\t" << seed << "/" << kSeedMax - kSeedMin + 1 << "\r"
       //  << flush;
       rand_seed(seed);
@@ -122,8 +126,8 @@ int main_func::spreader::networks_stat(int argc, char** argv) {
     Networks net;
     string fn_full = data_dir + dataset;
     net.readName = fn_full + ".spreader";
-    net.saveName = stat_dir + dataset + ".spreader";
     net.read_params();
+    net.saveName = stat_dir + dataset + ".spreader";
 
     {  // stat spreader
       auto& sir = net.sir;

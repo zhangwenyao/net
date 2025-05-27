@@ -72,7 +72,7 @@ int main_func::check_args(int argc, char** argv) {
           cout << argv[i] << " " << argv[i + 1] << "\n";
           ifstream ifs(argv[i + 1]);
           if (!ifs.is_open()) {
-            cout << "Error: config file " << config_file << " not found!\n";
+            cout << "Error: config file " << argv[i + 1] << " not found!\n";
             return EXIT_FAILURE;
           }
           ifs >> configs;

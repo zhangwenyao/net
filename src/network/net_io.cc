@@ -34,6 +34,29 @@ int network::read0_link(VNodeType& link, const char* name, const unsigned n) {
   return 0;
 }
 
+int network::save_link(ostream& os, const VNodeType& link) {
+  if (!os) return -1;
+  for (LinkType i = 0; i < link.size(); i += 2) {
+    os << link[i] << '\t' << link[i + 1] << '\n';
+  }
+  return 0;
+}
+
+int network::save_link(const char* name, const VNodeType& link) {
+  if (name == NULL || name[0] == '\0' || link.size() % 2 == 1) {
+    ERROR();
+    return -1;
+  }
+  ofstream os(name);
+  if (!os) {
+    ERROR();
+    return -1;
+  }
+  int flag = save_link(os, link);
+  os.close();
+  return flag;
+}
+
 int network::read_link(VNodeType& link, const char* name) {
   if (name == NULL || name[0] == '\0') {
     ERROR();

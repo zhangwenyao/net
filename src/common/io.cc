@@ -162,3 +162,25 @@ int common::save_json(const char* name, const json& j) {
 }
 
 // *************************************************************
+int common::check_args_config(int argc, char** argv) {
+  if (argc > 1) {
+    for (int i = 1; i < argc; i++) {
+      if (0 == strcmp(argv[i], "--config")) {
+        if (i + 1 < argc) {
+          cout << argv[i] << " " << argv[i + 1] << "\n";
+          ifstream is(argv[i + 1]);
+          if (!is.is_open()) {
+            cout << "Error: config file " << argv[i + 1] << " not found!\n";
+            return EXIT_FAILURE;
+          }
+          is >> configs;
+          is.close();
+          i++;
+        }
+      }
+    }
+  }
+  return EXIT_SUCCESS;
+}
+
+// *************************************************************

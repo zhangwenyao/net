@@ -147,9 +147,7 @@ Networks& Networks::act_sir(void) {
     ERROR();
     return *this;
   }
-  network::sir::act_sir_cal_modularity(p2p, sir.modularity_nums,
-                                       sir.modularity_nums2, nodeSize);
-  network::sir::act_sir(sir.Rs, sir.beta, sir.gamma, p2p, nodeSize);
+  network::sir::act_sir_lambda(sir.Rs, sir.beta, p2p, nodeSize);
   return *this;
 }
 

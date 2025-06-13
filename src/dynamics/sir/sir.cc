@@ -108,14 +108,14 @@ int network::sir::act_sir_beta_id0(VNodeType& R_nums_, const double beta,
   return EXIT_SUCCESS;
 }
 
-int network::sir::act_sir_cal_lambda(double& lambda_c, const VVNodeType& p2p) {
+int network::sir::act_sir_cal_lambdac(double& lambda_c, const VVNodeType& p2p) {
   LinkType kSum = 0, k2Sum = 0;
   for (NodeType i = 0; i < p2p.size(); ++i) {
     NodeType k = p2p[i].size();
     kSum += k;
     k2Sum += k * k;
   }
-  lambda_c = (double)kSum / k2Sum;
+  lambda_c = (double)kSum / (k2Sum - kSum);
   return 0;
 }
 
@@ -200,8 +200,9 @@ int network::sir::act_sir_cal_params(const VVNodeType& p2p, VDouble& Rs,
   return 0;
 }
 
-int network::sir::act_sir(VDouble& Rs, const double beta, const double gamma,
-                          const VVNodeType& p2p, const NodeType nodeSize) {
+int network::sir::act_sir_lambda(VDouble& Rs, const double beta,
+                                 const VVNodeType& p2p,
+                                 const NodeType nodeSize) {
   Rs.assign(nodeSize, 0);
   VNodeType R_nums_;
   for (NodeType i = 0; i < nodeSize; ++i) {

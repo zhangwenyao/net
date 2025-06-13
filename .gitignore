@@ -2,9 +2,10 @@
 .idea
 archive
 bin
+obj
 config
 data
-log
-obj
+logs
+results
 test
 */.DS_Store

@@ -8,6 +8,8 @@
 #endif
 
 // *******************************************************
+// #define MAIN_DATA
+
 // #define MAIN_TEST
 // #define MAIN_DISTRIBUTION
 // #define MAIN_EXTREMUM

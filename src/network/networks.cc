@@ -466,14 +466,14 @@ network::Networks& network::Networks::read_params(const char* name) {
     fn = readName + ".params.txt";
   if (fn.size() <= 0) {
     runStatus = -1;
-    ERROR();
+    ERROR("read_params: fn.size() <= 0");
     return *this;
   }
 
   ifstream is(fn.c_str());
   if (!is) {
     runStatus = -1;
-    ERROR();
+    ERROR("read_params file error: ", fn);
     return *this;
   }
   is >> *this;

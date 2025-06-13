@@ -19,19 +19,22 @@ string kStatDir = kDataDir, kStatDir2 = "beta0.05_gamma1";
 vector<string> kDatasetNames = {
     // "example"
     "CondMat"
-    // "Email-Enron"
+    // "EmailEnron"
     // "Facebook"
 };
-double kBeta = 0.05, kGamma = 1.0;
+double kBeta = 0.05, kGamma = 1.0, kLambdac = 2.0;
 bool kCalcFlag = false, kStatFlag = false;
+int configs_2_main(void);
 }  // namespace spreader
 }  // namespace main_func
 // ******************************************************
-int configs_2_main(void) {
+int main_func::spreader::configs_2_main(void) {
   if (configs.contains("kBeta"))
     main_func::spreader::kBeta = configs["kBeta"].get<double>();
   if (configs.contains("kGamma"))
     main_func::spreader::kGamma = configs["kGamma"].get<double>();
+  if (configs.contains("kLambdac"))
+    main_func::spreader::kLambdac = configs["kLambdac"].get<double>();
   if (configs.contains("kSeedMin"))
     main_func::spreader::kSeedMin = configs["kSeedMin"].get<int>();
   if (configs.contains("kSeedMax"))
@@ -52,6 +55,7 @@ int configs_2_main(void) {
   INFORM("main_func::spreader configs");
   cout << "kBeta: " << main_func::spreader::kBeta << "\n"
        << "kGamma: " << main_func::spreader::kGamma << "\n"
+       << "kLambdac: " << main_func::spreader::kLambdac << "\n"
        << "kSeedMin: " << main_func::spreader::kSeedMin << "\n"
        << "kSeedMax: " << main_func::spreader::kSeedMax << "\n"
        << "kDataDir: " << main_func::spreader::kDataDir << "\n"
@@ -64,33 +68,12 @@ int configs_2_main(void) {
   return EXIT_SUCCESS;
 }
 
-int main_func::check_args(int argc, char** argv) {
-  if (argc > 1) {
-    for (int i = 1; i < argc; i++) {
-      if (0 == strcmp(argv[i], "--config")) {
-        if (i + 1 < argc) {
-          cout << argv[i] << " " << argv[i + 1] << "\n";
-          ifstream ifs(argv[i + 1]);
-          if (!ifs.is_open()) {
-            cout << "Error: config file " << argv[i + 1] << " not found!\n";
-            return EXIT_FAILURE;
-          }
-          ifs >> configs;
-          ifs.close();
-          i++;
-        }
-      }
-    }
-  }
-  _ERR(configs_2_main());
-  return EXIT_SUCCESS;
-}
-
 int main_func::main_spreader(int argc, char** argv) {
   string dirData = kDataDir, dirStat = kStatDir;
   mkdirs(dirStat.c_str());
 
-  _ERR(check_args(argc, argv));
+  _ERR(common::check_args_config(argc, argv));
+  _ERR(spreader::configs_2_main());
 
 #ifdef MAIN_SPREADER_DATA
   _ERR(spreader::networks_data(argc, argv));

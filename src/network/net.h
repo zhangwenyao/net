@@ -40,7 +40,7 @@ const std::string NET_VERSION = "net3.0: " __DATE__ ", " __TIME__;
 
 // #define ACT_SIS
 #define ACT_SIR
-// #define ACT_SPREAD
+#define ACT_SPREAD
 // #define ACT_FITNESS_COMPLEXITY
 // #define ACT_RECOMMEND
 // #define ACT_CORRELATION

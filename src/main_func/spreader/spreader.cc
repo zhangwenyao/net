@@ -12,16 +12,6 @@ using namespace network;
 //**//**************************************************//**//*
 #ifdef MAIN_SPREADER_DATA
 int main_func::spreader::networks_data(int argc, char** argv) {
-  for (auto& dataset : kDatasetNames) {
-    string data_dir = kDataDir + "/" + dataset + "/";
-    string link_name = data_dir + dataset + ".linkname.txt",
-           name_file = data_dir + dataset + ".name.txt",
-           link_file0 = data_dir + dataset + ".link0.txt",
-           link_file = data_dir + dataset + ".link.txt";
-    INFORM(dataset, ": ", link_file0);
-    linkname_2_link<NodeType>(link_name.c_str(), name_file.c_str(),
-                              link_file0.c_str(), link_file.c_str());
-  }
   return EXIT_SUCCESS;
 }
 #endif  // MAIN_SPREADER_DATA
@@ -68,49 +58,37 @@ int main_func::spreader::networks_calc(int argc, char** argv) {
       net.kMin = net.degArrVal.front();
       net.kMax = net.degArrVal.back();
       net.status = 1;
-      auto& sir = net.sir;
-      sir.beta = kBeta;
-      sir.gamma = kGamma;
       // _ERR(net.p2p_2_lkk().runStatus);
       INFORM("nodeSize: ", net.nodeSize, "\tlinkSize: ", net.linkSize);
     }
 
-    if (0) {  // calc spreader
-      // net.act_sir();
+    {  // spread
+      double lambda_c;
+      network::sir::act_sir_cal_lambdac(lambda_c, net.p2p);
       auto& sir = net.sir;
-      network::sir::act_sir_cal_modularity(net.p2p, sir.modularity_nums,
-                                           sir.modularity_nums2, net.nodeSize);
-      // sir::act_sir(sir.Rs, sir.beta, sir.gamma, net.p2p, net.nodeSize);
-      if (save1((net.saveName + ".modularity.txt").c_str(), sir.modularity_nums,
-                net.priChar) != 0)
-        return EXIT_FAILURE;
-      if (save1((net.saveName + ".modularity2.txt").c_str(),
-                sir.modularity_nums2, net.priChar) != 0)
-        return EXIT_FAILURE;
-      _ERR(net.save_params().runStatus);
-    }
-
-    for (int seed = kSeedMin; seed <= kSeedMax; seed++) {
-      // INFORM("seed: ", seed, " [", kSeedMin, "-", kSeedMax, "], ",
-      //  seed - kSeedMin, "/", kSeedMax - kSeedMin + 1, ", ", dataset,
-      //  ", beta: ", kBeta, ", gamma: ", kGamma);
-      INFORM("seed: ", seed, " [", kSeedMin, "-", kSeedMax, "], ",
-             seed - kSeedMin, "/", kSeedMax - kSeedMin + 1);
-      // cout << "seed:\t" << seed << "/" << kSeedMax - kSeedMin + 1 << "\r"
-      //  << flush;
-      rand_seed(seed);
-      auto& sir = net.sir;
-      // sir::act_sir(sir.Rs, sir.beta, sir.gamma, net.p2p, net.nodeSize);
-      // network::sir::act_sir_cal_modularity(net.p2p, sir.modularity_nums,
-      //  sir.modularity_nums2, nodeSize);
-      network::sir::act_sir(sir.Rs, sir.beta, sir.gamma, net.p2p, net.nodeSize);
-      // net.sir.save_data((net.saveName + ".sir").c_str());
-      if (save1((net.saveName + ".R_nums_" + to_string(seed) + ".txt").c_str(),
+      sir.beta = lambda_c * kLambdac;
+      for (int seed = kSeedMin; seed <= kSeedMax; seed++) {
+        // INFORM("seed: ", seed, " [", kSeedMin, "-", kSeedMax, "], ",
+        //  seed - kSeedMin, "/", kSeedMax - kSeedMin + 1, ", ", dataset,
+        //  ", beta: ", kBeta, ", gamma: ", kGamma);
+        INFORM("seed: ", seed, " [", kSeedMin, "-", kSeedMax, "], ",
+               seed - kSeedMin, "/", kSeedMax - kSeedMin + 1);
+        // cout << "seed:\t" << seed << "/" << kSeedMax - kSeedMin + 1 << "\r"
+        //  << flush;
+        rand_seed(seed);
+        // sir::act_sir(sir.Rs, sir.beta, sir.gamma, net.p2p, net.nodeSize);
+        // network::sir::act_sir_cal_modularity(net.p2p, sir.modularity_nums,
+        //  sir.modularity_nums2, nodeSize);
+        network::sir::act_sir_lambda(sir.Rs, sir.beta, net.p2p, net.nodeSize);
+        // net.sir.save_data((net.saveName + ".sir").c_str());
+        if (save1(
+                (net.saveName + ".R_nums_" + to_string(seed) + ".txt").c_str(),
                 sir.Rs, net.priChar) != 0)
-        return EXIT_FAILURE;
+          return EXIT_FAILURE;
+      }
+      INFORM(dataset, " DONE!\tkSeedMin: ", kSeedMin, "\tkSeedMax: ", kSeedMax);
     }
-    INFORM(dataset, " DONE!\tkSeedMin: ", kSeedMin, "\tkSeedMax: ", kSeedMax);
-  }
+  }  // end for dataset
   return EXIT_SUCCESS;
 }
 #endif  // MAIN_SPREADER_CALC
@@ -125,8 +103,10 @@ int main_func::spreader::networks_stat(int argc, char** argv) {
 
     Networks net;
     string fn_full = data_dir + dataset;
-    net.readName = fn_full + ".spreader";
+    // net.readName = fn_full + ".spreader";
+    net.readName = fn_full;
     net.read_params();
+    net.readName = fn_full + ".spreader";
     net.saveName = stat_dir + dataset + ".spreader";
 
     {  // stat spreader
@@ -134,27 +114,33 @@ int main_func::spreader::networks_stat(int argc, char** argv) {
       VDouble Rmean(net.nodeSize, 0), Rstd(net.nodeSize, 0);
       VLinkType Rsum(net.nodeSize, 0), Rsum2(net.nodeSize, 0);
       sir.Rs.resize(net.nodeSize);
+      int ns = 0;
       for (int seed = kSeedMin; seed <= kSeedMax; seed++) {
         if (read1(
                 (net.saveName + ".R_nums_" + to_string(seed) + ".txt").c_str(),
-                sir.Rs) != 0)
-          return EXIT_FAILURE;
+                sir.Rs, false) != 0)
+          // return EXIT_FAILURE;
+          continue;
         for (NodeType i = 0; i < net.nodeSize; i++) {
           Rsum[i] += sir.Rs[i];
           Rsum2[i] += (LinkType)sir.Rs[i] * sir.Rs[i];
         }
+        ns++;
       }
-      INFORM("kSeedMin: ", kSeedMin, "\tkSeedMax: ", kSeedMax);
-      double nseed = kSeedMax - kSeedMin + 1;
+      INFORM("samples: ", ns);
+      if (ns <= 0) continue;
+
+      // INFORM("kSeedMin: ", kSeedMin, "\tkSeedMax: ", kSeedMax);
+      // double nseed = kSeedMax - kSeedMin + 1;
+      double nsr = 1.0 / ns;
       for (NodeType i = 0; i < net.nodeSize; i++) {
-        Rmean[i] = (double)Rsum[i] / nseed;
-        Rstd[i] = sqrt((double)Rsum2[i] / nseed - Rmean[i] * Rmean[i]);
+        Rmean[i] = (double)Rsum[i] * nsr;
+        Rstd[i] = sqrt((double)Rsum2[i] * nsr - Rmean[i] * Rmean[i]);
       }
-      if (save1((net.saveName + ".R_mean.txt").c_str(), Rmean, net.priChar) !=
-          0)
-        return EXIT_FAILURE;
-      if (save1((net.saveName + ".R_std.txt").c_str(), Rstd, net.priChar) != 0)
-        return EXIT_FAILURE;
+      _ERR(save1((net.readName + "." + kStatDir2 + ".R_mean.txt").c_str(),
+                 Rmean, net.priChar));
+      _ERR(save1((net.readName + "." + kStatDir2 + ".R_std.txt").c_str(), Rstd,
+                 net.priChar));
     }
   }
   return EXIT_SUCCESS;

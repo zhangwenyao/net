@@ -17,12 +17,11 @@
 // ******************************************************
 namespace main_func {
 int main_spreader(int argc, char** argv);
-int check_args(int argc, char** argv);
 namespace spreader {
-extern int kSeedMin, kSeedMax, DATASET_SIZE;
+extern int kSeedMin, kSeedMax;
 extern std::string kDataDir, kStatDir, kStatDir2;
 extern std::vector<std::string> kDatasetNames;
-extern double kBeta, kGamma;
+extern double kBeta, kGamma, kLambdac;
 extern bool kCalcFlag, kStatFlag;
 }  // namespace spreader
 }  // namespace main_func

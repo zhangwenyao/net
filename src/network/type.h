@@ -27,7 +27,7 @@ typedef uint32_t DistType;            // 节点间距离类型
 typedef int32_t DistSType;            // 节点间距离类型
 const DistType DistMax = UINT32_MAX;  // 距离无穷大的值
 inline LinkKeyType link_key(const NodeType i, const NodeType j) {
-  return i < j ? ((LinkKeyType)i << 32 | j) : ((LinkKeyType)j << 32 | i);
+  return (LinkKeyType)i << 32 | j;
 }
 
 // typedef uint64_t NodeType; // 节点编号类型

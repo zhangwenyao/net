@@ -59,17 +59,6 @@ typedef graph_traits<Graph>::edge_descriptor Edge;
 //**//**************************************************//**//*
 #ifdef MAIN_BETWEENNESS_DATA
 int main_func::betweenness::networks_data(int argc, char** argv) {
-  for (int i = 0; i < DATASET_SIZE; i++) {
-    string dataset = DATASET_NAMES[i];
-    string data_dir = kDataDir + dataset + "/";
-    string link_name = data_dir + dataset + ".linkname.txt",
-           name_file = data_dir + dataset + ".name.txt",
-           link_file0 = data_dir + dataset + ".link0.txt",
-           link_file = data_dir + dataset + ".link.txt";
-    INFORM(dataset, ": ", link_file0);
-    linkname_2_link<NodeType>(link_name.c_str(), name_file.c_str(),
-                              link_file0.c_str(), link_file.c_str());
-  }
   return EXIT_SUCCESS;
 }
 #endif  // MAIN_BETWEENNESS_DATA
@@ -112,9 +101,8 @@ void normalize_betweenness_boost_edge(Graph& g,
 #endif  // MAIN_BETWEENNESS_STAT_BOOST
 
 int main_func::betweenness::networks_stat(int argc, char** argv) {
-  for (int i = 0; i < DATASET_SIZE; i++) {
-    string dataset = DATASET_NAMES[i];
-    string data_dir = kDataDir + dataset + "/", stat_dir = data_dir;
+  for (auto& dataset : kDatasetNames) {
+    string data_dir = kDataDir + "/" + dataset + "/", stat_dir = data_dir;
     INFORM(dataset, " in ", data_dir);
     mkdirs(stat_dir.c_str());
 
@@ -122,7 +110,6 @@ int main_func::betweenness::networks_stat(int argc, char** argv) {
     string fn_full = data_dir + dataset;
     net.readName = fn_full;
     net.saveName = fn_full;
-    net.seed = kSeed0;
     net.dirFlag = 0;
     net.argv =
         " --cal_p2p read_link"

@@ -9,6 +9,10 @@ using namespace common;
 #include "test.h"
 #endif
 
+#ifdef MAIN_DATA
+#include "main_func/data/main.h"
+#endif
+
 #ifdef MAIN_DISTRIBUTION
 #include "main_func/distribution/main.h"
 #endif
@@ -46,7 +50,7 @@ using namespace common;
 namespace {
 int main_default(int argc, char **argv) {
   for (int i = 0; i < argc && argv[i] != NULL; ++i) {
-    cout << argc << '\t' << argv[i] << '\n';
+    cout << i << '\t' << argv[i] << '\n';
   }
   return EXIT_SUCCESS;
 }
@@ -61,8 +65,10 @@ int main(int argc, char **argv) {
   // common::SHOW_TIME(cout);  // 显示系统时间
   INFORM("START...");
   init_config();
-  // for (auto &it : configs.items())
-  // cout << it.key() << ": " << it.value() << endl;
+
+#ifdef MAIN_FUNC_DATA
+  _ERR(MAIN_FUNC_DATA(argc, argv));
+#endif
 
   _ERR(MAIN_FUNC(argc, argv));
 

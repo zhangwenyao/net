@@ -45,6 +45,10 @@ using namespace common;
 #include "main_func/spreader/main.h"
 #endif
 
+#ifdef MAIN_INDEXES
+#include "main_func/indexes/main.h"
+#endif
+
 #ifndef MAIN_FUNC
 #define MAIN_FUNC main_default
 namespace {

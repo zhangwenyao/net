@@ -142,7 +142,8 @@ int histogram_lg2(std::vector<double>& val, std::vector<double>& mean,
                   const std::vector<T4>& size0);
 
 // *************************************************************
-int mkdirs(const char* dirname = NULL);
+int mkdirs(const char* dirname);
+int is_exist(const char* const name);
 }  // end namespace common
 
 // *****************************************************

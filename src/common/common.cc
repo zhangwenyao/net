@@ -1,4 +1,5 @@
 #include "common.h"
+
 #include <cstring>
 
 #ifdef _WIN32
@@ -6,7 +7,7 @@
 #include <io.h>
 #define ACCESS _access
 #define MKDIR(a) _mkdir((a))
-#else // _LINUX
+#else  // _LINUX
 #include <sys/stat.h>
 #include <unistd.h>
 #define ACCESS access
@@ -16,10 +17,8 @@
 using namespace std;
 
 // *************************************************************
-void common::cstring_swap(char* a, char* b)
-{
-  if (a == b || (*a == '\0' && *b == '\0'))
-    return;
+void common::cstring_swap(char* a, char* b) {
+  if (a == b || (*a == '\0' && *b == '\0')) return;
   char t, *c;
   while (*a && *b) {
     t = *b;
@@ -35,19 +34,15 @@ void common::cstring_swap(char* a, char* b)
   if (*a) {
     *c++ = *a;
     *a++ = '\0';
-    while ((*c++ = *a++))
-      continue;
+    while ((*c++ = *a++)) continue;
   }
   return;
 }
 
-void common::cstring_reverse(char* a)
-{
-  if (*a == '\0')
-    return;
+void common::cstring_reverse(char* a) {
+  if (*a == '\0') return;
   char c, *p = a;
-  while (*++p)
-    continue;
+  while (*++p) continue;
   while (a < --p) {
     c = *p;
     *p = *a;
@@ -57,14 +52,12 @@ void common::cstring_reverse(char* a)
 }
 
 // *************************************************************
-int common::mkdirs(const char* dirname)
-{
+int common::mkdirs(const char* dirname) {
   int i = 0;
   int iRet;
   char dir[1000];
   int iLen = strlen(dirname);
-  if (iLen <= 0 || iLen >= 998)
-    return -1;
+  if (iLen <= 0 || iLen >= 998) return -1;
   strcpy(dir, dirname);
   // 在末尾加/
   if (dir[iLen - 1] != '\\' && dir[iLen - 1] != '/') {
@@ -98,4 +91,6 @@ int common::mkdirs(const char* dirname)
 
   return 0;
 }
+
+int common::is_exist(const char* const name) { return 0 == ACCESS(name, 0); }
 // *************************************************************

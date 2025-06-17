@@ -18,7 +18,7 @@
 // #define MAIN_FITNESS_COMPLEXITY
 // #define MAIN_SPEARMAN
 // #define MAIN_BETWEENNESS
-// #define MAIN_SPREADER
-#define MAIN_INDEXES
+#define MAIN_SPREADER
+// #define MAIN_INDEXES
 // *******************************************************
 #endif

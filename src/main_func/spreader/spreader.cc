@@ -68,10 +68,12 @@ int main_func::spreader::networks_calc(int argc, char** argv) {
       auto& sir = net.sir;
       sir.beta = lambda_c * kLambdac;
       for (int seed = kSeedMin; seed <= kSeedMax; seed++) {
+        string filename = net.saveName + ".R_nums_" + to_string(seed) + ".txt";
+        if (is_exist(filename.c_str())) continue;
         // INFORM("seed: ", seed, " [", kSeedMin, "-", kSeedMax, "], ",
         //  seed - kSeedMin, "/", kSeedMax - kSeedMin + 1, ", ", dataset,
         //  ", beta: ", kBeta, ", gamma: ", kGamma);
-        INFORM("seed: ", seed, " [", kSeedMin, "-", kSeedMax, "], ",
+        INFORM(dataset, ": ", seed, " [", kSeedMin, "-", kSeedMax, "] ",
                seed - kSeedMin, "/", kSeedMax - kSeedMin + 1);
         // cout << "seed:\t" << seed << "/" << kSeedMax - kSeedMin + 1 << "\r"
         //  << flush;
@@ -79,12 +81,10 @@ int main_func::spreader::networks_calc(int argc, char** argv) {
         // sir::act_sir(sir.Rs, sir.beta, sir.gamma, net.p2p, net.nodeSize);
         // network::sir::act_sir_cal_modularity(net.p2p, sir.modularity_nums,
         //  sir.modularity_nums2, nodeSize);
-        network::sir::act_sir_lambda(sir.Rs, sir.beta, net.p2p, net.nodeSize);
+        _ERR(network::sir::act_sir_lambda(sir.Rs, sir.beta, net.p2p,
+                                          net.nodeSize));
         // net.sir.save_data((net.saveName + ".sir").c_str());
-        if (save1(
-                (net.saveName + ".R_nums_" + to_string(seed) + ".txt").c_str(),
-                sir.Rs, net.priChar) != 0)
-          return EXIT_FAILURE;
+        _ERR(save1(filename.c_str(), sir.Rs, net.priChar));
       }
       INFORM(dataset, " DONE!\tkSeedMin: ", kSeedMin, "\tkSeedMax: ", kSeedMax);
     }
